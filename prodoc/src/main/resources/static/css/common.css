@@ -1,0 +1,48 @@
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  width: 300px;
+  background: #FF6347;
+  height: 100%;
+  overflow: auto;
+  position: fixed;
+  display:block;
+}
+
+li a {
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  color: #000;
+  font-weight: bold;
+}
+
+li a:hover {
+  background: #333;
+  color: #fff;
+}
+
+li a.home {
+  background : #333;
+  color: #fff;
+}
+
+.cd1 {
+  margin-left: 120px;
+}
+#content1 {
+	background-color: yellow;
+	text-align:center;
+	height:800px;
+}
+#foot {
+	background-color: blue;
+	text-align:center;
+	height: 100px;
+}
+#head {
+	height : 100px;
+	text-align:center;
+}
