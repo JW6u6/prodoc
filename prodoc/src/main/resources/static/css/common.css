@@ -1,16 +1,18 @@
 
+#side {
+	height:100%;
+	float:left;
+}
 #side ul {
   list-style: none;
   padding: 0px;
   margin: 0px;
   width: 300px;
   background: lightsalmon;
-  height: 100%;
+  height: 1000px;
   overflow: auto;
-  position: fixed;
   display:block;
 }
-
 #side a {
   text-decoration: none;
   padding: 10px;
@@ -32,14 +34,29 @@
 .cd1 {
   margin-left: 120px;
 }
-#content1 {
+.content {
 	background-color: lightyellow;
 	text-align:center;
-	height:800px;
+	height:1000px;
+	width:calc(100% - 300px);
+	margin:0px;
+	float:left;
+}
+#content1{
+	margin:0px;
 }
 
 #head {
+	background: #ccc;
+	color: black;
+	ling-height: 50px;
+	margin: 0px;
+	padding: 0px;
+	width:calc(100% - 300px);
+	float:right;
 	position:relative;
+	height:100px;
+	text-align:center;
 }
 
 #head li {
@@ -47,18 +64,10 @@
 	display: inline-block;
 }
 
-#head {
-	background: #ccc;
-	color: black;
-	ling-height: 50px;
-	margin: 0 auto;
-	padding: 5px;
-}
-
 #menu {
 	background-color: lightblue;
 	font-size: 14px;
-	position: absolute;
+	position: inherit;
 }
 
 .hide {
