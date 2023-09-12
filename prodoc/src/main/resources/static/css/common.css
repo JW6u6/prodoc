@@ -1,6 +1,6 @@
 
-ul {
-  list-style-type: none;
+#side ul {
+  list-style: none;
   padding: 0px;
   margin: 0px;
   width: 300px;
@@ -11,7 +11,7 @@ ul {
   display:block;
 }
 
-li a {
+#side a {
   text-decoration: none;
   padding: 10px;
   display: block;
@@ -19,12 +19,12 @@ li a {
   font-weight: bold;
 }
 
-li a:hover {
+#side li a:hover {
   background: #fcb7ad;
   color: #fff;
 }
 
-li a.home {
+#side li a.home {
   background : #fcb7ad;
   color: #fff;
 }
@@ -37,12 +37,33 @@ li a.home {
 	text-align:center;
 	height:800px;
 }
-#foot {
-	background-color: lightblue;
-	text-align:center;
-	height: 100px;
-}
+
 #head {
-	height : 100px;
-	text-align:center;
+	position:relative;
+}
+
+#head li {
+	list-style: none;
+	display: inline-block;
+}
+
+#head {
+	background: #ccc;
+	color: black;
+	ling-height: 50px;
+	margin: 0 auto;
+	padding: 5px;
+}
+
+#menu {
+	background-color: lightblue;
+	font-size: 14px;
+	position: absolute;
+}
+
+.hide {
+	display: none;
+}
+.view {
+	display: block;
 }

@@ -1,12 +1,35 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
 
-    <!-- header -->
-	<div id="head">
-        여기는 헤더임다
-	</div>
-	
+	<!-- header -->
+	<nav>
+		<ul id="head">
+			<li> <span id="menuBtn">메뉴</span>
+				<ul id="menu" class="hide">
+					<li>내보내기</li>
+					<li>페이지 잠금</li>
+					<li>링크 복사</li>
+					<li>페이지 복사</li>
+					<li>이 페이지를 메인 페이지로 지정</li>
+					<li>페이지 삭제</li>
+					<li>페이지 알림 켜기</li>
+				</ul>
+			</li>
+			<li>사용자계정</li>
+		</ul>
+	</nav>
+
 </th:block>
+<script>
+	let nav = document.querySelector('#menuBtn');
+	
+	nav.addEventListener('click', function(){
+		document.querySelector('#menu').classList.toggle('view');
+	})
+	
+</script>
+
 </html>
