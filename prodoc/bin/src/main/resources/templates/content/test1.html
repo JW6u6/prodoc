@@ -5,19 +5,19 @@
       layout:decorate="~{layout/default_layout}">
     
     <th:block layout:fragment="head">
-
+    	<title>Spring Boot</title>
 		
         <!--/* css */-->
         <link th:href="@{/css/common.css}" rel="stylesheet" />
-        <title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
     </th:block>
     <body>
         <th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
         <th:block layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
 		
         <div layout:fragment="content" class="content">
-            <h2 id ="content1">내용물은 여기임니다</h2>
+            <h2 id ="content1">테스트 페이지입니다</h2>
         </div>
-
+        
+        <th:block layout:fragment="footer" th:include="@{/fragments/footer}"></th:block>	
     </body>
 </html>
