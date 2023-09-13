@@ -8,17 +8,18 @@
 <body>
     <div>
         <div>
-            <input type="text" id="email" value="user1@user1">
-            <input type="password" id="password" value="1234">
+            <input type="text" id="email" name="email" value="user1@user1">
+            <input type="password" id="password" name="password" value="1234">
             <button type="button" id="loginBtn">로그인</button>
             <button type="button" id="joinBtn">회원가입</button>
-            <p>이메일/비밀번호 찾기</p>
-            <p>이메일 또는 비밀번호가 잘못되었습니다.</p>
+            <p id="find">이메일/비밀번호 찾기</p>
+            <p style="display:none">이메일 또는 비밀번호가 잘못되었습니다.</p>
+            
             <button type="button" id="googleBtn">구글 로그인</button>
             <button type="button" id="kakaoBtn">카카오 로그인</button>
         </div>
-        <div>
-        <!--  <img src=""> -->
+        <div> <!-- prodoc 로고 이미지 -->
+        	<img src="">
         </div>
     </div>
 
@@ -63,26 +64,46 @@
 
 
 <script>
+//로그인 버튼
 let logBtn = document.getElementById("loginBtn");
-let joinBtn = document.getElementById("joinBtn");
-let googleBtn = document.getElementById("googleBtn");
-let kakaoBtn = document.getElementById("kakaoBtn");
-
 logBtn.addEventListener('click', function(e){
-	alert('로그인클릭');
+	let email = document.querySelector('input[name="email"]');
+	let password = document.querySelector('input[name="password"]');
+	
+	if(email.value == "" || password.value == ""){	//1)이메일 비밀번호 누락
+		alert("아이디와 비밀번호를 확인해주세요.");
+		return;
+	}
+	
+	//로그인 확인
+	fetch("/login",{
+		method: "POST",
+		body: JSON.stringify({"email":email.value, "password":password.value}),
+		headers: { 'content-Type' : 'application/json' }
+	})
+	.done(result => console.log(result))
+	.fail(err => console.log(err));
 });
 
+//회원가입 버튼
+let joinBtn = document.getElementById("joinBtn");
 joinBtn.addEventListener('click', function(e){
+	//1)모달창 팝업
+	//2)모달창 선택사항에 따른 화면이동
 	let joinModal = document.getElementById("joinModal");
 	joinModal.style.display = "block";
 });
 
+
+//구글로그인
+let googleBtn = document.getElementById("googleBtn");
 googleBtn.addEventListener('click', function(e){
-	
 });
 
+
+//카카오로그인
+let kakaoBtn = document.getElementById("kakaoBtn");
 kakaoBtn.addEventListener('click', function(e){
-	
 });
 </script>
 </body>
