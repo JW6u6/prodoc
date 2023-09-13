@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<!-- 해야 할 목록
+□ 이메일 중복확인
+□ 이메일 인증
+□ 전화번호 인증
+□ 필수값 다 입력했는지
+□ 회원가입 후 로그인창 이동
+□ css
+ -->
 <body>
     <div>
 	    <form id="joinForm" action="/join" method="post">
@@ -12,7 +20,7 @@
 	        <!-- 이메일 -->
 	        <input type="email" name="email" placeholder="*EMAIL" required>
 	        <button type="button" id="emailCheck">중복확인</button>
-	        <input type="text" name="authEmail" placeholder="*EMAIL 인증번호" required>
+	        <input type="text" name="authEmail" placeholder="*EMAIL 인증번호" readonly required>
 	        <button type="button" id="authEmailCheck">인증확인</button>
 			<!-- 비밀번호 -->
 	        <input type="password" name="password" placeholder="*PASSWORD" required>
@@ -33,11 +41,11 @@
 
 
 <script>
-let emailCheck = false;
-let passCheck = false;
-let phoneCheck = false;
+let emailCheck = false; //이메일 중복체크
+let passCheck = false;  //비밀번호 일치 체크
+let phoneCheck = false; //
 
-let mailBtn = document.getElementById("emailCheck");
+let mailBtn = document.getElementById("emailCheck"); 
 let mailAuthBtn = document.getElementById("authEmailCheck");
 let phoneBtn = document.getElementById("phoneCheck");
 let phoneAuthBtn = document.getElementById("authPhoneCheck");
