@@ -10,6 +10,7 @@ class ProdocApplicationTests {
 
 	@Autowired
 	StringEncryptor jasyptStringEncryptor;
+	
 	@Test
 	void contextLoads() {
 		String[] datas = {""};
