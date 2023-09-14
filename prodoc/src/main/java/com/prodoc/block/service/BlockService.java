@@ -1,5 +1,8 @@
 package com.prodoc.block.service;
 
-public interface BlockService {
+import java.util.List;
 
+public interface BlockService {
+	public List<BlockVO> selectAllBlock(BlockVO blockVO);
+	public int createBlock(BlockVO blockVO);
 }
