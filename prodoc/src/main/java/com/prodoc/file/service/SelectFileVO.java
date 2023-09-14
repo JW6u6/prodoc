@@ -13,5 +13,5 @@ public class SelectFileVO {
 	private String nickName;
 	private String pageName;
 	private Date saveDate;
-	private String blockId;
+	private String displayId;
 }
