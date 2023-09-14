@@ -1,5 +1,5 @@
 /* 모달창 크기 */
-#modal {
+#pageModal,#workModal {
 		position: fixed;
 		z-index: 1;
 		left: 0;

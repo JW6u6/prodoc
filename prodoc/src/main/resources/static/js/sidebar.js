@@ -9,22 +9,25 @@ function init(){
 let wsCount = 0;
 function newWork(){
     wsCount += 1;
-    let element = event.currentTarget.nextElementSibling
+    let element = event.currentTarget.nextElementSibling;
+    workModal.style.display = "block";
+    document.body.style.overflow = "hidden";
     element.innerHTML += '<div class= "Work">' + wsCount +' <span onclick="newPage()" class="add">➕</span> <div>'
 }
 function newPage(){
-    modal.style.display = "block";
+    pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
     // console.log(event.currentTarget.nextElementSibling)
     event.currentTarget.nextElementSibling.innerHTML += '<div class = "Page">페이지<span onclick="newSubPage()" class="add">➕</span> <div>'
 }
 function newSubPage(){
-    modal.style.display = "block";
+    pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
     event.currentTarget.nextElementSibling.innerHTML += '<div class = "Page">페이지<span onclick="newSSPage()" class="add">➕</span> <div>'
 }
 function closeModal(){
-    modal.style.display = "none";
+    workModal.style.display = "none";
+    pageModal.style.display = "none";
     document.body.style.overflow = "auto"
 }
 
