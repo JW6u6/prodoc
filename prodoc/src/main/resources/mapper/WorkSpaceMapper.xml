@@ -8,4 +8,37 @@
  		FROM tbl_workspace
  	</select>
  	
+ 	<insert id="registerWorkspace" parameterType="WorkSpaceVO" statementType="CALLABLE">
+ 		{call workspace_register(
+ 								#{workType}
+ 								, #{workName}
+ 								, #{publicCheck}
+ 								, #{email}
+ 								, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+ 								)}
+ 	
+ 	</insert>
+ 	
+ 	<update id="modifyWorkspace" parameterType="WorkSpaceVO">
+ 		UPDATE TBL_WORKSPACE
+ 			<set>
+ 				<if test="workName != null and !workName.equals('')">
+ 					work_name = #{workName},
+ 				</if>
+ 				<if test="publicCheck != null and !publicCheck.equals('')">
+ 					public_check = #{publicCheck},
+ 				</if>
+ 			</set>
+ 		WHERE work_id = #{workId}
+ 	</update>
+ 	
+ 	<update id="renewOWNER" parameterType="WorkSpaceVO">
+ 		UPDATE TBL_MEMBER
+ 		SET AUTH = 'OWNER'
+ 		, EMAIL = #{email}
+ 		WHERE WORK_ID = #{workId}
+ 		AND EMAIL = #{email}
+ 			
+ 	</update>
+ 	
  </mapper>
