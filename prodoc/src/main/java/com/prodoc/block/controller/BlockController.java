@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import com.prodoc.block.service.impl.BlockServiceImpl;
  * 개발일자 : 2023/09/14
  * 
 */
+@CrossOrigin
 @RestController
 public class BlockController {
 
@@ -24,14 +26,13 @@ public class BlockController {
 	BlockServiceImpl service;
 	
 	@PostMapping("block/get")
-	public List<BlockVO> getBlock(BlockVO block) {
+	public List<BlockVO> getBlock(@RequestBody BlockVO block) {
 		List<BlockVO> blocks = service.selectAllBlock(block);
 		return blocks;
 	}
 	
 	@PostMapping("block/create")
 	public String createBlock(@RequestBody BlockVO block) {
-		System.out.println("aaaa"+block);
 		int result = service.createBlock(block);
 		return result + "";
 	}
