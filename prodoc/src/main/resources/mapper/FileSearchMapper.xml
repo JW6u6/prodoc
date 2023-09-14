@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prodoc.file.mapper.FileSearchMapper">
+	<!-- 파일검색 -->
+	<select id="getFileList" resultType="SelectFileVO">
+		SELECT f.up_name, u.nickname, p.page_name, f.save_date, d.display_id
+		FROM TBL_FILE f JOIN TBL_DISPLAY d
+							ON f.display_id = d.display_id
+						JOIN TBL_PAGE p
+							ON d.page_id = p.page_id
+						JOIN TBL_WORKSPACE w
+							ON w.work_id = p.work_id
+						JOIN TBL_USER u
+							ON u.email = d.cre_user
+	</select>
+	
+	<select id="getPageid" parameterType="String" resultType="DisplayVO">
+		SELECT page_id
+		FROM TBL_DISPLAY
+		WHERE display_id = #{displayId}
+	</select>
+	
+	<select id="getFileInfo" parameterType="String" resultType="FileVO">
+		SELECT *
+		FROM TBL_FILE
+		WHERE display_id = #{displayId}
+	</select>
+
+</mapper>

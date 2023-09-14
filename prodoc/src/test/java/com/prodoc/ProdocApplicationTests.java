@@ -24,7 +24,7 @@ class ProdocApplicationTests {
 //	}
 	
 	@Autowired
-	WorkSpaceService workspaceService;
+	StringEncryptor jasyptStringEncryptor;
 	
 	@Test
 	public void insertTest(){
