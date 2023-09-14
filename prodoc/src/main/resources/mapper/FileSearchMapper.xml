@@ -16,8 +16,16 @@
 							ON u.email = d.cre_user
 	</select>
 	
-	<select id="getFileInfo">
-
+	<select id="getPageid" parameterType="String" resultType="DisplayVO">
+		SELECT page_id
+		FROM TBL_DISPLAY
+		WHERE display_id = #{displayId}
+	</select>
+	
+	<select id="getFileInfo" parameterType="String" resultType="FileVO">
+		SELECT *
+		FROM TBL_FILE
+		WHERE display_id = #{displayId}
 	</select>
 
 </mapper>
