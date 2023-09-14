@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.prodoc.block.mapper.BlockMapper">
+	<select id="selectAllBlock" resultType="BlockVO">
+		SELECT * 
+		FROM TBL_DISPLAY
+		WHERE PAGE_ID = #{pageId}
+		order by row_x
+	</select>
+	
+	<insert id="insertBlock" parameterType="BlockVO">
+		insert into tbl_display (display_id,page_id,row_x,block_id,cre_user,content)
+		values (#{displayId},#{pageId},#{rowX},#{blockId},#{creUser},#{content})
+	</insert>
+</mapper>
