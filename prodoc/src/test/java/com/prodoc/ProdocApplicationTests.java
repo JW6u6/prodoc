@@ -1,6 +1,6 @@
 package com.prodoc;
 
-//import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,6 @@ class ProdocApplicationTests {
 		vo.setWorkName("서비스 테스트");
 		vo.setPublicCheck("PUBLIC");
 		vo.setEmail("serviceTest@naver.com");
-		workspaceService.insertWorkspace(vo);
 	}
 
 }
