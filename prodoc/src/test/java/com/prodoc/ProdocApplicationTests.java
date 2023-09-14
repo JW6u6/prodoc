@@ -22,10 +22,6 @@ class ProdocApplicationTests {
 	@Test
 	void contextLoads() {
 		String[] datas = {
-				"smtp.gmail.com",
-				"587",
-				"8520hana@gmail.com",
-				"truoozlqqvoupwll"
 				};
 		
 		for(String data : datas) {
