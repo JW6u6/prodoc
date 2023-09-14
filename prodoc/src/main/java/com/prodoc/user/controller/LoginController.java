@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
 
-
+/*
+ 개발자 : 김은주
+ 개발일자 : 2023.09.13~
+ 		 로그인: 화면 & 프로세스
+ */
 @Controller
 public class LoginController {
 	@Autowired
@@ -30,7 +34,7 @@ public class LoginController {
 	public String loginProcess(@RequestBody UserVO user, HttpServletRequest request) {
 		UserVO logUser = service.getUser(user);
 		if(logUser != null) {
-			//로그인 성공
+			//로그인 성공 : 세션에 로그인 정보 저장
 			HttpSession session = request.getSession();
 			session.setAttribute("logUser", logUser);
 			return "true";
