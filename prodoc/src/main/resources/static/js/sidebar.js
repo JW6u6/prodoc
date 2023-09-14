@@ -80,4 +80,23 @@ function selectPage(pId){
         }
     })
     .fail(reject => console.log(reject))
-};
+}
+let wt = document.querySelector("#wsType");
+let ta = document.querySelector("#typeArrow");
+wt.addEventListener("click",(e)=>{
+    ta.classList.toggle("turn");
+})
+wt.addEventListener("focusout",(e)=>{
+    ta.classList.remove("turn");
+})
+
+let wp = document.querySelector("#wsPrivate");
+let pa = document.querySelector("#priArrow");
+wp.addEventListener("click",(e)=>{
+    pa.classList.toggle("turn");
+})
+wp.addEventListener("focusout",(e)=>{
+    pa.classList.remove("turn");
+})
+
+
