@@ -66,9 +66,7 @@
         let fileSearchList = document.querySelector("#fileSearchList tbody");
         fileSearchList.innerHTML = "";    	
     	
-        /*
-            ✅ 파라미터 값 바꾸기
-        */
+        // ✅ 파라미터 값 바꾸기
         fetch("getFileList", {
             method : "get",
             data : searchData
@@ -92,9 +90,13 @@
                     tdTag.addEventListener("click", getFileInfo);
                     tdTag.innerText = value;
                     trTag.append(tdTag);
+                    if(field == 'workName' || field == 'workId' || field == 'pageId'){
+                    	tdTag.style.display = 'none';
+                    }
                 }
                 fileSearchList.append(trTag);
             }
+
         })
         .catch(err => console.log(err))
     }
@@ -130,7 +132,7 @@
 
         // 날짜 태그의 value 가져오기
         for(let date of searchDate){
-            console.log(date.value);
+            console.log("DATE값: " + date.value);
         }
 
 
@@ -140,8 +142,10 @@
             }
         }
 
-        let searchData = {};
-
+        let searchData = { keyword : searchWord,
+                            startDate : "",
+                            endDate : "" };
+            console.log(searchData);
         // getAllList(searchData);
         
     }
