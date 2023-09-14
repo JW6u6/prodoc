@@ -4,28 +4,25 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.file.mapper.FileSearchMapper">
 	<!-- 파일검색 -->
-	<select id="getFileList" resultType="SelectFileVO">
-		SELECT f.up_name, u.nickname, p.page_name, f.save_date, d.display_id
-		FROM TBL_FILE f JOIN TBL_DISPLAY d
-							ON f.display_id = d.display_id
-						JOIN TBL_PAGE p
-							ON d.page_id = p.page_id
-						JOIN TBL_WORKSPACE w
-							ON w.work_id = p.work_id
-						JOIN TBL_USER u
-							ON u.email = d.cre_user
-	</select>
-	
-	<select id="getPageid" parameterType="String" resultType="DisplayVO">
-		SELECT page_id
-		FROM TBL_DISPLAY
-		WHERE display_id = #{displayId}
-	</select>
-	
-	<select id="getFileInfo" parameterType="String" resultType="FileVO">
+	<select id="getFileList" resultType="SelectFileVO" parameterType="KeywordVO">
 		SELECT *
-		FROM TBL_FILE
-		WHERE display_id = #{displayId}
+		FROM view_file_list
+		WHERE work_id IN (
+            SELECT work_id
+            FROM tbl_member
+            WHERE email = #{email})
+        <choose>
+        	<when test="startDate != null">
+        		AND save_date BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND TO_DATE(#{endDete}, 'yyyy-MM-dd')
+        	</when>
+        	<when test="keyword != null">
+        	        AND( UPPER(up_name) LIKE UPPER('%'||#{keyword}||'%')
+	                    OR UPPER(nickname) LIKE UPPER('%'||#{keyword}||'%')
+	                    OR UPPER(page_name) LIKE UPPER('%'||#{keyword}||'%')
+	                    OR UPPER(work_name) LIKE UPPER('%'||#{keyword}||'%')
+                  		)
+        	</when>
+        </choose>
+		ORDER BY save_date
 	</select>
-
 </mapper>

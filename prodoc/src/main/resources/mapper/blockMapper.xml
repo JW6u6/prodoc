@@ -6,6 +6,8 @@
 	<select id="selectAllBlock" resultType="BlockVO">
 		SELECT * 
 		FROM TBL_DISPLAY
+		WHERE PAGE_ID = #{pageId}
+		order by row_x
 	</select>
 	
 	<insert id="insertBlock" parameterType="BlockVO">

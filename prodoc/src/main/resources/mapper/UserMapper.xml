@@ -6,7 +6,8 @@
 
 	<select id="selectUser" resultType="UserVO">
 		SELECT * FROM TBL_USER
-		WHERE email= #{email} AND password = #{password}
+		WHERE email= #{email} 
+		<if test="password != null"> AND password = #{password} </if>
 	</select>
 	
 	<insert id="insertUser" parameterType="UserVO">
