@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div>
+            <input type="text" id="email" value="user1@user1">
+            <input type="password" id="password" value="1234">
+            <button type="button" id="loginBtn">로그인</button>
+            <button type="button" id="joinBtn">회원가입</button>
+            <p>이메일/비밀번호 찾기</p>
+            <p>이메일 또는 비밀번호가 잘못되었습니다.</p>
+            <button type="button" id="googleBtn">구글 로그인</button>
+            <button type="button" id="kakaoBtn">카카오 로그인</button>
+        </div>
+        <div>
+        <!--  <img src=""> -->
+        </div>
+    </div>
+
+
+ 	<div id="findUserInfo"> <!--아이디비번찾기 모달창-->
+ 		<button class="closeBtn">&#10005;</button>
+ 		
+        <button type="button" id="findEmailBtn">Email찾기</button>
+        <button type="button" id="findPWBtn">PW찾기</button>
+
+        <!--이메일 찾기-->
+        <div>
+            <input name="phone" id="phone" placeholder="-없이 연락처 입력">
+            <button type="button" id="phoneAuth">인증번호</button>
+            <p id="showEmail" style="display:none"></p>
+        </div>
+        <!--비밀번호 찾기-->
+        <div>
+            <input name="emailMd" id="emailMd" placeholder="EMAIL 입력" style="display:none">
+            <button type="button" id="emailAuth" style="display:none">인증번호</button>
+        </div>
+        
+        <input name="authInput" id="authInput" placeholder="인증번호">
+        <button type="button" id="close">확인</button>
+        
+        <input name="newPW" id="newPW" placeholder="새비밀번호" style="display:none">
+        <input name="newPWCheck" id="newPWCheck" placeholder="비밀번호확인" style="display:none">
+
+        <button type="button" id="close">확인</button>
+        
+    </div>
+
+
+
+    <div id="joinModal" style="display:none"> <!--회원가입 선택 모달창-->
+        <button type="button" id="emailJoin">이메일 회원가입</button>
+        <button type="button" id="googleJoin">구글 연동 회원가입</button>
+        <button type="button" id="kakaoJoin">카카오 회원가입</button>
+        <button type="button" id="close">취소</button>
+    </div>
+
+
+
+<script>
+let logBtn = document.getElementById("loginBtn");
+let joinBtn = document.getElementById("joinBtn");
+let googleBtn = document.getElementById("googleBtn");
+let kakaoBtn = document.getElementById("kakaoBtn");
+
+logBtn.addEventListener('click', function(e){
+	alert('로그인클릭');
+});
+
+joinBtn.addEventListener('click', function(e){
+	let joinModal = document.getElementById("joinModal");
+	joinModal.style.display = "block";
+});
+
+googleBtn.addEventListener('click', function(e){
+	
+});
+
+kakaoBtn.addEventListener('click', function(e){
+	
+});
+</script>
+</body>
+</html>
