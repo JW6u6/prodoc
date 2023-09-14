@@ -1,4 +1,4 @@
-package com.prodoc.controller.fileController;
+package com.prodoc.file.controller;
 
 import java.util.List;
 
@@ -22,4 +22,5 @@ public class FileController {
 		model.addAttribute("fileList", fileList);
 		return "content/fileSearch";
 	}
+
 }

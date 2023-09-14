@@ -5,7 +5,7 @@
 <mapper namespace="com.prodoc.file.mapper.FileSearchMapper">
 	<!-- 파일검색 -->
 	<select id="getFileList" resultType="SelectFileVO">
-		SELECT f.up_name, u.nickname, p.page_name, f.save_date, d.block_id
+		SELECT f.up_name, u.nickname, p.page_name, f.save_date, d.display_id
 		FROM TBL_FILE f JOIN TBL_DISPLAY d
 							ON f.display_id = d.display_id
 						JOIN TBL_PAGE p
@@ -14,6 +14,10 @@
 							ON w.work_id = p.work_id
 						JOIN TBL_USER u
 							ON u.email = d.cre_user
+	</select>
+	
+	<select id="getFileInfo">
+
 	</select>
 
 </mapper>
