@@ -17,4 +17,9 @@ public class UserServiceImpl implements UserService {
 		return mapper.selectUser(user);
 	}
 
+	@Override
+	public int join(UserVO user) {
+		return mapper.insertUser(user);
+	}
+
 }
