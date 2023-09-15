@@ -3,22 +3,45 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.prodoc.workspace.mapper.WorkSpaceMapper">
+ 	
+ 	
  	<select id="selectWorkNo" resultType="String">
  		SELECT work_id
  		FROM tbl_workspace
  	</select>
  	
+ 	
+ 	<!-- 워크스페이스 단건 조회 -->
+ 	<select id="selectOneWorkspace" resultType="WorkSpaceVO">
+ 		SELECT work_id, work_type, work_name, public_check
+ 		FROM TBL_WORKSPACE
+ 		WHERE work_id = #{workId}
+ 	</select>
+ 	
+ 	<!-- 워크스페이스 등록 -->
  	<insert id="registerWorkspace" parameterType="WorkSpaceVO" statementType="CALLABLE">
  		{call workspace_register(
- 								#{workType}
- 								, #{workName}
- 								, #{publicCheck}
- 								, #{email}
- 								, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+	 								#{workType}
+	 								, #{workName}
+	 								, #{publicCheck}
+	 								, #{email}
+	 								, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+	 								, #{outWid, mode=OUT, jdbcType=VARCHAR, javaType=string}
  								)}
- 	
  	</insert>
  	
+ 	
+ 	<!-- 팀 워크스페이스일시 초대기능 -->
+	<insert id="inviteWorkspace" parameterType="WorkJoinVO" statementType="CALLABLE">
+		{call workjoin_register(
+									#{workId}
+									, #{inviteEmail}
+									, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+								)}
+	</insert>
+ 	
+ 	
+ 	<!-- 워크스페이스 수정 -->
  	<update id="modifyWorkspace" parameterType="WorkSpaceVO">
  		UPDATE TBL_WORKSPACE
  			<set>
@@ -31,14 +54,14 @@
  			</set>
  		WHERE work_id = #{workId}
  	</update>
+
  	
- 	<update id="renewOWNER" parameterType="WorkSpaceVO">
- 		UPDATE TBL_MEMBER
- 		SET AUTH = 'OWNER'
- 		, EMAIL = #{email}
- 		WHERE WORK_ID = #{workId}
- 		AND EMAIL = #{email}
- 			
+ 	<!-- 워크스페이스 삭제 -->
+ 	<update id="removeCheckWorkspace" parameterType="String">
+ 		UPDATE TBL_WORKSPACE
+ 		SET delete_check = 'true'
+ 		WHERE work_id = #{workId}
  	</update>
+ 	
  	
  </mapper>
