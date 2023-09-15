@@ -1,5 +1,7 @@
 package com.prodoc.member.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean deleteMember(MemberVO memberVO) {
 		return memberMapper.removeMember(memberVO) == 1;
+	}
+
+	@Override
+	public List<MemberVO> listMember(String workId) {
+		return memberMapper.listMember(workId);
 	}
 	
 }
