@@ -36,5 +36,15 @@ public class BlockController {
 		int result = service.createBlock(block);
 		return result + "";
 	}
+	@PostMapping("block/update")
+	public String updateBlock(@RequestBody BlockVO block) {
+		int result = service.updateBlock(block);
+		return result +"";
+	}
+	@PostMapping("block/delete")
+	public String deleteBlock(@RequestBody BlockVO block) {
+		int result = service.deleteBlock(block);
+		return result+"";
+	}
 	
 }
