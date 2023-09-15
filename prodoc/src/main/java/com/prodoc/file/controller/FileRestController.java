@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.file.service.FileSearchService;
@@ -23,14 +25,12 @@ public class FileRestController {
 	@Autowired
 	FileSearchService service;
 	
-	@GetMapping("getFileList")
-	public List<SelectFileVO> getFileList(KeywordVO vo, HttpServletRequest request){
-		//HttpSession session = request.getSession();
-		//UserVO user = (UserVO)session.getAttribute("logUser");
-		//vo.setEmail(user.getEmail());
-		vo.setEmail("test001@naver.com");
+	@PostMapping("getFileList")
+	public List<SelectFileVO> getFileList(@RequestBody KeywordVO vo, HttpServletRequest request){
+		HttpSession session = request.getSession();
+		UserVO user = (UserVO)session.getAttribute("logUser");
+		vo.setEmail(user.getEmail());
 		log.info(vo.toString());
 		return service.getFileList(vo);
 	}
-	
 }

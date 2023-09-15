@@ -13,14 +13,25 @@
             WHERE email = #{email})
         <choose>
         	<when test="startDate != null">
-        		AND save_date BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND TO_DATE(#{endDete}, 'yyyy-MM-dd')
+        		AND save_date BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND (TO_DATE(#{startDate}, 'yyyy-MM-dd') + 1)
         	</when>
-        	<when test="keyword != null">
-        	        AND( UPPER(up_name) LIKE UPPER('%'||#{keyword}||'%')
-	                    OR UPPER(nickname) LIKE UPPER('%'||#{keyword}||'%')
-	                    OR UPPER(page_name) LIKE UPPER('%'||#{keyword}||'%')
-	                    OR UPPER(work_name) LIKE UPPER('%'||#{keyword}||'%')
-                  		)
+        </choose>
+        <choose>
+        	<when test="keyword != null || keyword != ''">
+        	<trim prefix="AND(" suffix=")"  suffixOverrides="OR">
+       	        <if test="upName == 'true'">
+       	            UPPER(up_name) LIKE UPPER('%'||#{keyword}||'%') OR
+       	        </if>
+       	        <if test="upUser == 'true'">
+                    UPPER(nickname) LIKE UPPER('%'||#{keyword}||'%') OR
+       	        </if>
+       	        <if test="pageName == 'true'">
+                    UPPER(page_name) LIKE UPPER('%'||#{keyword}||'%') OR
+       	        </if>
+       	        <if test="workName == 'true'">
+                    UPPER(work_name) LIKE UPPER('%'||#{keyword}||'%')
+       	        </if>
+       	    </trim>
         	</when>
         </choose>
 		ORDER BY save_date
