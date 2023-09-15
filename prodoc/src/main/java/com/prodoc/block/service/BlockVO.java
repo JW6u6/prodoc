@@ -19,4 +19,6 @@ public class BlockVO {
 	private String upDate;
 	private String content;
 	private String mentionList;
+	private String color;
+	private String backColor;
 }
