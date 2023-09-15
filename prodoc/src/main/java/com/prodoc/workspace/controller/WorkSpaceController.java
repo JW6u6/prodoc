@@ -28,14 +28,36 @@ public class WorkSpaceController {
 	WorkSpaceMapper WorkSpaceMapper;
 	WorkSpaceService workspaceService;
 	
-	@GetMapping("workList")
+	//사이드바에 워크스페이스 목록 출력
+	@GetMapping("/workList")
 	public List<String> workList(WorkSpaceVO workVO){
 		return WorkSpaceMapper.selectWorkNo(workVO);
 	}
 	
-	@PostMapping("workInsert")
-	public void insertWorkspace(WorkSpaceVO workVO) {
+	//워크스페이스 단건 조회
+	@GetMapping("/workInfo")
+	public void workInfo(String workId) {
+		WorkSpaceVO workVO = new WorkSpaceVO();
+		workVO.setWorkId(workId);
+		System.out.println(workVO);
+		
+		workspaceService.infoWorkspace(workId);
+		System.out.println(workspaceService.infoWorkspace(workId));
+	}
+	
+	//워크스페이스 새로 생성
+	@PostMapping("/workInsert")
+	public void workspaceInsert(WorkSpaceVO workVO) {
 		workspaceService.insertWorkspace(workVO);
 	}
+	
+	//워크스페이스 수정
+	@PostMapping("/workEdit")
+	public void workspaceEdit(WorkSpaceVO workVO) {
+		workspaceService.editWorkspace(workVO);
+	}
+	
+	//워크스페이스 삭제
+	
 	
 }
