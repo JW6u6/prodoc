@@ -19,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int join(UserVO user) {
+		String origin = user.getPassword();
+		//String enc = 
 		return mapper.insertUser(user);
 	}
 
