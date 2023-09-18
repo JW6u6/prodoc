@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
@@ -45,10 +46,11 @@ public class WorkSpaceController {
 	}
 	
 	//워크스페이스 새로 생성
-	@PostMapping("/workInsert")
-	public void workspaceInsert(WorkSpaceVO workVO) {
-		workspaceService.insertWorkspace(workVO);
-	}
+		@PostMapping("/workInsert")
+		public void workspaceInsert(@RequestBody WorkSpaceVO workVO) {
+			workspaceService.insertWorkspace(workVO);
+			//워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
+		}
 	
 	//워크스페이스 생성시 유저 초대
 	@PostMapping("/workJoin")
