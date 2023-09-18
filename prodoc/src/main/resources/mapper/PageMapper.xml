@@ -8,9 +8,34 @@
   		FROM tbl_page
   	</select>
   
-  	<select id ="selectPageInfo" resultType="pageVO">
+  	<select id ="selectPageInfo" resultType="PageVO">
   		SELECT page_id
   		FROM tbl_page
   		WHERE page_id = #{pageId}
   	</select>
+  	<!-- 등록 -->
+  	<insert id="insertPage" parameterType="PageVO">
+  		<selectKey keyProperty="pageId"
+  				   resultType="String"
+  				   order="BEFORE">
+  		SELECT 'PAGE' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(page_id, -3))),0) + 1,3,'0')
+  		FROM tbl_page
+  		where page_id LIKE 'PAGE' || '___'
+  		</selectKey>
+  		INSERT INTO tbl_page
+  				(
+  					page_id
+  					,work_id
+  					,case_id
+  					
+  				)
+  			VALUES
+ 				(
+ 					#{pageId}
+ 					,#{workId}
+ 					,#{caseId}
+ 				)
+ 	</insert>
   </mapper>
+  
+  

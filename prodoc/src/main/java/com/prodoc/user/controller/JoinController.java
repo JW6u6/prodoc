@@ -43,7 +43,6 @@ public class JoinController {
 		service.join(user); //회원가입
 		return "login";			
 	}
-	
 	@ResponseBody
 	@PostMapping("/searchEmail")
 	public String searchEmail(@RequestBody UserVO user, Model model) {
