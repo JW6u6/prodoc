@@ -8,9 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.prodoc.user.service.EmailService;
+import com.prodoc.user.service.ProfileService;
 import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
 
@@ -21,12 +24,14 @@ import com.prodoc.user.service.UserVO;
 */
 @Controller
 public class JoinController {
+//	@Value("${file.upload.path}")
+//	private String uploadPath; //업로드 경로(propertise에 정의) => c:/prodoc/image/profile
 	@Autowired
-	private EmailService emailService;
-
+	private EmailService emailService;	//이메일 인증 서비스
 	@Autowired
-	UserService service;
-	
+	UserService service;	//user 관련 db 서비스
+	@Autowired
+	ProfileService proService; 			//프로필 이미지 저장 서비스
 
 	@GetMapping("/join")
 	public String JoinForm(HttpServletRequest request) {
@@ -34,10 +39,11 @@ public class JoinController {
 	}
 	
 	@PostMapping("/join")
-	public String JoinProcess(HttpServletRequest request) {
-		//회원가입
-		return "login";
-	}
+	public String JoinProcess(UserVO user, @RequestPart(value="file",required = false) MultipartFile mfile) {
+		String uploadName = proService.fileUploadName(mfile);	//서비스에서 이미지 업로드네임 가져옴
+		user.setProfile(uploadName);
+		service.join(user); //회원가입
+		return "login";			
 	
 	@ResponseBody
 	@PostMapping("/searchEmail")
