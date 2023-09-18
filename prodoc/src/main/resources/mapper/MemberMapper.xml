@@ -20,7 +20,7 @@
  	</delete>
  	
  	<!-- 멤버 조회 -->
- 	<select id="listMember" parameterType="MemberVO">
+ 	<select id="listMember" parameterType="MemberVO" resultType="MemberVO">
  		SELECT	work_id
 				, email
 				, auth
