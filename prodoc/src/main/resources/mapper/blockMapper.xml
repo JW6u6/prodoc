@@ -7,7 +7,7 @@
 		SELECT *
 		FROM TBL_DISPLAY
 		WHERE PAGE_ID = #{pageId}
-		order by row_x
+		order by parent_id DESC,row_x ASC
 	</select>
 
 	<insert id="insertBlock" parameterType="BlockVO">
@@ -21,17 +21,15 @@
 		set
 		up_user = #{upUser}
 		,up_date = sysdate
-		<if test="blockId != null">
-			,block_id = #{blockId}
-		</if>
+		,parent_id = #{parentId}
 		<if test="content != null">
 			,content = #{content}
 		</if>
+		<if test="blockId != null">
+			,block_id = #{blockId}
+		</if>
 		<if test="rowX != 0">
 			,row_x = #{rowX}
-		</if>
-		<if test="parentId != null">
-			,parent_id = #{parentId}
 		</if>
 		<if test="colY != 0">
 			,col_y = #{colY}
