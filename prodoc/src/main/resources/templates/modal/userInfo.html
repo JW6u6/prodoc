@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="userInfoFrag">
+	<!-- 유저정보 모달 -->
+	<div id="UserInfoMod" class="hide">
+	    <img id="profile" >
+	    <p id="Nickname">닉네임</p>
+	    <p>이름</p>
+	    <button type="button" id="modInfoBtn">정보수정</button>
+	    <button type="button" id="logoutBtn">로그아웃</button>
+	     [[${session.logUser}]] ==============
+	</div>
+	<!-- 유저정보 수정 모달 -->
+	<div id="UserModiMod" class="hide">
+	    <div><button class="closeBtn">&#10005;</button></div>	    
+	    <div>
+	        <form id="userModForm" action="/" method="post" enctype="multipart/form-data"></form>
+	        <label>NAME</label><input type="text" name="nickname" value="">
+	        <label>PASSWORD</label><input type="password" name="password">
+	        <label>PASSWORD CHECK</label><input type="password" id="password">
+	        <label>TEL</label><input type="tel" value="">
+	        <button id="authBtn">인증번호</button>
+	        <input type="text" id="auth" placeholder="인증번호">
+	        <button id="authCheckBtn">확인</button>
+	        <label>BIRTH</label><input type="text" name="birth" value="" placeholder="ex.991231">
+	    </div>
+	</div>
+</div>
+
+<script th:src="@{js/modal/userInfo.js}"></script><!-- 유저정보 모달창 관련 js -->
+<script>
+	
+</script>
+</html>

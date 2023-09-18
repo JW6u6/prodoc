@@ -24,8 +24,6 @@ import com.prodoc.user.service.UserVO;
 */
 @Controller
 public class JoinController {
-//	@Value("${file.upload.path}")
-//	private String uploadPath; //업로드 경로(propertise에 정의) => c:/prodoc/image/profile
 	@Autowired
 	private EmailService emailService;	//이메일 인증 서비스
 	@Autowired
