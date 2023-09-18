@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
-
 	<!-- header -->
 	<div class="wrap">
 		<header>
@@ -19,8 +18,7 @@
 					<li id="notifyPage">페이지 알림 켜기</li>
 				</ul>
 			</nav>
-			<div id="userBtn">로그인 유저</div>
-			<ul id="user" class="hide"></ul>
+			<img id="userImg" class="menuBtn" src="images/noneUser.jpg" style="width:30px; border-radius: 15px;">
 		</header>
 	</div>
 
@@ -41,14 +39,22 @@
 
 	let header = document.querySelector('header');
 
-	header.addEventListener('click', toggleBtn);
+	<!-- 유저정보 모달 -->
+	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
+</th:block>
 
-	function toggleBtn(Btn) {
-		let targetId = Btn.target.nextElementSibling.id;
-		let toggle = document.getElementById(targetId);
-		toggle.classList.toggle('hide');
-		toggle.classList.toggle('view');
-	}
+<script>
+	let menuBtn = document.querySelectorAll('.menuBtn') 	//헤더에 위치한 이미지
+		.forEach(tag => tag.addEventListener('click', function(e){
+			let id = e.target.id;
+			let menu = "";
+			if(id == "menuImg"){
+				menu = document.querySelector("#menu");
+			}else{
+				menu = document.querySelector("#UserInfoMod");
+			}
+			menu.classList.toggle('hide');
+			menu.classList.toggle('view');
+		}));
 </script>
-
 </html>

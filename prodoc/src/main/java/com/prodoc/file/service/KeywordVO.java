@@ -1,7 +1,5 @@
 package com.prodoc.file.service;
 
-import java.util.Date;
-
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
@@ -11,6 +9,10 @@ import lombok.Data;
 public class KeywordVO {
 	private String email;
 	private String keyword;
-	private Date startDate;
-	private Date endDate;
+	private String startDate;
+	private String endDate;
+	private String pageName;
+	private String upName;
+	private String upUser;
+	private String workName;
 }

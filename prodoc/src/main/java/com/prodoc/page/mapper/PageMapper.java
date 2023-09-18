@@ -8,4 +8,6 @@ public interface PageMapper {
 	public List<PageVO> pageList(PageVO pageVO);
 	
 	public PageVO selectPageInfo(PageVO pageVO);
+	
+	public PageVO insertPage(PageVO pageVO);
 }
