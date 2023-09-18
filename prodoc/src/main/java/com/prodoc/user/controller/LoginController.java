@@ -24,21 +24,8 @@ public class LoginController {
 	@Autowired
 	UserService service;
 	
-	@RequestMapping(value = "/", method=RequestMethod.GET)
+	@RequestMapping(value = "/")
 	public String goMain(HttpServletRequest request) {
 		return "login";
-	}
-	
-	@ResponseBody
-	@PostMapping("/login")
-	public String loginProcess(@RequestBody UserVO user, HttpServletRequest request) {
-		UserVO logUser = service.getUser(user);
-		if(logUser != null) {
-			//로그인 성공 : 세션에 로그인 정보 저장
-			HttpSession session = request.getSession();
-			session.setAttribute("logUser", logUser);
-			return "true";
-		}
-		return "false";
 	}
 }

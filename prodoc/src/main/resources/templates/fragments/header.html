@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
-
 	<!-- header -->
 	<div class="wrap">
 		<header>
 			<nav>
-				<div id="menuBtn">메뉴</div>
+				<img id="menuImg" class="menuBtn" th:src="@{../images/menu.svg}">
 				<ul id="menu" class="hide">
 					<li>내보내기</li>
 					<li>페이지 잠금</li>
@@ -19,8 +18,7 @@
 					<li>페이지 알림 켜기</li>
 				</ul>
 			</nav>
-			<div id="userBtn">로그인 유저</div>
-			<ul id="user" class="hide"></ul>
+			<img id="userImg" class="menuBtn" src="images/noneUser.jpg" style="width:30px; border-radius: 15px;">
 		</header>
 	</div>
 	
@@ -35,24 +33,23 @@
 		<button type="button">내보내기</button>
 		<button type="button">취소</button>	
 	</div>
-	
-	
+
+	<!-- 유저정보 모달 -->
+	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
 </th:block>
+
 <script>
-	//네비게이션 바(헤더) 누르면 메뉴 토글 display block(보이게) none(안보이게) 하는 코드... 
-	//헤더가 눌리면 타겟을 찾아와서 그 타겟의 형제인 ul의 아이디를 가져와 토글을 보여주게 만듭니다.
-	//그대로 쓰시면 되는데... 토글을 이렇게해야하는지는 의문
-	
-	let header = document.querySelector('header');
-
-	header.addEventListener('click', toggleBtn);
-
-	function toggleBtn(Btn) {
-		let targetId = Btn.target.nextElementSibling.id;
-		let toggle = document.getElementById(targetId);
-		toggle.classList.toggle('hide');
-		toggle.classList.toggle('view');
-	}
+	let menuBtn = document.querySelectorAll('.menuBtn') 	//헤더에 위치한 이미지
+		.forEach(tag => tag.addEventListener('click', function(e){
+			let id = e.target.id;
+			let menu = "";
+			if(id == "menuImg"){
+				menu = document.querySelector("#menu");
+			}else{
+				menu = document.querySelector("#UserInfoMod");
+			}
+			menu.classList.toggle('hide');
+			menu.classList.toggle('view');
+		}));
 </script>
-
 </html>
