@@ -44,7 +44,6 @@ public class JoinController {
 		user.setProfile(uploadName);
 		service.join(user); //회원가입
 		return "login";			
-	}
 	
 	@ResponseBody
 	@PostMapping("/searchEmail")

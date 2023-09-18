@@ -6,8 +6,8 @@ import lombok.Data;
 public class BlockVO {
 	private String displayId;
 	private String parentId;
-	private String OriginId;
-	private String PageId;
+	private String originId;
+	private String pageId;
 	private int rowX;
 	private int rowY;
 	private String blockId;
@@ -19,4 +19,6 @@ public class BlockVO {
 	private String upDate;
 	private String content;
 	private String mentionList;
+	private String color;
+	private String backColor;
 }
