@@ -143,15 +143,13 @@ function pageList() {
                 selectPage(pId.innerText);
             })
         })
-=======
         page = $('.Page')
         page.on('click',function(event){
             let pId = event.currentTarget.firstElementChild;
             selectPage(pId.innerText);
            
         })
-    })
-}
+    }
 
 function selectPage(pId) {
     $.ajax({
@@ -170,10 +168,6 @@ function selectPage(pId) {
             }
         })
         .fail(reject => console.log(reject))
-        url : "/pageInfo",
-        type: "get",
-        data: { pageId : pId}
-    })
     .done(data => {
         for(let field in data){
             if(data[field]==pId){
@@ -215,20 +209,21 @@ wp.addEventListener("focusout", (e) => {
     pa.classList.remove("turn");
 })
 
+//======================================================================
+
 //새 워크스페이스 생성
 function newWorkSpace(){
 
-    let type = document.querySelector('#wsType');
-    let pCheck = document.querySelector('#wsPrivate');
+    let workType = document.querySelector('#wsType').value;
+    let publicCheck = document.querySelector('#wsPrivate').value;
     let email = document.querySelector('#loginUser').value;
-    console.log(email);
-    let val = {
-        'workType' : type.options[type.selectedIndex].value,
-        'workName' : document.querySelector('#wsName').value,
-        'publicCheck' : pCheck.options[pCheck.selectedIndex].value,
-        'email' : email
+    let workName = document.querySelector('#wsName').value;
+
+    let val = {   workType,
+        workName,
+        publicCheck,
+        email
     };
-    console.log(val);
     let url = '/workInsert';
 
     fetch(url, {
@@ -238,7 +233,8 @@ function newWorkSpace(){
         },
         body: JSON.stringify(val)
     })
-    .then(response => console.log(response))
+    .then(response => response.text())
+    .then(result => console.log(result))
     .catch(err => console.log(err));
 }
 
