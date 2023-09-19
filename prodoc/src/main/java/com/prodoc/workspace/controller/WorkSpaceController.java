@@ -65,7 +65,7 @@ public class WorkSpaceController {
 		workspaceService.editWorkspace(workVO);
 	}
 	
-	//워크스페이스 삭제
+	//워크스페이스 삭제(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/workDelete")
 	public void workspaceDeleteCheck(String workId) {
 		workspaceService.deleteCheckWorkspace(workId);

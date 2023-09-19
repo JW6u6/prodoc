@@ -36,6 +36,31 @@
  					,#{caseId}
  				)
  	</insert>
+ 	
+ 	<!-- 페이지 잠금(관리자, 소유자) -->
+ 	<update id="LockPage" parameterType="PageVO">
+ 		UPDATE tbl_page
+		SET lock_check = #{lockCheck}
+		WHERE page_id = #{pageId}
+ 	</update>
+ 	
+ 	<!-- 페이지 삭제(체크) -->	
+ 	<update id="RemoveCheckPage" parameterType="String">
+ 		UPDATE tbl_page
+ 		SET delete_check = 'TRUE'
+ 		WHERE page_id = #{pageId}
+ 	</update>
+ 	
+ 	<!-- 페이지 알림 끄기 -->
+ 	<insert id="onOffPage" parameterType="PageVO">
+ 		{call PAGENOTI_TOGGLE(
+ 								#{workId}
+ 								, #{pageId}
+ 								, #{email}
+ 								, #{result, mode=OUT, jdbcType=INTEGER, javaType=int}
+ 							)}
+ 	</insert>
+ 	
   </mapper>
   
   
