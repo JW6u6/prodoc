@@ -3,11 +3,12 @@
 	  xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
+
 	<!-- header -->
 	<div class="wrap">
 		<header>
 			<nav>
-				<img id="menuBtn" th:src="@{/images/menu.svg}">
+				<img id="menuImg" class="menuBtn" th:src="@{/images/menu.svg}">
 				<ul id="menu" class="hide">
 					<li id="outOf">내보내기</li>
 					<li id="lockPg">페이지 잠금</li>
@@ -30,15 +31,6 @@
 		<button type="button">취소</button>
 	</div>
 
-
-</th:block>
-<script>
-	//네비게이션 바(헤더) 누르면 메뉴 토글 display block(보이게) none(안보이게) 하는 코드... 
-	//헤더가 눌리면 타겟을 찾아와서 그 타겟의 형제인 ul의 아이디를 가져와 토글을 보여주게 만듭니다.
-	//그대로 쓰시면 되는데... 토글을 이렇게해야하는지는 의문
-
-	let header = document.querySelector('header');
-
 	<!-- 유저정보 모달 -->
 	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
 </th:block>
@@ -57,4 +49,5 @@
 			menu.classList.toggle('view');
 		}));
 </script>
+
 </html>
