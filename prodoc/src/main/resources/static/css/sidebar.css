@@ -39,7 +39,7 @@
 		overflow: auto;
 		display: none;
 }
-#pageCont {
+#pageContent {
 	z-index: 1;
 		left: 0;
 		top: 0;
