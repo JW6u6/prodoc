@@ -19,7 +19,7 @@ public class SecurityConfig {
 		//세부 설정
 		http.authorizeHttpRequests(
         		(authz) -> {	
-        			authz.antMatchers("/", "/join", "/login").permitAll();//이 페이지는 인증X
+        			authz.antMatchers("/", "/join", "/login","/block/**").permitAll();//이 페이지는 인증X
         			authz.anyRequest().authenticated();			//그 외 모든 페이지 인증O?
         			});
 		
