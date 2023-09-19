@@ -18,7 +18,7 @@
 					<li>페이지 알림 켜기</li>
 				</ul>
 			</nav>
-			<img id="userImg" class="menuBtn" src="images/noneUser.jpg" style="width:30px; border-radius: 15px;">
+			<img id="userImg" class="menuBtn" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:30px; border-radius: 15px;">
 		</header>
 	</div>
 	
@@ -52,4 +52,5 @@
 			menu.classList.toggle('view');
 		}));
 </script>
+<script th:inline="javascript" src="js/modal/userInfo.js"></script>
 </html>

@@ -29,4 +29,12 @@
 		AND auth != 'OWNER'
  	</select>
  	
+ 	<!-- 탈퇴: 내 소유팀 워크스페이스 개수 -->
+ 	<select id="myAuth" resultType="Integer">
+ 		SELECT count(*) FROM TBL_MEMBER 
+		WHERE email = #{email} AND auth = 'OWNER'
+		AND work_id IN (SELECT work_id
+ 						FROM TBL_WORKSPACE
+ 						WHERE WORK_TYPE = 'TEAM')
+ 	</select>
 </mapper>

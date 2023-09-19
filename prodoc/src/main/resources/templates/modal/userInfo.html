@@ -2,32 +2,66 @@
 <div th:fragment="userInfoFrag">
 	<!-- 유저정보 모달 -->
 	<div id="UserInfoMod" class="hide">
-	    <img id="profile" >
-	    <p id="Nickname">닉네임</p>
-	    <p>이름</p>
+	    <img th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:200px">
+	    <p>[[${session.logUser.email}]]</p>
+	    <p>[[${session.logUser.nickname}]]</p>
 	    <button type="button" id="modInfoBtn">정보수정</button>
-	    <button type="button" id="logoutBtn">로그아웃</button>
-	     [[${session.logUser}]] ==============
+	    <button type="button" id="logoutBtn" onclick='document.location.href = "/logout"'>로그아웃</button>
 	</div>
+	
 	<!-- 유저정보 수정 모달 -->
 	<div id="UserModiMod" class="hide">
 	    <div><button class="closeBtn">&#10005;</button></div>	    
-	    <div>
-	        <form id="userModForm" action="/" method="post" enctype="multipart/form-data"></form>
-	        <label>NAME</label><input type="text" name="nickname" value="">
-	        <label>PASSWORD</label><input type="password" name="password">
-	        <label>PASSWORD CHECK</label><input type="password" id="password">
-	        <label>TEL</label><input type="tel" value="">
-	        <button id="authBtn">인증번호</button>
-	        <input type="text" id="auth" placeholder="인증번호">
-	        <button id="authCheckBtn">확인</button>
-	        <label>BIRTH</label><input type="text" name="birth" value="" placeholder="ex.991231">
-	    </div>
+        <form id="userModForm" action="/userMod" method="post" enctype="multipart/form-data">
+	        <div>
+		        <img th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" id="profile" style="width:200px; border-radius:100px">
+		        <input type="file" accept="image/*" name="file" style="visibility:hidden;">
+				<button type="button" id="infoSaveBtn">저장</button>
+				<button type="button" id="joinOutBtn">탈퇴</button>
+	        </div>
+	        <div>
+		        <label>NAME</label>
+		        <input type="text" name="nickname" th:value="${session.logUser.nickname}">
+		        <div>
+			        <label>PASSWORD</label><input type="password" name="password">
+			        <label>PASSWORD CHECK</label><input type="password" id="password">
+		        </div>
+		        <div>
+			        <label>TEL</label>
+			        <input type="tel" th:value="${session.logUser.phone}">
+			        <button type="button" id="authBtn">인증번호</button>
+			        <input type="text" id="auth" placeholder="인증번호">
+			        <button type="button" id="authCheckBtn">확인</button>
+		        </div>
+		        <label>BIRTH</label>
+		        <input type="text" name="birth" th:value="${session.logUser.birth}"
+		        		maxlength="6" placeholder="ex.991231">
+	        </div>
+        </form>
 	</div>
-</div>
-
-<script th:src="@{js/modal/userInfo.js}"></script><!-- 유저정보 모달창 관련 js -->
-<script>
 	
-</script>
+	<div id="joinOutMod" class="hide">
+		<div><button class="closeBtn">&#10005;</button></div>	    
+        <p style="color:red">탈퇴를 원하시면 현재 비밀번호를 입력하세요.<br><strong>탈퇴된 정보는 복구가 불가능합니다.</strong></p>
+		<input type="password" id="joinout">
+		<button id="jOutBtn">확인</button>
+	</div>
+<style>
+#UserInfoMod{
+	background-color : skyblue;
+	width : 300px;
+	height: 400px;
+	float: right;
+	text-align: center;
+}
+#UserModiMod{
+	background-color : pink;
+	width : 700px;
+	height: 350px;
+	float: right;
+	text-align: center;
+}
+}
+</style>
+</div>
 </html>

@@ -14,4 +14,7 @@ public interface MemberMapper {
 	
 	//멤버 조회
 	public List<MemberVO> listMember(String workId);
+	
+	//탈퇴
+	public int myAuth(String email);
 }
