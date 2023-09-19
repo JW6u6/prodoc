@@ -12,15 +12,13 @@
 	
 	<insert id="insertUser" parameterType="UserVO">
 		INSERT INTO TBL_USER (
-			email, password, phone, nickname
+			email, password, phone, nickname,platform
 			<if test="profile != null">, profile</if>
 			<if test="birth != null">, birth</if>
-			<if test="platform != null">,platform</if>
 		) VALUES(
-			#{email}, #{password}, #{phone}, #{nickname}
-			<if test="profile != null">, profile</if>
-			<if test="birth != null">, birth</if>
-			<if test="platform != null">,platform</if>
+			#{email}, #{password}, #{phone}, #{nickname}, #{platform}
+			<if test="profile != null">, #{profile}</if>
+			<if test="birth != null">, #{birth}</if>
 		)
 	</insert>
 </mapper>

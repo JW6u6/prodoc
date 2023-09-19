@@ -27,4 +27,16 @@ public class BlockServiceImpl implements BlockService {
 		return blockmapper.insertBlock(blockVO);
 	}
 
+	@Override
+	public int updateBlock(BlockVO blockVO) {
+		// TODO Auto-generated method stub
+		return blockmapper.updateBlock(blockVO);
+	}
+
+	@Override
+	public int deleteBlock(BlockVO blockVO) {
+		// TODO Auto-generated method stub
+		return blockmapper.deleteBlock(blockVO);
+	}
+
 }

@@ -3,25 +3,22 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_layout}">
-      
-    
-    <th:block layout:fragment="head">
+<th:block layout:fragment="head">
     
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-
-		
-        <!--/* css */-->
-        <link th:href="@{/css/common.css}" rel="stylesheet" />
-        <title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
-    </th:block>
-    <body>
+<!--/* css */-->
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
+</th:block>
+<body>
         
-        <th:block layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
-        <th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
-		
-        <div layout:fragment="content" class="content">
-            <h2 id ="content1">내용물은 여기임니다</h2>
-        </div>
+	<th:block layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
+	<th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
+	
+	<div layout:fragment="content" class="content">
+	    <h2 id ="content1">내용물은 여기임니다</h2>
+	</div>
 
-    </body>
+	<div id="modSearch" th:insert="modal/search.html :: searchFrag"></div>	<!-- 검색 모달 -->
+</body>
 </html>
