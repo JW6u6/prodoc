@@ -1,9 +1,12 @@
 package com.prodoc.block.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,6 +51,30 @@ public class BlockController {
 	public String deleteBlock(@RequestBody BlockVO block) {
 		int result = service.deleteBlock(block);
 		return result+"";
+	}
+	
+	@GetMapping("block/getMeta")
+	public Map<String, String> getMeta(@RequestParam String url) {
+		String parsingUrl = url;
+		Document doc = null;
+		System.out.println(url);
+		try {
+			doc = Jsoup.connect(parsingUrl).get();
+			String ogTitle = doc.select("meta[property=og:title]").attr("content");
+            String ogDescription = doc.select("meta[property=og:description]").attr("content");
+            String ogImage = doc.select("meta[property=og:image]").attr("content");
+            Map<String,String> map = new HashMap<String, String>();
+            map.put("title", ogTitle);
+            map.put("desc", ogDescription);
+            map.put("img", ogImage);
+            	
+            return map;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 //	@PostMapping("block/check")
