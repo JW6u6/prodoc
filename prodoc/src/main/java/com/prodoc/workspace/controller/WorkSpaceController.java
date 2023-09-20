@@ -47,21 +47,21 @@ public class WorkSpaceController {
 	
 	//워크스페이스 새로 생성
 		@PostMapping("/workInsert")
-		public void workspaceInsert(@RequestBody WorkSpaceVO workVO) {
-			workspaceService.insertWorkspace(workVO);
+		public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
+			return workspaceService.insertWorkspace(workVO);
 			//워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
 		}
 	
 	//워크스페이스 생성시 유저 초대
 	@PostMapping("/workJoin")
-	public void workspaceJoin(WorkJoinVO joinVO) {
+	public void workspaceJoin(@RequestBody WorkJoinVO joinVO) {
 		workspaceService.inviteWorkspaceUser(joinVO);
 	}
 	
 	
 	//워크스페이스 수정
 	@PostMapping("/workEdit")
-	public void workspaceEdit(WorkSpaceVO workVO) {
+	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
 		workspaceService.editWorkspace(workVO);
 	}
 	

@@ -18,12 +18,12 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
 	// 워크스페이스 생성
 	@Override
-	public int insertWorkspace(WorkSpaceVO workVO) {
+	public String insertWorkspace(WorkSpaceVO workVO) {
 		workMapper.registerWorkspace(workVO);
 		if (workVO.getResult().equals("TRUE")) {
-			return 1;
+			return workVO.getOutWid();
 		} else {
-			return 0;
+			return workVO.getOutWid();
 		}
 	}
 
