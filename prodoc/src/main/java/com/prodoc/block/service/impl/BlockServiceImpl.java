@@ -1,6 +1,7 @@
 package com.prodoc.block.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ public class BlockServiceImpl implements BlockService {
 	public int deleteBlock(BlockVO blockVO) {
 		// TODO Auto-generated method stub
 		return blockmapper.deleteBlock(blockVO);
+	}
+
+	@Override
+	public int createCheckBlock(Map<String,String> hashMap) {
+		// TODO Auto-generated method stub
+		return blockmapper.createCheckBlock(hashMap);
 	}
 
 }

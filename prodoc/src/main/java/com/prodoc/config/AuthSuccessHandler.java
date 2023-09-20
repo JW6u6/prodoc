@@ -22,14 +22,10 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
-		System.out.println("===================="+authentication.getName());
 		UserVO vo = new UserVO();
 		vo.setEmail(authentication.getName());
-		System.out.println(vo);
 		HttpSession session = request.getSession();
-		System.out.println(session);
 		session.setAttribute("logUser", service.getUser(vo));
-		
 		
 		response.sendRedirect("/home");
 	}
