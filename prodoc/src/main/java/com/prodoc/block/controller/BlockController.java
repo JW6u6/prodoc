@@ -1,13 +1,19 @@
 package com.prodoc.block.controller;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.block.service.BlockVO;
@@ -18,7 +24,7 @@ import com.prodoc.block.service.impl.BlockServiceImpl;
  * 개발일자 : 2023/09/14
  * 
 */
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 public class BlockController {
 
@@ -46,5 +52,42 @@ public class BlockController {
 		int result = service.deleteBlock(block);
 		return result+"";
 	}
+	
+	@GetMapping("block/getMeta")
+	public Map<String, String> getMeta(@RequestParam String url) {
+		String parsingUrl = url;
+		Document doc = null;
+		System.out.println(url);
+		try {
+			doc = Jsoup.connect(parsingUrl).get();
+			String ogTitle = doc.select("meta[property=og:title]").attr("content");
+            String ogDescription = doc.select("meta[property=og:description]").attr("content");
+            String ogImage = doc.select("meta[property=og:image]").attr("content");
+            Map<String,String> map = new HashMap<String, String>();
+            map.put("title", ogTitle);
+            map.put("desc", ogDescription);
+            map.put("img", ogImage);
+            	
+            return map;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+//	@PostMapping("block/check")
+//	public String updateCheckBlock(@RequestParam String id,@RequestParam String checked) {
+//		
+//		Map<String, String> map = new HashMap<String, String>();
+//		
+//		map.put(id, checked);
+//		
+//		int result = service.createCheckBlock(map);
+//		
+//		return checked;
+//		
+//	}
 	
 }
