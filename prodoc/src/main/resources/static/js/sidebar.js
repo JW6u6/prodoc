@@ -51,7 +51,7 @@ function selectWork(wId){
     .then(data => {
         for(let i=0;i<data.length;i++){
             if(wId == data[i]){
-                // console.log(data[i])
+                console.log(data[i])
                 //워크 ID 들고와서 일치시켰으니 페이지 정보 띄우기.
             }
         }
@@ -75,18 +75,28 @@ function pageList() {
         return response.json();
     })
     .then(data=>{
-        for(let i=0;i<data.length;i++){
-            let side = document.querySelector('#side');
-            let pId = data[i];
-            let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-            side.insertAdjacentHTML("beforeend",text);
+        //페이지 ID값들 배열
+        const pageArr = [];
+        //워크 ID값들 배열
+        const workArr = [];
+        for(let item of data){
+            pageArr.push(item.pageId);
+            workArr.push(item.workId);
         }
+        for(let i=0;i<data.length;i++){
+        let pId = pageArr[i]
+        let side = document.querySelector('#side');
+        let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
+        side.insertAdjacentHTML("beforeend",text);
         document.querySelectorAll('#side .Page').forEach(pages =>{
             pages.addEventListener('click',function(e){
-                let pId = e.currentTarget.firstElementChild.innerText;
-                selectPage(pId);
+                let pageClick = e.currentTarget.firstElementChild.innerText;
+                if(pId == pageClick){
+                    selectPage(pId);
+                }
             })
         })
+        }
     })
 }
 
@@ -94,47 +104,16 @@ function pageList() {
 function selectPage(pId){
     let url = '/pageInfo?pageId='+pId;
     fetch(url)
-    .then(response =>{
-        return response.json();
-    })
-    .then(data =>{
-        for(let field in data){
-            if(data[field]==pId){
-                // console.log(data);
-                //PID 불러왔음..
-            }
-        }
+    .then(res => {
+        return res.json();
+      })
+    .then(data => {
+        console.log('111');
     })
 }
 
 //=======
 
-// 인사이트 내 사이드바에 페이지 목록 불러옴
-function pageList(workListName) {
-    let url = '/pageList?workName='+workListName;
-    fetch(url,{
-        method:'GET',
-    })
-    .then(response =>{
-        return response.json();
-    })
-    .then(data=>{
-        console.log(data);
-        // for(let i=0;i<data.length;i++){
-        //     let side = document.querySelector('#side');
-        //     let pId = data[i];
-        //     let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-        //     side.insertAdjacentHTML("beforeend",text);
-        // }
-        // document.querySelectorAll('#side .Page').forEach(pages =>{
-        //     pages.addEventListener('click',function(e){
-        //         let pId = e.currentTarget.firstElementChild.innerText;
-        //         console.log(pId)
-        //     })
-        // })
-    })
-}
-
 // 페이지 선택시 PID 불러오기
 function selectPage(pId){
     let url = '/pageInfo?pageId='+pId;
@@ -145,7 +124,6 @@ function selectPage(pId){
     .then(data =>{
         for(let field in data){
             if(data[field]==pId){
-                console.log(data);
                 //PID 불러왔음..
             }
         }

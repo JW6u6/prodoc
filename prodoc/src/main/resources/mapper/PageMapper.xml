@@ -3,13 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace ="com.prodoc.page.mapper.PageMapper">
-  	<select id = "pageList" resultType = "String">
-  		SELECT page_id
-  		FROM tbl_page
+  	<select id = "pageList" resultType = "PageVO">
+  		select page_id,work_id
+		from tbl_page
   	</select>
   
   	<select id ="selectPageInfo" resultType="PageVO">
-  		SELECT page_id
+  		SELECT *
   		FROM tbl_page
   		WHERE page_id = #{pageId}
   	</select>
