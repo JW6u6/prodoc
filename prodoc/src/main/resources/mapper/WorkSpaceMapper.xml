@@ -6,7 +6,7 @@
  	
  	
  	<select id="selectWorkNo" resultType="String">
- 		SELECT work_id
+ 		SELECT work_name
  		FROM tbl_workspace
  	</select>
  	

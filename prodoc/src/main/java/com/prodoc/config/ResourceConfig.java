@@ -17,6 +17,6 @@ public class ResourceConfig implements WebMvcConfigurer {
         .setCacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES)); // 접근 파일 캐싱 시간 
         
         registry.addResourceHandler("/files/**")
-        .addResourceLocations("file://c:/prodoc/image/profile/");
+        .addResourceLocations("file:///c:/prodoc/image/profile/");
     }
 }

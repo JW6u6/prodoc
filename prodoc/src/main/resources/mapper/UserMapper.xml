@@ -10,15 +10,21 @@
 		<if test="password != null"> AND password = #{password} </if>
 	</select>
 	
-	<insert id="insertUser" parameterType="UserVO">
-		INSERT INTO TBL_USER (
-			email, password, phone, nickname,platform
-			<if test="profile != null">, profile</if>
-			<if test="birth != null">, birth</if>
-		) VALUES(
-			#{email}, #{password}, #{phone}, #{nickname}, #{platform}
-			<if test="profile != null">, #{profile}</if>
-			<if test="birth != null">, #{birth}</if>
-		)
+	<insert id="insertUser" parameterType="UserVO" statementType="CALLABLE">
+		{call JOIN_PROCESS(
+						#{email}
+						, #{password}
+						, #{phone}
+						, #{nickname}
+						, #{platform}
+						, #{profile}
+						, #{birth}
+						, #{pMain, mode=OUT, jdbcType=VARCHAR, javaType=string}
+		)}
 	</insert>
+	
+	<delete id="deleteUser" parameterType="UserVO">
+		DELETE FROM TBL_USER WHERE email= #{email}
+	</delete>
+	
 </mapper>

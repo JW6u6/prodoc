@@ -27,7 +27,6 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
         	errorMsg = "비활성화 계정입니다.";
         }
 		request.setAttribute("errorMsg", errorMsg);
-		//response.sendRedirect("/");
 	
 		request.getRequestDispatcher("/").forward(request, response);
 	}
