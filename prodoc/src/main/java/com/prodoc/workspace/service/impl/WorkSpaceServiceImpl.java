@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
+import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
 import com.prodoc.workspace.service.WorkSpaceVO;
 
@@ -14,15 +15,36 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
 	@Setter(onMethod_ = @Autowired)
 	WorkSpaceMapper workMapper;
-	
+
+	// 워크스페이스 생성
 	@Override
-	public void insertWorkspace(WorkSpaceVO workVO) {
+	public String insertWorkspace(WorkSpaceVO workVO) {
 		workMapper.registerWorkspace(workVO);
-		if(workVO.getResult().equals("TRUE")) {
-			System.out.println("성공");
-		}else{
-			System.out.println("실패");
-		};
+		if (workVO.getResult().equals("TRUE")) {
+			return workVO.getOutWid();
+		} else {
+			return workVO.getOutWid();
+		}
+	}
+
+	@Override
+	public WorkSpaceVO infoWorkspace(String workId) {
+		return workMapper.selectOneWorkspace(workId);
+	}
+
+	@Override
+	public void inviteWorkspaceUser(WorkJoinVO joinVO) {
+		workMapper.inviteWorkspace(joinVO);
+	}
+
+	@Override
+	public boolean editWorkspace(WorkSpaceVO workVO) {
+		return workMapper.modifyWorkspace(workVO) == 1;
+	}
+
+	@Override
+	public boolean deleteCheckWorkspace(String workId) {
+		return workMapper.removeCheckWorkspace(workId) == 1;
 	}
 
 }

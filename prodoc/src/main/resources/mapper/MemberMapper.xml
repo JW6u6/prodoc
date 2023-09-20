@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prodoc.member.mapper.MemberMapper">
+
+ 	<!-- 멤버 권한 변경 -->
+ 	<update id="renewAUTH" parameterType="MemberVO">
+ 		UPDATE tbl_member
+ 		SET auth = #{auth}
+ 		WHERE work_id = #{workId}
+ 		AND email = #{email}
+ 	</update>
+ 	
+ 	<!-- 멤버 내보내기(삭제) -->
+ 	<delete id="removeMember" parameterType="MemberVO">
+ 		DELETE FROM tbl_member
+ 		WHERE work_id = #{workId}
+ 		AND EMAIL = #{email}
+ 	</delete>
+ 	
+ 	<!-- 멤버 조회 -->
+ 	<select id="listMember" parameterType="MemberVO" resultType="MemberVO">
+ 		SELECT	work_id
+				, email
+				, auth
+		FROM TBL_MEMBER
+		WHERE work_id = #{workId}
+		AND auth != 'OWNER'
+ 	</select>
+ 	
+</mapper>
