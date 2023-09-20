@@ -33,8 +33,9 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	}
 
 	@Override
-	public void inviteWorkspaceUser(WorkJoinVO joinVO) {
+	public String inviteWorkspaceUser(WorkJoinVO joinVO) {
 		workMapper.inviteWorkspace(joinVO);
+		return joinVO.getResult();
 	}
 
 	@Override

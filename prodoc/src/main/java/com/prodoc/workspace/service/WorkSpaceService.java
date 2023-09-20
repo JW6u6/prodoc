@@ -10,7 +10,7 @@ public interface WorkSpaceService {
 	public String insertWorkspace(WorkSpaceVO workVO);
 	
 	//워크스페이스 초대
-	public void inviteWorkspaceUser(WorkJoinVO joinVO);
+	public String inviteWorkspaceUser(WorkJoinVO joinVO);
 	
 	//워크스페이스 수정
 	public boolean editWorkspace(WorkSpaceVO workVO);

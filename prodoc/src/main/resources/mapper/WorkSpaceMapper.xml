@@ -6,8 +6,13 @@
  	
  	
  	<select id="selectWorkNo" resultType="String">
- 		SELECT work_name
- 		FROM tbl_workspace
+ 		select work_name
+		from tbl_workspace
+		where work_id IN (
+			                SELECT work_id
+			                FROM tbl_member
+			                where email = #{email}
+			                )
  	</select>
  	
  	
@@ -59,7 +64,7 @@
  	<!-- 워크스페이스 삭제 -->
  	<update id="removeCheckWorkspace" parameterType="String">
  		UPDATE TBL_WORKSPACE
- 		SET delete_check = 'TRUE'
+ 		SET DELETE_CHECK = 'TRUE'
  		WHERE work_id = #{workId}
  	</update>
  	
