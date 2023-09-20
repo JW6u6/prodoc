@@ -15,21 +15,16 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
 	@Setter(onMethod_ = @Autowired)
 	WorkSpaceMapper workMapper;
-	
+
+	// 워크스페이스 생성
 	@Override
-	public void insertWorkspace(WorkSpaceVO workVO) {
+	public int insertWorkspace(WorkSpaceVO workVO) {
 		workMapper.registerWorkspace(workVO);
-		if(workVO.getResult().equals("TRUE")) {
-			System.out.println("성공");
-			
-			if(workVO.getWorkType().equals("TEAM")) {
-				WorkJoinVO joinVO = new WorkJoinVO();
-				joinVO.setWorkId(workVO.getOutWid());
-				workMapper.inviteWorkspace(joinVO);
-			}
-		}else{
-			System.out.println("실패");
-		};
+		if (workVO.getResult().equals("TRUE")) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override

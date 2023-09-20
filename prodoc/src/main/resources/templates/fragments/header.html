@@ -7,32 +7,37 @@
 	<div class="wrap">
 		<header>
 			<nav>
-				<img id="menuImg" class="menuBtn" th:src="@{../images/menu.svg}">
+				<img id="menuBtn" th:src="@{../images/menu.svg}">
 				<ul id="menu" class="hide">
-					<li>내보내기</li>
-					<li>페이지 잠금</li>
-					<li>링크 복사</li>
-					<li>페이지 복사</li>
-					<li>이 페이지를 메인 페이지로 지정</li>
-					<li>페이지 삭제</li>
-					<li>페이지 알림 켜기</li>
+					<li id="outOf">내보내기</li>
+					<li id="lockPg">페이지 잠금</li>
+					<li id="copyLink">링크 복사</li>
+					<li id="copyPage">페이지 복사</li>
+					<li id="mainPage">이 페이지를 메인 페이지로 지정</li>
+					<li id="delPage">페이지 삭제</li>
+					<li id="notifyPage">페이지 알림 켜기</li>
 				</ul>
 			</nav>
 			<img id="userImg" class="menuBtn" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:30px; border-radius: 15px;">
 		</header>
 	</div>
-	
+
 	<!-- 내보내기 모달 -->
 	<div class="modelBtnList release hide">
 		<button class="closeBtn">&#10005;</button>
-		내보내기
-		파일형식
-		멀티미디어 제외
-		파일이름
-		저장위치
+		내보내기 파일형식 멀티미디어 제외 파일이름 저장위치
 		<button type="button">내보내기</button>
-		<button type="button">취소</button>	
+		<button type="button">취소</button>
 	</div>
+
+
+</th:block>
+<script>
+	//네비게이션 바(헤더) 누르면 메뉴 토글 display block(보이게) none(안보이게) 하는 코드... 
+	//헤더가 눌리면 타겟을 찾아와서 그 타겟의 형제인 ul의 아이디를 가져와 토글을 보여주게 만듭니다.
+	//그대로 쓰시면 되는데... 토글을 이렇게해야하는지는 의문
+
+	let header = document.querySelector('header');
 
 	<!-- 유저정보 모달 -->
 	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
