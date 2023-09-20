@@ -31,5 +31,5 @@ public class MemberServiceImpl implements MemberService {
 	public List<MemberVO> listMember(String workId) {
 		return memberMapper.listMember(workId);
 	}
-	
+
 }
