@@ -7,7 +7,7 @@
 	<select id="selectUser" resultType="UserVO">
 		SELECT * FROM TBL_USER
 		WHERE email= #{email} 
-		<if test="password != null"> AND password = #{password} </if>
+		<if test="password != null and password != ''"> AND password = #{password} </if>
 	</select>
 	
 	<insert id="insertUser" parameterType="UserVO" statementType="CALLABLE">
@@ -27,4 +27,13 @@
 		DELETE FROM TBL_USER WHERE email= #{email}
 	</delete>
 	
+	<update id="updateUser" parameterType="UserVO">
+		UPDATE TBL_USER
+		SET	<if test="nickname != ''"> nickname = #{nickname} </if>
+			<if test="password != ''"> , password = #{password} </if>
+			<if test="profile != null"> , profile = #{profile} </if>
+			<if test="phone != ''"> , phone = #{phone} </if>
+			<if test="birth != null"> , birth = #{birth} </if>
+		WHERE email = #{email}
+	</update>
 </mapper>
