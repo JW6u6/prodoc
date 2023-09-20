@@ -46,16 +46,16 @@ public class WorkSpaceController {
 	}
 	
 	//워크스페이스 새로 생성
-		@PostMapping("/workInsert")
-		public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
-			return workspaceService.insertWorkspace(workVO);
-			//워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
-		}
+	@PostMapping("/workInsert")
+	public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
+		return workspaceService.insertWorkspace(workVO);
+		//워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
+	}
 	
-	//워크스페이스 생성시 유저 초대
+	//워크스페이스 유저 초대
 	@PostMapping("/workJoin")
-	public void workspaceJoin(@RequestBody WorkJoinVO joinVO) {
-		workspaceService.inviteWorkspaceUser(joinVO);
+	public String workspaceJoin(@RequestBody WorkJoinVO joinVO) {
+		return workspaceService.inviteWorkspaceUser(joinVO);
 	}
 	
 	
@@ -67,8 +67,14 @@ public class WorkSpaceController {
 	
 	//워크스페이스 삭제(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/workDelete")
-	public void workspaceDeleteCheck(String workId) {
+	public void workspaceDeleteCheck(@RequestBody String workId) {
 		workspaceService.deleteCheckWorkspace(workId);
+	}
+	
+	//워크스페이스 메인 페이지 지정
+	@PostMapping("/workMainPg")
+	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
+		workspaceService.assignMainPage(workVO);
 	}
 	
 }
