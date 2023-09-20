@@ -3,14 +3,15 @@ package com.prodoc.db.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.service.DBCaseVO;
-import com.prodoc.db.service.DBPageVO;
 import com.prodoc.db.service.DBService;
+import com.prodoc.page.service.PageVO;
 
 @RestController
 public class DBController {
@@ -24,12 +25,11 @@ public class DBController {
 	}
 	
 	@PostMapping("getDBPageList")
-	public List<DBPageVO> getDBPageList(@RequestBody String pageCase){
-		return service.getDBPageList("in328-rsvwv-54tpib");
+	public List<BlockVO> getDBPageList(@RequestBody PageVO page, Model model){
+		String pageCage = page.getPageId();
+		List<BlockVO> DBList = service.getDBPageList(pageCage);
+		model.addAttribute("DBList", DBList);
+		return DBList;
 	}
-	
-	@GetMapping("DBPage")
-	public String openDBPage() {
-		return "";
-	}
+
 }

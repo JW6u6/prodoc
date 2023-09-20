@@ -14,10 +14,10 @@
 		)}
 	</insert>
 	
-	<select id="getDBPageList" resultType="DBPageVO" parameterType="String">
-		SELECT dp.display_id, pg.page_id
-		FROM tbl_display dp JOIN tbl_page pg
-					        ON dp.page_id = pg.parent_id
-		WHERE pg.parent_id = #{casePage};
+	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
+		SELECT *
+		FROM tbl_display
+		WHERE page_id = #{casePage}
+		ORDER BY row_x
 	</select>
 </mapper>

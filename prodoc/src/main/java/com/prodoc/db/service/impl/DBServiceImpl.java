@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
 import com.prodoc.db.service.DBCaseVO;
-import com.prodoc.db.service.DBPageVO;
 import com.prodoc.db.service.DBService;
 
 @Service
@@ -22,7 +22,7 @@ public class DBServiceImpl implements DBService {
 	}
 
 	@Override
-	public List<DBPageVO> getDBPageList(String casePage) {
+	public List<BlockVO> getDBPageList(String casePage) {
 		return mapper.getDBPageList(casePage);
 	}
 
