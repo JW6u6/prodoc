@@ -9,4 +9,8 @@ public interface BlockService {
 	public int updateBlock(BlockVO blockVO);
 	public int deleteBlock(BlockVO blockVO);
 	public int createCheckBlock(Map<String,String> hashMap);
+	public int createBookMark(String display_id);
+	public int updateBookMark(Map<String,String> map);
+	public String getBookMark(String displayId);
+	public int deleteBookMark(String displayId);
 }
