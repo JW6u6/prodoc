@@ -11,5 +11,5 @@ public interface MemberService {
 	public boolean deleteMember(MemberVO memberVO);
 	
 	//멤버 조회
-	public List<MemberVO> listMember(String workId);
+	public List<MemberVO> listMember(MemberVO memberVO);
 }

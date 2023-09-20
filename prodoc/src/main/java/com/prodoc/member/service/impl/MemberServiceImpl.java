@@ -28,8 +28,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberVO> listMember(String workId) {
-		return memberMapper.listMember(workId);
+	public List<MemberVO> listMember(MemberVO memberVO) {
+		return memberMapper.listMember(memberVO);
 	}
 
 }
