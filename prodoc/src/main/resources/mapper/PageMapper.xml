@@ -14,28 +14,17 @@
   		WHERE page_id = #{pageId}
   	</select>
   	<!-- 등록 -->
-  	<insert id="insertPage" parameterType="PageVO">
-  		<selectKey keyProperty="pageId"
-  				   resultType="String"
-  				   order="BEFORE">
-  		SELECT 'PAGE' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(page_id, -3))),0) + 1,3,'0')
-  		FROM tbl_page
-  		where page_id LIKE 'PAGE' || '___'
-  		</selectKey>
-  		INSERT INTO tbl_page
-  				(
-  					page_id
-  					,work_id
-  					,case_id
-  					
-  				)
-  			VALUES
- 				(
- 					#{pageId}
- 					,#{workId}
- 					,#{caseId}
- 				)
- 	</insert>
+  	<!-- <insert id="insertPage" parameterType="PageVO" statementType ="CALLABLE">
+  		{call INSERT_PAGE(
+  							#{pid, mode=OUT, jdbcType=VARCHER, javaType=string}
+  						,	#{parentId}
+  						,	#{pageName}
+  						,	#{creUser}
+  						,	#{workId}
+  						,	#{caseId}
+  						,	#{result, mode=OUT, jdbcType=VARCHER, javaType=string}
+  		)}
+ 	</insert> -->
  	
  	<!-- 페이지 잠금(관리자, 소유자) -->
  	<update id="LockPage" parameterType="PageVO">
