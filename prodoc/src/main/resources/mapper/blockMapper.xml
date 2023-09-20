@@ -19,7 +19,14 @@
 	<update id="updateBlock" parameterType="BlockVO">
 		update tbl_display
 		set
-		up_user = #{upUser}
+		<choose>
+		<when test="upUser != null">
+		up_user = #{upUser}		
+		</when>
+		<otherwise>
+		up_user = up_user
+		</otherwise>
+		</choose>
 		,up_date = sysdate
 		,parent_id = #{parentId}
 		<if test="content != null">
@@ -40,4 +47,10 @@
 		delete from tbl_display
 		where display_id = #{displayId}
 	</delete>
+	
+	<insert id="createCheckBlock" statementType="CALLABLE" parameterType="hashMap">
+		{call check_block(#{displayId, mode=IN,jdbcType=VARCHAR,javaType=string},
+							#{checked, mode=IN,jdbcType=VARCHAR,javaType=string})}
+	</insert>
+	
 </mapper>

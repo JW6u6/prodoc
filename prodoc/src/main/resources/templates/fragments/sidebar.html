@@ -50,8 +50,8 @@
 			</div>
 			<div id="pageModal">
 				<div class="modal-content">
-					<div class="pageDiv">페이지 이름</div>
-					<div id="pageCont"></div>
+					<div id ="pgName"class="pageDiv">페이지 이름</div>
+					<div id="pageContent"></div>
 					<div id="temPage">
 						<div id="tem1" class="tem" onclick="selectTemp()">템플릿1</div>
 						<div id="tem2" class="tem" onclick="selectTemp()">템플릿2</div>
@@ -66,14 +66,13 @@
 					</div>
 					<button id="temBtn" class="Type" onclick="template()">템플릿</button>
 					<button id="dbBtn" class="Type" onclick="database()">DB</button>
-					<form id=pageData>
-						<input type="text" value="1" id="pageId" /> <input type="text"
-							value="2" id="workId" /> <input type="text" value="3"
-							id="caseId" /> <br> <br> <br> <br> <br>
+					
+						<input type="text" value="1" id="pageId" /> 
+						<input type="text" value="2" id="workId" />
+						<input type="text" value="3" id="caseId" /> 
+						<br> <br> <br> <br> <br>
 
-						<button type="submit" id="insert-page" class="close"
-							onclick="insertPage()">생성</button>
-					</form>
+					<button type="button" id="insert-page" class="close">생성</button>
 					<button id="close-modal" class="close" onclick="closeModal()">닫기</button>
 				</div>
 			</div>

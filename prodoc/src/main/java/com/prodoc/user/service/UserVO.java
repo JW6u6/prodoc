@@ -23,6 +23,8 @@ public class UserVO implements UserDetails{
 	String profile;
 	String platform;
 	
+	String pMain;
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> list = new ArrayList<SimpleGrantedAuthority>();
