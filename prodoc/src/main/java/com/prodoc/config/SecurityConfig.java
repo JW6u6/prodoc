@@ -19,7 +19,7 @@ public class SecurityConfig {
 		//세부 설정
 		http.authorizeHttpRequests(
         		(authz) -> {	
-        			authz.antMatchers("/", "/join", "/login","/block/**").permitAll();//이 페이지는 인증X
+        			authz.antMatchers("/", "/join","/joinout", "/login", "/block/**").permitAll();//이 페이지는 인증X
         			authz.anyRequest().authenticated();			//그 외 모든 페이지 인증O?
         			});
 		
@@ -35,7 +35,7 @@ public class SecurityConfig {
             .and().logout()
             .logoutUrl("/logout")			//해당 url로 접근 시 로그아웃 실행
             .logoutSuccessUrl("/")			//로그아웃 시 이동 페이지 경로
-            .invalidateHttpSession(true).deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true).deleteCookies("JSESSIONID") 	//로그아웃 시 세션과 쿠키를 지움
         	
             .and().csrf().disable(); //csrf 토큰을 비활성화: ajax 통신 가능
         return http.build();
@@ -52,7 +52,7 @@ public class SecurityConfig {
 	 
 	@Bean
     public WebSecurityCustomizer webSecurityCustomizer() {//인증 없이 접속 가능한 경로 (인증없이 리소스 이용가능)
-        return (web) -> web.ignoring().antMatchers( "/css/**", "/js/**", "/images/**");
+        return (web) -> web.ignoring().antMatchers( "/files/**", "/css/**", "/js/**", "/images/**");
 	}
 	
 	@Bean
