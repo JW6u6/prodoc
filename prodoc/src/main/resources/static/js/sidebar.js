@@ -84,6 +84,51 @@ function pageList() {
         document.querySelectorAll('#side .Page').forEach(pages =>{
             pages.addEventListener('click',function(e){
                 let pId = e.currentTarget.firstElementChild.innerText;
+                selectPage(pId);
+            })
+        })
+    })
+}
+
+// 페이지 선택시 PID 불러오기
+function selectPage(pId){
+    let url = '/pageInfo?pageId='+pId;
+    fetch(url)
+    .then(response =>{
+        return response.json();
+    })
+    .then(data =>{
+        for(let field in data){
+            if(data[field]==pId){
+                console.log(data);
+                //PID 불러왔음..
+            }
+        }
+    })
+}
+
+=======
+}
+
+// 인사이트 내 사이드바에 페이지 목록 불러옴
+function pageList() {
+    let url = '/pageList';
+    fetch(url,{
+        method:'GET',
+    })
+    .then(response =>{
+        return response.json();
+    })
+    .then(data=>{
+        for(let i=0;i<data.length;i++){
+            let side = document.querySelector('#side');
+            let pId = data[i];
+            let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
+            side.insertAdjacentHTML("beforeend",text);
+        }
+        document.querySelectorAll('#side .Page').forEach(pages =>{
+            pages.addEventListener('click',function(e){
+                let pId = e.currentTarget.firstElementChild.innerText;
                 console.log(pId)
             })
         })
@@ -222,7 +267,7 @@ document.querySelector('#wsType').addEventListener('change', function(e){
         memberOption.classList.remove('hide');
         privateOption.classList.add('hide');
     }else{
-    	invite.classList.add('hide');
+       invite.classList.add('hide');
         memberOption.classList.add('hide');
         privateOption.classList.remove('hide');
     }
