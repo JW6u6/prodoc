@@ -71,4 +71,10 @@ public class WorkSpaceController {
 		workspaceService.deleteCheckWorkspace(workId);
 	}
 	
+	//워크스페이스 메인 페이지 지정
+	@PostMapping("/workMainPg")
+	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
+		workspaceService.assignMainPage(workVO);
+	}
+	
 }

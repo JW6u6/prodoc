@@ -63,5 +63,12 @@
  		WHERE work_id = #{workId}
  	</update>
  	
+ 	<!-- 워크스페이스 메인 페이지 지정 -->
+ 	<update id="MainPgWorkspace" parameterType="WorkSpaceVO">
+ 		UPDATE TBL_WORKSPACE
+ 		SET MAIN_PAGE_ID = #{mainPageId}
+ 		WHERE work_id = #{workId}
+ 	</update>
+ 	
  	
  </mapper>

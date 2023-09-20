@@ -17,4 +17,7 @@ public interface WorkSpaceService {
 	
 	//워크스페이스 삭제(체크)
 	public boolean deleteCheckWorkspace(String workId);
+	
+	//워크스페이스 메인페이지 지정
+	public boolean assignMainPage(WorkSpaceVO workVO);
 }

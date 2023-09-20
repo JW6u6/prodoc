@@ -47,4 +47,9 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 		return workMapper.removeCheckWorkspace(workId) == 1;
 	}
 
+	@Override
+	public boolean assignMainPage(WorkSpaceVO workVO) {
+		return workMapper.MainPgWorkspace(workVO) == 1;
+	}
+
 }

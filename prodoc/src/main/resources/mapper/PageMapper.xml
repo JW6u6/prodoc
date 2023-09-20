@@ -52,7 +52,7 @@
  	</update>
  	
  	<!-- 페이지 알림 끄기 -->
- 	<insert id="onOffPage" parameterType="PageVO">
+ 	<insert id="onOffPage" parameterType="PageVO" statementType="CALLABLE">
  		{call PAGENOTI_TOGGLE(
  								#{workId}
  								, #{pageId}
