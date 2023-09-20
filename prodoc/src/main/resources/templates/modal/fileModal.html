@@ -1,0 +1,41 @@
+<html xmlns:th="https://www.thymeleaf.org">
+	<div id="FileModal" th:fragment="FileSearchModal" class="hide">
+        <div class="modelBtnList">
+            <button class="closeBtn">&#10005;</button>
+        </div>
+        <div class="search_option">
+            <div>
+                <input type="text" name="searchWord" placeholder="검색어">
+                <button id="fileSearchBtn">검색</button>
+            </div>
+            <div>
+                <input type="date" name="searchDate" id="startDate" disabled> ~ <input type="date" name="searchDate" id="endDate" disabled>
+                <button>업로드일</button><br>
+                <input type="checkbox" id="checkAll"><span>전체선택</span>
+                <input type="checkbox" name="searchOption" value="upName"><span>파일명</span>
+                <input type="checkbox" name="searchOption" value="upUser"><span>업로더</span>
+                <input type="checkbox" name="searchOption" value="pageName"><span>페이지명</span>
+                <input type="checkbox" name="searchOption" value="workName"><span>워크스페이스명</span>
+            </div>
+        </div>
+        
+        <div class="searchList">
+            <table border="1" id="fileSearchList">
+                <thead>
+                    <tr>
+                        <th>파일명</th>
+                        <th>업로더</th>
+                        <th>페이지명</th>
+                        <th>날짜</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 파일 검색 JS -->
+        <script type="text/javascript" src="js/modal/fileSearch.js"></script>
+    </div>
+</html>
