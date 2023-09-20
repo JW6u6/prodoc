@@ -2,29 +2,34 @@ init();
 
 
 
-function init(){
+function init() {
     workList();
     pageList();
+    document.querySelector('#wsCreate').addEventListener('click', newWorkSpace);
 }
 let wsCount = 0;
-function newWork(){
+
+function newWork() {
     wsCount += 1;
     let element = event.currentTarget.nextElementSibling;
     workModal.style.display = "block";
     document.body.style.overflow = "hidden";
-    element.innerHTML += '<div class= "Work">' + wsCount +' <span onclick="newPage()" class="add">➕</span> <div>'
+    element.innerHTML += '<div class= "Work">' + wsCount + ' <span onclick="newPage()" class="add">➕</span> <div>'
 }
-function newPage(){
+
+function newPage() {
     pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
     event.currentTarget.nextElementSibling.innerHTML += '<div class = "Page">페이지<span onclick="newSubPage()" class="add">➕</span> <div>'
 }
-function newSubPage(){
+
+function newSubPage() {
     pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
     event.currentTarget.nextElementSibling.innerHTML += '<div class = "Page">페이지<span onclick="newSSPage()" class="add">➕</span> <div>'
 }
-function closeModal(){
+
+function closeModal() {
     workModal.style.display = "none";
     pageModal.style.display = "none";
     document.body.style.overflow = "auto"
@@ -53,8 +58,16 @@ function selectDb(){
 //     .then((data) => console.log(data))
 //     .catch((error) => console.log(error));
 // }
-function workList(){
+function workList() {
     $.ajax("/workList")
+        .done(data => {
+            $.each(data, function (idx, obj) {
+                let side = $('#side');
+                let wName = obj;
+                let text = '<div class= "Work">' + wName + ' <span onclick="newPage()" class="add">➕</span> <div>'
+                side.append(text);
+            })
+        })
     .done(data =>{
         $.each(data, function(idx,obj){
             let side = $('#side');
@@ -113,15 +126,22 @@ function selectWork(wId){
 
     })
 }
-function pageList(){
+
+function pageList() {
     $.ajax("/pageList")
-    .done(data =>{
-        let page = ""
-        $.each(data, function(idx,obj){
-            let side = $('#side');
-            let pId = obj;
-            let text = '<div class= "Page">' +'<span class = "pageVal" >'+ pId + '</span>'+' <span onclick="newPage()" class="add">➕</span> <div>'
-            side.append(text);
+        .done(data => {
+            let page = ""
+            $.each(data, function (idx, obj) {
+                let side = $('#side');
+                let pId = obj;
+                let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newPage()" class="add">➕</span> <div>'
+                side.append(text);
+            })
+            page = $('.Page')
+            page.on('click', function (event) {
+                let pId = event.currentTarget.firstElementChild;
+                selectPage(pId.innerText);
+            })
         })
         page = $('.Page')
         page.on('click',function(event){
@@ -129,14 +149,25 @@ function pageList(){
             selectPage(pId.innerText);
            
         })
-    })
-}
-function selectPage(pId){
+    }
+
+function selectPage(pId) {
     $.ajax({
-        url : "/pageInfo",
-        type: "get",
-        data: { pageId : pId}
-    })
+            url: "/pageInfo",
+            type: "get",
+            data: {
+                pageId: pId
+            }
+        })
+        .done(data => {
+            console.log(data);
+            for (let emp in data) {
+                let content = $('.content');
+                let text = '<div class= "conts">' + emp + '</div>';
+                content.append(text);
+            }
+        })
+        .fail(reject => console.log(reject))
     .done(data => {
         for(let field in data){
             if(data[field]==pId){
@@ -162,21 +193,77 @@ function insertPage(){
 let wId = $('#workId')
 let wt = document.querySelector("#wsType");
 let ta = document.querySelector("#typeArrow");
-wt.addEventListener("click",(e)=>{
+wt.addEventListener("click", (e) => {
     ta.classList.toggle("turn");
 })
-wt.addEventListener("focusout",(e)=>{
+wt.addEventListener("focusout", (e) => {
     ta.classList.remove("turn");
 })
 
 let wp = document.querySelector("#wsPrivate");
 let pa = document.querySelector("#priArrow");
-wp.addEventListener("click",(e)=>{
+wp.addEventListener("click", (e) => {
     pa.classList.toggle("turn");
 })
-wp.addEventListener("focusout",(e)=>{
+wp.addEventListener("focusout", (e) => {
     pa.classList.remove("turn");
 })
 
+//======================================================================
 
+//새 워크스페이스 생성
+function newWorkSpace(){
 
+    let workType = document.querySelector('#wsType').value;
+    let publicCheck = document.querySelector('#wsPrivate').value;
+    let email = document.querySelector('#loginUser').value;
+    let workName = document.querySelector('#wsName').value;
+
+    let val = {   workType,
+        workName,
+        publicCheck,
+        email
+    };
+    let url = '/workInsert';
+
+    fetch(url, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(val)
+    })
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
+}
+
+//워크스페이스 타입별 select option 구분 / 초대 부분 노출여부
+document.querySelector('#wsType').addEventListener('change', function(e){
+        let invite = document.querySelector('#inviteUser'); //초대 부분
+        let memberOption = document.querySelector('#memOption'); //멤버공개옵션(팀)
+        let privateOption = document.querySelector('#privOption'); //비공개옵션(개인)
+    if(e.target.value == 'TEAM'){
+        invite.classList.remove('hide');
+        memberOption.classList.remove('hide');
+        privateOption.classList.add('hide');
+    }else{
+    	invite.classList.add('hide');
+        memberOption.classList.add('hide');
+        privateOption.classList.remove('hide');
+    }
+});
+
+let invBtn = document.querySelector('#inviteBtn');
+
+invBtn.addEventListener('click', function(e){
+    let mail = document.querySelector('#invEmail');
+    let trTag = document.createElement('tr');
+    let tdTag = document.createElement('td');
+    tdTag.textContent = mail.value;
+
+    trTag.appendChild(tdTag);
+    document.querySelector('#invList').appendChild(trTag);
+
+    mail.value = '';
+});

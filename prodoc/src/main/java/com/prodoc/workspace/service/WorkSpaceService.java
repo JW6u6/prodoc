@@ -7,7 +7,7 @@ public interface WorkSpaceService {
 	public WorkSpaceVO infoWorkspace(String workId);
 	
 	//워크스페이스 등록
-	public void insertWorkspace(WorkSpaceVO workVO);
+	public String insertWorkspace(WorkSpaceVO workVO);
 	
 	//워크스페이스 초대
 	public void inviteWorkspaceUser(WorkJoinVO joinVO);
