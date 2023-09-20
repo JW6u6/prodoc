@@ -21,16 +21,5 @@
 
 	<div id="modSearch" th:insert="modal/search.html :: searchFrag"></div>	<!-- 검색 모달 -->
 </body>
-<script>
-	//닫기버튼
-	let closeBtn = document.querySelectorAll('.closeBtn')
-	.forEach(tag => {
-		tag.addEventListener('click',function(e){
-			let modal = e.target.parentElement.parentElement;
-			console.log(modal);
-			modal.classList.toggle('hide');
-			modal.classList.toggle('view');
-		});
-	});
-</script>
+<script src="js/modal/close.js"></script>
 </html>
