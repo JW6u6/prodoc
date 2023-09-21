@@ -55,7 +55,7 @@
 	<select id="getBookMark" resultType="String">
 		select title,description,img_adrs 
 		from tbl_book_mark 
-		where display_id = #{displayId};
+		where display_id = #{displayId}
 	</select>
 	<insert id="createBookMark" parameterType="String">
 		insert into TBL_BOOK_MARK (display_id)

@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.db.mapper.DBMapper">
-
+	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">
 		{call insert_db(
 						#{wordId}
@@ -13,15 +13,31 @@
 						, #{result}
 		)}
 	</insert>
-	
+
+	<!-- DBCase페이지로 하위 페이지(블럭) 리스트 조회 -->	
 	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
 		SELECT *
 		FROM tbl_display
 		WHERE page_id = #{casePage}
 		ORDER BY row_x
 	</select>
+
 	
-	<update id="">
+	<!-- displayId로 DB 페이지 조회 -->
+	<select id="getDBPageInfo" resultType="PageVO" parameterType="String">
+		SELECT *
+		FROM tbl_page
+		WHERE page_id = ( SELECT page_id
+                          FROM tbl_dbblock
+                          WHERE display_id = #{displayId})
+	</select>
 	
-	</update>
+	<!-- 페이지 속성 조회 -->
+	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
+		SELECT *
+		FROM tbl_page_attr
+		WHERE page_id = ( SELECT page_id
+                          FROM tbl_dbblock
+                          WHERE display_id = #{displayId})
+	</select>
 </mapper>

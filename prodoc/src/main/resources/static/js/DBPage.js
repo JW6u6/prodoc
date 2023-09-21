@@ -5,16 +5,13 @@ window.addEventListener("DOMContentLoaded", (e) => {
 const dataList = document.getElementById("dataList");
 const pageList = [];											// fetch로 받은 페이지 리스트 저장
 const casePageInfo = {"pageId" : "", "caseId" : "DB_LIST"};		// 케이스 페이지 정보
+const stateType = ['WAIT', 'RUN', 'END', 'CANCLE'];             // 상태 속성에 들어갈 수 있는 값
 
 // DB 레이아웃 체인지 이벤트
 document.querySelectorAll(".change-layout li").forEach(tag => {
     tag.addEventListener("click", function(e){
-        let changeLayout = e.currentTarget.getAttribute("id");
-        if(changeLayout == 'dbGal') changeGal();
-        else if(changeLayout == 'dbTbl') changeTbl();
-        else if(changeLayout == 'dbCal') changeCal();
-        else if(changeLayout == 'dbBrd') changeBrd();
-        else if(changeLayout == 'dbList') changeList();
+        let layout = e.currentTarget.getAttribute("id");
+        listLayoutChange(layout);
     });
 });
 
@@ -64,7 +61,7 @@ endDate.addEventListener("change", function(e){
 
 function getDBPageList(){
 	pageList.length = 0;		//기존 데이터 비우기
-// 페이지 아이디, 페이지 케이스 같이 넘겨주기
+	// 페이지 아이디, 페이지 케이스 같이 넘겨주기
 	
     fetch("getDBPageList",{
         method : "post",
@@ -77,8 +74,9 @@ function getDBPageList(){
         return response.json();
     })
     .then(result => {
-        //pageList.push(result);
-        //result 반복문 돌려서 객체를 pageList에 push
+        result.forEach(item => {
+            pageList.push(item);
+        })
         console.log(pageList);
     })
     .catch(err => console.log(err))

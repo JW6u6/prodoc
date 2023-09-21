@@ -9,6 +9,8 @@ import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
+import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.page.service.PageVO;
 
 @Service
 public class DBServiceImpl implements DBService {
@@ -24,6 +26,16 @@ public class DBServiceImpl implements DBService {
 	@Override
 	public List<BlockVO> getDBPageList(String casePage) {
 		return mapper.getDBPageList(casePage);
+	}
+
+	@Override
+	public PageVO getDBPageInfo(String displayId) {
+		return mapper.getDBPageInfo(displayId);
+	}
+
+	@Override
+	public List<PageAttrVO> getPageAttr(String displayId) {
+		return mapper.getPageAttr(displayId);
 	}
 
 }

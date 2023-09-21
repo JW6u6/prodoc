@@ -13,7 +13,6 @@ li {
 
 .searchOption {
     display: inline;
-    float: right;
 }
 
 #getSearchDate {
@@ -26,4 +25,29 @@ li {
     height: 180px;
     width: 300px;
     float: right;
+}
+
+#db-page-body {
+    width: 90%;
+    margin: auto;
+}
+
+.db-layout {
+    border: 1px solid gray;
+}
+
+.layout-list {
+    background-color: beige;
+}
+
+#brd-case {
+    width: 20%;
+    display: inline-block;
+    border: 1px solid sandybrown;
+    margin: auto;
+    padding: 10px;
+}
+
+.layout-brd {
+    background-color: blanchedalmond;
 }

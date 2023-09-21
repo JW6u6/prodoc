@@ -13,15 +13,45 @@
 	 -->
 <div>
 	<link th:href="@{/css/dbpage.css}" rel="stylesheet" />
-    <div th:insert="content/DBPage.html :: DBPageCase"></div>
-    
+    	<div id="db-page-header">
+		<div id="db-case-id" class="dbName" contenteditable="true">TITLE</div>
+		<div id="db-select-layout">
+			<ul class="change-layout">
+                <li id="DB_GAL">갤러리</li>
+                <li id="DB_TBL">표</li>
+                <li id="DB_CAL">캘린더</li>
+                <li id="DB_BRD">칸반보드</li>
+                <li id="DB_LIST">리스트</li>
+           	</ul>
+		</div>
+		<div class="searchOption">
+               <div id="getSearchDate">날짜</div>
+               <select>
+                   <option>검색옵션</option>
+                   <option>상태</option>
+                   <option>태그</option>
+                   <option>페이지명</option>
+                   <option>생성자</option>
+               </select>
+               <input type="text" name="keyword" placeholder="검색어">
+               <button id="searchBtn">검색</button>
+           </div>
+           <div id="selectDate" visibility="hidden" style="display: none;">
+               <input type="radio" name="date" value="period" checked>기간
+               <input type="radio" name="date" value="creDate">등록일
+               <input type="radio" name="date" value="upDate">최종수정일
+               <br>
+               <input type="date" name="startDate"> ~ <input type="date" name="endDate" disabled> 
+           </div>
+		<hr>
+	</div>
 	<div id="db-page-body">
 	
 	</div>
 	
     
 	<script th:inline="javascript" src="js/DBPage.js"></script>
-	<script type="text/javascript" src="js/LayoytChange.js"></script>
+	<script th:inline="javascript" src="js/LayoytChange.js"></script>
 </div>
     
 </body>
