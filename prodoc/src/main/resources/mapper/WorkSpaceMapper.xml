@@ -6,13 +6,15 @@
  	
  	
  	<select id="selectWorkNo" resultType="String">
+ 		SELECT work_id
+ 		FROM tbl_workspace
  		select work_name
 		from tbl_workspace
 		where work_id IN (
 			                SELECT work_id
 			                FROM tbl_member
 			                where email = #{email}
-			                )
+			                ) -->
  	</select>
  	
  	
