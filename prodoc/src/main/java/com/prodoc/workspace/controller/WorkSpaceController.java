@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
@@ -54,7 +56,8 @@ public class WorkSpaceController {
 	
 	//워크스페이스 유저 초대
 	@PostMapping("/workJoin")
-	public String workspaceJoin(@RequestBody WorkJoinVO joinVO) {
+	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
+		
 		return workspaceService.inviteWorkspaceUser(joinVO);
 	}
 	

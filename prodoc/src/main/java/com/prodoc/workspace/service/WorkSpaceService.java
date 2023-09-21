@@ -1,5 +1,6 @@
 package com.prodoc.workspace.service;
 
+import java.util.List;
 
 public interface WorkSpaceService {
 
@@ -10,7 +11,7 @@ public interface WorkSpaceService {
 	public String insertWorkspace(WorkSpaceVO workVO);
 	
 	//워크스페이스 초대
-	public String inviteWorkspaceUser(WorkJoinVO joinVO);
+	public int inviteWorkspaceUser(List<WorkJoinVO> joinVO);
 	
 	//워크스페이스 수정
 	public boolean editWorkspace(WorkSpaceVO workVO);
