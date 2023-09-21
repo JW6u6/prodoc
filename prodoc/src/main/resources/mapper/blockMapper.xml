@@ -52,5 +52,24 @@
 		{call check_block(#{displayId, mode=IN,jdbcType=VARCHAR,javaType=string},
 							#{checked, mode=IN,jdbcType=VARCHAR,javaType=string})}
 	</insert>
+	<select id="getBookMark" resultType="String">
+		select title,description,img_adrs 
+		from tbl_book_mark 
+		where display_id = #{displayId};
+	</select>
+	<insert id="createBookMark" parameterType="String">
+		insert into TBL_BOOK_MARK (display_id)
+		values (#{displayId})
+	</insert>
+	<update id="updateBookMark" parameterType="hashMap">
+		update TBL_BOOK_MARK
+		set TITLE = #{title}
+			,DESCRIPTION = #{description}
+			,IMG_ADRS = #{img_adrs}
+	</update>
 	
+	<delete id="deleteBookMark" parameterType="String">
+		delete from TBL_BOOK_MARK
+		where display_id = #{displayId}
+	</delete>
 </mapper>

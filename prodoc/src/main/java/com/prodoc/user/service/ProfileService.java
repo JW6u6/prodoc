@@ -37,10 +37,10 @@ public class ProfileService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	//		System.out.println("mfile: " + mfile);					//mfile: org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@51ec2087
-	//		System.out.println("originalName: " + originalName);	//originalName: img4.jpg
-	//		System.out.println(uploadName);							//1694761782169img6.jpg
-	//		System.out.println(savePath);							//c:\prodoc\image\profile\1694761782169img6.jpg
+			System.out.println("mfile: " + mfile);					//mfile: org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@51ec2087
+			System.out.println("originalName: " + originalName);	//originalName: img4.jpg
+			System.out.println(uploadName);							//1694761782169img6.jpg
+			System.out.println(savePath);							//c:\prodoc\image\profile\1694761782169img6.jpg
 		}
 		return uploadName;
 	}

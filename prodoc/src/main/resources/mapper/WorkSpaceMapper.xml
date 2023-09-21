@@ -8,6 +8,13 @@
  	<select id="selectWorkNo" resultType="String">
  		SELECT work_id
  		FROM tbl_workspace
+ 		select work_name
+		from tbl_workspace
+		where work_id IN (
+			                SELECT work_id
+			                FROM tbl_member
+			                where email = #{email}
+			                ) -->
  	</select>
  	
  	
@@ -59,7 +66,14 @@
  	<!-- 워크스페이스 삭제 -->
  	<update id="removeCheckWorkspace" parameterType="String">
  		UPDATE TBL_WORKSPACE
- 		SET delete_check = 'TRUE'
+ 		SET DELETE_CHECK = 'TRUE'
+ 		WHERE work_id = #{workId}
+ 	</update>
+ 	
+ 	<!-- 워크스페이스 메인 페이지 지정 -->
+ 	<update id="MainPgWorkspace" parameterType="WorkSpaceVO">
+ 		UPDATE TBL_WORKSPACE
+ 		SET MAIN_PAGE_ID = #{mainPageId}
  		WHERE work_id = #{workId}
  	</update>
  	

@@ -1,8 +1,11 @@
 package com.prodoc.db.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
@@ -13,13 +16,14 @@ public class DBServiceImpl implements DBService {
 	DBMapper mapper;
 
 	@Override
-	public void insertDBCase(DBCaseVO vo) {
+	public String insertDBCase(DBCaseVO vo) {
 		mapper.insertDBCase(vo);
-		if(vo.result == "false") {
-			System.out.println("false");
-		}else if(vo.result == "success") {
-			System.out.println("success");
-		}
+		return vo.getResult();
+	}
+
+	@Override
+	public List<BlockVO> getDBPageList(String casePage) {
+		return mapper.getDBPageList(casePage);
 	}
 
 }

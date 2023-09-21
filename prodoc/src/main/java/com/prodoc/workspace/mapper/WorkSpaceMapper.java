@@ -22,4 +22,7 @@ public interface WorkSpaceMapper {
 
 	// 워크스페이스 삭제(체크)
 	public int removeCheckWorkspace(String workId);
+	
+	//워크스페이스 메인페이지 지정
+	public int MainPgWorkspace(WorkSpaceVO workVO);
 }

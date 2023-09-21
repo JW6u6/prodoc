@@ -13,4 +13,11 @@
 						, #{result}
 		)}
 	</insert>
+	
+	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
+		SELECT *
+		FROM tbl_display
+		WHERE page_id = #{casePage}
+		ORDER BY row_x
+	</select>
 </mapper>

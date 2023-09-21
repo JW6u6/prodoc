@@ -1,0 +1,29 @@
+.dbName {
+    font-size: 30px;
+    max-width: 100%;
+}
+ul {
+    list-style-type: none;
+    display: inline;
+}
+
+li {
+    display: inline;
+}
+
+.searchOption {
+    display: inline;
+    float: right;
+}
+
+#getSearchDate {
+    display: inline;
+    background-color: gainsboro;
+}
+
+#selectDate {
+    border: 1px solid seagreen;
+    height: 180px;
+    width: 300px;
+    float: right;
+}
