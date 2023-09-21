@@ -43,20 +43,110 @@ let jOutBtn = document.querySelector("#jOutBtn")
 	}
 });
 
-//수정 저장 버튼
-let infoSaveBtn = document.querySelector("#infoSaveBtn")
-.addEventListener('click', function(e){
-	console.log('저장');
+//프로필 이미지 변경 처리
+let img = document.querySelector("#profile");
+let profile = document.querySelector('input[name="file"]');
+img.addEventListener('click', function(e){ 				//이미지 클릭
+	profile.click(); 									//파일 선택(click) 이벤트 강제 발동
+	profile.addEventListener('change', function(e){		//파일 선택(change): 이미지 선택시 chang 이벤트 발생
+		if(this.files[0] != null) {
+		   	var reader = new FileReader;				//비동기적으로 파일 객체의 내용을 읽어들임
+		    reader.onload = function(data) {
+		    	img.setAttribute("src", data.target.result);
+			}
+		    reader.readAsDataURL(this.files[0]); //파일 정보를 주소처럼 사용, img태그의 src로 이용가능
+		}
+	});
 });
 
-//인증번호 전송
+//비밀번호 일치 체크
+document.querySelectorAll(".password").forEach((tag, idx, obj)=>{
+	tag.addEventListener('change', function(e){
+		if(obj[0].value == obj[1].value)	passTrue = true;
+		else	passTrue = false;
+	});
+});
+
+//전화번호	인증 체크
+let beforeN = document.querySelector("input[name='phone']").value;	//원래의 전화번호
+document.querySelector("input[name='phone']")
+.addEventListener('change', function(e){
+	//원래의 전화번호에서 변경이 일어나면 인증 여부 초기화
+	if(e.target.value == beforeN)	phoneTrue = true;
+	else 							phoneTrue = false;
+});
+
+
+let passTrue = true;	//비밀번호 일치 여부
+let phoneTrue = true;	//전화번호 인증 여부
+//수정 저장
+userModForm.addEventListener('submit', function(e){
+	e.preventDefault();
+	if(!passTrue || !phoneTrue) return;		//비밀번호, 전화번호(인증) NO
+	
+	let list = document.querySelectorAll("form input[name]");
+	const formData = new FormData();
+	for(let item of list){
+		if(item.name == "file"){
+			formData.append(item.name, item.files[0]);
+		}else{
+			formData.append(item.name, item.value);
+		}
+	}
+	fetch("/userMod", {	method: "post",	body: formData })
+	.then( response => response.json() )
+	.then(result => {
+		if(result.result){
+			alert('프로필이 수정되었습니다.');
+			updateUser(result.data);
+			document.querySelector("#modInfoBtn").click();
+		}else alert('프로필 수정이 실패하였습니다.');
+	}).catch(err => console.log(err));
+});
+
+//사용자 정보 화면 업데이트
+function updateUser(data){
+	console.log(data);
+	for(let list in data){
+		console.log("list: " + list);
+		console.log(data[list]);
+		let name = "input[name='"+ list +"']"
+		let inputT = document.querySelector(name);
+		if(list == "email" || list == "nickname"){
+			document.querySelectorAll("#UserModiMod p").forEach(item =>{
+				if(item.name == list){
+					inputT.value = data[list];	//정보수정창
+					item.value = data[list];	//정보창
+				}
+			});
+		}else if(list == "profile"){
+			let img = document.querySelector("#UserModiMod img");
+			img.setAttribute("th:src", `/files/${data[list] != null ? data[list] : 'noneUser.jpg'}`);
+			img = document.querySelector("img[id='profile']");
+			img.setAttribute("th:src", `/files/${data[list] != null ? data[list] : "noneUser.jpg"}`);
+		}else{
+			if(inputT != null)
+				inputT.value = data[list];
+		}
+	}
+}
+
+//휴대폰 인증번호 전송
+let authMsg = "";	//불러올 인증번호
 let authBtn = document.querySelector("#authBtn")
 .addEventListener('click', function(e){
+	if(phoneTrue) return;	//인증이 된 번호
+	//TODO: 인증번호 전송 프로세스
 	console.log('전송');
 });
 
-//인증번호 확인
+//휴대폰 인증번호 확인
+const authCheck = document.querySelector("#auth");
 let authCheckBtn = document.querySelector("#authCheckBtn")
 .addEventListener('click', function(e){
-	console.log('확인');
+	if(phoneTrue) return;	//인증이 된 번호
+	if(authMsg == authCheck.value){	//인증번호 일치
+		phoneTrue = true;
+		console.log('인증 확인');
+	}
 });

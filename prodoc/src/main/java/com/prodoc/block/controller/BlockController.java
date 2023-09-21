@@ -24,7 +24,7 @@ import com.prodoc.block.service.impl.BlockServiceImpl;
  * 개발일자 : 2023/09/14
  * 
 */
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin
 @RestController
 public class BlockController {
 
@@ -75,6 +75,34 @@ public class BlockController {
 		}
 		
 		return null;
+	}
+	
+	@PostMapping("block/createBookMark")
+	public String createBookMark(@RequestBody Map<String,String> displayId) {
+		Map<String, String> map = displayId;
+		String id = map.get("displayId");
+		int result = service.createBookMark(id);
+		
+		return result+"";
+	}
+	
+	@PostMapping("block/updateBookMark")
+	public String updateBookMark(@RequestBody Map<String,String> data) {
+		int result = service.updateBookMark(data);
+		return result+"";
+	}
+	
+	@GetMapping("block/getBookMark")
+	public String getBookMark(@RequestParam String displayId) {
+		String result = service.getBookMark(displayId);
+		return result;
+	}
+	
+	@PostMapping("block/deleteBookMark")
+	public String deleteBookMark(@RequestBody Map<String,String> data) {
+		String displayId = data.get("displayId");
+		int result = service.deleteBookMark(displayId);
+		return "";
 	}
 	
 //	@PostMapping("block/check")

@@ -33,8 +33,9 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	}
 
 	@Override
-	public void inviteWorkspaceUser(WorkJoinVO joinVO) {
+	public String inviteWorkspaceUser(WorkJoinVO joinVO) {
 		workMapper.inviteWorkspace(joinVO);
+		return joinVO.getResult();
 	}
 
 	@Override
@@ -45,6 +46,11 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	@Override
 	public boolean deleteCheckWorkspace(String workId) {
 		return workMapper.removeCheckWorkspace(workId) == 1;
+	}
+
+	@Override
+	public boolean assignMainPage(WorkSpaceVO workVO) {
+		return workMapper.MainPgWorkspace(workVO) == 1;
 	}
 
 }

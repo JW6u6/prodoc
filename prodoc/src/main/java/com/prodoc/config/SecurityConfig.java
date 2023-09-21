@@ -19,9 +19,10 @@ public class SecurityConfig {
 		//세부 설정
 		http.authorizeHttpRequests(
         		(authz) -> {	
-        			authz.antMatchers("/", "/join","/joinout", "/login", "/block/**").permitAll();//이 페이지는 인증X
-        			authz.anyRequest().authenticated();			//그 외 모든 페이지 인증O?
-        			});
+        			//authz.antMatchers("/", "/join","/joinout", "/login", "/block/**").permitAll();//이 페이지는 인증X
+        			//authz.anyRequest().authenticated();			//그 외 모든 페이지 인증O?
+        			authz.anyRequest().permitAll();
+        		});
 		
 		//로그인 처리 설정
         http.formLogin().loginPage("/")		//접근이 허락되지 않은 페이지에 접근 했을 경우 커스텀 로그인 페이지로 이동
