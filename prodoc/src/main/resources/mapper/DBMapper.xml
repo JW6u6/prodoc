@@ -20,4 +20,8 @@
 		WHERE page_id = #{casePage}
 		ORDER BY row_x
 	</select>
+	
+	<update id="">
+	
+	</update>
 </mapper>
