@@ -18,10 +18,11 @@
 	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
 		SELECT *
 		FROM tbl_display
-		WHERE page_id = #{casePage}
+		WHERE page_id = (SELECT page_id
+		                FROM tbl_dbblock
+		                WHERE display_id = #{dbBlockID})
 		ORDER BY row_x
 	</select>
-
 	
 	<!-- displayId로 DB 페이지 조회 -->
 	<select id="getDBPageInfo" resultType="PageVO" parameterType="String">
@@ -40,4 +41,10 @@
                           FROM tbl_dbblock
                           WHERE display_id = #{displayId})
 	</select>
+	
+	<update id="updateCase" parameterType="PageVO">
+		UPDATE tbl_page
+		SET case_id = #{caseId}
+		WHERE page_id = #{pageId}
+	</update>
 </mapper>

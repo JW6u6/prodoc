@@ -9,7 +9,8 @@ import com.prodoc.page.service.PageVO;
 
 public interface DBMapper {
 	public void insertDBCase(DBCaseVO page);
-	public List<BlockVO> getDBPageList(String casePageId);	//매개변수 PageVO로 바꾸기(case같이 가져와야함)
+	public List<BlockVO> getDBPageList(String caseBlockId);
 	public PageVO getDBPageInfo(String displayId);
 	public List<PageAttrVO> getPageAttr(String displayId);
+	public int updateCase(PageVO vo);
 }

@@ -1,53 +1,12 @@
-.dbName {
-    font-size: 30px;
-    max-width: 100%;
+.db-block{
+    border: 1px solid gainsboro;
 }
-ul {
+
+.db-layout-list ul{
     list-style-type: none;
     display: inline;
 }
 
-li {
+.db-layout-list li{
     display: inline;
-}
-
-.searchOption {
-    display: inline;
-}
-
-#getSearchDate {
-    display: inline;
-    background-color: gainsboro;
-}
-
-#selectDate {
-    border: 1px solid seagreen;
-    height: 180px;
-    width: 300px;
-    float: right;
-}
-
-#db-page-body {
-    width: 90%;
-    margin: auto;
-}
-
-.db-layout {
-    border: 1px solid gray;
-}
-
-.layout-list {
-    background-color: beige;
-}
-
-#brd-case {
-    width: 20%;
-    display: inline-block;
-    border: 1px solid sandybrown;
-    margin: auto;
-    padding: 10px;
-}
-
-.layout-brd {
-    background-color: blanchedalmond;
 }

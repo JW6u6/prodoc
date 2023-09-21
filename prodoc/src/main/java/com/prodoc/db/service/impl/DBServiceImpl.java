@@ -38,4 +38,9 @@ public class DBServiceImpl implements DBService {
 		return mapper.getPageAttr(displayId);
 	}
 
+	@Override
+	public int updateCase(PageVO vo) {
+		return mapper.updateCase(vo);
+	}
+
 }

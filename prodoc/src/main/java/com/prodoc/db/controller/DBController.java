@@ -29,10 +29,8 @@ public class DBController {
 	}
 	
 	@PostMapping("getDBPageList")
-	public List<BlockVO> getDBPageList(@RequestBody PageVO page, Model model){
-		String pageCage = page.getPageId();
-		List<BlockVO> DBList = service.getDBPageList(pageCage);
-		model.addAttribute("DBList", DBList);
+	public List<BlockVO> getDBPageList(@RequestBody String parentId){
+		List<BlockVO> DBList = service.getDBPageList(parentId);
 		return DBList;
 	}
 	
@@ -44,5 +42,15 @@ public class DBController {
 		result.add(pageInfo);
 		result.add(attrList);
 		return result;
+	}
+	
+	@PostMapping("updateCase")
+	public String updateCase(@RequestBody PageVO page) {
+		int result = service.updateCase(page);
+		if(result > 0) {
+			return "success";
+		} else {
+			return "fail";
+		}
 	}
 }

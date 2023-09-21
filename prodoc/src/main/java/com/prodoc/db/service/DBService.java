@@ -10,4 +10,5 @@ public interface DBService {
 	public List<BlockVO> getDBPageList(String casePage);
 	public PageVO getDBPageInfo(String displayId);
 	public List<PageAttrVO> getPageAttr(String displayId);
+	public int updateCase(PageVO vo);
 }
