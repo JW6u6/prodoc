@@ -26,12 +26,14 @@
 		padding: 20px;
 		border: 3px solid #888;
 		border-radius: 10px;
-		width: 700px;
+		width: 800px;
 		height: 500px;
 		text-align: center;
+		z-index: 1;
 }
 #temPage,#dbPage {
-		z-index: 1;
+		display:inherit;
+		z-index: 2;
 		left: 0;
 		top: 0;
 		width: 100%;
@@ -39,13 +41,17 @@
 		overflow: auto;
 		display: none;
 }
-#pageCont {
+#pageContent {
 	z-index: 1;
 		left: 0;
 		top: 0;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
+		width: 500px;
+		float:left;
+		height: 70%;
+		margin: 0 auto;
+		margin-top : 30px;
+		border:solid 2px pink;
+		border-radius: 10px;
 }
 .tem,.db {
 	background-color:yellow;
@@ -54,7 +60,7 @@
 	margin-top : 30px;
 	padding : 10px;
 	float : left;
-}
+} 
 /* 모달 내 닫기창 스타일 */
 .close {
 		color: #aaa;
@@ -162,7 +168,7 @@ select::-ms-expand {
 	font-size:17px;
 	font-weight:bold;
 	padding:12px;
-	width: 130px;
+	width: 150px;
 	height: 50px;
 	text-decoration:none;
 	text-shadow:1px 2px 0px #ffffff;
@@ -176,6 +182,9 @@ select::-ms-expand {
 	position:relative;
 	top:1px;
 }
+.btnDiv{
+	float:left;
+}
 .pageDiv{
 	width : 300px;
 	height : 40px;
@@ -183,12 +192,15 @@ select::-ms-expand {
 	border:solid 2px pink;
 	border-radius: 10px;
 }
-#temPage,#dbPage,#pageCont{
-	width : 400px;
-	float:right;
-	height :300px;
-	padding-left : 30px;
-	margin: 0 auto;
-	border:solid 2px pink;
-	border-radius: 10px;
+#temPage,#dbPage{
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 500px;
+		float:left;
+		height: 70%;
+		margin: 0 auto;
+		margin-top : 30px;
+		border:solid 2px pink;
+		border-radius: 10px;
 }

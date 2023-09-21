@@ -18,4 +18,11 @@ public class PageVO {
 	private String caseId;
 	private String pubCheck;
 	private String upDate;
+	
+	
+	//페이지 알림 끄기/켜기를 위한...
+	private String email;
+	private int result;
+	
+	
 }

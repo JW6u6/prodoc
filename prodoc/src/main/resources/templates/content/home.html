@@ -19,7 +19,12 @@
 	    <h2 id ="content1">내용물은 여기임니다</h2>
 	</div>
 
-	<div id="modSearch" th:insert="modal/search.html :: searchFrag"></div>	<!-- 검색 모달 -->
+
+
+	<!-- 워크/디비 검색 모달 -->
+	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
+	<script th:inline="javascript" src="js/modal/search.js"></script>
+	<div id="FileSearchModal" th:insert="modal/fileModal.html :: FileSearchModal"></div>	<!-- 파일 검색 모달 -->
 </body>
 <script src="js/modal/close.js"></script>
 </html>

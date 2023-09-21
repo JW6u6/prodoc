@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.w3.org/1999/xhtml">
+	xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
 
@@ -19,14 +19,25 @@
 					<li id="notifyPage">페이지 알림 켜기</li>
 				</ul>
 			</nav>
+
 			<img id="userImg" class="menuBtn profile" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:30px; border-radius: 15px;">
+
 		</header>
 	</div>
 
 	<!-- 내보내기 모달 -->
-	<div class="modelBtnList release hide">
-		<button class="closeBtn">&#10005;</button>
-		내보내기 파일형식 멀티미디어 제외 파일이름 저장위치
+	<div id="outOfFile" class="hide">
+		<div class="modelBtnList">
+			<button class="closeBtn">&#10005;</button>
+		</div>
+		<div>내보내기</div>
+		<select>
+			<option selected="selected" disabled="disabled">파일 형식</option>
+			<option value=".pdf"></option>
+			<option value=".jpg"></option>
+			<option value=".png"></option>
+		</select>
+		파일형식 멀티미디어 제외 파일이름 저장위치
 		<button type="button">내보내기</button>
 		<button type="button">취소</button>
 	</div>

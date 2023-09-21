@@ -1,13 +1,15 @@
 <!-- *은주 : WORKSCASE , DB 검색
-□ 모달창 띄우기 : id= searchMod display:none -> block
-□ 워크/디비 선택 시 보이는 화면 처리 : showWorkBtn , showDBBtn
-□ WORK : 날짜 / 작성자 / 내용 class:work ,  name="startDate" name="endDate" = id="dateBtn"  id="writerBtn" id="contentBtn"
-□ DB : 이름/ 타입             class="db"  id="dbNameBtn" id="dbTypetBtn"
-□ 공통 : 검색어, 워크스페이스명   name="keyword"  id="searchBtn"  id="workNameBtn"
+■ 모달창 띄우기 : id= searchMod display:none -> block
+■ 워크/디비 선택 시 보이는 화면 처리 : showWorkBtn , showDBBtn
+□ WORK : 날짜 / 작성자 / 내용 /검색어 / 워크스페이스명
+□ DB : 이름/ 타입 / 검색어 / 워크스페이스명
 □ 검색 버튼 눌렀을 때 테이블 리로드
+□ 로우 클릭 시 해당 위치로 이동
 -->
 <html xmlns:th="http://www.thymeleaf.org">
-<div id="searchMod" th:fragment="searchFrag" class="hide">
+<div th:fragment="searchFrag">
+<div id="modSearchWKDB" class="hide">
+    <h3>검색</h3>
     <div><button class="closeBtn">&#10005;</button></div>
     <div>
         <button type="button" id="showWorkBtn" class="findBtn">워크스페이스</button>
@@ -18,25 +20,31 @@
     <button type="button" id="searchBtn">검색</button>
     <!-- ---------------------------------------------- -->
     <div class="menuDiv">
-        <div  class="work">
-            <input type="date" name="startDate" disabled>
-            <input type="date" name="endDate" disabled>
-            <button type="button" id="dateBtn">날짜</button>
+        <div id="wkDiv" class="view">
+	        <div>
+	            <input type="date" name="startDate" disabled> ~ 
+	            <input type="date" name="endDate" onClick="this.max=settingDates()" disabled>
+	            <button type="button" class="none" id="dateBtn">날짜</button>
+	        </div>
+            <input type="checkbox" name="wkOption" value="creUser"><span>작성자</span>
+            <input type="checkbox" name="wkOption" value="content"><span>내용</span>
+            <input type="checkbox" name="wkOption" value="workName"><span>워크스페이스명</span>
         </div>
-        <button type="button" id="workNameBtn">워크스페이스명</button>
         
-        <button type="button" class="work" id="writerBtn">작성자</button>
-        <button type="button" class="work" id="contentBtn">내용</button>
-        
-        <button type="button" class="db" id="dbNameBtn">이름</button>
-        <button type="button" class="db" id="dbTypetBtn">타입</button>
+        <div id="dbDiv" class="hide">
+            <input type="checkbox" name="dbOption" value="pageName"><span>이름</span>
+            <input type="checkbox" name="dbOption" value="caseName"><span>타입</span>
+            <input type="checkbox" name="dbOption" value="workName"><span>워크스페이스명</span>
+        </div> 
     </div>
     <!-- ---------------------------------------------- -->
     <div class="result">
         <table>
-            <thead></thead>
-            <tbody></tbody>
+            <thead>
+            </thead>
+            <tbody id="resultData"></tbody>
         </table>
     </div>
+</div>
 </div>
 </html>
