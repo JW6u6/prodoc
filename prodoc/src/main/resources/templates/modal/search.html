@@ -1,10 +1,17 @@
-<!-- *은주 : WORKSCASE , DB 검색	-->
+<!-- *은주 : WORKSCASE , DB 검색
+□ 모달창 띄우기 : id= searchMod display:none -> block
+□ 워크/디비 선택 시 보이는 화면 처리 : showWorkBtn , showDBBtn
+□ WORK : 날짜 / 작성자 / 내용 class:work ,  name="startDate" name="endDate" = id="dateBtn"  id="writerBtn" id="contentBtn"
+□ DB : 이름/ 타입             class="db"  id="dbNameBtn" id="dbTypetBtn"
+□ 공통 : 검색어, 워크스페이스명   name="keyword"  id="searchBtn"  id="workNameBtn"
+□ 검색 버튼 눌렀을 때 테이블 리로드
+-->
 <html xmlns:th="http://www.thymeleaf.org">
 <div id="searchMod" th:fragment="searchFrag" class="hide">
     <div><button class="closeBtn">&#10005;</button></div>
     <div>
-        <button type="button" id="showWorkBtn">워크스페이스</button>
-        <button type="button" id="showDBBtn">데이터베이스</button>
+        <button type="button" id="showWorkBtn" class="findBtn">워크스페이스</button>
+        <button type="button" id="showDBBtn" class="findBtn">데이터베이스</button>
     </div>
     <!-- ---------------------------------------------- -->
     <input type="text" name="keyword">
@@ -33,11 +40,3 @@
     </div>
 </div>
 </html>
-<!--
-□ 모달창 띄우기 : id= searchMod display:none -> block
-□ 워크/디비 선택 시 보이는 화면 처리 : showWorkBtn , showDBBtn
-□ WORK : 날짜 / 작성자 / 내용 class:work ,  name="startDate" name="endDate" = id="dateBtn"  id="writerBtn" id="contentBtn"
-□ DB : 이름/ 타입             class="db"  id="dbNameBtn" id="dbTypetBtn"
-□ 공통 : 검색어, 워크스페이스명   name="keyword"  id="searchBtn"  id="workNameBtn"
-□ 검색 버튼 눌렀을 때 테이블 리로드
--->
