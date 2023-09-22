@@ -23,8 +23,6 @@ document.querySelectorAll(".findBtn").forEach((tag,idx) => {
 			wkdbType = "db";
 			workMd.className = "hide";
 			dbMd.className = "view";
-			document.querySelectorAll('input[name="wkOption"]')
-			.forEach(item => item.checked = false )
 		}
 	});
 });
@@ -61,16 +59,21 @@ document.querySelector("#searchBtn")
 	let dataList = {};
 	let checkList = [] , dateList = [];
 	
-	document.querySelectorAll('.menuDiv input[type="checkbox"]:checked')
-			.forEach(tag=> checkList.push(tag.value));
-	document.querySelectorAll('.menuDiv input[name$="Date"]')
-			.forEach(tag=> dateList.push(tag.value));
 	dataList.keyword = keyword;
 	dataList.type = wkdbType;
-	dataList.check = checkList;
-	dataList.date = dateList;
-
-	searchThis(dataList);
+	if(wkdbType == 'wk'){
+		console.log(wkdbType);
+		document.querySelectorAll('.menuDiv input[name$="Date"]')
+			.forEach(tag=> dateList.push(tag.value));
+		dataList.date = dateList;
+	}else{
+		console.log(wkdbType);
+		document.querySelectorAll('.menuDiv input[type="checkbox"]:checked')
+			.forEach(tag=> checkList.push(tag.value));
+		dataList.check = checkList;
+	}
+	console.log(dataList);
+	//searchThis(dataList);
 });
 
 //검색프로세스
