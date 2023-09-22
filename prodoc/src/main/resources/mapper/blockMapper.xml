@@ -57,10 +57,6 @@
 		where display_id = #{displayId}
 	</delete>
 	
-	<insert id="createCheckBlock" statementType="CALLABLE" parameterType="hashMap">
-		{call check_block(#{displayId, mode=IN,jdbcType=VARCHAR,javaType=string},
-							#{checked, mode=IN,jdbcType=VARCHAR,javaType=string})}
-	</insert>
 	<select id="getBookMark" resultType="bookMarkVO">
 		select display_id,title,description,img_adrs,url
 		from tbl_book_mark 
