@@ -1,6 +1,8 @@
 package com.prodoc.page.service;
 
 public interface PageService {
+	
+	public String insertPage(PageVO pageVO);
 
 	public boolean LockCheckPage(PageVO pageVO);
 	
