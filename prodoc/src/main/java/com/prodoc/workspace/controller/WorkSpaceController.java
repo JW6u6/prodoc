@@ -34,10 +34,14 @@ public class WorkSpaceController {
 	
 	//사이드바에 워크스페이스 목록 출력
 	@GetMapping("/workList")
-	public List<String> workList(WorkSpaceVO workVO){
+	public List<WorkSpaceVO> workList(WorkSpaceVO workVO){
 		return WorkSpaceMapper.selectWorkNo(workVO);
 	}
 	
+	@GetMapping("/workId")
+	public String workId(String workName) {
+		return WorkSpaceMapper.workId(workName);
+	}
 	//워크스페이스 단건 조회
 	@GetMapping("/workInfo")
 	public WorkSpaceVO workInfo(String workId) {
