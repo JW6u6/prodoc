@@ -129,32 +129,6 @@ console.log(val);
                 .catch(err => console.log(err));
 }
 
-// 페이지 삽입 AJAX
-// function insertPage() {
-//     let parentId = document.querySelector
-//     let pageName = document.querySelector('#pgName').value;
-//     let creUser = document.querySelector('#loginUser').value;
-//     let workId = 1;
-//     let caseId = 1;//해당 템플릿 클릭시 case 선택가능
-//     let val = { parentId, pageName, creUser, workId, caseId}
-// //     let numbering = a;
-// //     let caseId = 1; //해당 템플릿 클릭시 case 선택가능
-// //     let val = {
-// //         parentId,
-// //     }
-//     let url = '/pageInsert';
-
-//     fetch(url, {
-//             method: 'post',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(val)
-//         })
-//         .then(response => response.text())
-//         .then(result => console.log(result))
-//         .catch(err => console.log(err));
-// }
 //새로운 페이지 삽입 모달창생성(+ 클릭시)
 function newPageModal(event) {
     pageModal.style.display = "block";
