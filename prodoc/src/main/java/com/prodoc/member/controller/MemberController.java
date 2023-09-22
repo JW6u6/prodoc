@@ -20,8 +20,8 @@ public class MemberController {
 	MemberService memberService;
 	
 	@GetMapping("/memberList")
-	public List<MemberVO> getMemberList(@RequestBody MemberVO memberVO){
-		return memberService.listMember(memberVO);
+	public List<MemberVO> getMemberList(String workId){
+		return memberService.listMember(workId);
 		
 	}
 	

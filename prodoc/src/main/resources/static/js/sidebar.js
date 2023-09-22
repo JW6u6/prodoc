@@ -1,5 +1,5 @@
 init();
-
+const wNameList = ['workName', 'workType', 'publicCheck'];
 const inviteList = []; //workJoin에 workId랑 초대 이메일 담아서 json으로 넘기는 배열
 
 //전체 JS 기능 실행함수
@@ -33,6 +33,12 @@ function workList() {
                 <div class="setting"><img src="/images/settings.svg" width="12px" height="12px"></div>
                 <div>`
                 side.insertAdjacentHTML("beforeend", text);
+
+                let set = document.querySelectorAll('.setting');
+                set.forEach((tag) => {
+                    tag.addEventListener('click', setWork);
+                    tag.addEventListener('click', typeChange);
+                })
             }
             document.querySelectorAll('#side .Work').forEach(works => {
                 works.addEventListener('click', function (e) {
@@ -42,7 +48,7 @@ function workList() {
             })
             pageList();
         })
-    }
+}
 // 선택한 워크스페이스와 DB내의 워크스페이스 일치과정.(DB ID로 조회하는거 추가해야함)
 function selectWork(wId) {
     let url = '/workList';
@@ -70,54 +76,81 @@ function newWork() {
 
 }
 
+//워크스페이스 설정창 여는..거
+async function setWork(e) {
+    workModal.style.display = 'block';
+    let workId = e.currentTarget.closest('.Work').firstElementChild.textContent;
+    let result = await selectOneWork(workId);
+    await memberList(workId);
+
+    let tTog = document.querySelector('#teamToggleArea');
+    let name = document.querySelector('#nameArea'); //워.스.이름영역
+    let pub = document.querySelector('#pubArea'); //공개범위 영역
+    let type = document.querySelector('#typeArea'); //타입 영역
+    let own = document.querySelector('#ownArea'); //소유자 영역
+    let del = document.querySelector('#deleteBtn'); //삭제로 넘어가는 버튼
+    let delCheck = document.querySelector('#delCheckArea'); //삭제확인
+    let inv = document.querySelector('#inviteUser');
+    let mem = document.querySelector('#memberArea'); //멤버 출력(권한,내보내기할수있음)
+
+    if (result.workType == 'TEAM') {
+        tTog.classList.remove('hide');
+        //팀 워크스페이스인 경우 설정/멤버 토글.
+
+    } else {
+        //개인일때 보여야 하는거
+
+    }
+}
+
 // 인사이트 내 사이드바에 페이지 목록 불러옴
 function pageList() {
     let url = '/pageList';
     let wId = "";
-    
-    fetch(url,{
-        method:'GET',
-    })
-    .then(response =>{
-        return response.json();
-    })
-    .then(data=>{
-        document.querySelectorAll('#side .Work').forEach(works => {
-            workId = works.firstElementChild.innerText;
-            console.log(wId);
-        })
-        for(let i=0;i<data.length;i++){
-        pId = data[i].pageId;
-        console.log(data[i].pageId);
-        if(wId == data[i].workId){
 
-        }
-        let side = document.querySelector('#side');
-        let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-        side.insertAdjacentHTML("beforeend",text);
-        }
-        
-        document.querySelectorAll('#side .Page').forEach(pages =>{
-            pages.addEventListener('click',function(e){
-                let pageClick = e.currentTarget.firstElementChild.innerText;
-                console.log(pageClick);
-                selectPage(pageClick);
-            })
+    fetch(url, {
+            method: 'GET',
         })
-       
-    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            document.querySelectorAll('#side .Work').forEach(works => {
+                workId = works.firstElementChild.innerText;
+                console.log(wId);
+            })
+            for (let i = 0; i < data.length; i++) {
+                pId = data[i].pageId;
+                console.log(data[i].pageId);
+                if (wId == data[i].workId) {
+
+                }
+                let side = document.querySelector('#side');
+                let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
+                side.insertAdjacentHTML("beforeend", text);
+            }
+
+            document.querySelectorAll('#side .Page').forEach(pages => {
+                pages.addEventListener('click', function (e) {
+                    let pageClick = e.currentTarget.firstElementChild.innerText;
+                    console.log(pageClick);
+                    selectPage(pageClick);
+                })
+            })
+
+        })
 }
 
 // 페이지 선택시 PID 불러오기
 function selectPage(pageClick) {
-    let url = '/pageInfo?pageId='+pageClick;
+    let url = '/pageInfo?pageId=' + pageClick;
     fetch(url)
-    .then(res => {
-        return res.json();
-      })
-    .then(data => {
-        console.log(data);
-    })
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
 }
 
 // 페이지 삽입 AJAX
@@ -166,6 +199,17 @@ function closeModal() {
     workModal.style.display = "none";
     pageModal.style.display = "none";
     document.body.style.overflow = "auto"
+    for (let field of wNameList) {
+
+        if (field == 'workName') {
+            document.querySelector('input[name="' + field + '"]').value = '';
+        } else {
+            let wselect = document.querySelectorAll('select[name="' + field + '"]');
+            wselect.forEach((item) => {
+                item.options[0].selected = true;
+            })
+        }
+    }
 }
 //페이지-템플릿 목록 띄움
 function template() {
@@ -235,15 +279,15 @@ function newWorkSpace() {
             }
             closeModal();
             workList();
-            workType.options[0].selected = true;
-            publicCheck.options[0].selected = true;
-            workName.value = '';
+
         })
         .catch(err => console.log(err));
 }
 
 //워크스페이스 타입별 select option 구분 / 초대 부분 노출여부
-document.querySelector('#wsType').addEventListener('change', function (e) {
+document.querySelector('#wsType').addEventListener('change', typeChange);
+
+function typeChange(e) {
     let invite = document.querySelector('#inviteUser'); //초대 부분
     let memberOption = document.querySelector('#memOption'); //멤버공개옵션(팀)
     let privateOption = document.querySelector('#privOption'); //비공개옵션(개인)
@@ -256,7 +300,8 @@ document.querySelector('#wsType').addEventListener('change', function (e) {
         memberOption.classList.add('hide');
         privateOption.classList.remove('hide');
     }
-});
+};
+
 
 
 
@@ -274,6 +319,7 @@ invBtn.addEventListener('click', addList);
 
 function addList() {
     let mail = document.querySelector('#invEmail');
+
     if (mail.value != '') {
 
         let trTag = document.createElement('tr');
@@ -322,6 +368,60 @@ function inviteWork(workId) {
 
 }
 
-function deleteWork() {
+const arr = ['workId', 'email', 'auth'];
+async function memberList(workId) {
+    let url = `/memberList?workId=${workId}`;
+    let mail;
+    await fetch(url, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            for (let num of result) {
+                let trTag = document.createElement('tr');
+                for (let a of arr) {
+                    let tdTag = document.createElement('td');
+                    tdTag.textContent = num[a];
+                    trTag.append(tdTag);
+                    let check = document.createElement('input');
+                    check.type = 'checkbox';
+                    tdTag.append(check);
+                }
+                document.querySelector('#memList').append(trTag);
+            }
+            mail = result.email;
+        })
+        .catch(err => console.log(err));
+    return mail;
+}
 
+//워크스페이스 설정에 쓸 단건조회
+async function selectOneWork(workId) {
+    let selectResult;
+
+    let url = `/workInfo?workId=${workId}`;
+    await fetch(url, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            for (let field in result) {
+                for (let nm of wNameList) {
+                    if (field == nm) {
+                        let list = document.querySelector(`[name="${field}"]`);
+                        list.value = result[field];
+                    }
+                }
+            }
+            selectResult = result;
+        })
+        .catch(err => console.log(err));
+
+    return selectResult;
 }
