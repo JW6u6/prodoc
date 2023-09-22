@@ -6,6 +6,7 @@
  	
  	
  	<select id="selectWorkNo" resultType="String">
+ 		<!--  
  		SELECT work_id
  		FROM tbl_workspace
  		select work_name
@@ -14,6 +15,10 @@
 			                SELECT work_id
 			                FROM tbl_member
 			                where email = #{email}
+			                )
+ 		-->
+ 		SELECT work_id
+      	FROM tbl_workspace
 			                ) -->
  	</select>
  	
@@ -46,6 +51,11 @@
 									, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
 								)}
 	</insert>
+	
+	<!-- 팀워크스페이스 설정에 출력되는 초대 유저 목록 -->
+	<select id="selectInvite" resultType="String" parameterType="WorkJoinVO">
+	
+	</select>	
  	
  	
  	<!-- 워크스페이스 수정 -->

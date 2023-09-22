@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.prodoc.block.mapper.BlockMapper;
 import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
+import com.prodoc.block.service.BookMarkVO;
 
 @Service
 public class BlockServiceImpl implements BlockService {
@@ -41,34 +42,31 @@ public class BlockServiceImpl implements BlockService {
 		return blockmapper.deleteBlock(blockVO);
 	}
 
+
 	@Override
-	public int createCheckBlock(Map<String,String> hashMap) {
+	public int createBookMark(BookMarkVO vo) {
 		// TODO Auto-generated method stub
-		return blockmapper.createCheckBlock(hashMap);
+		return blockmapper.createBookMark(vo);
 	}
 
 	@Override
-	public int createBookMark(String display_id) {
+	public int updateBookMark(BookMarkVO vo) {
 		// TODO Auto-generated method stub
-		return blockmapper.createBookMark(display_id);
+		return blockmapper.updateBookMark(vo);
 	}
 
 	@Override
-	public int updateBookMark(Map<String, String> map) {
+	public BookMarkVO getBookMark(BookMarkVO vo) {
 		// TODO Auto-generated method stub
-		return blockmapper.updateBookMark(map);
+		return blockmapper.getBookMark(vo);
 	}
 
 	@Override
-	public String getBookMark(String displayId) {
+	public BlockVO selectBlock(BlockVO blockVO) {
 		// TODO Auto-generated method stub
-		return blockmapper.getBookMark(displayId);
+		return blockmapper.selectBlock(blockVO);
 	}
 
-	@Override
-	public int deleteBookMark(String displayId) {
-		// TODO Auto-generated method stub
-		return blockmapper.deleteBookMark(displayId);
-	}
+
 
 }

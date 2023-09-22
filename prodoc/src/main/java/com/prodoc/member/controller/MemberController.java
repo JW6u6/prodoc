@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +23,11 @@ public class MemberController {
 	public List<MemberVO> getMemberList(@RequestBody MemberVO memberVO){
 		return memberService.listMember(memberVO);
 		
+	}
+	
+	//멤버 내보내기
+	@PostMapping("/memberDelete")
+	public int membersDelete(@RequestBody List<MemberVO> memberVO) {
+		return memberService.deleteMember(memberVO);
 	}
 }
