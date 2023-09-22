@@ -1,5 +1,7 @@
 package com.prodoc.workspace.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +35,13 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	}
 
 	@Override
-	public String inviteWorkspaceUser(WorkJoinVO joinVO) {
-		workMapper.inviteWorkspace(joinVO);
-		return joinVO.getResult();
+	public int inviteWorkspaceUser(List<WorkJoinVO> listVO) {
+		for (WorkJoinVO joinVO : listVO) {
+
+			workMapper.inviteWorkspace(joinVO);
+		}
+		
+		return listVO.size();
 	}
 
 	@Override

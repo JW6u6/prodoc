@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.block.service.BlockVO;
+import com.prodoc.block.service.BookMarkVO;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 
 /*
@@ -37,6 +38,15 @@ public class BlockController {
 		return blocks;
 	}
 	
+	@GetMapping("block/getOne")
+	public BlockVO getOneBlock(@RequestParam String displayId) {
+		BlockVO block = new BlockVO();
+		block.setDisplayId(displayId);
+		
+		
+		return service.selectBlock(block);
+	}
+	
 	@PostMapping("block/create")
 	public String createBlock(@RequestBody BlockVO block) {
 		int result = service.createBlock(block);
@@ -44,7 +54,9 @@ public class BlockController {
 	}
 	@PostMapping("block/update")
 	public String updateBlock(@RequestBody BlockVO block) {
+		System.out.println(block);
 		int result = service.updateBlock(block);
+		System.out.println(result);
 		return result +"";
 	}
 	@PostMapping("block/delete")
@@ -78,32 +90,27 @@ public class BlockController {
 	}
 	
 	@PostMapping("block/createBookMark")
-	public String createBookMark(@RequestBody Map<String,String> displayId) {
-		Map<String, String> map = displayId;
-		String id = map.get("displayId");
-		int result = service.createBookMark(id);
+	public String createBookMark(@RequestBody BookMarkVO vo) {
+		System.out.println(vo);
+		int result = service.createBookMark(vo);
 		
 		return result+"";
 	}
 	
 	@PostMapping("block/updateBookMark")
-	public String updateBookMark(@RequestBody Map<String,String> data) {
-		int result = service.updateBookMark(data);
+	public String updateBookMark(@RequestBody BookMarkVO vo) {
+		System.out.println(vo);
+		int result = service.updateBookMark(vo);
 		return result+"";
 	}
 	
 	@GetMapping("block/getBookMark")
-	public String getBookMark(@RequestParam String displayId) {
-		String result = service.getBookMark(displayId);
-		return result;
+	public BookMarkVO getBookMark(BookMarkVO vo) {
+		BookMarkVO map = service.getBookMark(vo);
+		return map;
 	}
 	
-	@PostMapping("block/deleteBookMark")
-	public String deleteBookMark(@RequestBody Map<String,String> data) {
-		String displayId = data.get("displayId");
-		int result = service.deleteBookMark(displayId);
-		return "";
-	}
+	
 	
 //	@PostMapping("block/check")
 //	public String updateCheckBlock(@RequestParam String id,@RequestParam String checked) {

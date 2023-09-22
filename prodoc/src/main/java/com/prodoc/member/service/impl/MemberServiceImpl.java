@@ -16,15 +16,19 @@ public class MemberServiceImpl implements MemberService {
 
 	@Setter(onMethod_ = @Autowired)
 	MemberMapper memberMapper;
-	
+
 	@Override
 	public boolean renewAuthMember(MemberVO memberVO) {
 		return memberMapper.renewAUTH(memberVO) == 1;
 	}
 
+	//멤버 내보내기
 	@Override
-	public boolean deleteMember(MemberVO memberVO) {
-		return memberMapper.removeMember(memberVO) == 1;
+	public int deleteMember(List<MemberVO> listVO) {
+		for(MemberVO memberVO : listVO) {
+			memberMapper.removeMember(memberVO);
+		}
+		return listVO.size(); 
 	}
 
 	@Override
