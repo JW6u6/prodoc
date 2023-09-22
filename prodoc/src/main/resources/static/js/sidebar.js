@@ -108,98 +108,44 @@ function pageList() {
        
     })
 }
-        //페이지 ID값들 배열
-        const pageArr = [];
-        //워크 ID값들 배열
-        const workArr = [];
-        for(let item of data){
-            pageArr.push(item.pageId);
-            workArr.push(item.workId);
-        }
-        for(let i=0;i<data.length;i++){
-        let pId = pageArr[i]
-        let side = document.querySelector('#side');
-        let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-        side.insertAdjacentHTML("beforeend",text);
-        document.querySelectorAll('#side .Page').forEach(pages =>{
-            pages.addEventListener('click',function(e){
-                let pageClick = e.currentTarget.firstElementChild.innerText;
-                if(pId == pageClick){
-                    selectPage(pId);
-                }
-            })
-        })
-        }
-    })
-//     fetch(url, {
-//             method: 'GET',
-//         })
-//         .then(response => {
-//             return response.json();
-//         })
-//         .then(data => {
-//             for (let i = 0; i < data.length; i++) {
-//                 let side = document.querySelector('#side');
-//                 let pId = data[i];
-//                 let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-//                 side.insertAdjacentHTML("beforeend", text);
-//             }
-//             document.querySelectorAll('#side .Page').forEach(pages => {
-//                 pages.addEventListener('click', function (e) {
-//                     let pId = e.currentTarget.firstElementChild.innerText;
-//                     selectPage(pId);
-//                 })
-//             })
-//         })
-}
 
 // 페이지 선택시 PID 불러오기
-function selectPage(pId) {
-    let url = '/pageInfo?pageId=' + pId;
+function selectPage(pageClick) {
+    let url = '/pageInfo?pageId='+pageClick;
     fetch(url)
     .then(res => {
         return res.json();
       })
     .then(data => {
-        console.log('111');
+        console.log(data);
     })
 }
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            for (let field in data) {
-                if (data[field] == pId) {
-                    console.log(data);
-                    //PID 불러왔음..
-                }
-            }
-        })
-}
 
-// 인사이트 내 사이드바에 페이지 목록 불러옴
-// function pageList() {
-//     let url = '/pageList';
+// 페이지 삽입 AJAX
+// function insertPage() {
+//     let parentId = document.querySelector
+//     let pageName = document.querySelector('#pgName').value;
+//     let creUser = document.querySelector('#loginUser').value;
+//     let workId = 1;
+//     let caseId = 1;//해당 템플릿 클릭시 case 선택가능
+//     let val = { parentId, pageName, creUser, workId, caseId}
+// //     let numbering = a;
+// //     let caseId = 1; //해당 템플릿 클릭시 case 선택가능
+// //     let val = {
+// //         parentId,
+// //     }
+//     let url = '/pageInsert';
+
 //     fetch(url, {
-//             method: 'GET',
+//             method: 'post',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(val)
 //         })
-//         .then(response => {
-//             return response.json();
-//         })
-//         .then(data => {
-//             for (let i = 0; i < data.length; i++) {
-//                 let side = document.querySelector('#side');
-//                 let pId = data[i];
-//                 let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-//                 side.insertAdjacentHTML("beforeend", text);
-//             }
-//             document.querySelectorAll('#side .Page').forEach(pages => {
-//                 pages.addEventListener('click', function (e) {
-//                     let pId = e.currentTarget.firstElementChild.innerText;
-//                     console.log(pId)
-//                 })
-//             })
-//         })
+//         .then(response => response.text())
+//         .then(result => console.log(result))
+//         .catch(err => console.log(err));
 // }
 
 // 페이지 선택시 PID 불러오기

@@ -59,26 +59,6 @@ img.addEventListener('click', function(e){ 				//이미지 클릭
 	});
 });
 
-//비밀번호 일치 체크
-document.querySelectorAll(".password").forEach((tag, idx, obj)=>{
-	tag.addEventListener('change', function(e){
-		if(obj[0].value == obj[1].value)	passTrue = true;
-		else	passTrue = false;
-	});
-});
-
-//전화번호	인증 체크
-let beforeN = document.querySelector("input[name='phone']").value;	//원래의 전화번호
-document.querySelector("input[name='phone']")
-.addEventListener('change', function(e){
-	//원래의 전화번호에서 변경이 일어나면 인증 여부 초기화
-	if(e.target.value == beforeN)	phoneTrue = true;
-	else 							phoneTrue = false;
-});
-
-
-let passTrue = true;	//비밀번호 일치 여부
-let phoneTrue = true;	//전화번호 인증 여부
 //수정 저장
 userModForm.addEventListener('submit', function(e){
 	e.preventDefault();
@@ -98,38 +78,57 @@ userModForm.addEventListener('submit', function(e){
 	.then(result => {
 		if(result.result){
 			alert('프로필이 수정되었습니다.');
-			updateUser(result.data);
-			document.querySelector("#modInfoBtn").click();
-		}else alert('프로필 수정이 실패하였습니다.');
+			for(let list in result.data){
+				//console.log(result.data);
+				let name = "input[name='"+ list +"']"
+				let inputT = document.querySelector(name);
+				updateUser(list, inputT, result.data[list]);	//화면 수정
+			}
+			document.querySelector("#UserModiMod button[class='closeBtn']").click();
+		}else 
+			alert('프로필 수정이 실패하였습니다.');
 	}).catch(err => console.log(err));
 });
 
 //사용자 정보 화면 업데이트
-function updateUser(data){
-	console.log(data);
-	for(let list in data){
-		console.log("list: " + list);
-		console.log(data[list]);
-		let name = "input[name='"+ list +"']"
-		let inputT = document.querySelector(name);
-		if(list == "email" || list == "nickname"){
-			document.querySelectorAll("#UserModiMod p").forEach(item =>{
-				if(item.name == list){
-					inputT.value = data[list];	//정보수정창
-					item.value = data[list];	//정보창
-				}
-			});
-		}else if(list == "profile"){
-			let img = document.querySelector("#UserModiMod img");
-			img.setAttribute("th:src", `/files/${data[list] != null ? data[list] : 'noneUser.jpg'}`);
-			img = document.querySelector("img[id='profile']");
-			img.setAttribute("th:src", `/files/${data[list] != null ? data[list] : "noneUser.jpg"}`);
-		}else{
-			if(inputT != null)
-				inputT.value = data[list];
-		}
+function updateUser(list, inputT, data){
+	if(list == "email" || list == "nickname"){	//이메일, 이름 재설정
+		document.querySelectorAll("#UserInfoMod p").forEach(item =>{
+			if(item.name == list){
+				inputT.value = data;		//정보수정창
+				item.value = data;		//정보창
+			}
+		});
+	}else if(list == "profile"){				//프로필 이미지 재설정
+		let img = document.querySelectorAll("img.profile").forEach(item =>{
+			item.src= `/files/${data != null ? data : 'noneUser.jpg'}`;
+		});
+	}else if(list == "password"){				//비밀번호 입력칸 재설정
+		document.querySelectorAll(".password").forEach(item => item.value = "");
+	}else{
+		if(inputT != null)	inputT.value = data;
 	}
 }
+
+let passTrue = true;	//비밀번호 일치 여부
+let phoneTrue = true;	//전화번호 인증 여부
+
+//비밀번호 일치 체크
+document.querySelectorAll(".password").forEach((tag, idx, obj)=>{
+	tag.addEventListener('change', function(e){
+		if(obj[0].value == obj[1].value)	passTrue = true;
+		else	passTrue = false;
+	});
+});
+
+//전화번호	인증 체크
+let beforeN = document.querySelector("input[name='phone']").value;	//원래의 전화번호
+document.querySelector("input[name='phone']")
+.addEventListener('change', function(e){
+	//원래의 전화번호에서 변경이 일어나면 인증 여부 초기화
+	if(e.target.value == beforeN)	phoneTrue = true;
+	else 							phoneTrue = false;
+});
 
 //휴대폰 인증번호 전송
 let authMsg = "";	//불러올 인증번호
