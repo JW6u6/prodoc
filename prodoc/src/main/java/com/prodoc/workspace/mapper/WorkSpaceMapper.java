@@ -18,6 +18,9 @@ public interface WorkSpaceMapper {
 	public void registerWorkspace(WorkSpaceVO workVO);
 	// 워크스페이스 초대
 	public void inviteWorkspace(WorkJoinVO joinVO);
+	
+	//팀 워크스페이스 초대목록
+	public List<String> selectInvite(WorkJoinVO joinVO);
 
 	// 워크스페이스 수정
 	public int modifyWorkspace(WorkSpaceVO workVO);
@@ -28,4 +31,5 @@ public interface WorkSpaceMapper {
 	
 	//워크스페이스 메인페이지 지정
 	public int MainPgWorkspace(WorkSpaceVO workVO);
+	
 }

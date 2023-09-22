@@ -21,4 +21,5 @@ public class BlockVO {
 	private String mentionList;
 	private String color;
 	private String backColor;
+	private String checked;
 }
