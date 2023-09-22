@@ -1,5 +1,7 @@
 package com.prodoc.file.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.prodoc.file.service.FileSearchService;
+import com.prodoc.file.service.FileVO;
 import com.prodoc.file.service.KeywordVO;
 import com.prodoc.file.service.SelectFileVO;
 import com.prodoc.user.service.UserVO;
@@ -33,4 +37,6 @@ public class FileRestController {
 		log.info(vo.toString());
 		return service.getFileList(vo);
 	}
+	
+	
 }
