@@ -16,9 +16,6 @@
 			                where email = #{email}
 			                )
  		-->
- 		SELECT work_id
-      	FROM tbl_workspace
-			                ) -->
 		SELECT work_id,work_name
 		FROM tbl_workspace
  	</select>
