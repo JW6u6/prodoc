@@ -21,9 +21,9 @@
  	</select>
  	<!-- 워크 id,name 값 가져오기 -->
  	<select id = "workId" resultType="String">
- 		SELECT work_id
+ 		SELECT work_name
  		FROM tbl_workspace
- 		WHERE work_name = #{workName}
+ 		WHERE work_id = #{workId}
  	</select>
  	
  	<!-- 워크스페이스 단건 조회 -->

@@ -26,10 +26,17 @@ public class PageController {
 	PageService pageService;
 	
 	@GetMapping("/pageList")
-	public List<PageVO> pageList(@RequestParam String workName){
-		return pageMapper.pageList(workName);
+	public List<PageVO> pageList(@RequestParam String workId){
+		return pageMapper.pageList(workId);
 	}
-	
+	@GetMapping("/findWork")
+	public String findWork(@RequestParam String pageId){
+		return pageMapper.findWork(pageId);
+	}
+	@GetMapping("/pageInPage")
+	public List<PageVO> pageInPage(@RequestParam String pageId){
+		return pageMapper.pageInPage(pageId);
+	}
 	@GetMapping("/pageInfo")
 	public String pageInfo(PageVO pageVO) {
 		return pageMapper.selectPageInfo(pageVO);

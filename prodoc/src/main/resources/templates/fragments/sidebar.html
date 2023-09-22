@@ -48,6 +48,38 @@
 					<button id="close-modal" class="close" onclick="closeModal()">닫기</button>
 				</div>
 			</div>
+			<div id="subPageModal">
+				<div class="modal-content">
+					<div class="pageDiv"><input type="text" value="" id="pgName"/></div>
+					<div class = "btnDiv">
+					<button id="subTemBtn" class="Type" onclick="template()">템플릿</button>
+					<button id="subdbBtn" class="Type" onclick="database()">DB</button>
+					</div>
+					<div id="subPageContent"></div>
+					<div id="subTemPage">
+						<div id="subtem1" class="tem" onclick="selectTemp(event)">템플릿1</div>
+						<div id="subtem2" class="tem" onclick="selectTemp(event)">템플릿2</div>
+						<div id="subtem3" class="tem" onclick="selectTemp(event)">템플릿3</div>
+						<div id="subtem4" class="tem" onclick="selectTemp(event)">템플릿4</div>
+					</div>
+					<div id="subDbPage">
+						<div id="subdb1" class="db" onclick="selectDb(event)">db1</div>
+						<div id="subdb2" class="db" onclick="selectDb(event)">db2</div>
+						<div id="subdb3" class="db" onclick="selectDb(event)">db3</div>
+						<div id="subdb4" class="db" onclick="selectDb(event)">db4</div>
+					</div>
+					
+						<input type="text" value="" id="subParentId" />
+						부모 pageId값
+						<input type="text" value="" id="subWorkId" />
+						workId값
+						<input type="text" value="" id="subCaseId" /> 
+						caseId값
+
+					<button type="button" id="insert-subPage" class="close">생성</button>
+					<button id="close-modal" class="close" onclick="closeModal()">닫기</button>
+				</div>
+			</div>
 		</div>
 		
 		<!--/*/ 워크스페이스 모달 시작 /*/-->
