@@ -1,5 +1,6 @@
 package com.prodoc.block.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -8,13 +9,13 @@ import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
@@ -25,17 +26,21 @@ import com.prodoc.block.service.impl.BlockServiceImpl;
  * 개발일자 : 2023/09/14
  * 
 */
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 public class BlockController {
 
 	@Autowired
 	BlockServiceImpl service;
 	
-	@PostMapping("block/get")
-	public List<BlockVO> getBlock(@RequestBody BlockVO block) {
-		List<BlockVO> blocks = service.selectAllBlock(block);
-		return blocks;
+	@GetMapping("block/get")
+	public List<BlockVO> getBlock(@RequestParam String pageId) {
+		
+		BlockVO block =  new BlockVO();
+		
+		block.setPageId(pageId);
+		
+		return service.selectAllBlock(block);
 	}
 	
 	@GetMapping("block/getOne")
@@ -79,7 +84,7 @@ public class BlockController {
             map.put("title", ogTitle);
             map.put("desc", ogDescription);
             map.put("img", ogImage);
-            	
+            
             return map;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -110,7 +115,20 @@ public class BlockController {
 		return map;
 	}
 	
-	
+	@PostMapping("block/uploadFile")
+	public void UploadFile(@RequestBody MultipartFile uploadFile) {
+		String uploadFileName = uploadFile.getOriginalFilename();
+		System.out.println(uploadFileName);
+		String uploadFolder = "C:\\upload";
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+		File saveFile = new File(uploadFolder,uploadFileName);
+		try {
+			uploadFile.transferTo(saveFile);
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 //	@PostMapping("block/check")
 //	public String updateCheckBlock(@RequestParam String id,@RequestParam String checked) {
