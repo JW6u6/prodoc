@@ -5,7 +5,7 @@ function listLayoutChange(pageId, layout){
     console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
     // case_id 업데이트 fetch
     updateCase(pageId, layout);
-
+    
     switch(layout){
         case 'DB_LIST' : 
             pageList.forEach(async(block) => {
@@ -13,16 +13,53 @@ function listLayoutChange(pageId, layout){
                 let makeBlock = dblistBlock(block, dbInfo);
                 dbbody.insertAdjacentHTML("afterbegin", makeBlock);
             });
+            let addpage = addDbpage();
+            dbbody.insertAdjacentHTML("afterbegin", addpage)
             break;
 
         case 'DB_BRD' : 
+        let states = ["WAIT", "RUN", "END", "CANCLE"];
+
+        let statesTag = document.createElement("div");
+        states.forEach(state => {
+            let stateType = document.createElement("div");
+            stateType.textContent = state;
+            stateType.setAttribute("data-state-tags", state);
+            statesTag.append(stateType);
+        })
+        dbbody.append(statesTag);
+
+        let caseDiv = document.createElement("div");
+        caseDiv.setAttribute("class", "display-flex");
+        states.forEach(state => {
+            let stateTag = document.createElement("div");
+            stateTag.setAttribute("data-state", state);
             pageList.forEach(async(block) => {
                 let dbInfo = await getDBPageInfo(block.displayId);
-                let makeBlock = dbBrdBlock(block, dbInfo);
-            })
+                    for(let field in dbInfo[1]){
+                        if(dbInfo[1][field]['attrId'] == 'STATE' && dbInfo[1][field]['attrContent'] == state) {
+                            let makeBlock = dbBrdBlock(block, dbInfo);      // return : 블럭 tag
+                            stateTag.insertAdjacentHTML("afterbegin",makeBlock);
+                        }
+                    }  // 속성 for
+                }); // pageList for
+                let addpage = addDbpage();
+                stateTag.insertAdjacentHTML("afterbegin", addpage);
+                caseDiv.append(stateTag);
+            }); //states for
+            dbbody.append(caseDiv);
             break;
 
         case 'DB_GAL' : 
+            pageList.forEach(async(block) => {
+                let dbInfo = await getDBPageInfo(block.displayId);            // displayId로 해당 page 정보 가져오기
+                let makeBlock = dbGalBlock(block, dbInfo);
+                dbbody.insertAdjacentHTML("afterbegin", makeBlock);
+            });
+
+            let add = addDbpage();
+            dbbody.insertAdjacentHTML("afterbegin", add);
+            
             break;
 
         case 'DB_TBL' : 
@@ -32,10 +69,6 @@ function listLayoutChange(pageId, layout){
             break;
     };
 
-    let addPage = document.createElement("div");
-    addPage.textContent = '새로 만들기';
-    addPage.addEventListener("click", addPage);
-    dbbody.append(addPage);
 }
 
 function updateCase(pageId, layout){
@@ -69,24 +102,74 @@ async function getDBPageInfo(diplayId){
     return data;
 }
 
-function addPage(e){
+function addDBPage(e){
     console.log(e.currentTarget);
 }
 
-// 블럭 레이아웃들      ✔️block : blockVO, dbInfo[0] : PageVo, dbInfo[1] : useAttrVO
+// 블럭 레이아웃들  ✔️block : blockVO, dbInfo[0] : PageVo, dbInfo[1] : useAttrVO
+function getAttrList(attrs){
+    let useAttr = '';
+    for(let field in attrs){
+        if (attrs[field]["displayCheck"] == "TRUE" && attrs[field]["attrId"] != "STATE"){
+            useAttr += `
+            <div data-page-attr="`+attrs[field]["attrId"]+`" data-attr-id="`+attrs[field]["useAttrId"]+`">
+                `+attrs[field]["attrContent"]+`
+            </div>
+            `;
+        }
+    }
+    return useAttr;
+}
+
+function addDbpage(){
+    const addDBPageBtn = `
+        <div data-add-db="addDBPage">
+            <div class="inlineTags">&#10010;</div>
+            <div class="inlineTags">새로 만들기</div>
+        <div>
+    `
+    return addDBPageBtn;
+}
+
 function dblistBlock(block, dbInfo){
     const listType = `
-        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`">
-        <div>img</div>
-        <div>`+dbInfo[0].pageName+`</div>
+        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="list">
+        <div data-tagimg>img</div>
+        <div data-pagename>`+dbInfo[0].pageName+`</div>
         </div>
     `;
     return listType;
 }
 
 function dbBrdBlock(block, dbInfo){
+    let useAttr = getAttrList(dbInfo[1]);
     const brdType = `
-    
+        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="brd">
+            <div data-pagename>`+dbInfo[0].pageName+`</div>
+            `+useAttr+`
+        </div>
     `;
     return brdType;
+}
+
+function dbGalBlock(block, dbInfo){
+    let useAttr = getAttrList(dbInfo[1]);
+    const galType = `
+        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="gal">
+            <div data-gal-img=""><img scr=""></div>
+            <div>
+                <div data-pagename>`+dbInfo[0].pageName+`</div>
+                `+useAttr+`
+            </div>
+        </div>
+    `;
+    return galType;
+}
+
+function dbTblBlock(block, dbInfo){
+    
+}
+
+function dbCalBlock(){
+    
 }
