@@ -28,7 +28,9 @@ function workList() {
         .then((data) => {
             data.forEach(item => {
                 let side = document.querySelector('#side');
-                let text = '<div class= "Work">' + '<span class="workId">' + item.workName + '</span>' + ' <span onclick="newPageModal(event)" class="add">➕</span> <div class = "page1"></div> <div>'
+                let plusImg = document.querySelector('.plus');
+                console.log(plusImg.src);
+                let text = '<div class= "Work">' + '<span class="workId">' + item.workName + '</span>' + ' <span onclick="newPageModal(event)" class="add">' + plusImg.src + '</span> <div class = "page1"></div> <div>'
                 side.insertAdjacentHTML("beforeend", text);
             })
             document.querySelectorAll('#side .workId').forEach(works => {
