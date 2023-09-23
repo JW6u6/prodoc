@@ -1,31 +1,24 @@
-//DOM 변화 감지
-const observer = new MutationObserver(mutations => {
-    //검색 버튼이벤트 활성화
-    const dbSearch = document.querySelectorAll(".database-search");
-    dbSearch.forEach(ele => {
-        ele.addEventListener("click", databaseSearch);
-    })
+// 그룹이벤트
+document.getElementById("pagecontainer").addEventListener("click", e =>{
+    if (e.target.matches(".database-search")) databaseSearch(e);
+    else if (e.target.matches(".addDBPage")) insertDBpage(e);
+    else if (e.target.matches(".change-layout")) layoutClick(e);
+})
 
-    // DB 레이아웃 체인지 이벤트
-    document.querySelectorAll(".change-layout").forEach(tag => {
-        tag.addEventListener("click", function(e){
-            let layout = e.currentTarget.getAttribute("data-dblayout");
-            let pageId = e.currentTarget.closest('[data-page-id]').getAttribute("data-page-id");
+// 레이아웃 변경을 위한 정보 전달 => 레이아웃 변경 이벤트 실행
+function layoutClick(e){
+    let layout = e.target.closest('[data-dblayout]').getAttribute("data-dblayout");     // 선택된 레이아웃 (update)
+    let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");       // 선택된 case의 페이지 id (update)
+    let caseId = e.target.closest('[data-block-id]').getAttribute("data-block-id");     // 선택된 case의 블럭 id (하위블럭 정보 select)
+    console.log(layout, pageId, caseId);
 
-            listLayoutChange(pageId, layout);
-        });
-    });
+    let list = getDBPageList(caseId);
     
-})  //observer
-const obOption = {
-    attributes: true,
-    childList: true,
-    characterData: true
-};
-observer.observe(container,obOption);
+    updateCase(pageId, layout);     // case_id 업데이트 fetch
+    listLayoutEditor(list[1], list[0]['casePageId'], list[0]['caseId']);
+}
 
-const pageList = [];     // 하위 블럭 리스트
-
+// DBcase block 생성
 function createDBblock(block){
     const dbBlockTemp = `
     <div class="db-block" data-block-id="` + block.displayId + `">
@@ -68,12 +61,24 @@ function createDBblock(block){
 
 // 검색 이벤트
 function databaseSearch(e){
-    console.log(e.target);
+    let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
+/*
+    fetch("",{
+
+    })
+    .then(response => response.json())
+    .then(result =>{
+        console.log(result);
+    })
+    .catch(err => console.log(err));
+*/
 }
 
 
-// DB케이스의 하위 페이지 불러오기
-function getDBPageList(blockId){
+// DB케이스의 하위 페이지 불러오기 : caseBlock의 아이디 => 하위 블럭 return
+async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
+	let pageList = [];     // 하위 블럭 리스트
+    let caseInfo = {};
     pageList.length = 0;
     fetch("getDBPageList",{
         method : "post",
@@ -82,22 +87,26 @@ function getDBPageList(blockId){
     .then(response => {
         return response.json();
     })
-    .then(async(result) => {
-        console.log(result);
-        let casePageId = result[0].pageId;
-        let pageInfo = await getPageInfo(casePageId);
+    .then( async(result) => {
+        //✔result : [ {BlockVO}, {BlockVO}, {BlockVO} ]
+        let casePageId = result[0].pageId;              // case page id
+        let pageInfo = await getPageInfo(casePageId);   // case id
         result.forEach(item => {
             pageList.push(item);
         });
         let select = `[data-block-id="`+ result[0].parentId +`"]`;
         let selTag = document.querySelector(select);
-        selTag.setAttribute('data-page-id', pageInfo.pageId);
-        listLayoutChange(pageInfo.pageId, pageInfo.caseId);
+        selTag.setAttribute('data-page-id', result[0].pageId);
+        console.log(pageList);
+        listLayoutEditor(pageList, pageInfo.pageId, pageInfo.caseId);
     })
     .catch(err => console.log(err))
+
+    let dataList = [caseInfo, pageList];  // dataList[0] : case정보, dataList[1] : 블럭리스트
+    return dataList;
 }
 
-// page Info
+// page Info (function앞에 async, fetch앞에 await 지움)
 async function getPageInfo(pageid){
     let pageInfo = {};
     let url = '/pageInfo?pageId=' + pageid;
@@ -108,4 +117,27 @@ async function getPageInfo(pageid){
     })
     .catch(err => console.log(err));
     return pageInfo;
+}
+
+// DB페이지 생성
+function insertDBpage(e){
+    let pageInfo = {};  //하위페이지 만들 정보
+    pageInfo['parentPage'] = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
+    pageInfo['displayId'] = window.crypto.randomUUID();  // 랜덤 아이디 생성
+    console.log("case page id = " + pageInfo['parentPage']);
+    console.log("random id = " + pageInfo['displayId']);
+
+    // url 경로 : insertDBpage, post
+    fetch("insertDBpage", {
+        method : 'post',
+        body : JSON.stringify(pageInfo),
+        headers : {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+        
+    })
 }

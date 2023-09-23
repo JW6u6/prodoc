@@ -5,12 +5,22 @@
 <mapper namespace="com.prodoc.db.mapper.DBMapper">
 	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">
-		{call insert_db(
+		{call INSERT_DB(
 						#{wordId}
 						, #{email}
 						, #{prentPage}
 						, #{displayId}
 						, #{result}
+		)}
+	</insert>
+	
+	<!-- DB속성 페이지 추가 -->
+	<insert id="insertDBPage" parameterType="DBdataVO" statementType="CALLABLE">
+		{call INSERT_DB_PAGE(
+							#{parentPage}
+							, #{email}
+							, #{displayId}
+							, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
 

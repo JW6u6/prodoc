@@ -1,10 +1,8 @@
-function listLayoutChange(pageId, layout){
+async function listLayoutEditor(pageList, pageId, layout){
     let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[1];
-    console.log(dbbody);
+    //console.log(dbbody);
     dbbody.innerHTML = "";
     console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
-    // case_id 업데이트 fetch
-    updateCase(pageId, layout);
     
     switch(layout){
         case 'DB_LIST' : 
@@ -79,8 +77,9 @@ function updateCase(pageId, layout){
             "Content-Type": "application/json"
         }
     })
-    .then(response => {
-        // console.log(response)
+    .then(response => response.json())
+    .then(result => {
+    	//console.log(result);
     })
     .catch(err => console.log(err));
 }
@@ -123,9 +122,9 @@ function getAttrList(attrs){
 
 function addDbpage(){
     const addDBPageBtn = `
-        <div data-add-db="addDBPage">
-            <div class="inlineTags">&#10010;</div>
-            <div class="inlineTags">새로 만들기</div>
+        <div class="caseTags">
+            <div class="inlineTags addDBPage">&#10010;</div>
+            <div class="inlineTags addDBPage">새로 만들기</div>
         <div>
     `
     return addDBPageBtn;

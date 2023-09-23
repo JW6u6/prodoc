@@ -10,16 +10,16 @@
 	<!-- 테스트 후 삭제하기(컨트롤러 포함) -->
 <div>
 	<button id="dbpagetest">page</button>
-    <div data-container="container">
+    <div data-container="container" id="pagecontainer">
 
     </div>
 
-    <script type="text/javascript">        
-
+    <script type="text/javascript">
+    	// test 임시데이터 : 메인 페이지 로드
         let container = document.querySelector('div[data-container="container"]');
     	document.getElementById("dbpagetest").addEventListener("click", e =>{
     		container.innerHTML = "";
-            let url = '/pageInfo?pageId=' + 'rkd50-py4bp-9tf1p7';
+            let url = '/pageInfo?pageId=' + 'aaaaa-bbbbb-cccccc';
             fetch(url)
             .then(response => response.json())
             .then(async result => {
@@ -28,7 +28,8 @@
             })
             .catch(err => console.log(err));
         });
-
+		
+    	// test 임시데이터 : 메인 페이지 하위 블럭 가져오기
         function getBlockList(pageId){
             fetch("block/get", {
                 method : "post",
@@ -38,14 +39,16 @@
                 body : JSON.stringify({ 'pageId' : pageId})
             })
             .then(response => response.json())
-            .then(blockList => {
+            .then( blockList => {
                  blockList.forEach( block => {
                     let divCase = document.createElement("div");
                     divCase.setAttribute("data-block-id", block.displayId);
+
+                    // ✅ blockId가 DB일 때 DB블럭의 정보 가져오기
                     if(block.blockId == "DB"){
                         let createBlock = createDBblock(block);
-                        getDBPageList(block.displayId);
                         container.insertAdjacentHTML("beforeend", createBlock);
+                        getDBPageList(block.displayId);
                     }
                  });
             })

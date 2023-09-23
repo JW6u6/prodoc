@@ -9,6 +9,7 @@ import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
+import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
 import com.prodoc.page.service.PageVO;
 
@@ -41,6 +42,11 @@ public class DBServiceImpl implements DBService {
 	@Override
 	public int updateCase(PageVO vo) {
 		return mapper.updateCase(vo);
+	}
+
+	@Override
+	public int insertDBPage(DBdataVO vo) {
+		return mapper.insertDBPage(vo);
 	}
 
 }
