@@ -4,13 +4,25 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace ="com.prodoc.page.mapper.PageMapper">
   	<select id = "pageList" resultType="PageVO">
-  		select page_id,page_name,work_id
+  		select page_id,page_name
 		from tbl_page
-		where work_id IN (
-		                select work_id
-		                from tbl_workspace
-		                where work_name = #{workName}
-		                )
+		where work_id = #{workId}
+		order by numbering
+  	</select>
+  	<select id = "findWork" resultType="String">
+  		select work_id
+  		from tbl_page
+  		where page_id = #{pageId}
+  	</select>
+  	<select id = "pageInPage" resultType="PageVO">
+  		select page_id,page_name
+  		from tbl_page
+  		where page_id IN (
+  							select page_id
+  							from tbl_page
+  							where page_id = #{pageId}
+  							)
+  		order by numbering
   	</select>
   	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">

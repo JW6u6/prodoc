@@ -7,6 +7,10 @@ import com.prodoc.page.service.PageVO;
 public interface PageMapper {
 	public List<PageVO> pageList(String workName);
 	
+	public String findWork(String pageId);
+	
+	public List<PageVO> pageInPage(String pageId);
+	
 	public String selectPageInfo(PageVO pageVO);
 	
 	public void insertPage(PageVO pageVO);
