@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
 import com.prodoc.block.service.impl.BlockServiceImpl;
+import com.prodoc.user.service.ProfileService;
 
 /*
  * 개발자 : 이명석
@@ -32,6 +33,9 @@ public class BlockController {
 
 	@Autowired
 	BlockServiceImpl service;
+	
+	@Autowired
+	ProfileService proService;
 	
 	@GetMapping("block/get")
 	public List<BlockVO> getBlock(@RequestParam String pageId) {
@@ -116,18 +120,9 @@ public class BlockController {
 	}
 	
 	@PostMapping("block/uploadFile")
-	public void UploadFile(@RequestBody MultipartFile uploadFile) {
-		String uploadFileName = uploadFile.getOriginalFilename();
-		System.out.println(uploadFileName);
-		String uploadFolder = "C:\\upload";
-		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-		File saveFile = new File(uploadFolder,uploadFileName);
-		try {
-			uploadFile.transferTo(saveFile);
-		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String UploadFile(MultipartFile file) {
+		String uploadName = proService.fileUploadName(file);
+		return uploadName;
 	}
 	
 //	@PostMapping("block/check")
