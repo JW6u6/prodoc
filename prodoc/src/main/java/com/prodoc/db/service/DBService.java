@@ -11,5 +11,7 @@ public interface DBService {
 	public PageVO getDBPageInfo(String displayId);
 	public List<PageAttrVO> getPageAttr(String displayId);
 	public int updateCase(PageVO vo);
-	public int insertDBPage(DBdataVO vo);
+	public String insertDBPage(DBdataVO vo);
+	
+	public List<PageAttrVO> getAllPageAttr(String parentId);
 }

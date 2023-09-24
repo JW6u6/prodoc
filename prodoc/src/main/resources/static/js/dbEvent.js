@@ -1,8 +1,9 @@
 // 그룹이벤트
 document.getElementById("pagecontainer").addEventListener("click", e =>{
     if (e.target.matches(".database-search")) databaseSearch(e);
-    else if (e.target.matches(".addDBPage")) insertDBpage(e);
+    else if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
+    else if (e.target.matches(".page-attr-option")) pageAttrOption(e);
 })
 
 // 레이아웃 변경을 위한 정보 전달 => 레이아웃 변경 이벤트 실행
@@ -11,11 +12,10 @@ function layoutClick(e){
     let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");       // 선택된 case의 페이지 id (update)
     let caseId = e.target.closest('[data-block-id]').getAttribute("data-block-id");     // 선택된 case의 블럭 id (하위블럭 정보 select)
     console.log(layout, pageId, caseId);
-
     let list = getDBPageList(caseId);
     
     updateCase(pageId, layout);     // case_id 업데이트 fetch
-    listLayoutEditor(list[1], list[0]['casePageId'], list[0]['caseId']);
+    listLayoutEditor(list, pageId, caseId);
 }
 
 // DBcase block 생성
@@ -36,11 +36,11 @@ function createDBblock(block){
             <div class="db-search-option">
                 <div class="select-date-btn">날짜</div>
                 <select>
-                    <option>검색옵션</option>
-                    <option>상태</option>
-                    <option>태그</option>
-                    <option>페이지명</option>
-                    <option>생성자</option>
+                    <option disabled selected>검색옵션</option>
+                    <option value="STATE">상태</option>
+                    <option value="TAG">태그</option>
+                    <option value="page_name">페이지명</option>
+                    <option value="CUSER">생성자</option>
                 </select>
                 <input type="text" name="keyword" placeholder="검색어">
                 <button class="database-search">검색</button>
@@ -51,6 +51,9 @@ function createDBblock(block){
                     <br>
                     <input type="date" name="startDate"> ~ <input type="date" name="endDate" disabled> 
                 </div> 
+            </div>
+            <div class="db-attr-option">
+                <button class="page-attr-option">속성</button>
             </div>
         </div>
         <div class="db-block-body"></div>
@@ -78,7 +81,6 @@ function databaseSearch(e){
 // DB케이스의 하위 페이지 불러오기 : caseBlock의 아이디 => 하위 블럭 return
 async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
 	let pageList = [];     // 하위 블럭 리스트
-    let caseInfo = {};
     pageList.length = 0;
     fetch("getDBPageList",{
         method : "post",
@@ -90,7 +92,7 @@ async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
     .then( async(result) => {
         //✔result : [ {BlockVO}, {BlockVO}, {BlockVO} ]
         let casePageId = result[0].pageId;              // case page id
-        let pageInfo = await getPageInfo(casePageId);   // case id
+        let pageInfo = await getPageInfo(casePageId);   // case page info(case 정보가 없기때문에 case 정보를 가져오기 위해 필요함)
         result.forEach(item => {
             pageList.push(item);
         });
@@ -102,8 +104,7 @@ async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
     })
     .catch(err => console.log(err))
 
-    let dataList = [caseInfo, pageList];  // dataList[0] : case정보, dataList[1] : 블럭리스트
-    return dataList;
+    return pageList;
 }
 
 // page Info (function앞에 async, fetch앞에 await 지움)
@@ -121,12 +122,19 @@ async function getPageInfo(pageid){
 
 // DB페이지 생성
 function insertDBpage(e){
+    let nowLayout = e.target.closest('[data-layout]').getAttribute("data-layout");
+    console.log(nowLayout);     // 현재 case-id 정보 => 속성 insert or update 필요
+
     let pageInfo = {};  //하위페이지 만들 정보
     pageInfo['parentPage'] = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
     pageInfo['displayId'] = window.crypto.randomUUID();  // 랜덤 아이디 생성
-    console.log("case page id = " + pageInfo['parentPage']);
-    console.log("random id = " + pageInfo['displayId']);
 
+    if(nowLayout == 'DB_BRD'){
+        let nowState = e.target.closest('[data-state]').getAttribute("data-state"); //생성위치의 상태값
+        console.log(nowState);
+    }
+
+    /*
     // url 경로 : insertDBpage, post
     fetch("insertDBpage", {
         method : 'post',
@@ -138,6 +146,28 @@ function insertDBpage(e){
     .then(response => response.json())
     .then(result => {
         console.log(result);
+        if (result != 'fail') getDBPageList(result);
         
     })
+    */
+}
+
+// 페이지 속성 보이기
+function pageAttrOption(e){
+    console.log("case페이지마다 속성 불러오는 div 생성해야함");
+    // 타임리프 템플릿으로 되는지 모르겠음
+    // getAllpageAttr 사용해서 해당 속성 불러오기
+}
+
+// 하위 페이지의 모든 속성 불러오기
+function getAllPageAttr(caseBlockId){
+    let url = 'getAllPageAttr?parentId=' + caseBlockId;
+    fetch(url, {
+        method : 'get'
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err))
 }

@@ -10,8 +10,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.block.service.BlockVO;
@@ -66,10 +69,14 @@ public class DBController {
 		UserVO user = (UserVO)session.getAttribute("logUser");
 		pageInfo.setEmail(user.getEmail());
 		Map<String, Object> result = new HashMap<>();
-		int num = service.insertDBPage(pageInfo);
-		if (num>0) {
-			result.put("result", "success");
-		} else result.put("result", "fail");
+		String parentId = service.insertDBPage(pageInfo);
+		result.put("result", parentId);
 		return result;
+	}
+	
+	@GetMapping("getAllPageAttr")
+	public List<PageAttrVO> getAllPageAttr(@RequestParam String parentId){
+		List<PageAttrVO> attrList = service.getAllPageAttr(parentId);
+		return attrList;
 	}
 }

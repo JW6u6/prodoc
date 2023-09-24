@@ -14,6 +14,8 @@ public interface DBMapper {
 	public PageVO getDBPageInfo(String displayId);			// 블럭아이디로 DB페이지 정보 select
 	public List<PageAttrVO> getPageAttr(String displayId);	// DB페이지의 속성 select
 	public int updateCase(PageVO vo);			// DB 레이아웃 변경시 case_id 변경
-	public int insertDBPage(DBdataVO vo);		// DBcase 하위에 DB페이지 생성
+	public void insertDBPage(DBdataVO vo);		// DBcase 하위에 DB페이지 생성
+	
+	public List<PageAttrVO> getAllPageAttr(String parentId);	// DBcase 하위 페이지의 모든 속성 select
 	
 }

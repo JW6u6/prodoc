@@ -45,8 +45,14 @@ public class DBServiceImpl implements DBService {
 	}
 
 	@Override
-	public int insertDBPage(DBdataVO vo) {
-		return mapper.insertDBPage(vo);
+	public String insertDBPage(DBdataVO vo) {
+		mapper.insertDBPage(vo);
+		return vo.getResult();
+	}
+
+	@Override
+	public List<PageAttrVO> getAllPageAttr(String parentId) {
+		return mapper.getAllPageAttr(parentId);
 	}
 
 }

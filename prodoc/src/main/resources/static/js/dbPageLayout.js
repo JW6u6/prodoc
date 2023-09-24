@@ -1,5 +1,6 @@
 async function listLayoutEditor(pageList, pageId, layout){
     let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[1];
+    dbbody.setAttribute("data-layout", layout);
     //console.log(dbbody);
     dbbody.innerHTML = "";
     console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
@@ -11,8 +12,7 @@ async function listLayoutEditor(pageList, pageId, layout){
                 let makeBlock = dblistBlock(block, dbInfo);
                 dbbody.insertAdjacentHTML("afterbegin", makeBlock);
             });
-            let addpage = addDbpage();
-            dbbody.insertAdjacentHTML("afterbegin", addpage)
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
 
         case 'DB_BRD' : 
@@ -56,14 +56,15 @@ async function listLayoutEditor(pageList, pageId, layout){
             });
 
             let add = addDbpage();
-            dbbody.insertAdjacentHTML("afterbegin", add);
-            
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
 
         case 'DB_TBL' : 
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
 
         case 'DB_CAL' : 
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
     };
 
@@ -123,18 +124,20 @@ function getAttrList(attrs){
 function addDbpage(){
     const addDBPageBtn = `
         <div class="caseTags">
-            <div class="inlineTags addDBPage">&#10010;</div>
-            <div class="inlineTags addDBPage">새로 만들기</div>
+            <div class="inlineTags add-dbpage">&#10010;</div>
+            <div class="inlineTags add-dbpage">새로 만들기</div>
         <div>
     `
     return addDBPageBtn;
 }
 
 function dblistBlock(block, dbInfo){
+    let useAttr = getAttrList(dbInfo[1]);
     const listType = `
         <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="list">
         <div data-tagimg>img</div>
         <div data-pagename>`+dbInfo[0].pageName+`</div>
+        <div class="listtype-attr">`+useAttr+`</div>
         </div>
     `;
     return listType;
@@ -166,9 +169,21 @@ function dbGalBlock(block, dbInfo){
 }
 
 function dbTblBlock(block, dbInfo){
-    
+    let useAttr = getAttrList(dbInfo[1]);
+    const galType = `
+        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="tbl">
+
+        </div>
+    `;
+    return galType;
 }
 
 function dbCalBlock(){
-    
+    let useAttr = getAttrList(dbInfo[1]);
+    const galType = `
+        <div data-block-id="`+block.displayId+`" data-page-id="`+dbInfo[0].pageId+`" data-dbtype="cal">
+
+        </div>
+    `;
+    return galType;
 }
