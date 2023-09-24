@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prodoc.page.mapper.PageMapper;
@@ -24,20 +25,19 @@ public class PageController {
 	@Setter(onMethod_ = @Autowired)
 	PageService pageService;
 	
-	@GetMapping("pageList")
-	public List<PageVO> pageList(PageVO pageVO){
-		return pageMapper.pageList(pageVO);
+	@GetMapping("/pageList")
+	public List<PageVO> pageList(@RequestParam String workName){
+		return pageMapper.pageList(workName);
 	}
 	
-	@GetMapping("pageInfo")
-	public PageVO pageInfo(PageVO pageVO) {
+	@GetMapping("/pageInfo")
+	public String pageInfo(PageVO pageVO) {
 		return pageMapper.selectPageInfo(pageVO);
 	}
 	
-	@PostMapping("pageInsert")
-	public PageVO pageInsert(@RequestBody PageVO pageVO) {
-		pageMapper.insertPage(pageVO);
-		return pageVO;
+	@PostMapping("/pageInsert")
+	public String pageInsert(@RequestBody PageVO pageVO) {
+		return pageService.insertPage(pageVO);
 	}
 	
 	//페이지 잠금/잠금해제(소유자, 관리자 권한)
