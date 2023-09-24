@@ -1,37 +1,36 @@
 init();
-const wNameList = ['workName', 'workType', 'publicCheck'];
+
 const inviteList = []; //workJoin에 workId랑 초대 이메일 담아서 json으로 넘기는 배열
+const wNameList = ['workName', 'workType', 'publicCheck'];
 
 //전체 JS 기능 실행함수
 function init() {
     workList();
     document.querySelector('#wsCreate').addEventListener('click', newWorkSpace);
+    document.querySelector('#insert-page').addEventListener('click', newPage);
+    document.querySelector('#insert-subPage').addEventListener('click', newPage)
 }
 let wp = document.querySelector("#wsPrivate");
 let pa = document.querySelector("#priArrow");
-let wId = document.querySelector('#workId')
 let wt = document.querySelector("#wsType");
 let ta = document.querySelector("#typeArrow");
 let workModal = document.querySelector("#workModal");
 let pageModal = document.querySelector("#pageModal");
+let subPageModal = document.querySelector("#subPageModal");
 
 //인사이트 내 사이드바 워크스페이스 목록 불러오기(AJAX)
 function workList() {
     let url = '/workList';
     fetch(url, {
-            method: 'GET',
+            method: 'GET'
         })
         .then(response => {
             return response.json();
         })
         .then((data) => {
-            for (let i = 0; i < data.length; i++) {
+            data.forEach(item => {
                 let side = document.querySelector('#side');
-                let wId = data[i];
-                let text = `<div class= "Work"> <span class="workId">${wId}</span> <span onclick="newPage()" class="add">
-                <img src="/images/plus.svg" width="12px" height="12px"></span> 
-                <div class="setting"><img src="/images/settings.svg" width="12px" height="12px"></div>
-                <div>`
+                let text = '<div class= "Work">' + '<span class="workName">' + item.workName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <img class="setting" src="/images/settings.svg" width="15px" height="15px"> <div class = "pageMain"></div> <div>'
                 side.insertAdjacentHTML("beforeend", text);
 
                 let set = document.querySelectorAll('.setting');
@@ -39,21 +38,22 @@ function workList() {
                     tag.addEventListener('click', setWork);
                     tag.addEventListener('click', typeChange);
                 })
-            }
-            document.querySelectorAll('#side .Work').forEach(works => {
-                works.addEventListener('click', function (e) {
-                    let wId = e.currentTarget.firstElementChild.innerText;
-                    selectWork(wId);
-                });
             })
-            pageList();
+            document.querySelectorAll('#side .workName').forEach(works => {
+                works.addEventListener('click', function (e) {
+                    let target = e.target;
+                    let workClick = e.currentTarget.nextElementSibling.innerText;
+                    pageList(workClick,target);
+                    // selectWork(workClick);
+                })
+            })
         })
-}
+    }
 // 선택한 워크스페이스와 DB내의 워크스페이스 일치과정.(DB ID로 조회하는거 추가해야함)
-function selectWork(wId) {
+function selectWork(workClick) {
     let url = '/workList';
     fetch(url, {
-            method: 'GET',
+            method: 'GET'
         })
         .then(response => {
             return response.json();
@@ -62,7 +62,7 @@ function selectWork(wId) {
             console.log(data);
             for (let i = 0; i < data.length; i++) {
                 if (wId == data[i]) {
-                    console.log(data[i])
+                    // console.log(data[i])
                     //워크 ID 들고와서 일치시켰으니 페이지 정보 띄우기.
                 }
             }
@@ -79,7 +79,7 @@ function newWork() {
 //워크스페이스 설정창 여는..거
 async function setWork(e) {
     workModal.style.display = 'block';
-    let workId = e.currentTarget.closest('.Work').firstElementChild.textContent;
+    let workId = e.currentTarget.closest('.Work').firstElementChild.nextElementSibling.textContent;
     let result = await selectOneWork(workId);
     await memberList(workId);
 
@@ -92,221 +92,166 @@ async function setWork(e) {
     let delCheck = document.querySelector('#delCheckArea'); //삭제확인
     let inv = document.querySelector('#inviteUser');
     let mem = document.querySelector('#memberArea'); //멤버 출력(권한,내보내기할수있음)
+    
+    let editBtn = document.createElement('button');
+    editBtn.id = 'wsEdit';
+    editBtn.textContent = '저장';
+    
+    document.querySelector('#wsCreate').replaceWith(editBtn);
+
+    //공통으로 보여야 하는 영역
+    type.classList.add('hide');
+    del.classList.remove('hide');
 
     if (result.workType == 'TEAM') {
         tTog.classList.remove('hide');
         //팀 워크스페이스인 경우 설정/멤버 토글.
+        document.querySelector('#teamWork').addEventListener('click', function(e){
+            //설정일때 보여야 하는거
+            own.classList.remove('hide');
+        })
+
+        document.querySelector('#teamMem').addEventListener('click', function(e){
+            //멤버일때 보여야 하는거
+            pub.classList.add('hide');
+            del.classList.add('hide');
+    
+            inv.classList.remove('hide');
+            mem.classList.remove('hide');
+        })
 
     } else {
         //개인일때 보여야 하는거
 
     }
+
 }
 
+
+let pageClick = 0;
 // 인사이트 내 사이드바에 페이지 목록 불러옴
-function pageList() {
-    let url = '/pageList';
-    let wId = "";
-    fetch(url, {
-            method: 'GET',
-        })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            document.querySelectorAll('#side .Work').forEach(works => {
-                workId = works.firstElementChild.innerText;
-                console.log(wId);
-            })
-            for (let i = 0; i < data.length; i++) {
-                pId = data[i].pageId;
-                console.log(data[i].pageId);
-                if (wId == data[i].workId) {
-
-                    fetch(url, {
-                            method: 'GET',
-                        })
-                        .then(response => {
-                            return response.json();
-                        })
-                        .then(data => {
-                            document.querySelectorAll('#side .Work').forEach(works => {
-                                workId = works.firstElementChild.innerText;
-                                console.log(wId);
-                            })
-                            for (let i = 0; i < data.length; i++) {
-                                pId = data[i].pageId;
-                                console.log(data[i].pageId);
-                                if (wId == data[i].workId) {
-
-                                }
-                                let side = document.querySelector('#side');
-                                let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-                                side.insertAdjacentHTML("beforeend", text);
-                            }
-
-                            document.querySelectorAll('#side .Page').forEach(pages => {
-                                pages.addEventListener('click', function (e) {
-                                    let pageClick = e.currentTarget.firstElementChild.innerText;
-                                    console.log(pageClick);
-                                    selectPage(pageClick);
-                                })
-                            })
-
-                        })
-                }
-                //페이지 ID값들 배열
-                const pageArr = [];
-                //워크 ID값들 배열
-                const workArr = [];
-                for (let item of data) {
-                    pageArr.push(item.pageId);
-                    workArr.push(item.workId);
-                }
-                for (let i = 0; i < data.length; i++) {
-                    let pId = pageArr[i]
-                    let side = document.querySelector('#side');
-                    let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-                    side.insertAdjacentHTML("beforeend", text);
-                    document.querySelectorAll('#side .Page').forEach(pages => {
-                        pages.addEventListener('click', function (e) {
-                            let pageClick = e.currentTarget.firstElementChild.innerText;
-                            if (pId == pageClick) {
-                                selectPage(pId);
-                            }
-                        })
-                    })
-                }
-                //     fetch(url, {
-                //             method: 'GET',
-                //         })
-                //         .then(response => {
-                //             return response.json();
-                //         })
-                //         .then(data => {
-                //             for (let i = 0; i < data.length; i++) {
-                //                 let side = document.querySelector('#side');
-                //                 let pId = data[i];
-                //                 let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-                //                 side.insertAdjacentHTML("beforeend", text);
-                //             }
-                //             document.querySelectorAll('#side .Page').forEach(pages => {
-                //                 pages.addEventListener('click', function (e) {
-                //                     let pId = e.currentTarget.firstElementChild.innerText;
-                //                     selectPage(pId);
-                //                 })
-                //             })
-                //         })
-            }
-
-            // 페이지 선택시 PID 불러오기
-            function selectPage(pId) {
-                let url = '/pageInfo?pageId=' + pId;
-                fetch(url)
-                    .then(res => {
-                        return res.json();
-                    })
-                    .then(data => {
-                        console.log('111');
-                    })
-            }
-            .then(response => {
-                    return response.json();
-                })
-                .then(data => {
-                    for (let field in data) {
-                        if (data[field] == pId) {
-                            console.log(data);
-                            //PID 불러왔음..
-                        }
-                    }
-                })
-        })
-}
-
-// 인사이트 내 사이드바에 페이지 목록 불러옴
-// function pageList() {
-//     let url = '/pageList';
-//     fetch(url, {
-//             method: 'GET',
-//         })
-//         .then(response => {
-//             return response.json();
-//         })
-//         .then(data => {
-//             for (let i = 0; i < data.length; i++) {
-//                 let side = document.querySelector('#side');
-//                 let pId = data[i];
-//                 let text = '<div class= "Page">' + '<span class = "pageVal" >' + pId + '</span>' + ' <span onclick="newSubPage()" class="add">➕</span> <div>'
-//                 side.insertAdjacentHTML("beforeend", text);
-//             }
-//             document.querySelectorAll('#side .Page').forEach(pages => {
-//                 pages.addEventListener('click', function (e) {
-//                     let pId = e.currentTarget.firstElementChild.innerText;
-//                     console.log(pId)
-//                 })
-//             })
-//         })
-// }
-
-// 페이지 선택시 PID 불러오기
-function selectPage(pageClick) {
-    let url = '/pageInfo?pageId=' + pageClick;
+function pageList(wId,target) {
+    let insertDiv = target.parentElement.querySelector('.pageMain');
+    let url = '/pageList?workId='+wId;
     fetch(url)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            console.log(data);
-        })
+    .then(res => {
+        return res.json();
+    })
+    .then(data => {
+        pageClick += 1;
+        if ( pageClick%2 ==0){
+            while(insertDiv.hasChildNodes()){
+                insertDiv.removeChild(insertDiv.firstChild);
+            }
+        }else{
+            data.forEach(item=> {
+                let text = '<div class= "Page">' + '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="pageIdVal">'+ item.pageId +'</span>' + ' <span onclick="newSubPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageSub"></div> <div>';
+                insertDiv.insertAdjacentHTML("beforeend", text);
+            })
+            document.querySelectorAll('.pageId').forEach(Pages => {
+                Pages.addEventListener('click', function(e){
+                    let target = e.target;
+                    console.log(target);
+                    let searchPageName = e.currentTarget.innerText;
+                    console.log(searchPageName);
+                    // selectPage(searchPageName,target);
+                })
+            })
+        }
+    })
+    .catch((err) => console.log('err: ', err));
+}
+let pageSubClick = 0;
+// 페이지 선택시 PID 불러오기 + 리스트노출. 
+function selectPage(pageName) {
+    let insertDiv = target.parentElement.querySelector('.pageSub');
+    let url = '/pageInfo?pageId='+pageName;
+    fetch(url)
+    .then(res => {
+        return res.json();
+      })
+    .then((data) => {
+       pageSubClick += 1;
+    })
+}
+// 새로운 페이지 생성.
+function newPage(){
+    let workId = document.querySelector('#workId').value;
+    let parentId = document.querySelector('#parentId').value;
+    let caseId = document.querySelector('#caseId').value;
+    let creUser = document.querySelector('#loginUser').value;
+    let pageName = document.querySelector('#pgName').value;
+    let val = { parentId, pageName, creUser, workId, caseId}
+    let url = '/pageInsert';
+console.log(val);
+    fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(val)
+                })
+                .then(response => response.text())
+                .then((data) => {
+                    document.querySelectorAll('#side .workIdVal').forEach(works => {
+                        if(works.innerText == workId){
+                            let insertDiv = works.parentElement.querySelector('.pageMain');
+                            let text = '<div class= "Page">' + '<span class="pageId">' + ' ' + pageName + '</span>' + ' <span onclick="newSubPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageSub"></div> <div>';
+                            insertDiv.insertAdjacentHTML("beforeend", text);
+                        }
+                    })
+                })
+                .catch(err => console.log(err));
 }
 
-// 페이지 삽입 AJAX
-// function insertPage() {
-//     let parentId = document.querySelector
-//     let pageName = document.querySelector('#pgName').value;
-//     let creUser = document.querySelector('#loginUser').value;
-//     let workId = 1;
-//     let caseId = 1;//해당 템플릿 클릭시 case 선택가능
-//     let val = { parentId, pageName, creUser, workId, caseId}
-// //     let numbering = a;
-// //     let caseId = 1; //해당 템플릿 클릭시 case 선택가능
-// //     let val = {
-// //         parentId,
-// //     }
-//     let url = '/pageInsert';
 
-//     fetch(url, {
-//             method: 'post',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(val)
-//         })
-//         .then(response => response.text())
-//         .then(result => console.log(result))
-//         .catch(err => console.log(err));
-// }
 //새로운 페이지 삽입 모달창생성(+ 클릭시)
-function newPage() {
+function newPageModal(event) {
     pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
-    let val = event.currentTarget.previousElementSibling;
-    console.log(val);
-}
+    let wId= event.currentTarget.previousElementSibling.innerText;
+    let url = '/workId?workId='+wId;
+    fetch(url)
+    .then(res => {
+        return res.text();
+    })
+    .then((data) => {
+        let workId = document.querySelector('#workId');
+        workId.value = wId;
+    })
+    .catch((err) => console.log('err: ', err));
+    }
 //새로운 서브-페이지 삽입 모달창생성(+ 클릭시)
-function newSubPage() {
-    pageModal.style.display = "block";
+function newSubPageModal(event) {
+    subPageModal.style.display = "block";
     document.body.style.overflow = "hidden";
-    // event.currentTarget.nextElementSibling.innerHTML += '<div class = "Page">페이지<span onclick="newSSPage()" class="add">➕</span> <div>'
-    let val = event.currentTarget.previousElementSibling.innerText;
-    console.log(val); // 부모 page ID 찾아둠.
+    let pageId = event.currentTarget.previousElementSibling.innerText;
+    let parentId = document.querySelector('#subParentId');
+    console.log(parentId);
+    parentId.value = pageId;
+    let workId = document.querySelector('#subWorkId');
+    let url = '/findWork?pageId='+pageId;
+    fetch(url)
+    .then(res => {
+        return res.text();
+    })
+    .then((data)=>{
+        workId.value = data;
+    })
+    .catch((err)=>console.log(err));
 }
 //모달창 닫는 기능
 function closeModal() {
     workModal.style.display = "none";
     pageModal.style.display = "none";
+    subPageModal.style.display = "none";
     document.body.style.overflow = "auto"
+    let caseId = document.querySelector('#caseId');
+    caseId.value = "";
+    let subCaseId = document.querySelector('#subCaseId');
+    subCaseId.value = "";
+
+    //워크스페이스 닫을때 워.스.값 리셋하는거
     for (let field of wNameList) {
 
         if (field == 'workName') {
@@ -322,24 +267,37 @@ function closeModal() {
 //페이지-템플릿 목록 띄움
 function template() {
     temPage.style.display = "block";
+    subTemPage.style.display = "block";
     pageContent.style.display = "none";
+    subPageContent.style.display = "none";
     dbPage.style.display = "none";
+    subDbPage.style.display = "none";
 }
 //페이지-DB 목록 띄움
 function database() {
     dbPage.style.display = "block";
+    subDbPage.style.display = "block";
     pageContent.style.display = "none";
+    subPageContent.style.display = "none";
     temPage.style.display = "none";
+    subTemPage.style.display = "none";
 }
 //페이지-템플릿 선택시 페이지생성에 템플릿 종류 삽입
-function selectTemp() {
-    // let selId = event.currentTarget.id;
-    $('#caseId').val("temp")
+function selectTemp(event) {
+    let temp = event.currentTarget.innerText;
+    let caseId = document.querySelector('#caseId');
+    let subCaseId = document.querySelector('#subCaseId');
+    caseId.value = temp;
+    subCaseId.value = temp;
 }
 //페이지- DB 선택시 페이지생성에 DB 종류 삽입
-function selectDb() {
+function selectDb(event) {
     // let selId = event.currentTarget.id;
-    $('#caseId').val("db")
+    let db = event.currentTarget.innerText;
+    let caseId = document.querySelector('#caseId'); 
+    let subCaseId = document.querySelector('#subCaseId'); 
+    caseId.value = db;
+    subCaseId.value = db;
 }
 wt.addEventListener("click", (e) => {
     ta.classList.toggle("turn");
@@ -354,7 +312,6 @@ wp.addEventListener("focusout", (e) => {
     pa.classList.remove("turn");
 })
 //======================================================================
-
 
 //새 워크스페이스 생성
 function newWorkSpace() {
@@ -409,8 +366,6 @@ function typeChange(e) {
         privateOption.classList.remove('hide');
     }
 };
-
-
 
 
 //엔터 누르면 추가되게...
@@ -488,6 +443,7 @@ async function memberList(workId) {
         })
         .then(response => response.json())
         .then(result => {
+            console.log(result);
             for (let num of result) {
                 let trTag = document.createElement('tr');
                 for (let a of arr) {
@@ -532,4 +488,34 @@ async function selectOneWork(workId) {
         .catch(err => console.log(err));
 
     return selectResult;
+}
+
+function deleteWorkS(workId){
+    let workNm = document.querySelector('#wsName');
+    let nameCheck = document.querySelector('#nameCheck');
+
+
+    if(nameCheck.value == workNm.value){
+        
+        let url = `/workDelete?workId=${workId}`;
+        
+        fetch(url, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if(result){
+                
+                alert('워크스페이스가 삭제되었습니다.');
+            }
+        })
+        .catch(err => console.log(err));
+        
+    }else{
+        alert('워크스페이스명이 일치하지 않습니다. 확인 후 다시 시도해주세요.');
+    }
+
 }

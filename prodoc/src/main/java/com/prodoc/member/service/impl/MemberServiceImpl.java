@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService {
 		for(MemberVO memberVO : listVO) {
 			memberMapper.removeMember(memberVO);
 		}
-		return listVO.size(); 
+		return listVO.size();
 	}
 
 	@Override
