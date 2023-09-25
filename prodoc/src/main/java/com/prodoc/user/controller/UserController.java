@@ -47,7 +47,7 @@ public class UserController {
 		System.out.println("profile" + file);
 		String uploadName = proService.fileUploadName(file);	//서비스에서 이미지 업로드네임 가져옴
 		user.setProfile(uploadName);
-		
+		System.out.println("UserVO" + user.toString());
 		return service.modifyInfo(user, request); //정보 수정
 	}
 }

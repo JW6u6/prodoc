@@ -4,7 +4,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_layout}">
 <th:block layout:fragment="head">
-    
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
@@ -32,6 +31,12 @@
 	<!-- 워크/디비 검색 모달 -->
 	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
 	<script th:inline="javascript" src="js/modal/search.js"></script>
+	
+	<!-- 휴지통 모달 -->
+	<div id="TrashFrag" th:insert="modal/trashModal.html :: trachFrag"></div>
+	<script th:inline="javascript" src="js/modal/trash.js"></script>
+	
+	
 	<div id="FileSearchModal" th:insert="modal/fileModal.html :: FileSearchModal"></div>	<!-- 파일 검색 모달 -->
 	<script th:inline="javascript" src="js/block/blockMaker.js"></script>
 	<script th:inline="javascript" src="js/block/blockEvent.js"></script>
