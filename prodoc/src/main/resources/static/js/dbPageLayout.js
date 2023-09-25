@@ -1,10 +1,13 @@
 async function listLayoutEditor(pageList, pageId, layout){
-    let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[1];
-    dbbody.setAttribute("data-layout", layout);
+    let dbbody = document.querySelector('[data-page-id="'+pageId+'"]');
+    console.log(dbbody);
+    // dbbody.setAttribute("data-layout", layout);
     //console.log(dbbody);
-    dbbody.innerHTML = "";
-    console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
+    //dbbody.innerHTML = "";
+    //console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
+    console.log(pageList);
     
+    /*
     switch(layout){
         case 'DB_LIST' : 
             pageList.forEach(async(block) => {
@@ -67,7 +70,7 @@ async function listLayoutEditor(pageList, pageId, layout){
             dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
     };
-
+    */
 }
 
 function updateCase(pageId, layout){

@@ -3,8 +3,8 @@
 	<!-- 유저정보 모달 -->
 	<div id="UserInfoMod" class="hide">
 	    <img class="profile" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:200px; border-radius:100px">
-	    <p>[[${session.logUser.email}]]</p>
-	    <p>[[${session.logUser.nickname}]]</p>
+	    <p class="email">[[${session.logUser.email}]]</p>
+	    <p class="nickname">[[${session.logUser.nickname}]]</p>
 	    <button type="button" id="modInfoBtn">정보수정</button>
 	    <button type="button" id="logoutBtn" onclick='location.href = "/logout"'>로그아웃</button>
 	</div>

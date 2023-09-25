@@ -79,4 +79,28 @@
 		delete from TBL_BOOK_MARK
 		where display_id = #{displayId}
 	</delete>
+	
+	<select id="getFile" parameterType="String" resultType="FileVO">
+		select * 
+		from tbl_file 
+		where display_id = #{displayId}
+	</select>
+	<insert id="insertFile" parameterType="FileVO">
+		insert into tbl_file (display_id)
+		values(#{displayId})
+	</insert>
+	<delete id="deleteFileBlock">
+		delete from tbl_file
+		where display_id = #{displayId}
+	</delete>
+	
+	<update id="updateFileBlock" parameterType="FileVO">
+		update tbl_file
+		   set save_date  = sysdate
+		   	  ,up_name    = #{upName}
+		   	  ,new_name   = #{newName}
+		   	  ,path       = #{path}
+		 where display_id = #{displayId}
+	</update>
+	
 </mapper>

@@ -18,7 +18,7 @@ function layoutClick(e){
     listLayoutEditor(list, pageId, caseId);
 }
 
-// DBcase block 생성
+// DBcase block 생성 || 케이스 아이디도 같이 넣어주도록 하자
 function createDBblock(block){
     const dbBlockTemp = `
     <div class="db-block" data-block-id="` + block.displayId + `">
@@ -77,6 +77,34 @@ function databaseSearch(e){
 */
 }
 
+// 하위 페이지 불러오기 | 매개값 : case block의 DisplayId
+async function getChildList(disId){
+    let pageList = [];
+	let url = 'getChildList?parentId=' + disId;
+	await fetch(url, {
+		method : 'get'
+	})
+	.then(response => response.json())
+	.then(infoList => {
+		console.log(infoList);
+        for(let key in infoList){
+            if(key == "parent") {
+                console.log(infoList[key]);
+                let parentDiv = document.querySelector('[data-block-id]');
+                let parentId = parentDiv.getAttribute("data-block-id");
+                if(parentId == disId){
+                    parentDiv.setAttribute("data-page-id", infoList[key]["pageId"]);
+                    parentDiv.setAttribute("data-layout", infoList[key]["caseId"]);
+                }
+            } else {
+            // 하위페이지 리스트
+            pageList.push(infoList[key]);
+            }
+        }
+        listLayoutEditor(pageList, infoList['parent']['pageId'], infoList['parent']['caseId']);
+	})
+	.catch(err => console.log(err))
+}
 
 // DB케이스의 하위 페이지 불러오기 : caseBlock의 아이디 => 하위 블럭 return
 async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
@@ -155,7 +183,8 @@ function insertDBpage(e){
 // 페이지 속성 보이기
 function pageAttrOption(e){
     console.log("case페이지마다 속성 불러오는 div 생성해야함");
-    // 타임리프 템플릿으로 되는지 모르겠음
+    console.log(e.target.closest('[data-block-id]').getAttribute("data-block-id"));
+    let caseBkId = e.target.closest('[data-block-id]').getAttribute("data-block-id");
     // getAllpageAttr 사용해서 해당 속성 불러오기
 }
 
@@ -166,8 +195,17 @@ function getAllPageAttr(caseBlockId){
         method : 'get'
     })
     .then(response => response.json())
-    .then(result => {
-        console.log(result);
+    .then(attrList => {
+        let attrOptionTag = `<div data-dbdiv="`+caseBlockId+`">`;
+        attrList.forEach(attr => {
+            attrOptionTag += `
+            <div data-page-attr="`+attr.attrId+`">
+                <span>`+attr.attrName+`</span>
+            </div>
+            `
+        });
+        attrOptionTag += `</div>`;
+
     })
     .catch(err => console.log(err))
 }

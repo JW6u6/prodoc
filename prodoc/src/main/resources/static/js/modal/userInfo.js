@@ -67,7 +67,7 @@ userModForm.addEventListener('submit', function(e){
 	let list = document.querySelectorAll("form input[name]");
 	const formData = new FormData();
 	for(let item of list){
-		if(item.name == "file"){
+		if(item.name == "file" && item.value != ""){
 			formData.append(item.name, item.files[0]);
 		}else{
 			formData.append(item.name, item.value);
@@ -79,7 +79,7 @@ userModForm.addEventListener('submit', function(e){
 		if(result.result){
 			alert('프로필이 수정되었습니다.');
 			for(let list in result.data){
-				//console.log(result.data);
+				console.log(result.data[list]);
 				let name = "input[name='"+ list +"']"
 				let inputT = document.querySelector(name);
 				updateUser(list, inputT, result.data[list]);	//화면 수정
@@ -94,9 +94,10 @@ userModForm.addEventListener('submit', function(e){
 function updateUser(list, inputT, data){
 	if(list == "email" || list == "nickname"){	//이메일, 이름 재설정
 		document.querySelectorAll("#UserInfoMod p").forEach(item =>{
-			if(item.name == list){
+			if(item.className == list){
+				console.log(item);
 				inputT.value = data;		//정보수정창
-				item.value = data;		//정보창
+				item.innerText = data;		//정보창
 			}
 		});
 	}else if(list == "profile"){				//프로필 이미지 재설정
@@ -105,8 +106,17 @@ function updateUser(list, inputT, data){
 		});
 	}else if(list == "password"){				//비밀번호 입력칸 재설정
 		document.querySelectorAll(".password").forEach(item => item.value = "");
+	}else if(list == "birth"){
+		let birth = new Date(data);
+		let year = birth.getFullYear().toString().substr(-2);
+		let month = (birth.getMonth()+1) > 10?
+					(birth.getMonth()+1) : "0"+ (birth.getMonth()+1);
+		let date = birth.getDate() > 10?
+					birth.getDate() : "0" + birth.getDate();
+		inputT.value = year + month + date;
 	}else{
-		if(inputT != null)	inputT.value = data;
+		if(inputT != null)
+			inputT.value = data;
 	}
 }
 
