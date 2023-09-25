@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Alias("DBPageVO")
 public class DBPageVO {
+	// tbl_dbblock
 	private String DisplayId;
 	private String PageId;
 }

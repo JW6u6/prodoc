@@ -5,11 +5,15 @@ import java.util.List;
 import com.prodoc.page.service.PageVO;
 
 public interface PageMapper {
-	public List<PageVO> pageList(PageVO pageVO);
+	public List<PageVO> pageList(String workName);
 	
-	public PageVO selectPageInfo(PageVO pageVO);
+	public String findWork(String pageId);
 	
-	public PageVO insertPage(PageVO pageVO);
+	public List<PageVO> pageInPage(String pageId);
+	
+	public String selectPageInfo(PageVO pageVO);
+	
+	public void insertPage(PageVO pageVO);
 	
 	//페이지 잠금 요청이 들어오면 잠금(관리자, 소유자)
 	public int LockPage(PageVO pageVO);

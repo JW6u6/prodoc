@@ -31,7 +31,7 @@
 		text-align: center;
 		z-index: 1;
 }
-#temPage,#dbPage {
+#temPage,#dbPage,#subTemPage,#subDbPage {
 		display:inherit;
 		z-index: 2;
 		left: 0;
@@ -41,7 +41,7 @@
 		overflow: auto;
 		display: none;
 }
-#pageContent {
+#pageContent,#subPageContent {
 	z-index: 1;
 		left: 0;
 		top: 0;
@@ -192,7 +192,7 @@ select::-ms-expand {
 	border:solid 2px pink;
 	border-radius: 10px;
 }
-#temPage,#dbPage{
+#temPage,#dbPage,#subTemPage,#subDbPage{
 		z-index: 1;
 		left: 0;
 		top: 0;
@@ -203,4 +203,7 @@ select::-ms-expand {
 		margin-top : 30px;
 		border:solid 2px pink;
 		border-radius: 10px;
+}
+.workIdVal, .pageIdVal {
+	display : none;
 }
