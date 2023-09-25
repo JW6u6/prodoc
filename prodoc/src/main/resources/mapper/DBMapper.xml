@@ -43,13 +43,11 @@
                           WHERE display_id = #{displayId})
 	</select>
 	
-	<!-- 페이지 속성 조회 -->
+	<!-- 특정 페이지 속성 조회 -->
 	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
-		SELECT *
-		FROM tbl_page_attr
-		WHERE page_id = ( SELECT page_id
-                          FROM tbl_dbblock
-                          WHERE display_id = #{displayId})
+		SELECT * 
+		FROM view_pageattr 
+		WHERE display_id = #{displayId}
 	</select>
 	
 	<update id="updateCase" parameterType="PageVO">
