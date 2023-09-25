@@ -57,7 +57,9 @@
 	
 	<!-- 팀워크스페이스 설정에 출력되는 초대 유저 목록 -->
 	<select id="selectInvite" resultType="String" parameterType="WorkJoinVO">
-	
+		SELECT invite_email
+		FROM TBL_WORKJOIN
+		WHERE work_id = #{workId}
 	</select>	
  	
  	
