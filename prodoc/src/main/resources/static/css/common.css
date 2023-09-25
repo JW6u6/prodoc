@@ -89,9 +89,3 @@ header > ul{
 	align-items: center;
 	justify-content: center;
 }
-.hide {
-	display: none;
-}
-.view {
-	display: block;
-}

@@ -1,5 +1,8 @@
 package com.prodoc.user.service.impl;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -29,9 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	MemberMapper mMapper;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
-    //@Autowired
-   // private AuthenticationManager authenticationManager; // 얘를 통해 세션값 변경해야함
 
 	@Override
 	public UserVO getUser(UserVO user) {	//로그인 OR 기존 메일 찾기
@@ -72,17 +72,19 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		if(!user.getPassword().equals(""))	//비밀번호 변경이 있음 -> 암호화 진행
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = "";
-		try {
-			json = objectMapper.writeValueAsString(user);
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 		if(	mapper.updateUser(user) > 0 ){	//업데이트 진행
+			UserVO newSession = mapper.selectUser(user);
 			HttpSession session = request.getSession();
-			session.setAttribute("logUser", mapper.selectUser(user));	//세션 재등록
+			session.setAttribute("logUser", newSession);	//세션 재등록
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			String json = "";
+			try {
+				json = objectMapper.writeValueAsString(newSession);
+				System.out.println("JSON: " + json);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 			return "{\"result\":true, \"data\" : "+ json +"}";
 		}
 		return "{\"result\":false}";

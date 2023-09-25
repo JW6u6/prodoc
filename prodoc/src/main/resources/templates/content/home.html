@@ -4,11 +4,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_layout}">
 <th:block layout:fragment="head">
-    
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-<!--/* css */-->
-<link th:href="@{/css/common.css}" rel="stylesheet" />
-<title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+	<!--/* css */-->
+	<link th:href="@{/css/common.css}" rel="stylesheet" />
+	<link href="/css/toggleClass.css" rel="stylesheet" />
+	<title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
 <body>
         
@@ -24,6 +24,12 @@
 	<!-- 워크/디비 검색 모달 -->
 	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
 	<script th:inline="javascript" src="js/modal/search.js"></script>
+	
+	<!-- 휴지통 모달 -->
+	<div id="TrashFrag" th:insert="modal/trashModal.html :: trachFrag"></div>
+	<script th:inline="javascript" src="js/modal/trash.js"></script>
+	
+	
 	<div id="FileSearchModal" th:insert="modal/fileModal.html :: FileSearchModal"></div>	<!-- 파일 검색 모달 -->
 </body>
 <script src="js/modal/close.js"></script>

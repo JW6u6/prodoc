@@ -18,9 +18,7 @@ let pageModal = document.querySelector("#pageModal");
 //인사이트 내 사이드바 워크스페이스 목록 불러오기(AJAX)
 function workList() {
     let url = '/workList';
-    fetch(url, {
-            method: 'GET',
-        })
+    fetch(url, {  method: 'GET' })
         .then(response => {
             return response.json();
         })
@@ -42,9 +40,8 @@ function workList() {
             })
             pageList();
         })
-    }
-    })
 }
+
 // 선택한 워크스페이스와 DB내의 워크스페이스 일치과정.(DB ID로 조회하는거 추가해야함)
 function selectWork(wId) {
     let url = '/workList';
@@ -55,10 +52,10 @@ function selectWork(wId) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            //console.log(data);
             for (let i = 0; i < data.length; i++) {
                 if (wId == data[i]) {
-                    console.log(data[i])
+                    //console.log(data[i])
                     //워크 ID 들고와서 일치시켰으니 페이지 정보 띄우기.
                 }
             }
@@ -85,11 +82,11 @@ function pageList() {
     .then(data=>{
         document.querySelectorAll('#side .Work').forEach(works => {
             workId = works.firstElementChild.innerText;
-            console.log(wId);
+            //console.log(wId);
         })
         for(let i=0;i<data.length;i++){
         pId = data[i].pageId;
-        console.log(data[i].pageId);
+        //console.log(data[i].pageId);
         if(wId == data[i].workId){
 
         }
