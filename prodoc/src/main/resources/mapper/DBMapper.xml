@@ -3,9 +3,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.db.mapper.DBMapper">
-
+	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">
-		{call insert_db(
+		{call INSERT_DB(
 						#{wordId}
 						, #{email}
 						, #{prentPage}
@@ -14,10 +14,56 @@
 		)}
 	</insert>
 	
+	<!-- DB속성 페이지 추가 -->
+	<insert id="insertDBPage" parameterType="DBdataVO" statementType="CALLABLE">
+		{call INSERT_DB_PAGE(
+							#{parentPage}
+							, #{email}
+							, #{displayId}
+							, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		)}
+	</insert>
+
+	<!-- DBCase페이지로 하위 페이지(블럭) 리스트 조회 -->	
 	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
 		SELECT *
 		FROM tbl_display
-		WHERE page_id = #{casePage}
+		WHERE page_id = (SELECT page_id
+		                FROM tbl_dbblock
+		                WHERE display_id = #{dbBlockID})
 		ORDER BY row_x
+	</select>
+	
+	<!-- displayId로 DB 페이지 조회 -->
+	<select id="getDBPageInfo" resultType="PageVO" parameterType="String">
+		SELECT *
+		FROM tbl_page
+		WHERE page_id = ( SELECT page_id
+                          FROM tbl_dbblock
+                          WHERE display_id = #{displayId})
+	</select>
+	
+	<!-- 페이지 속성 조회 -->
+	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
+		SELECT *
+		FROM tbl_page_attr
+		WHERE page_id = ( SELECT page_id
+                          FROM tbl_dbblock
+                          WHERE display_id = #{displayId})
+	</select>
+	
+	<update id="updateCase" parameterType="PageVO">
+		UPDATE tbl_page
+		SET case_id = #{caseId}
+		WHERE page_id = #{pageId}
+	</update>
+	
+	<!-- case페이지 아이디로 하위페이지의 모든 속성 이름 조회 -->
+	<select id="getAllPageAttr" parameterType="String" resultType="PageAttrVO">
+		SELECT a.attr_id, a.attr_name
+		FROM tbl_page_attr a JOIN tbl_page p ON a.page_id = p.page_id
+		                    JOIN tbl_dbblock d ON p.parent_id = d.page_id
+		WHERE d.display_id = #{parentId}
+		GROUP BY a.attr_id, a.attr_name
 	</select>
 </mapper>
