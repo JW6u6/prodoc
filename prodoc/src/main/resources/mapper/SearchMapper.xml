@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.prodoc.search.mapper.PageMapper">
+	<select id="selectblockList" parameterType="SearchVO">
+	SELECT *
+	FROM (SELECT * 
+          FROM (SELECT * FROM v_wk_pg_dp) MINUS (SELECT * FROM v_wk_pg_dp WHERE page_cre_user != 'user1@user1' AND public_check = 'P_PRIV'))
+	WHERE (delete_check != 'TRUE') AND (work_id in ( SELECT work_id FROM tbl_member WHERE email = 'user1@user1'))
+            AND content LIKE '%' || #{keyword} || '%'
+            AND (case WHEN display_up_date IS NULL 
+            	then display_cre_date ELSE display_up_date end)
+                          between TO_DATE(#{startDate},'rrrr-MM-dd') 
+                          	  AND TO_DATE(#{endDate},'rrrr-MM-dd')
+	</select>
+	
+	<select id="selectDBList" parameterType="SearchVO"></select>
+</mapper>

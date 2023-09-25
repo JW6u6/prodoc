@@ -1,29 +1,79 @@
-.dbName {
-    font-size: 30px;
-    max-width: 100%;
+.display-flex{
+	display: flex;
 }
-ul {
+
+.db-block{
+    border: 1px solid gainsboro;
+}
+
+.db-layout-list{
+	display: inline;
+}
+
+.db-layout-list li{
+    display: inline;
     list-style-type: none;
-    display: inline;
 }
 
-li {
-    display: inline;
+.db-search-option{
+	display: inline;
+	float: inline-end;
 }
 
-.searchOption {
-    display: inline;
-    float: right;
+.inlineTags{
+	display: inline;
 }
 
-#getSearchDate {
-    display: inline;
-    background-color: gainsboro;
+div[data-block-id]{
+	border: 1px solid gray;
+	margin: 10px;
 }
 
-#selectDate {
-    border: 1px solid seagreen;
-    height: 180px;
-    width: 300px;
-    float: right;
+div[data-tagimg]{
+	display: inline;
+	border: 1px solid green;
+}
+
+div[data-pagename]{
+	display: inline;
+}
+
+div[data-dbtype="list"]{
+	width : 90%;
+}
+
+div[data-dbtype="brd"]{
+	margin: auto;
+}
+
+div[data-dbtype="gal"]{
+	width : 40%;
+	margin: auto;
+	display: inline-block;
+}
+
+div[data-state]{
+	width: 20%;
+	margin: 10px;
+	border: 1px solid salmon;
+	display: inline-block;
+	min-height: 150px;
+}
+
+div[data-state-tags]{
+	width: 20%;
+	margin: 10px;
+	text-align: center;
+	background-color: beige;
+	display: inline-block;
+}
+
+div[data-page-attr]{
+	font-size: small;
+	background-color: linen;
+}
+
+div[data-gal-img]{
+	height: 80px;
+	width: 100px;
 }

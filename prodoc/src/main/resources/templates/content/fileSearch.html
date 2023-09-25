@@ -4,25 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="css/dbpage.css" rel="stylesheet" />
 </head>
 <body>
 	<!-- 테스트 후 삭제하기(컨트롤러 포함) -->
-	<!-- 
-		페이지 클릭 -> 아이디, 페이지 케이스 가져옴
-		페이지 케이스 : LIKE 'DB%' 일 때 DBPageCase 보이기
-	 -->
 <div>
-	<link th:href="@{/css/dbpage.css}" rel="stylesheet" />
-    <div th:insert="content/DBPage.html :: DBPageCase"></div>
-    
-	<div id="db-page-body">
-	
-	</div>
-	
-    
-	<script th:inline="javascript" src="js/DBPage.js"></script>
-	<script type="text/javascript" src="js/LayoytChange.js"></script>
+	<button id="dbpagetest">page</button>
+    <div data-container="container" id="pagecontainer">
+
+    </div>
+
+    <script type="text/javascript">
+    	// test 임시데이터 : 메인 페이지 로드
+        let container = document.querySelector('div[data-container="container"]');
+    	document.getElementById("dbpagetest").addEventListener("click", e =>{
+    		container.innerHTML = "";
+            let url = '/pageInfo?pageId=' + 'aaaaa-bbbbb-cccccc';
+            fetch(url)
+            .then(response => response.json())
+            .then(async result => {
+                container.setAttribute("data-page-id", result.pageId);
+                await getBlockList(result.pageId);
+            })
+            .catch(err => console.log(err));
+        });
+		
+    	// test 임시데이터 : 메인 페이지 하위 블럭 가져오기
+        function getBlockList(pageId){
+            fetch("block/get", {
+                method : "post",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify({ 'pageId' : pageId})
+            })
+            .then(response => response.json())
+            .then( blockList => {
+                 blockList.forEach( block => {
+                    let divCase = document.createElement("div");
+                    divCase.setAttribute("data-block-id", block.displayId);
+
+                    // ✅ blockId가 DB일 때 DB블럭의 정보 가져오기
+                    if(block.blockId == "DB"){
+                        let createBlock = createDBblock(block);
+                        container.insertAdjacentHTML("beforeend", createBlock);
+                        getDBPageList(block.displayId);
+                    }
+                 });
+            })
+            .catch(err => console.log(err))
+        }
+        
+    </script>
+<script type="text/javascript" src="js/dbEvent.js"></script>
+<script type="text/javascript" src="js/dbPageLayout.js"></script>
 </div>
-    
+
 </body>
 </html>
+

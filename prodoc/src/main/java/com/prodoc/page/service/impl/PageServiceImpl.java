@@ -38,9 +38,9 @@ public class PageServiceImpl implements PageService {
 	public String insertPage(PageVO pageVO) {
 		pageMapper.insertPage(pageVO);
 		if(pageVO.getInsertResult().equals("success")) {
-			return pageVO.getOutPid();
+			return pageVO.getPageId();
 		}else {
-			return pageVO.getOutPid();
+			return pageVO.getPageId();
 		}
 	}
 
