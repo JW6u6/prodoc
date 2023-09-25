@@ -19,6 +19,7 @@ let pageModal = document.querySelector("#pageModal");
 //인사이트 내 사이드바 워크스페이스 목록 불러오기(AJAX)
 function workList() {
     let url = '/workList';
+    
     fetch(url, {
             method: 'GET'
         })
@@ -46,6 +47,8 @@ function workList() {
             document.querySelectorAll('#side .workName').forEach(works => {
                 works.addEventListener('click', function (e) {
                     let target = e.target;
+                    let pageDiv = target.parentElement.querySelector('.pageMain');
+                    pageDiv.innerHTML = "";
                     let workClick = e.currentTarget.nextElementSibling.innerText;
                     pageList(workClick,target);
                     // selectWork(workClick);
@@ -86,7 +89,6 @@ function newWork() {
     document.querySelector('#wsCreate').addEventListener('click', newWorkSpace);
 }
 
-let pageClick = 0;
 // 인사이트 내 사이드바에 페이지 목록 불러옴
 function pageList(wId,target) {
     let insertDiv = target.parentElement.querySelector('.pageMain');
@@ -96,10 +98,6 @@ function pageList(wId,target) {
         return res.json();
     })
     .then(data => {
-        pageClick += 1;
-        if ( pageClick%2 ==0){
-            insertDiv.innerHTML = "";
-        }else{
             data.forEach(item=> {
                 let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="pageIdVal">'+ item.pageId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
                 insertDiv.insertAdjacentHTML("beforeend", text);
@@ -113,7 +111,6 @@ function pageList(wId,target) {
                     // selectPage(searchPageName,target);
                 })
             })
-        }
     })
     .catch((err) => console.log('err: ', err));
 }
@@ -188,25 +185,6 @@ function newPageModal(event) {
     })
     .catch((err) => console.log('err: ', err));
     }
-// //새로운 서브-페이지 삽입 모달창생성(+ 클릭시)
-// function newSubPageModal(event) {
-//     PageModal.style.display = "block";
-//     document.body.style.overflow = "hidden";
-//     let pageId = event.currentTarget.previousElementSibling.innerText;
-//     let parentId = document.querySelector('#ParentId');
-//     console.log(parentId);
-//     parentId.value = pageId;
-//     let workId = document.querySelector('#WorkId');
-//     let url = '/findWork?pageId='+pageId;
-//     fetch(url)
-//     .then(res => {
-//         return res.text();
-//     })
-//     .then((data)=>{
-//         workId.value = data;
-//     })
-//     .catch((err)=>console.log(err));
-// }
 //모달창 닫는 기능
 function closeModal() {
     workModal.style.display = "none";
