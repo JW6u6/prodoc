@@ -19,7 +19,6 @@
  		-->
  		SELECT work_id
       	FROM tbl_workspace
-			                ) -->
  	</select>
  	
  	
