@@ -8,7 +8,7 @@ public interface MemberService {
 	public boolean renewAuthMember(MemberVO memberVO);
 	
 	//멤버 내보내기
-	public boolean deleteMember(MemberVO memberVO);
+	public int deleteMember(List<MemberVO> memberVO);
 	
 	//멤버 조회
 	public List<MemberVO> listMember(MemberVO memberVO);

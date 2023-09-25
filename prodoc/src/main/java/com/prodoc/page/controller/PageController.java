@@ -2,16 +2,24 @@ package com.prodoc.page.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.member.service.MemberService;
+import com.prodoc.member.service.MemberVO;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
+import com.prodoc.socket.SocketVO;
+import com.prodoc.user.service.UserVO;
 
 import lombok.Setter;
 
@@ -21,23 +29,50 @@ public class PageController {
 	@Autowired
 	PageMapper pageMapper;
 	
+	@Autowired
+	MemberService memberserivce;
+	
+    private SimpMessagingTemplate template;
+
+    @Autowired
+    public PageController(SimpMessagingTemplate template) {
+        this.template = template;
+    }
+	
 	@Setter(onMethod_ = @Autowired)
 	PageService pageService;
 	
-	@GetMapping("pageList")
-	public List<PageVO> pageList(PageVO pageVO){
-		return pageMapper.pageList(pageVO);
+	@GetMapping("/pageList")
+	public List<PageVO> pageList(@RequestParam String workId){
+		return pageMapper.pageList(workId);
 	}
-	
-	@GetMapping("pageInfo")
-	public PageVO pageInfo(PageVO pageVO) {
+	@GetMapping("/findWork")
+	public String findWork(@RequestParam String pageId){
+		return pageMapper.findWork(pageId);
+	}
+	@GetMapping("/pageInPage")
+	public List<PageVO> pageInPage(@RequestParam String pageId){
+		return pageMapper.pageInPage(pageId);
+	}
+	@GetMapping("/pageInfo")
+	public String pageInfo(PageVO pageVO) {
 		return pageMapper.selectPageInfo(pageVO);
 	}
 	
-	@PostMapping("pageInsert")
-	public PageVO pageInsert(@RequestBody PageVO pageVO) {
-		pageMapper.insertPage(pageVO);
-		return pageVO;
+	@PostMapping("/pageInsert")
+	public String pageInsert(@RequestBody PageVO pageVO,HttpSession session ) {
+		MemberVO memberVO = new MemberVO();
+		UserVO user = (UserVO)session.getAttribute("logUser");
+		memberVO.setWorkId(pageVO.getWorkId());
+		List<MemberVO> list = memberserivce.listMember(memberVO);
+		for(int i=0;i<list.size();i++) {
+			if(!list.get(i).getEmail().equals(user.getEmail())) {
+				System.out.println("======================//////////////");
+				this.template.convertAndSendToUser(
+					list.get(i).getEmail() , "/topic/updatePage", new SocketVO("pageCreate",pageVO.getPageId()));
+			}
+		}
+		return pageService.insertPage(pageVO);
 	}
 	
 	//페이지 잠금/잠금해제(소유자, 관리자 권한)

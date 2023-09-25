@@ -29,10 +29,10 @@
 	
 	<update id="updateUser" parameterType="UserVO">
 		UPDATE TBL_USER
-		SET	<if test="nickname != ''"> nickname = #{nickname} </if>
-			<if test="password != ''"> , password = #{password} </if>
-			<if test="profile != null"> , profile = #{profile} </if>
-			<if test="phone != ''"> , phone = #{phone} </if>
+		SET	<if test="nickname != null and nickname != ''"> nickname = #{nickname} </if>
+			<if test="password != null and password != ''"> , password = #{password} </if>
+			<if test="profile != null and profile != ''"> , profile = #{profile} </if>
+			<if test="phone != null and phone != ''"> , phone = #{phone} </if>
 			<if test="birth != null"> , birth = #{birth} </if>
 		WHERE email = #{email}
 	</update>

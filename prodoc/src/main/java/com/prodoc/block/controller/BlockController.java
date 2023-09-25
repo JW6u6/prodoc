@@ -1,5 +1,6 @@
 package com.prodoc.block.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -8,33 +9,57 @@ import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.prodoc.block.mapper.BlockMapper;
 import com.prodoc.block.service.BlockVO;
+import com.prodoc.block.service.BookMarkVO;
+import com.prodoc.block.service.blockfileService;
 import com.prodoc.block.service.impl.BlockServiceImpl;
+import com.prodoc.file.service.FileVO;
+import com.prodoc.user.service.ProfileService;
 
 /*
  * 개발자 : 이명석
  * 개발일자 : 2023/09/14
  * 
 */
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 public class BlockController {
 
 	@Autowired
 	BlockServiceImpl service;
 	
-	@PostMapping("block/get")
-	public List<BlockVO> getBlock(@RequestBody BlockVO block) {
-		List<BlockVO> blocks = service.selectAllBlock(block);
-		return blocks;
+	@Autowired
+	blockfileService blockFileService;
+	
+	@Autowired
+	BlockMapper mapper;
+	
+	@GetMapping("block/get")
+	public List<BlockVO> getBlock(@RequestParam String pageId) {
+		
+		BlockVO block =  new BlockVO();
+		
+		block.setPageId(pageId);
+		
+		return service.selectAllBlock(block);
+	}
+	
+	@GetMapping("block/getOne")
+	public BlockVO getOneBlock(@RequestParam String displayId) {
+		BlockVO block = new BlockVO();
+		block.setDisplayId(displayId);
+		
+		
+		return service.selectBlock(block);
 	}
 	
 	@PostMapping("block/create")
@@ -44,7 +69,9 @@ public class BlockController {
 	}
 	@PostMapping("block/update")
 	public String updateBlock(@RequestBody BlockVO block) {
+		System.out.println(block);
 		int result = service.updateBlock(block);
+		System.out.println(result);
 		return result +"";
 	}
 	@PostMapping("block/delete")
@@ -67,7 +94,7 @@ public class BlockController {
             map.put("title", ogTitle);
             map.put("desc", ogDescription);
             map.put("img", ogImage);
-            	
+            
             return map;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -78,44 +105,52 @@ public class BlockController {
 	}
 	
 	@PostMapping("block/createBookMark")
-	public String createBookMark(@RequestBody Map<String,String> displayId) {
-		Map<String, String> map = displayId;
-		String id = map.get("displayId");
-		int result = service.createBookMark(id);
+	public String createBookMark(@RequestBody BookMarkVO vo) {
+		System.out.println(vo);
+		int result = service.createBookMark(vo);
 		
 		return result+"";
 	}
 	
 	@PostMapping("block/updateBookMark")
-	public String updateBookMark(@RequestBody Map<String,String> data) {
-		int result = service.updateBookMark(data);
+	public String updateBookMark(@RequestBody BookMarkVO vo) {
+		System.out.println(vo);
+		int result = service.updateBookMark(vo);
 		return result+"";
 	}
 	
 	@GetMapping("block/getBookMark")
-	public String getBookMark(@RequestParam String displayId) {
-		String result = service.getBookMark(displayId);
-		return result;
+	public BookMarkVO getBookMark(BookMarkVO vo) {
+		BookMarkVO map = service.getBookMark(vo);
+		return map;
 	}
 	
-	@PostMapping("block/deleteBookMark")
-	public String deleteBookMark(@RequestBody Map<String,String> data) {
-		String displayId = data.get("displayId");
-		int result = service.deleteBookMark(displayId);
+	@PostMapping("block/uploadFile")
+	public String UploadFile(MultipartFile file) {
+		String uploadName = blockFileService.fileUploadName(file);
+		System.out.println("upload--------------"+uploadName);
+		return uploadName;
+	}
+	
+	// 파일유무
+	@GetMapping("block/getFile")
+	public FileVO getFile(@RequestParam String displayId) {
+		return service.getFile(displayId);
+	}
+	
+	// 파일블럭이 만들어졌을때.
+	@PostMapping("block/createFileBlock")
+	public String createFileBlock(@RequestBody FileVO file) {
+		System.out.println(file);
+		int result = service.insertFile(file);
 		return "";
 	}
 	
-//	@PostMapping("block/check")
-//	public String updateCheckBlock(@RequestParam String id,@RequestParam String checked) {
-//		
-//		Map<String, String> map = new HashMap<String, String>();
-//		
-//		map.put(id, checked);
-//		
-//		int result = service.createCheckBlock(map);
-//		
-//		return checked;
-//		
-//	}
+	// 파일블록을 등록했을때.
+	@PostMapping("block/upFileBlock")
+	public String updateFileBlock(@RequestBody FileVO file) {
+		int result = mapper.updateFileBlock(file);
+		return ""+result;
+	}
 	
 }
