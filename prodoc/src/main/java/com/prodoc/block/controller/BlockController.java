@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.prodoc.block.mapper.BlockMapper;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
+import com.prodoc.block.service.blockfileService;
 import com.prodoc.block.service.impl.BlockServiceImpl;
+import com.prodoc.file.service.FileVO;
 import com.prodoc.user.service.ProfileService;
 
 /*
@@ -35,7 +38,10 @@ public class BlockController {
 	BlockServiceImpl service;
 	
 	@Autowired
-	ProfileService proService;
+	blockfileService blockFileService;
+	
+	@Autowired
+	BlockMapper mapper;
 	
 	@GetMapping("block/get")
 	public List<BlockVO> getBlock(@RequestParam String pageId) {
@@ -121,21 +127,30 @@ public class BlockController {
 	
 	@PostMapping("block/uploadFile")
 	public String UploadFile(MultipartFile file) {
-		String uploadName = proService.fileUploadName(file);
+		String uploadName = blockFileService.fileUploadName(file);
+		System.out.println("upload--------------"+uploadName);
 		return uploadName;
 	}
 	
-//	@PostMapping("block/check")
-//	public String updateCheckBlock(@RequestParam String id,@RequestParam String checked) {
-//		
-//		Map<String, String> map = new HashMap<String, String>();
-//		
-//		map.put(id, checked);
-//		
-//		int result = service.createCheckBlock(map);
-//		
-//		return checked;
-//		
-//	}
+	// 파일유무
+	@GetMapping("block/getFile")
+	public FileVO getFile(@RequestParam String displayId) {
+		return service.getFile(displayId);
+	}
+	
+	// 파일블럭이 만들어졌을때.
+	@PostMapping("block/createFileBlock")
+	public String createFileBlock(@RequestBody FileVO file) {
+		System.out.println(file);
+		int result = service.insertFile(file);
+		return "";
+	}
+	
+	// 파일블록을 등록했을때.
+	@PostMapping("block/upFileBlock")
+	public String updateFileBlock(@RequestBody FileVO file) {
+		int result = mapper.updateFileBlock(file);
+		return ""+result;
+	}
 	
 }

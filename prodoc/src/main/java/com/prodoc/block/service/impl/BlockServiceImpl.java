@@ -10,6 +10,7 @@ import com.prodoc.block.mapper.BlockMapper;
 import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
+import com.prodoc.file.service.FileVO;
 
 @Service
 public class BlockServiceImpl implements BlockService {
@@ -38,6 +39,7 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public int deleteBlock(BlockVO blockVO) {
 		// TODO Auto-generated method stub
+		blockmapper.deleteFileBlock(blockVO.getDisplayId());
 		blockmapper.deleteBookMark(blockVO.getDisplayId());
 		return blockmapper.deleteBlock(blockVO);
 	}
@@ -65,6 +67,18 @@ public class BlockServiceImpl implements BlockService {
 	public BlockVO selectBlock(BlockVO blockVO) {
 		// TODO Auto-generated method stub
 		return blockmapper.selectBlock(blockVO);
+	}
+
+	@Override
+	public FileVO getFile(String displayId) {
+		// TODO Auto-generated method stub
+		return blockmapper.getFile(displayId);
+	}
+
+	@Override
+	public int insertFile(FileVO vo) {
+		// TODO Auto-generated method stub
+		return blockmapper.insertFile(vo);
 	}
 
 

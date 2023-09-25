@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
+import com.prodoc.file.service.FileVO;
 
 @Mapper
 public interface BlockMapper {
@@ -19,4 +20,8 @@ public interface BlockMapper {
 	public int updateBookMark(BookMarkVO bookmarkVO);
 	public BookMarkVO getBookMark(BookMarkVO bookmarkVO);	
 	public int deleteBookMark(String id);
+	public FileVO getFile(String displayId);
+	public int insertFile(FileVO vo);
+	public int deleteFileBlock(String displayId);
+	public int updateFileBlock(FileVO vo);
 }
