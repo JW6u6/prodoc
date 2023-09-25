@@ -24,5 +24,6 @@ public class PageVO {
 	private String email;
 	private int result;
 	
-	
+	//프로시저용
+	private String insertResult;
 }
