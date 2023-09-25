@@ -6,18 +6,9 @@
 
  	<!-- <워크 list 불러오기> -->
  	<select id="selectWorkNo" resultType="WorkSpaceVO">
- 		<!--SELECT work_id
- 		FROM tbl_workspace
- 		select work_name
-		from tbl_workspace
-		where work_id IN (
-			                SELECT work_id
-			                FROM tbl_member
-			                where email = #{email}
-			                )
- 		-->
 		SELECT work_id,work_name
 		FROM tbl_workspace
+		WHERE delete_check != 'TRUE'
  	</select>
  	<!-- 워크 id,name 값 가져오기 -->
  	<select id = "workId" resultType="String">

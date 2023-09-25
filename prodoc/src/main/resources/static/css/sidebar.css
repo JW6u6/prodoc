@@ -1,6 +1,6 @@
 
 /* 모달창 크기 */
-#pageModal,#workModal,#subPageModal {
+#pageModal,#workModal {
 		position: fixed;
 		z-index: 1;
 		left: 0;

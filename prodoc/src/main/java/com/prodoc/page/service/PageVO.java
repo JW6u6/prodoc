@@ -25,6 +25,5 @@ public class PageVO {
 	private int result;
 	
 	//프로시저용
-	private String outPid;
 	private String insertResult;
 }
