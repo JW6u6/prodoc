@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prodoc.member.mapper.MemberMapper;
 import com.prodoc.member.service.MemberService;
@@ -18,22 +19,30 @@ public class MemberServiceImpl implements MemberService {
 	MemberMapper memberMapper;
 
 	@Override
-	public boolean renewAuthMember(MemberVO memberVO) {
-		return memberMapper.renewAUTH(memberVO) == 1;
+	@Transactional
+	public int renewAuthMember(List<MemberVO> listVO) {
+		int result = 0;
+
+		for (MemberVO memberVO : listVO) {
+			if (memberMapper.renewAUTH(memberVO) == 1) {
+				result++;
+			}
+		}
+		return result;
 	}
 
-	//멤버 내보내기
+	// 멤버 내보내기
 	@Override
 	public int deleteMember(List<MemberVO> listVO) {
-		for(MemberVO memberVO : listVO) {
+		for (MemberVO memberVO : listVO) {
 			memberMapper.removeMember(memberVO);
 		}
-		return listVO.size(); 
+		return listVO.size();
 	}
 
 	@Override
-	public List<MemberVO> listMember(MemberVO memberVO) {
-		return memberMapper.listMember(memberVO);
+	public List<MemberVO> listMember(String workId) {
+		return memberMapper.listMember(workId);
 	}
 
 }
