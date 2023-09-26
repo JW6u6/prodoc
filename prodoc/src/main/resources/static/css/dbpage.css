@@ -24,6 +24,15 @@
 	display: inline;
 }
 
+.attr {
+	
+}
+
+.attr-list {
+	display: inline;
+	float: inline-end;
+}
+
 div[data-block-id]{
 	border: 1px solid gray;
 	margin: 10px;

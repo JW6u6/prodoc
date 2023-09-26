@@ -12,13 +12,13 @@ function layoutClick(e){
     let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");       // 선택된 case의 페이지 id (update)
     let caseId = e.target.closest('[data-block-id]').getAttribute("data-block-id");     // 선택된 case의 블럭 id (하위블럭 정보 select)
     console.log(layout, pageId, caseId);
-    let list = getDBPageList(caseId);
     
     updateCase(pageId, layout);     // case_id 업데이트 fetch
-    listLayoutEditor(list, pageId, caseId);
+    console.log(caseId);
+    getChildList(caseId);
 }
 
-// DBcase block 생성 || 케이스 아이디도 같이 넣어주도록 하자
+// DBcase block 생성
 function createDBblock(block){
     const dbBlockTemp = `
     <div class="db-block" data-block-id="` + block.displayId + `">
@@ -62,6 +62,35 @@ function createDBblock(block){
     return dbBlockTemp;
 }
 
+// 하위 페이지 불러오기 | 매개값 : case block의 DisplayId
+async function getChildList(disId){
+    let pageList = [];
+	let url = 'getChildList?parentId=' + disId;
+	await fetch(url, {
+		method : 'get'
+	})
+	.then(response => response.json())
+	.then(infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
+        for(let key in infoList){
+            if(key == "parent") {
+                let parentDiv = document.querySelectorAll('[data-block-id]');                
+                parentDiv.forEach(tag => {
+                    let tagId = tag.getAttribute("data-block-id");
+                    if(tagId == disId){
+                        tag.setAttribute("data-page-id", infoList[key]["pageId"]);
+                        tag.setAttribute("data-layout", infoList[key]["caseId"]);
+                    }
+                });
+            } else {
+            // 하위페이지 리스트
+            pageList.push(infoList[key]);   // blockVO, pageVO, attrList
+            }
+        }
+        listLayoutEditor(pageList, infoList['parent']['pageId'], infoList['parent']['caseId']);
+	})
+	.catch(err => console.log(err))
+}
+
 // 검색 이벤트
 function databaseSearch(e){
     let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
@@ -75,64 +104,6 @@ function databaseSearch(e){
     })
     .catch(err => console.log(err));
 */
-}
-
-// 하위 페이지 불러오기 | 매개값 : case block의 DisplayId
-async function getChildList(disId){
-    let pageList = [];
-	let url = 'getChildList?parentId=' + disId;
-	await fetch(url, {
-		method : 'get'
-	})
-	.then(response => response.json())
-	.then(infoList => {
-		console.log(infoList);
-        for(let key in infoList){
-            if(key == "parent") {
-                console.log(infoList[key]);
-                let parentDiv = document.querySelector('[data-block-id]');
-                let parentId = parentDiv.getAttribute("data-block-id");
-                if(parentId == disId){
-                    parentDiv.setAttribute("data-page-id", infoList[key]["pageId"]);
-                    parentDiv.setAttribute("data-layout", infoList[key]["caseId"]);
-                }
-            } else {
-            // 하위페이지 리스트
-            pageList.push(infoList[key]);
-            }
-        }
-        listLayoutEditor(pageList, infoList['parent']['pageId'], infoList['parent']['caseId']);
-	})
-	.catch(err => console.log(err))
-}
-
-// DB케이스의 하위 페이지 불러오기 : caseBlock의 아이디 => 하위 블럭 return
-async function getDBPageList(blockId){  //blockId : DBcase block_Id (type : db)
-	let pageList = [];     // 하위 블럭 리스트
-    pageList.length = 0;
-    fetch("getDBPageList",{
-        method : "post",
-        body : blockId
-    })
-    .then(response => {
-        return response.json();
-    })
-    .then( async(result) => {
-        //✔result : [ {BlockVO}, {BlockVO}, {BlockVO} ]
-        let casePageId = result[0].pageId;              // case page id
-        let pageInfo = await getPageInfo(casePageId);   // case page info(case 정보가 없기때문에 case 정보를 가져오기 위해 필요함)
-        result.forEach(item => {
-            pageList.push(item);
-        });
-        let select = `[data-block-id="`+ result[0].parentId +`"]`;
-        let selTag = document.querySelector(select);
-        selTag.setAttribute('data-page-id', result[0].pageId);
-        console.log(pageList);
-        listLayoutEditor(pageList, pageInfo.pageId, pageInfo.caseId);
-    })
-    .catch(err => console.log(err))
-
-    return pageList;
 }
 
 // page Info (function앞에 async, fetch앞에 await 지움)
