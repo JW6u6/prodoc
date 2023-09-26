@@ -21,23 +21,23 @@
 				<button type="button" id="joinOutBtn">탈퇴</button>
 	        </div>
 	        <div>
-		        <label>NAME</label>
+		        <label>이름</label>
 		        <input type="text" name="nickname" th:value="${session.logUser.nickname}">
 		        <div>
-			        <label>PASSWORD</label>
+			        <label>비밀번호</label>
 			        <input type="password" name="password" class="password">
-			        <label>PASSWORD CHECK</label>
+			        <label>비밀번호 확인</label>
 			        <input type="password" class="password">
 		        </div>
 		        <div>
-			        <label>TEL</label>
+			        <label>전화번호</label>
 			        <input type="tel" name="phone" 
 			        	th:value="${session.logUser.phone}" maxlength="11">
 			        <button type="button" id="authBtn">인증번호</button>
 			        <input type="text" id="auth" placeholder="인증번호">
 			        <button type="button" id="authCheckBtn">확인</button>
 		        </div>
-		        <label>BIRTH</label>
+		        <label>생년월일</label>
 		        <input type="text" name="birth" th:value="${#dates.format(session.logUser.birth, 'yyMMdd')}"
 		        		maxlength="6" placeholder="ex.991231">
 	        </div>

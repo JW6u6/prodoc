@@ -1,19 +1,21 @@
 package com.prodoc.user.controller;
 
+
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.prodoc.member.service.MemberService;
 import com.prodoc.user.service.ProfileService;
+import com.prodoc.user.service.SMSUtil;
 import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
 
@@ -25,7 +27,9 @@ public class UserController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	ProfileService proService; 			//프로필 이미지 저장 서비스
-
+	@Autowired
+	SMSUtil sms;
+	
 	@ResponseBody
 	@PostMapping("/joinout")
 	public String goMain(@RequestBody UserVO pw, HttpServletRequest request) {
@@ -50,4 +54,13 @@ public class UserController {
 		System.out.println("UserVO" + user.toString());
 		return service.modifyInfo(user, request); //정보 수정
 	}
+	
+	@ResponseBody
+    @PostMapping("/sendSMS")
+    public String PhoneAuthProcess(@RequestBody UserVO user) {
+		System.out.println(user.toString());
+    	sms.init();
+    	String result = sms.sendSMSAuth(user.getPhone());
+    	return "{\"authNum\" : " + result + "}";
+    }
 }

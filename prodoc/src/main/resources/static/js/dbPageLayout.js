@@ -3,14 +3,22 @@ async function listLayoutEditor(pageList, pageId, layout){
     dbbody.innerHTML = "";
     console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
     
-    switch(layout){
+   <!-- switch(layout){
         case 'DB_LIST' :
             dbbody.insertAdjacentHTML("afterbegin", addDbpage()); 
+            pageList.forEach(block => {-->
+    // 속성에 매핑하기 위한 tbl_db_attr 불러오기
+    
+    <!--switch(layout){
+        case 'DB_LIST' : 
             pageList.forEach(block => {
+                console.log(block);-->
                 let blockTag = dblistBlock(block);
                 // let attrTags = getAttrList(block['attrList']);
                 dbbody.insertAdjacentHTML("afterbegin", blockTag);
             });
+
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
 
        case 'DB_BRD' : 
@@ -39,7 +47,6 @@ async function listLayoutEditor(pageList, pageId, layout){
                     }
                 })
             })
-            
             caseDiv.append(stateTag);
         })
             dbbody.append(caseDiv);
@@ -128,6 +135,7 @@ function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
         <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+
             <div data-pagename>`+block['page']['pageName']+`</div>
             `+useAttr+`
         </div>

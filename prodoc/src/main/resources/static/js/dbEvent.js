@@ -89,7 +89,10 @@ async function getChildList(disId){
                     }
                 });
             } else {
-                caseInfo.push(infoList[key]);
+               <!--caseInfo.push(infoList[key]);-->
+
+            // 하위페이지 리스트
+            <!--pageList.push(infoList[key]);   // blockVO, pageVO, attrList-->
             }
         }
         listLayoutEditor(caseInfo, infoList['parent']['pageId'], infoList['parent']['caseId']);

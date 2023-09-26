@@ -44,7 +44,13 @@
                           WHERE display_id = #{displayId})
 	</select>
 	
-	<!-- DB 레이아웃 변경 -->
+	<!-- 특정 페이지 속성 조회 -->
+	<!-- <select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
+		SELECT * 
+		FROM view_pageattr 
+		WHERE display_id = #{displayId}
+	</select> -->
+  
 	<update id="updateCase" parameterType="PageVO">
 		UPDATE tbl_page
 		SET case_id = #{caseId}

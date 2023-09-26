@@ -131,10 +131,15 @@ document.querySelectorAll(".password").forEach((tag, idx, obj)=>{
 	});
 });
 
-//전화번호	인증 체크
+
 let beforeN = document.querySelector("input[name='phone']").value;	//원래의 전화번호
-document.querySelector("input[name='phone']")
-.addEventListener('change', function(e){
+let phoneNumber = document.querySelector('input[name="phone"]');
+
+//번호 입력 칸에 문자 입력
+phoneNumber.addEventListener('input', (e)=> phoneNumber.value =
+					 phoneNumber.value.replace(/[^0-9]/gi, ""));
+
+phoneNumber.addEventListener('change', function(e){ //전화번호	인증 체크
 	//원래의 전화번호에서 변경이 일어나면 인증 여부 초기화
 	if(e.target.value == beforeN)	phoneTrue = true;
 	else 							phoneTrue = false;
@@ -146,6 +151,9 @@ let authBtn = document.querySelector("#authBtn")
 .addEventListener('click', function(e){
 	if(phoneTrue) return;	//인증이 된 번호
 	//TODO: 인증번호 전송 프로세스
+	//fetch("/sendSMS",{
+	//method: "post",
+	//body: {"phone": beforeN}})
 	console.log('전송');
 });
 
