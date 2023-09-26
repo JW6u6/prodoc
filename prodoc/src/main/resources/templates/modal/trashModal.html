@@ -1,4 +1,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
+<!-- 
+■ 클릭 시 휴지통 열기
+■ 휴지통 목록 전체 세팅
+■ 선택값에 맞게 목록 재설정
+□ 클릭 시 복구
+ -->
 <div th:fragment="trachFrag">
 	<div id="modTrash" class="hide">
 		<h3>휴지통</h3>
@@ -15,11 +21,8 @@
 	         <input type="date" onClick="this.max=settingDates()" name="endDate" disabled>
 	         <button type="button" id="trashResetBtn">기간 초기화</button>
 	
-		<div class="trashList" style="width:100%; height:200px; overflow:auto">
-			<table  style="width:100%; border : 1px solid black; border-collapse : collapse;">
-				<thead></thead>
-				<tbody></tbody>
-			</table>
+		<div class="trashList" style="width:70%; height:200px; overflow:auto">
+			<div class="trashResult"></div>
 		</div>
 	</div>
 </div>

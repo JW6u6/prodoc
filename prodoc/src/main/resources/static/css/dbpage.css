@@ -24,6 +24,15 @@
 	display: inline;
 }
 
+.attr {
+	
+}
+
+.attr-list {
+	display: inline;
+	float: inline-end;
+}
+
 div[data-block-id]{
 	border: 1px solid gray;
 	margin: 10px;
@@ -76,4 +85,11 @@ div[data-page-attr]{
 div[data-gal-img]{
 	height: 80px;
 	width: 100px;
+}
+
+.hide {
+	display: none;
+}
+.view {
+	display: block;
 }

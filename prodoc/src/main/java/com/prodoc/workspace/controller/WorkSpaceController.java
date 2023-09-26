@@ -34,8 +34,8 @@ public class WorkSpaceController {
 
 	// 사이드바에 워크스페이스 목록 출력
 	@GetMapping("/workList")
-	public List<WorkSpaceVO> workList(WorkSpaceVO workVO) {
-		return WorkSpaceMapper.selectWorkNo(workVO);
+	public List<WorkSpaceVO> workList(String email){
+		return WorkSpaceMapper.workList(email);
 	}
 
 	@GetMapping("/workId")

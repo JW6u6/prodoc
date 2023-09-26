@@ -20,6 +20,8 @@
         let container = document.querySelector('div[data-container="container"]');
     	document.getElementById("dbpagetest").addEventListener("click", e =>{
     		container.innerHTML = "";
+    		getBlockList();    
+    /*		
             let url = '/pageInfo?pageId=' + 'aaaaa-bbbbb-cccccc';
             fetch(url)
             .then(response => response.json())
@@ -28,19 +30,16 @@
                 await getBlockList(result.pageId);
             })
             .catch(err => console.log(err));
+    	*/
         });
 		
     	// test 임시데이터 : 메인 페이지 하위 블럭 가져오기
-        function getBlockList(pageId){
-            fetch("block/get", {
-                method : "post",
-                headers : {
-                    "Content-Type" : "application/json"
-                },
-                body : JSON.stringify({ 'pageId' : pageId})
-            })
+        function getBlockList(){
+    		let url = 'block/get?pageId=aaaaa-bbbbb-cccccc'
+            fetch(url)
             .then(response => response.json())
             .then( blockList => {
+            	console.log(blockList);
                  blockList.forEach( block => {
                     let divCase = document.createElement("div");
                     divCase.setAttribute("data-block-id", block.displayId);
@@ -49,7 +48,8 @@
                     if(block.blockId == "DB"){
                         let createBlock = createDBblock(block);
                         container.insertAdjacentHTML("beforeend", createBlock);
-                        getChildList(block.displayId);
+                        let list = getChildList(block.displayId);
+                        // listLayoutEditor(pageList, infoList['parent']['pageId'], infoList['parent']['caseId']);
                     }
                  });
             })

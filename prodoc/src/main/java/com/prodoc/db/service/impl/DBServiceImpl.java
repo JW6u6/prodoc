@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
+import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
@@ -35,11 +36,6 @@ public class DBServiceImpl implements DBService {
 	}
 
 	@Override
-	public List<PageAttrVO> getPageAttr(String displayId) {
-		return mapper.getPageAttr(displayId);
-	}
-
-	@Override
 	public int updateCase(PageVO vo) {
 		return mapper.updateCase(vo);
 	}
@@ -50,9 +46,6 @@ public class DBServiceImpl implements DBService {
 		return vo.getResult();
 	}
 
-	@Override
-	public List<PageAttrVO> getAllPageAttr(String parentId) {
-		return mapper.getAllPageAttr(parentId);
-	}
+
 
 }
