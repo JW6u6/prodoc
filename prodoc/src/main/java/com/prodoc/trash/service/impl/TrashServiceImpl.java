@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.prodoc.history.service.HistoryVO;
 import com.prodoc.trash.mapper.TrashMapper;
+import com.prodoc.trash.service.TrashResultVO;
 import com.prodoc.trash.service.TrashService;
 import com.prodoc.trash.service.TrashVO;
 
@@ -16,7 +17,7 @@ public class TrashServiceImpl implements TrashService {
 	TrashMapper mapper;
 	
 	@Override
-	public List<HistoryVO> getTrash(TrashVO trash) {
+	public List<TrashResultVO> getTrash(TrashVO trash) {
 		return mapper.selectList(trash);
 	}
 
