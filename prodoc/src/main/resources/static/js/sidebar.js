@@ -69,6 +69,7 @@ function selectWork(workClick) {
             return response.json();
         })
         .then(data => {
+            //console.log(data);
             for (let i = 0; i < data.length; i++) {
                 if (wId == data[i]) {
                     // console.log(data[i])

@@ -36,24 +36,27 @@ public class DBController {
 		service.insertDBCase(casePage);
 		return casePage.getResult();
 	}
-	
-	@PostMapping("getDBPageList")		// DBCase 블럭Id로 하위 블럭 조회
-	public List<BlockVO> getDBPageList(@RequestBody String parentId){
-		List<BlockVO> DBList = service.getDBPageList(parentId);
-		return DBList;
+
+	@GetMapping("getChildList")	// DBCase displayId로 자식요소 조회
+	public Map<String, Object> getChildList(@RequestParam String parentId){
+		Map<String, Object> childList = new HashMap<String, Object>();	// 반환할 하위 정보를 담은 맵
+		PageVO parentVO = service.getDBPageInfo(parentId);				// case page의 VO 담기
+		childList.put("parent", parentVO);
+		List<BlockVO> blockList = service.getDBPageList(parentId);		// DB하위 리스트(블럭)
+		for(int i=0; i<blockList.size(); i++) {							// 하위블럭의 블럭아이디로 attr, 해당pageVO 조회
+			Map<String, Object> infoMap = new HashMap<String, Object>();		// 한 블럭당 가질 정보 맵
+			String key = blockList.get(i).getDisplayId();
+			PageVO pageVO = service.getDBPageInfo(key);
+			List<PageAttrVO> attrList = service.getPageAttr(key);
+			infoMap.put("block", blockList.get(i));
+			infoMap.put("page", pageVO);
+			infoMap.put("attrList", attrList);
+			childList.put(key, infoMap);	// 하위블럭ID, 블럭정보map
+		}
+		return childList;
 	}
 	
-	@PostMapping("getDBPageInfo")		// 하위블럭Id로 해당 블럭의 페이지정보, 속성정보 반환
-	public List<Object> getDBPageInfo(@RequestBody String diplayId) {
-		PageVO pageInfo = service.getDBPageInfo(diplayId);
-		List<PageAttrVO> attrList = service.getPageAttr(diplayId);
-		List<Object> result = new ArrayList<>();
-		result.add(pageInfo);
-		result.add(attrList);
-		return result;
-	}
-	
-	@PostMapping("updateCase")			// DBCase의 casId 변경
+	@PostMapping("updateCase")			// DBCase의 레이아웃(caseId) 변경
 	public Map<String, Object> updateCase(@RequestBody PageVO page) {
 		Map<String, Object> result = new HashMap<>();
 		int num = service.updateCase(page);

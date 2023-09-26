@@ -34,10 +34,8 @@
 .cd1 {
   margin-left: 120px;
 }
-.content {
+.app {
 	background-color: lightyellow;
-	text-align:center;
-	height:1000px;
 	width:calc(100% - 300px);
 	margin:0px;
 	float:left;
@@ -88,10 +86,4 @@ header > ul{
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-}
-.hide {
-	display: none;
-}
-.view {
-	display: block;
 }

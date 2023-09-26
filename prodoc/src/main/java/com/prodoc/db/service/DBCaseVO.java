@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 @Alias("DBCaseVO")
 public class DBCaseVO {
-	public String wordId;
+	// INSERT_DB 프로시저에 사용
+	public String workId;
 	public String email;
 	public String prentPage;
 	public String displayId;
