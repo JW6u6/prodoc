@@ -41,12 +41,13 @@ function workList(email) {
                     tag.addEventListener('click', setWork);
                     tag.addEventListener('click', typeChange);
                   //시인누나 커밋
-            <!--let sett = document.querySelectorAll('.setting');
-                sett.forEach((tag) => {
-                    tag.addEventListener('click', makeWid) -->
-                })
+            // let sett = document.querySelectorAll('.setting');
+            //     sett.forEach((tag) => {
+            //         tag.addEventListener('click', makeWid) 
+            //     })
 
             })
+        })
             document.querySelectorAll('#side .workName').forEach(works => {
                 works.addEventListener('click', function (e) {
                     let target = e.target;
@@ -63,19 +64,9 @@ function workList(email) {
                 })
             })
 
-            let set = document.querySelectorAll('.setting');
-            set.forEach((tag) => {
-                tag.addEventListener('click', function (e) {
-                    setWork(e);
-                    typeChange(e);
-                    makeWid(e);
-                })
-            })
-
             let list = side.querySelectorAll('.Work');
             console.log(list);
-
-        })
+    })
 }
 
 //setting 분리하려고 nameArea 아래에 input:hidden으로 워크아이디 넣음
