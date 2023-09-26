@@ -1,3 +1,4 @@
+
 init();
 
 const inviteList = []; //workJoin에 workId랑 초대 이메일 담아서 json으로 넘기는 배열
@@ -5,7 +6,8 @@ const wNameList = ['workName', 'workType', 'publicCheck'];
 
 //전체 JS 기능 실행함수
 function init() {
-    workList();
+    let email = document.querySelector("#side input.logUser").value;
+    workList(email);
     document.querySelector('#wsCreate').addEventListener('click', newWorkSpace);
     document.querySelector('#insert-page').addEventListener('click', newPage);
 }
@@ -17,9 +19,8 @@ let workModal = document.querySelector("#workModal");
 let pageModal = document.querySelector("#pageModal");
 
 //인사이트 내 사이드바 워크스페이스 목록 불러오기(AJAX)
-function workList() {
-    let url = '/workList';
-    
+function workList(email) {
+    let url = '/workList?email='+email;
     fetch(url, {
             method: 'GET'
         })
@@ -27,17 +28,14 @@ function workList() {
             return response.json();
         })
         .then((data) => {
-            
-            
             let works = side.querySelectorAll('.Work');
             works.forEach(work=>{
                 work.remove()
             })
             data.forEach(item => {
                 let side = document.querySelector('#side');
-                let text = '<div class= "Work" data-id="'+item.workId+'">' + '<span class="workName">' + item.workName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div> <div>'
+                let text = '<div class= "Work" data-id="'+item.workId+'">' + '<span class="workName">' + item.workName + '</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>'+'<input type="hidden" class ="num" value="0">'+ '<div>'
                 side.insertAdjacentHTML("beforeend", text);
-                
                 let set = document.querySelectorAll('.setting');
                 set.forEach((tag) => {
                     tag.addEventListener('click', setWork);
@@ -47,11 +45,16 @@ function workList() {
             document.querySelectorAll('#side .workName').forEach(works => {
                 works.addEventListener('click', function (e) {
                     let target = e.target;
-                    let pageDiv = target.parentElement.querySelector('.pageMain');
-                    pageDiv.innerHTML = "";
-                    let workClick = e.currentTarget.nextElementSibling.innerText;
-                    pageList(workClick,target);
-                    // selectWork(workClick);
+                    console.log(target);
+                    if(target.classList.contains("clicked")){
+                        target.classList.remove("clicked");
+                        let pageDiv = target.parentElement.querySelector('.pageMain');
+                        pageDiv.innerHTML = "";
+                    }else{
+                        target.classList.add("clicked");
+                        let workClick = e.currentTarget.parentElement.dataset.id;
+                        pageList(workClick,target);
+                    }
                 })
             })
         })
@@ -99,16 +102,22 @@ function pageList(wId,target) {
     })
     .then(data => {
             data.forEach(item=> {
-                let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="pageIdVal">'+ item.pageId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
+                let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
                 insertDiv.insertAdjacentHTML("beforeend", text);
             })
-            document.querySelectorAll('.pageId').forEach(Pages => {
+            document.querySelectorAll('#side .pageName').forEach(Pages => {
                 Pages.addEventListener('click', function(e){
                     let target = e.target;
                     console.log(target);
-                    let searchPageName = e.currentTarget.innerText;
-                    console.log(searchPageName);
-                    // selectPage(searchPageName,target);
+                    if(target.classList.contains("clicked")){
+                        target.classList.remove("clicked");
+                        let pageDiv = target.parentElement.querySelector('.pageMain');
+                        pageDiv.innerHTML = "";
+                    }else{
+                        target.classList.add("clicked");
+                        let pageClick = e.currentTarget.parentElement.dataset.id;
+                        pageInPage(pageClick,target);
+                    }
                 })
             })
     })
@@ -123,6 +132,9 @@ function selectPage(pageName) {
         return res.json();
       })
     .then((data) => {
+        data.forEach(item => {
+            let text = ''
+        })
     })
 }
 // 새로운 페이지 생성.
@@ -134,7 +146,6 @@ function newPage(){
     let pageName = document.querySelector('#pgName').value;
     let val = { parentId, pageName, creUser, workId, caseId}
     let url = '/pageInsert';
-console.log(val);
     fetch(url, {
                     method: 'POST',
                     headers: {
@@ -144,14 +155,12 @@ console.log(val);
                 })
                 .then(response => response.text())
                 .then((pageId) => {
-                    console.log(pageId);
                     if(parentId){
-                        let parent = document.querySelector('.Page[data-id='+parentId+']')
+                        let parent = document.querySelector('.Page[data-id='+parentId+']');
                         let insertDiv = parent.querySelector('.pageMain');
-                        let text = `<div class= "Page"><span class="pageId" data-id='${pageId}'>${pageName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>`;
-                        insertDiv.insertAdjacentHTML("afterend", text);
+                        pageInPage(parentId,insertDiv);
                     }else{
-                        let works = document.querySelector('.Work[data-id='+workId+']')
+                        let works = document.querySelector('.Work[data-id='+workId+']');
                         let insertDiv = works.querySelector('.pageMain');
                         let text =  `<div class= "Page"><span class="pageId" data-id='${pageId}'>${pageName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>`;
                         insertDiv.insertAdjacentHTML("afterend", text);
@@ -167,10 +176,10 @@ console.log(val);
 function newPageModal(event) {
     pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
-    let wId = event.target.closest('.Work').querySelector('.workIdVal').innerText;
+    let wId = event.target.closest('.Work').dataset.id;
     let pId = '';
     if(event.target.closest('.pageMain')){
-        pId = event.target.closest('.pageMain').querySelector('.pageIdVal').innerText;
+        pId = event.target.closest('.Page').dataset.id;
     }
     let url = '/workId?workId='+wId;
     fetch(url)
@@ -185,6 +194,57 @@ function newPageModal(event) {
     })
     .catch((err) => console.log('err: ', err));
     }
+
+
+//페이지 안의 페이지 여는 기능
+function pageInPage(pId,target){
+    let insertDiv = target.parentElement.querySelector('.pageMain');
+    let url = '/pageInPage?pageId='+pId;
+    fetch(url)
+    .then(res => {
+        return res.json();
+    })
+    .then(data => {
+        data.forEach(item => {
+            let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
+            insertDiv.insertAdjacentHTML("beforeend",text)
+        })
+        let inPageDiv = target.parentElement.querySelector('.pageMain');
+        inPageDiv.querySelectorAll('.pageName').forEach(Pages => {
+            Pages.addEventListener('click', function(e){
+                let target = e.target;
+                console.log(target);
+                if(target.classList.contains("clicked")){
+                    target.classList.remove("clicked");
+                    let pageDiv = target.parentElement.querySelector('.pageMain');
+                    pageDiv.innerHTML = "";
+                }else{
+                    target.classList.add("clicked");
+                    let pageClick = e.currentTarget.parentElement.dataset.id;
+                    pageInPage(pageClick,target);
+                }
+            })
+        })
+    })
+}
+
+function clickPage(){
+    document.querySelectorAll('#side .pageName').forEach(Pages => {
+        Pages.addEventListener('click', function(e){
+            let target = e.target;
+            console.log(target);
+            if(target.classList.contains("clicked")){
+                target.classList.remove("clicked");
+                let pageDiv = target.parentElement.querySelector('.pageMain');
+                pageDiv.innerHTML = "";
+            }else{
+                target.classList.add("clicked");
+                let pageClick = e.currentTarget.parentElement.dataset.id;
+                pageInPage(pageClick,target);
+            }
+        })
+    })
+}
 //모달창 닫는 기능
 function closeModal() {
     workModal.style.display = "none";
@@ -387,6 +447,7 @@ function newWorkSpace() {
     let email = document.querySelector('#loginUser').value;
     let workName = document.querySelector('#wsName');
     let val = {
+        "parentId": '',
         "workType": workType.value,
         "workName": workName.value,
         "publicCheck": publicCheck.value,
