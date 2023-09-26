@@ -86,3 +86,10 @@ div[data-gal-img]{
 	height: 80px;
 	width: 100px;
 }
+
+.hide {
+	display: none;
+}
+.view {
+	display: block;
+}

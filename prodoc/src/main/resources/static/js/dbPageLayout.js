@@ -2,18 +2,15 @@ async function listLayoutEditor(pageList, pageId, layout){
     let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[1];
     dbbody.innerHTML = "";
     console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
-    // 속성에 매핑하기 위한 tbl_db_attr 불러오기
     
     switch(layout){
-        case 'DB_LIST' : 
+        case 'DB_LIST' :
+            dbbody.insertAdjacentHTML("afterbegin", addDbpage()); 
             pageList.forEach(block => {
-                console.log(block);
                 let blockTag = dblistBlock(block);
                 // let attrTags = getAttrList(block['attrList']);
                 dbbody.insertAdjacentHTML("afterbegin", blockTag);
             });
-
-            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             break;
 
        case 'DB_BRD' : 
@@ -33,7 +30,7 @@ async function listLayoutEditor(pageList, pageId, layout){
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
-
+            stateTag.insertAdjacentHTML("afterbegin", addDbpage());
             pageList.forEach(info => {
                 info.attrList.forEach(attr => {
                     if(attr.attrId == "STATE" && attr.attrContent == state){
@@ -42,7 +39,7 @@ async function listLayoutEditor(pageList, pageId, layout){
                     }
                 })
             })
-            stateTag.insertAdjacentHTML("afterbegin", addDbpage());
+            
             caseDiv.append(stateTag);
         })
             dbbody.append(caseDiv);
@@ -81,7 +78,7 @@ function updateCase(pageId, layout){
     })
     .then(response => response.json())
     .then(result => {
-    	console.log(result);
+    	// console.log(result);
     })
     .catch(err => console.log(err));
 }
@@ -92,11 +89,13 @@ function getAttrList(attrs){    // 속성
     let displayOption = 'view';
 
     for(let info in attrs){
+        let content = attrs[info]['attrContent'];
+        if (content == null || content == "") continue;
         if(attrs[info]['displayCheck'] == "FALSE") displayOption = 'hide';
         else displayOption = 'view';
         useAttr += `
-        <div data-duse-id="`+attrs[info]['dbUseId']+`" data-puse-id="`+attrs[info]['pageUseId']+`" class="`+displayOption+`">
-            <span>`+attrs[info]['attrContent']+`</span>
+        <div data-duse-id="`+attrs[info]['dbUseId']+`" data-puse-id="`+attrs[info]['pageUseId']+`" data-attrid="`+attrs[info]['attrId']+`" class="`+displayOption+`">
+            <span>`+content+`</span>
         </div>
         `
     }
@@ -116,7 +115,7 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block">
+        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
             <div data-tagimg>📄</div>
             <div data-pagename>`+block['page']['pageName']+`</div>
             <div class="attr attr-list">`+useAttr+`</div>
@@ -128,7 +127,7 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block">
+        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
             <div data-pagename>`+block['page']['pageName']+`</div>
             `+useAttr+`
         </div>

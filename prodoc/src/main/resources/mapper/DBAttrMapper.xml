@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prodoc.db.mapper.DBAttrMapper">
+	<insert id="insertPageAttr" statementType="CALLABLE" parameterType="AddAttrVO">
+		{call INSERT_PAGE_ATTR(
+						#{caseBlockId}
+						, #{attrId}
+						, #{attrName}
+						, #{attrContent}
+						, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		)}
+	</insert>
+	
+	<!-- 속성 디스플레이 변경 -->
+	<update id="updateDbAttr" parameterType="PageAttrVO">
+		UPDATE tbl_db_attr
+		SET display_check = #{displayCheck}
+		WHERE db_use_id = #{dbUseId}
+	</update>
+
+	<!-- case 블럭 아이디로 하위페이지의 모든 속성 조회 -->
+	<select id="getAllPageAttr" parameterType="String" resultType="PageAttrVO">
+		SELECT db_use_id, attr_id, attr_name, numbering, display_check, case_page_id
+		FROM view_pageattr
+		WHERE case_page_id = #{displayId}
+		GROUP BY db_use_id, attr_id, attr_name, numbering, display_check, case_page_id
+		ORDER BY display_check DESC
+	</select>
+	
+	<!-- tbl_attr -->
+	<select id="pageAttrList" resultType="AttrVO">
+		SELECT *
+		FROM tbl_attr
+	</select>
+	
+	<!-- 특정 페이지 속성 조회 -->
+	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
+		SELECT * 
+		FROM view_pageattr 
+		WHERE display_id = #{displayId}
+	</select>
+</mapper>

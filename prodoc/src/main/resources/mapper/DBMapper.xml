@@ -17,9 +17,10 @@
 	<!-- DB속성 페이지 추가 -->
 	<insert id="insertDBPage" parameterType="DBdataVO" statementType="CALLABLE">
 		{call INSERT_DB_PAGE(
-							#{parentPage}
-							, #{email}
+							#{parentBlockId}
 							, #{displayId}
+							, #{email}
+							, #{state}
 							, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
@@ -43,25 +44,11 @@
                           WHERE display_id = #{displayId})
 	</select>
 	
-	<!-- 특정 페이지 속성 조회 -->
-	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
-		SELECT * 
-		FROM view_pageattr 
-		WHERE display_id = #{displayId}
-	</select>
-	
+	<!-- DB 레이아웃 변경 -->
 	<update id="updateCase" parameterType="PageVO">
 		UPDATE tbl_page
 		SET case_id = #{caseId}
 		WHERE page_id = #{pageId}
 	</update>
-	
-	<!-- case페이지 아이디로 하위페이지의 모든 속성 이름 조회 -->
-	<select id="getAllPageAttr" parameterType="String" resultType="PageAttrVO">
-		SELECT a.attr_id, a.attr_name
-		FROM tbl_page_attr a JOIN tbl_page p ON a.page_id = p.page_id
-		                    JOIN tbl_dbblock d ON p.parent_id = d.page_id
-		WHERE d.display_id = #{parentId}
-		GROUP BY a.attr_id, a.attr_name
-	</select>
+
 </mapper>
