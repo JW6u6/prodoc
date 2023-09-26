@@ -66,7 +66,7 @@ public class WorkSpaceController {
 
 	// 워크스페이스 초대한 유저 리스트
 	@GetMapping("/joinList")
-	public List<WorkJoinVO> inviteList(@RequestBody String workId){
+	public List<WorkJoinVO> inviteList(String workId){
 		return workspaceService.inviteListWorkspace(workId);
 	}
 

@@ -19,14 +19,22 @@ public class MemberServiceImpl implements MemberService {
 	MemberMapper memberMapper;
 
 	@Override
-	public boolean renewAuthMember(MemberVO memberVO) {
-		return memberMapper.renewAUTH(memberVO) == 1;
+	@Transactional
+	public int renewAuthMember(List<MemberVO> listVO) {
+		int result = 0;
+
+		for (MemberVO memberVO : listVO) {
+			if (memberMapper.renewAUTH(memberVO) == 1) {
+				result++;
+			}
+		}
+		return result;
 	}
 
-	//멤버 내보내기
+	// 멤버 내보내기
 	@Override
 	public int deleteMember(List<MemberVO> listVO) {
-		for(MemberVO memberVO : listVO) {
+		for (MemberVO memberVO : listVO) {
 			memberMapper.removeMember(memberVO);
 		}
 		return listVO.size();

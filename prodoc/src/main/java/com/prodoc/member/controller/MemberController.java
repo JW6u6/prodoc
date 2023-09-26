@@ -18,26 +18,21 @@ public class MemberController {
 
 	@Setter(onMethod_ = @Autowired)
 	MemberService memberService;
-	
+
 	@GetMapping("/memberList")
-	public List<MemberVO> getMemberList(String workId){
+	public List<MemberVO> getMemberList(String workId) {
 		return memberService.listMember(workId);
 	}
-	
-	//멤버 내보내기
+
+	// 멤버 내보내기
 	@PostMapping("/memberDelete")
 	public int membersDelete(@RequestBody List<MemberVO> memberVO) {
 		return memberService.deleteMember(memberVO);
 	}
-	
-	//멤버 권한 설정
+
+	// 멤버 권한 설정
 	@PostMapping("/memberRenewAuth")
-	public int memberReAuth(@RequestBody MemberVO memberVO) {
-		if(memberService.renewAuthMember(memberVO)) {
-			return 1;
-			
-		}else {
-			return 0;
-		}
+	public int memberReAuth(@RequestBody List<MemberVO> memberVO) {
+		return memberService.renewAuthMember(memberVO);
 	}
 }
