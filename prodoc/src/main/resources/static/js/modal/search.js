@@ -109,11 +109,13 @@ function searchThis(dataList){
 		if(result.data.length == 0){ return; }	//검색 결과가 없으면 종료
 		
 		const wkhead= [ {"workName" :'워크스페이스명'},	//워크스페이스
+						{"pageId" :'페이지아이디'},
 						{"pageName" :'페이지명'},
 						{"content" :'내용'},
 						{"blockCreUser" :'작성자'},
 						{"displayDate" :'최종수정일'}];
 		const dbhead= [ {"workName" :'워크스페이스명'},	//데이터베이스
+						{"pageId" :'페이지아이디'},
 						{"parentName" :'페이지명'},
 						{"pageName": '데이터베이스'},
 						{"caseName": '타입'}];
@@ -150,10 +152,11 @@ function settingSearchResult(headers, data){
 		let tr = document.createElement('tr');
 		for(let head of headers){ 	
 			for(let pair in head){					//헤더와 아이디가 같은 데이터만
-				if(pair == "blockCreUser"){
+				if(pair == "pageId"){
 				 	tr.setAttribute('data-pageid', list.pageId);
 					tr.setAttribute('data-blockid', list.displayId);
-					let td = document.createElement('td');	//컬럼 만들기
+				}else if(pair == "blockCreUser"){
+					let td = document.createElement('td');	//컬럼 만들기				
 					td.innerText = list.nickName +"("+ list[pair] + ")";
 					tr.appendChild(td);
 				}else if(pair == "displayDate"){

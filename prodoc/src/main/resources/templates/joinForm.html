@@ -12,8 +12,7 @@
 ■ 이미지 클릭 시 파일 업로드
 ■ 비밀번호 암호화
 ■ 회원가입 후 로그인창 이동
-□ 전화번호 인증
-□ 비밀번호 숫자 문자, 특수문자 3가지 입력받기
+■ 전화번호 인증
 □ css
  -->
 <body>
@@ -33,8 +32,8 @@
 	        <button type="button" id="authEmailCheck">인증확인</button>
 	    </div>
 		<div><!-- 비밀번호 -->
-	        <input type="password" name="password" placeholder="*PASSWORD" required>
-	        <input type="password" id="password" placeholder="*PASSWORD 확인" required>
+	        <input type="password" name="password" placeholder="*PASSWORD" maxlength="16" required><br>
+	        <input type="password" id="password" placeholder="*PASSWORD 확인" maxlength="16" required><br>
 	        <p style="color:red; display:none;">비밀번호가 일치하지 않습니다.</p>
 	        <input type="text" name="nickname" placeholder="*이름" required>
 		</div>
@@ -58,22 +57,24 @@
 
 <script th:inline="javascript">
 let emailCheck = false; //이메일 중복체크
-let emailAuth = false; //이메일 인증 체크
+let emailAuth = false; 	//이메일 인증 체크
 let passCheck = false;  //비밀번호 일치 체크
-let phoneAuth = false; //휴대폰 인증 체크
+let phoneAuth = false; 	//휴대폰 인증 체크
+let serverNum = "";		//서버에서 넘어온 이메일 인증번호
+let serverNum2 ="";		//서버에서 넘어온 전화번호 인증번호
 
 joinForm.addEventListener('submit', function(e){					//회원가입 버튼 클릭 시 폼데이터 전송
 	e.preventDefault();
 	//손쉬운 테스트를 위한 주석처리
-	//if(emailCheck == true){			alert("중복된 이메일입니다.");
-	//	return;
-	//}else if(emailAuth == false){		alert("이메일 인증이 확인되지 않았습니다.");
-	//	return;
-	//}else if( passCheck == false){	alert("비밀번호가 일치하지 않습니다.")
-	//	return;
-	//}else if(phoneAuth == false){		alert("휴대폰 인증이 확인되지 않았습니다.")
-	//	return;
-	//}
+	if(emailCheck == true){			
+		alert("중복된 이메일입니다."); return;
+	}else if(emailAuth == false){		
+		alert("이메일 인증이 확인되지 않았습니다."); return;
+	}else if( passCheck == false){	
+		alert("비밀번호가 일치하지 않습니다."); return;
+	}else if(phoneAuth == false){		
+		alert("휴대폰 인증이 확인되지 않았습니다."); return;
+	}
 	joinForm.submit();
 });
 
@@ -139,11 +140,12 @@ mailAuthBtn.addEventListener('click', function (e){
 });
 
 //비밀번호 일치 확인
-let password = document.getElementById("password");
+let password = document.getElementById("password");	//두번째 비밀번호
 password.addEventListener('change', function(e){
-	let pass = document.querySelector('input[name="password"]');
-	let pTag = document.querySelector('p');
-	if(pass.value == password.value) {
+	let pass = document.querySelector('input[name="password"]');//첫번째 비밀번호
+	let pTag = document.querySelector('p');	//불일치 메시지 태그
+
+	if(pass.value == password.value) {		//비밀번호 일치 체크
 		passCheck = true;
 		pTag.style.display = "none";
 	}else {
@@ -162,13 +164,32 @@ phoneBtn.addEventListener('click', function(e){ //인증번호 전송
 		alert("휴대폰 11자리를 정확하게 입력해주세요.");
 		return;
 	}
-	alert("인증번호 전송");
+	fetch("/sendSMS",{
+	method: "post",
+	headers: {"Content-Type": 'application/json'},
+	body: JSON.stringify({"phone" : phoneNumber.value})
+	}).then(response=> response.json())
+	.then(result=>{
+		if(result == null){
+			alert("인증번호 발송 실패"); return;
+		}
+		alert("인증번호 발송 성공");
+		serverNum2 = result.authNum;
+		console.log(serverNum2 + typeof(serverNum2));
+	})
+	.catch(err=>console.log(err));
 });
 
 //전화번호 인증 확인
 let phoneAuthBtn = document.getElementById("authPhoneCheck");
 phoneAuthBtn.addEventListener('click', function(e){
-	phoneAuth = true;
+	let phone = phoneAuthBtn.previousElementSibling;
+	if(phone.value == serverNum2){
+		phoneAuth = true;
+		alert('인증 성공');		
+	}else{
+		alert('인증 실패');
+	}
 });
 </script>
 </html>

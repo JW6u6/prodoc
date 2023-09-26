@@ -4,10 +4,26 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.trash.mapper.TrashMapper">
 
-<select	id="selectList" parameterType="TrashVO" resultType="HistoryVO">
+<select	id="selectList" parameterType="TrashVO" resultType="TrashResultVO">
 	SELECT *
-	FROM tbl_history
-	WHERE HISTORY_TYPE = 'DELETE'
+	FROM view_trash
+	WHERE work_id IN (SELECT WORK_ID FROM TBL_MEMBER WHERE email = #{logUser})
+         <if test="keyword != ''"> AND (
+          		<if test="select == 'all' or select == 'work'">
+		                    WORK_NAME LIKE '%'|| #{keyword} ||'%'
+		         </if>
+		    	 <if test="select == 'all' or select == 'page'">
+		              <if test="select == 'all'" > OR </if>
+		                     page_NAME LIKE '%'|| #{keyword} ||'%'
+		         </if> )
+         </if>	
+		<if test="startDate != null and endDate == null">
+			AND UP_DATE BETWEEN TRUNC(#{startDate}, 'dd')  AND TRUNC( #{startDate},'dd')
+		 </if>
+		<if test="startDate != null and endDate != null">
+			AND UP_DATE BETWEEN TRUNC(#{startDate}, 'dd')  AND TRUNC( #{endDate}, 'dd')
+		</if>
+	order by up_date desc
 </select>
 
 <update id="revokeTrash" parameterType="HistoryVO">

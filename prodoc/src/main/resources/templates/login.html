@@ -11,34 +11,30 @@
 ■ 로그인: java -> 비밀번호 암호화-비교
 ■ 로그인 (1)이메일
 □ 로그인 (2)카카오 연동
-□ 로그인 (3)구글 연동
 □ 아이디 / 비밀번호 찾기
 □ css
  -->
 <body>
-    <div> <!-- 로그인 영역 -->
+	<!-- 로그인 영역 -->
+    <div>
         <div>
 	        <div>
-	        	<form	method="post"	action="/login" >
-	            <input type="text" id="email" name="email" value="user1@user1">
-	            <input type="password" id="password" name="password" value="1234">
+	        	<form method="post"	action="/login" >
+	            <input type="text" id="email" name="email" value="user1@user1"><br>
+	            <input type="password" id="password" name="password" value="1234"><br>
 	            <button type="submit" id="loginBtn">로그인</button>
-	            <button type="button" id="joinBtn">회원가입</button>
+	            <button type="button" id="joinBtn">회원가입</button><br>
+	            <button type="button" id="kakaoBtn" style="background-color:#FEE500; width:150px; height:auth; border:0px; padding:5px; margin:3px;">카카오 로그인</button>
 	        	</form>
 		        <p id="failMsg" th:text="${errorMsg}" style="color:red;"></p>
 	        </div>
             <p id="find" style="color:gray;">이메일/비밀번호 찾기</p>
-            
-            <button type="button" id="googleBtn">구글 로그인</button>
-            <button type="button" id="kakaoBtn" style="background-color:#FEE500; border:0px; padding: 10px">카카오 로그인</button>
         </div>
-        <div> <!-- prodoc 로고 이미지 -->
-        	<img src="">
-        </div>
+        <div><!-- prodoc 로고 이미지 --><img src=""></div>
     </div>
 
-
- 	<div id="findUserInfo" style="border:1px solid black" class="hide"> <!--아이디비번찾기 모달창-->
+	<!--아이디비번찾기 모달창-->
+ 	<div id="findUserInfo" style="border:1px solid black" class="hide">
  		<div><button class="closeBtn">&#10005;</button></div>
  		
         <button type="button" class="findBtn">Email찾기</button>
@@ -46,21 +42,23 @@
 
         <!--이메일 찾기-->
         <div id="findEmail">
-            <input name="phone" id="phone" placeholder="-없이 연락처 입력">
-            <button type="button" id="phoneAuth">인증번호 받기</button>
-        	<input name="authInput" placeholder="인증번호">
-        	<button type="button" class="authCheck">확인</button>
+        	<label>이메일</label><input name="email" id="emailMd" placeholder="EMAIL 입력" disabled><br>
+            
+            <label>전화번호</label><input name="phone" id="phoneMd" placeholder="-없이 연락처 입력">
+            <button type="button" id="AuthBtn">인증번호 받기</button><br>
+        	
+        	<label>인증번호</label><input id="authInput" placeholder="인증번호">
+        	<button type="button" class="authCheck">확인</button><br>
+            
             <p id="showEmail" style="display:none"></p>
+            
+	        <div id="findPW" class="hide">
+	            <label>비밀번호</label><input name="newPW" placeholder="새 비밀번호" disabled><br>
+		        <label>비밀번호 확인</label><input id="newPWCheck" placeholder="비밀번호 확인" disabled>
+	        </div>        
         </div>
+        
         <!--비밀번호 찾기-->
-        <div id="findPW" class="hide">
-            <input name="emailMd" id="emailMd" placeholder="EMAIL 입력" >
-            <button type="button" id="emailAuth" >인증번호 받기</button>
-	        <input name="authInput" placeholder="인증번호">
-	        <button type="button" class="authCheck">확인</button>
-	        <input name="newPW" id="newPW" placeholder="새비밀번호">
-	        <input name="newPWCheck" id="newPWCheck" placeholder="비밀번호확인">
-        </div>        
 
         <button type="button" id="closeFind">확인</button>
     </div>
@@ -70,9 +68,10 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 //아이디, 비밀번호 찾기
-let findMd = document.getElementById("findUserInfo"); //모달창
-let find = document.getElementById("find");			  //p태그 <-버튼효과
-find.addEventListener('click', function(e){
+let findMd = document.getElementById("findUserInfo"); //모달창 
+
+document.getElementById("find")	//p태그 <-버튼효과
+.addEventListener('click', function(e){
 	if(findMd.className == 'view'){
 		findMd.className = 'hide';
 	}else{		
@@ -80,9 +79,15 @@ find.addEventListener('click', function(e){
 	}
 });
 
+//번호 입력 칸에 문자 입력(찾기 창 속)
+let phoneNumber = document.querySelector('input[name="phone"]');
+phoneNumber.addEventListener('input', (e)=> phoneNumber.value =
+					 phoneNumber.value.replace(/[^0-9]/gi, ""));
+
 //찾기 창 내 토글 버튼
-let emailType = document.querySelector("#findEmail");	//이메일 찾기: id findEmail
-let pwType = document.querySelector("#findPW") 			//비밀번호 찾기: id findPW
+let emailType = document.querySelector("#findEmail");	//이메일 찾기
+let pwType = document.querySelector("#findPW") 			//비밀번호 찾기
+
 document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
 	tag.addEventListener('click', function(e){
 		if(idx == 0){	//아이디 찾기
@@ -95,16 +100,31 @@ document.querySelectorAll(".findBtn").forEach((tag,idx) => {
 	});
 });
 
+function findEmailFnc(){
+	//id="phone" id="phoneAuth" name="authInput" class="authCheck" id="showEmail"
+}
+
+function findPassFnc(){
+	//id="emailMd" id="emailAuth" name="authInput" class="authCheck"  name="newPW" id="newPWCheck"
+}
+
+//확인 창
+document.querySelector("#closeFind").addEventListener('click', function(e){
+	//1) 이메일 확인 후 닫기
+	//2) 비밀번호 변경 ajax 처리 후 닫기
+});
+
 //회원가입 버튼
-let joinBtn = document.getElementById("joinBtn");
-joinBtn.addEventListener('click', function(e){		//1)회원가입 모달창 팝업
+document.getElementById("joinBtn")
+.addEventListener('click', function(e){	
 	document.location.href = "/join"
 });
-//
+
 
 //카카오로그인
 window.Kakao.init("250e6ec18ab563f59e7bf3d2479ad0e7");
 let kakaoBtn = document.getElementById("kakaoBtn");
+
 kakaoBtn.addEventListener('click', function(e){
 	window.Kakao.Auth.login({
 		scope: 'profile_nickname, profile_image, account_email, birthday',	//로그인 시 받아오는 정보 변수	
@@ -122,11 +142,6 @@ kakaoBtn.addEventListener('click', function(e){
 	});
 });
 
-//구글로그인
-let googleBtn = document.getElementById("googleBtn");
-googleBtn.addEventListener('click', function(e){
-	
-});
 </script>
 </body>
 </html>
