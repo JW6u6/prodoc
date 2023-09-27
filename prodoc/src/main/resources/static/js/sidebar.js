@@ -378,8 +378,6 @@ wp.addEventListener("focusout", (e) => {
 function contextWorkSpace(e) {
 
     let subMenu = document.querySelector('#subWorkMenu');
-    console.log(e.pageY);
-    console.log(e.pageX);
     subMenu.style.display = 'block';
     subMenu.style.top = e.pageY + 'px';
     subMenu.style.left = e.pageX + 'px';
@@ -550,9 +548,7 @@ async function setWork(e) {
                     //제외하기 버튼을 누르면 필터를 통해 내보내지 않을 멤버의 이메일을 빼고 새 배열을 만듦)
                     noBtn.addEventListener('click', function (e) {
                         let targetTd = e.currentTarget.parentElement.previousSibling;
-                        console.log(val);
                         val = val.filter(no => no.email != targetTd.textContent);
-                        console.log(val);
                         targetTd.parentElement.remove();
                     })
 
@@ -906,7 +902,6 @@ function memberOut(list) {
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             closeModal();
         })
         .catch(err => console.log(err))
