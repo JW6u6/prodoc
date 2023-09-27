@@ -1,4 +1,6 @@
 
+const sidebar = document.querySelector('#sidebar');
+
 init();
 
 const inviteList = []; //workJoin에 workId랑 초대 이메일 담아서 json으로 넘기는 배열
@@ -34,7 +36,9 @@ function workList(email) {
             })
             data.forEach(item => {
                 let side = document.querySelector('#side');
-                let text = '<div class= "Work" data-id="'+item.workId+'">' + '<span class="workName">' + item.workName + '</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>'+'<input type="hidden" class ="num" value="0">'+ '<div>'
+                let text = `<div class= "Work" data-id="${item.workId}"><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
+                            <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>
+                            <input type="hidden" class ="num" value="0"><div>`
                 side.insertAdjacentHTML("beforeend", text);
                 let set = document.querySelectorAll('.setting');
                 set.forEach((tag) => {
@@ -63,9 +67,11 @@ function workList(email) {
                     }
                 })
             })
-
-            let list = side.querySelectorAll('.Work');
-            console.log(list);
+            document.querySelectorAll('#side .Work').forEach(items => {
+                items.addEventListener("dragstart",(e)=>{
+                    console.log(e);
+                })
+            })
     })
 }
 
@@ -130,13 +136,15 @@ function pageList(wId, target) {
     })
     .then(data => {
             data.forEach(item=> {
-                let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
+                let text = `<div class= "Page" data-id="${item.pageId}" draggable="true"><span class="pageName">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+                            <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
+                            <div class = "pageMain"></div>
+                            <div>`
                 insertDiv.insertAdjacentHTML("beforeend", text);
             })
             document.querySelectorAll('#side .pageName').forEach(Pages => {
                 Pages.addEventListener('click', function(e){
                     let target = e.target;
-                    console.log(target);
                     if(target.classList.contains("clicked")){
                         target.classList.remove("clicked");
                         let pageDiv = target.parentElement.querySelector('.pageMain');
@@ -179,6 +187,7 @@ function newPage() {
         workId,
         caseId
     }
+    console.log(val);
     let url = '/pageInsert';
     fetch(url, {
                     method: 'POST',
@@ -192,6 +201,7 @@ function newPage() {
                     if(parentId){
                         let parent = document.querySelector('.Page[data-id='+parentId+']');
                         let insertDiv = parent.querySelector('.pageMain');
+                        insertDiv.innerHTML="";
                         pageInPage(parentId,insertDiv);
                     }else{
                         let works = document.querySelector('.Work[data-id='+workId+']');
@@ -349,6 +359,40 @@ wp.addEventListener("focusout", (e) => {
 //         body: JSON.stringify({'cmd': 'createPage',content:pageId})
 //     });
 // }
+
+//사이드바 블록화.
+sidebar.addEventListener("drop", (e) => {
+    let newOrder = null;
+    const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
+    console.log(dragItem);
+    insertAfter(dragItem, target);
+    newOrder = Number(target.dataset.blockOrder) + 1024;
+    dragItem.dataset.blockOrder = newOrder;
+    const updateObj = {
+      upUser: "pepsiman",
+      displayId: dragItem.dataset.blockId,
+      rowX: dragItem.dataset.blockOrder,
+    };
+    updateDBBlock(updateObj);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //======================================================================
 
 //워크스페이스 설정창 여는..거

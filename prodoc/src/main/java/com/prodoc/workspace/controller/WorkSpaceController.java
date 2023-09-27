@@ -53,6 +53,7 @@ public class WorkSpaceController {
 	// 워크스페이스 새로 생성
 	@PostMapping("/workInsert")
 	public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
+		//워크스페이스 생성
 		return workspaceService.insertWorkspace(workVO);
 		// 워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
 	}
@@ -60,8 +61,8 @@ public class WorkSpaceController {
 	// 워크스페이스 유저 초대
 	@PostMapping("/workJoin")
 	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
-
-		return workspaceService.inviteWorkspaceUser(joinVO);
+		int r = workspaceService.inviteWorkspaceUser(joinVO);
+		return r;
 	}
 
 	// 워크스페이스 초대한 유저 리스트
