@@ -38,7 +38,7 @@ public class DBController {
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
 	public String InsertDBCase(DBCaseVO casePage) {
 		dbService.insertDBCase(casePage);
-		return casePage.getResult();
+		return casePage.getResult(); 
 	}
 
 	@GetMapping("getChildList")	// DBCase displayId로 자식요소 조회
