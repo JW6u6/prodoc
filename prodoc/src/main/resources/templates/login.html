@@ -11,7 +11,7 @@
 ■ 로그인: java -> 비밀번호 암호화-비교
 ■ 로그인 (1)이메일
 □ 로그인 (2)카카오 연동
-□ 아이디 / 비밀번호 찾기
+■ 아이디 / 비밀번호 찾기
 □ css
  -->
 <body>
@@ -24,41 +24,40 @@
 	            <input type="password" id="password" name="password" value="1234"><br>
 	            <button type="submit" id="loginBtn">로그인</button>
 	            <button type="button" id="joinBtn">회원가입</button><br>
-	            <button type="button" id="kakaoBtn" style="background-color:#FEE500; width:150px; height:auth; border:0px; padding:5px; margin:3px;">카카오 로그인</button>
-	        	</form>
+	            <a th:href="@{|${kakaoUrl}|}"><img src="images/Kakao.png" style="width:200px"></a>
+	            </form>
 		        <p id="failMsg" th:text="${errorMsg}" style="color:red;"></p>
+		        <p id="kakaoMsg" th:text="${kakao}" style="color:red;"></p>
 	        </div>
             <p id="find" style="color:gray;">이메일/비밀번호 찾기</p>
         </div>
         <div><!-- prodoc 로고 이미지 --><img src=""></div>
     </div>
-
+	        	
 	<!--아이디비번찾기 모달창-->
  	<div id="findUserInfo" style="border:1px solid black" class="hide">
  		<div><button class="closeBtn">&#10005;</button></div>
  		
         <button type="button" class="findBtn">Email찾기</button>
-        <button type="button" class="findBtn">PW찾기</button>
+        <button type="button" class="findBtn">PW찾기</button><br>
 
-        <!--이메일 찾기-->
-        <div id="findEmail">
-        	<label>이메일</label><input name="email" id="emailMd" placeholder="EMAIL 입력" disabled><br>
-            
-            <label>전화번호</label><input name="phone" id="phoneMd" placeholder="-없이 연락처 입력">
-            <button type="button" id="AuthBtn">인증번호 받기</button><br>
-        	
-        	<label>인증번호</label><input id="authInput" placeholder="인증번호">
-        	<button type="button" class="authCheck">확인</button><br>
-            
-            <p id="showEmail" style="display:none"></p>
-            
-	        <div id="findPW" class="hide">
-	            <label>비밀번호</label><input name="newPW" placeholder="새 비밀번호" disabled><br>
-		        <label>비밀번호 확인</label><input id="newPWCheck" placeholder="비밀번호 확인" disabled>
-	        </div>        
+       	<div id="findPass" class="hide">
+       		<label>이메일</label><input id="emailMd" placeholder="EMAIL 입력">
         </div>
         
-        <!--비밀번호 찾기-->
+           <label>전화번호</label><input id="phoneMd" maxlength="11" placeholder="-없이 연락처 입력">
+           <button type="button" id="AuthBtn">인증번호 받기</button><br>
+       	
+       	<label>인증번호</label><input id="authInput" placeholder="인증번호">
+       	<button type="button" id="authCheck">확인</button><br>
+           
+           <p id="showEmail" style="display:none"></p>
+           
+        <div id="newPassDIV" class="hide">
+            <label>비밀번호</label><input type="password" id="newPW" placeholder="새 비밀번호"><br>
+	        <label>비밀번호 확인</label><input type="password" id="newPWCheck" placeholder="비밀번호 확인">
+	        <p style="color:red; display:none;">비밀번호가 일치하지 않습니다.</p>
+        </div>        
 
         <button type="button" id="closeFind">확인</button>
     </div>
@@ -67,79 +66,152 @@
 <script src="js/modal/close.js"></script>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
+let pTag = document.querySelector("#showEmail");
+let newDiv = document.querySelector("#newPassDIV");
+let email = document.getElementById("emailMd"); 		//찾기 - 이메일 입력창
+let phone = document.getElementById("phoneMd"); 		//찾기 - 전화번호 입력창
+let newPass = document.getElementById("newPW"); 		//찾기 - 새비밀번호 입력창
+let newCheck = document.getElementById("newPWCheck"); 	//찾기 - 새비밀번호 확인 입력창
+let auth = document.getElementById("authInput");		//찾기 - 인증번호 입력창
+let authNum = "";//서버에서 넘어온 인증번호
+let passOK = false;
+let authOK = false;
+
+//찾기 창 내 인풋 값 초기화
+function findInit(){
+	document.querySelectorAll("#findUserInfo input").forEach(tag=>tag.value = "");
+}
+
 //아이디, 비밀번호 찾기
 let findMd = document.getElementById("findUserInfo"); //모달창 
-
 document.getElementById("find")	//p태그 <-버튼효과
 .addEventListener('click', function(e){
 	if(findMd.className == 'view'){
 		findMd.className = 'hide';
+		findInit();
 	}else{		
 		findMd.className = 'view';
 	}
 });
 
-//번호 입력 칸에 문자 입력(찾기 창 속)
-let phoneNumber = document.querySelector('input[name="phone"]');
-phoneNumber.addEventListener('input', (e)=> phoneNumber.value =
-					 phoneNumber.value.replace(/[^0-9]/gi, ""));
-
+let pwType = document.querySelector("#findPass")	//비밀번호 찾기
 //찾기 창 내 토글 버튼
-let emailType = document.querySelector("#findEmail");	//이메일 찾기
-let pwType = document.querySelector("#findPW") 			//비밀번호 찾기
-
 document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
 	tag.addEventListener('click', function(e){
-		if(idx == 0){	//아이디 찾기
-			emailType.className = "view";
-			pwType.className = "hide";
-		}else{			//비밀번호 찾기
-			emailType.className = "hide";
-			pwType.className = "view";
+		if(idx == 0){
+			pwType.className = "hide";				//아이디 찾기
+			newDiv.style.display = "none";
+			findInit();
+		}else{
+			pwType.className = "view";				//비밀번호 찾기
+			pTag.style.display = "none";
+			findInit();
 		}
 	});
 });
 
-function findEmailFnc(){
-	//id="phone" id="phoneAuth" name="authInput" class="authCheck" id="showEmail"
-}
 
-function findPassFnc(){
-	//id="emailMd" id="emailAuth" name="authInput" class="authCheck"  name="newPW" id="newPWCheck"
-}
+//번호 입력 칸에 문자 입력(찾기 창 속)
+phone.addEventListener('input', (e)=> phone.value = phone.value.replace(/[^0-9]/gi, ""));
 
-//확인 창
-document.querySelector("#closeFind").addEventListener('click', function(e){
-	//1) 이메일 확인 후 닫기
-	//2) 비밀번호 변경 ajax 처리 후 닫기
+
+//인증번호 받기
+document.querySelector("#AuthBtn").addEventListener('click', function(e){
+	if(phone.value.length != 11){
+		alert("휴대폰 11자리를 정확하게 입력해주세요.");	return;
+	}else if(authOK){ return; }	//인증이 된 번호
+	
+	fetch("/sendSMS",{
+		method: "post",
+		headers: {"Content-Type": 'application/json'},
+		body: JSON.stringify({"phone" : phone.value})
+	}).then(response=> response.json())
+	.then(result=>{
+		if(result == null){
+			alert("인증번호 발송 실패"); return;
+		}
+		alert("인증번호 발송 성공");
+		authNum = result.authNum;
+		console.log(authNum);
+	})
+	.catch(err=>console.log(err));
 });
+
+
+//인증번호 확인
+document.querySelector("#authCheck").addEventListener('click', function(e){
+	if(authNum != auth.value){
+		alert('인증 실패');
+		authOK = false; return;
+	}else if(authNum == ""){
+		authOK = false; return;
+	}
+	authOK = true; 	//authOK 이메일 view or 새 비밀번호 설정
+	fetch("/findME",{ 
+		method: "post",
+		headers: {"Content-Type": 'application/json'},
+		body: JSON.stringify({"email": email.value ,
+				"phone" : phone.value})
+	}).then(response=> response.json())
+	.then(result=>{
+		if(result == null){
+			alert("해당 정보와 일치하는 회원이 없습니다."); return;
+		}
+		console.log("findUser:" + result.email);
+		console.log("findUser:" + result.phone);
+		if(pwType.className == "hide"){	//이메일 찾기 상태
+			pTag.innerText = "가입 이메일:" + result.email;
+			pTag.style.display = "block";
+		}else{							//비밀번호 찾기 상태
+			newDiv.style.display = "block";	//새 비밀번호 보이기
+		}
+	})
+	.catch(err=>alert("해당 정보와 일치하는 회원이 없습니다."));
+	
+});
+
+//비밀번호 일치 확인
+newCheck.addEventListener('change', function(e){
+	let notMatch = newCheck.nextElementSibling;	//불일치 메시지 태그
+	if(newPass.value == newCheck.value) {		//비밀번호 일치 체크
+		passOK = true;
+		notMatch.style.display = "none";
+	}else {
+		passOK = false;
+		notMatch.style.display = "block";
+	}
+});
+
+//확인 창 비번찾기일 때 passOK = true 닫기 가능
+document.querySelector("#closeFind").addEventListener('click', function(e){
+	if(pwType.className == "hide"){	//1) 이메일 확인 후 닫기
+		findMd.className = 'hide';
+		findInit();
+	}else{							//2) 비밀번호 변경 ajax 처리 후 닫기
+		if(!passOK){	return; }
+		
+		const formData = new FormData();
+		formData.append("email", email.value);
+		formData.append("password", newPass.value);
+		
+		fetch("/userMod", {	method: "post",	body: formData })
+		.then( response => response.json() )
+		.then(result => {
+			if(result.result){
+				alert('비밀번호가 변경되었습니다. 새 비밀번호로 로그인해주세요.');
+			}else 
+				alert('비밀번호 변경에 실패했습니다. 다시 시도해주세요.');
+		}).catch(err => console.log(err));
+	
+		findMd.className = 'hide';
+		findInit();
+	}
+});
+
 
 //회원가입 버튼
-document.getElementById("joinBtn")
-.addEventListener('click', function(e){	
+document.getElementById("joinBtn").addEventListener('click', function(e){	
 	document.location.href = "/join"
-});
-
-
-//카카오로그인
-window.Kakao.init("250e6ec18ab563f59e7bf3d2479ad0e7");
-let kakaoBtn = document.getElementById("kakaoBtn");
-
-kakaoBtn.addEventListener('click', function(e){
-	window.Kakao.Auth.login({
-		scope: 'profile_nickname, profile_image, account_email, birthday',	//로그인 시 받아오는 정보 변수	
-		success : function(user){
-			console.log(user);
-			window.Kakao.API.request({
-				url: '/v2/user/me',
-				success: res =>{
-					const kakao_account = res.kakao_account;
-					console.log(kakao_account);
-					//DB 저장 -> 이메일 체크
-				}
-			});
-		}
-	});
 });
 
 </script>
