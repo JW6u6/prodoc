@@ -9,9 +9,6 @@ public interface DBService {
 	public String insertDBCase(DBCaseVO vo);
 	public List<BlockVO> getDBPageList(String casePage);
 	public PageVO getDBPageInfo(String displayId);
-	public List<PageAttrVO> getPageAttr(String displayId);
 	public int updateCase(PageVO vo);
 	public String insertDBPage(DBdataVO vo);
-	
-	public List<PageAttrVO> getAllPageAttr(String parentId);
 }

@@ -43,6 +43,11 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 		
 		return listVO.size();
 	}
+	
+	@Override
+	public List<WorkJoinVO> inviteListWorkspace(String workId) {
+		return workMapper.selectInvite(workId);
+	}
 
 	@Override
 	public boolean editWorkspace(WorkSpaceVO workVO) {
@@ -58,5 +63,7 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	public boolean assignMainPage(WorkSpaceVO workVO) {
 		return workMapper.MainPgWorkspace(workVO) == 1;
 	}
+
+
 
 }

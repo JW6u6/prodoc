@@ -6,7 +6,8 @@ import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceVO;
 
 public interface WorkSpaceMapper {
-	public List<WorkSpaceVO> selectWorkNo(WorkSpaceVO workVO);
+	//워크스페이스 리스트조회
+	public List<WorkSpaceVO> workList(String email);
 	
 	//워크스페이스 단건조회
 	public WorkSpaceVO selectOneWorkspace(String workId);
@@ -20,7 +21,7 @@ public interface WorkSpaceMapper {
 	public void inviteWorkspace(WorkJoinVO joinVO);
 	
 	//팀 워크스페이스 초대목록
-	public List<String> selectInvite(WorkJoinVO joinVO);
+	public List<WorkJoinVO> selectInvite(String workId);
 
 	// 워크스페이스 수정
 	public int modifyWorkspace(WorkSpaceVO workVO);
