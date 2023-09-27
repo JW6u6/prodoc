@@ -56,5 +56,17 @@
 		SET case_id = #{caseId}
 		WHERE page_id = #{pageId}
 	</update>
+	
+	<select id="getDBblock" parameterType="DBBlockVO" resultType="DBBlockVO">
+		SELECT page_id, display_id
+		FROM tbl_dbblock
+		WHERE
+		<if test="displayId != '' and displayId != null ">
+			display_id = #{displayId}
+		</if>
+		<if test="pageId != '' and pageId != null ">
+			page_id = #{pageId}
+		</if>
+	</select>
 
 </mapper>

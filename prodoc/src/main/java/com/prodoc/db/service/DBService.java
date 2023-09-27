@@ -12,4 +12,5 @@ public interface DBService {
 	public int updateCase(PageVO vo);
 	public String insertDBPage(DBdataVO vo);
 	public int deleteDBPage(String pageId);
+	public DBBlockVO getDBblock(DBBlockVO vo);
 }

@@ -1,7 +1,6 @@
 async function listLayoutEditor(pageList, pageId, layout){
     let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[1];
     dbbody.innerHTML = "";
-    console.log("페이지아이디: " + pageId + ", 레이아웃 : " + layout);
     
     switch(layout){
         case 'DB_LIST' :
@@ -171,7 +170,9 @@ function updateCase(pageId, layout){
     })
     .then(response => response.json())
     .then(result => {
-    	// console.log(result);
+    	console.log(result.result.displayId);
+        let caseId = result.result.displayId;
+        getChildList(caseId);
     })
     .catch(err => console.log(err));
 }

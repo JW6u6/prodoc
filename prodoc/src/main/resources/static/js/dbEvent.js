@@ -19,11 +19,9 @@ function layoutClick(e){
     let layout = e.target.closest('[data-dblayout]').getAttribute("data-dblayout");     // 선택된 레이아웃 (update)
     let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");       // 선택된 case의 페이지 id (update)
     let caseId = e.target.closest('[data-block-id]').getAttribute("data-block-id");     // 선택된 case의 블럭 id (하위블럭 정보 select)
-    console.log(layout, pageId, caseId);
+    console.log("레이아웃 클릭 : " + layout, pageId, caseId);
     
     updateCase(pageId, layout);     // case_id 업데이트 fetch
-    console.log(caseId);
-    getChildList(caseId);
 }
 
 // DBcase block 생성
@@ -79,8 +77,8 @@ async function getChildList(disId){
 	await fetch(url, {
 		method : 'get'
 	})
-	.then(response => response.json())
-	.then(infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
+	.then( response => response.json())
+	.then( infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
         for(let key in infoList){
             if(key == "parent") {
                 let parentDiv = document.querySelectorAll('[data-block-id]');                
@@ -94,11 +92,11 @@ async function getChildList(disId){
             } else {
                 caseInfo.push(infoList[key]);
             }
+            
         }
         listLayoutEditor(caseInfo, infoList['parent']['pageId'], infoList['parent']['caseId']);
 	})
-	.catch(err => console.log(err))
-    return caseInfo;
+	.catch(err => console.log(err));
 }
 
 // 검색 이벤트

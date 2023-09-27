@@ -20,6 +20,7 @@ import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.service.AddAttrVO;
 import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBAttrService;
+import com.prodoc.db.service.DBBlockVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
@@ -61,10 +62,13 @@ public class DBController {
 	
 	@PostMapping("updateCase")			// DBCase의 레이아웃(caseId) 변경
 	public Map<String, Object> updateCase(@RequestBody PageVO page) {
+		String pageId = page.getPageId();
 		Map<String, Object> result = new HashMap<>();
 		int num = dbService.updateCase(page);
 		if(num > 0) {
-			result.put("result", "success");
+			DBBlockVO dbblock = new DBBlockVO();
+			dbblock.setPageId(pageId);
+			result.put("result", dbService.getDBblock(dbblock));
 		} else result.put("result", "fail");
 		return result;
 	}
