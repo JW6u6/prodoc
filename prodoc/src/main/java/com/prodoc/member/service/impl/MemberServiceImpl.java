@@ -41,14 +41,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberVO> listMember(String workId) {
-		return memberMapper.listMember(workId);
+	public List<MemberVO> listMember(MemberVO memberVO) {
+		return memberMapper.listMember(memberVO);
 	}
 
-	// 멤버 전부조회
-	@Override
-	public List<MemberVO> AllListMember(MemberVO memberVO) {
-		return memberMapper.selectListMember(memberVO);
-	}
 
 }

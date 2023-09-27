@@ -11,8 +11,6 @@ public interface MemberService {
 	public int deleteMember(List<MemberVO> memberVO);
 
 	// 멤버 조회
-	public List<MemberVO> listMember(String workId);
+	public List<MemberVO> listMember(MemberVO memberVO);
 
-	// 멤버 전체 조회(권한 제한 x)
-	public List<MemberVO> AllListMember(MemberVO memberVO);
 }

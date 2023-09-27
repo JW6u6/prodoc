@@ -20,8 +20,8 @@ public class MemberController {
 	MemberService memberService;
 
 	@GetMapping("/memberList")
-	public List<MemberVO> getMemberList(String workId) {
-		return memberService.listMember(workId);
+	public List<MemberVO> getMemberList(MemberVO memberVO) {
+		return memberService.listMember(memberVO);
 	}
 
 	// 멤버 내보내기
@@ -35,10 +35,5 @@ public class MemberController {
 	public int memberReAuth(@RequestBody List<MemberVO> memberVO) {
 		return memberService.renewAuthMember(memberVO);
 	}
-	
-	//멤버 권한 제한 없이 전체 조회해오는거
-	@GetMapping("/MemberAllList")
-	public List<MemberVO> getMemberAllList(MemberVO memberVO){
-		return memberService.AllListMember(memberVO);
-	}
+
 }
