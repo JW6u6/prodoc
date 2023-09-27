@@ -39,4 +39,12 @@
  						WHERE WORK_TYPE = 'TEAM')
  	</select>
  	
+ 	<select id="selectListMember" parameterType="MemberVO" resultType="MemberVO">
+	 	SELECT	work_id
+				, email
+				, auth
+		FROM TBL_MEMBER
+		WHERE work_id = #{workId}
+ 	</select>
+ 	
 </mapper>

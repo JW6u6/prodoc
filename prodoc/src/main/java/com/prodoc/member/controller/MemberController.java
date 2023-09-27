@@ -35,4 +35,10 @@ public class MemberController {
 	public int memberReAuth(@RequestBody List<MemberVO> memberVO) {
 		return memberService.renewAuthMember(memberVO);
 	}
+	
+	//멤버 권한 제한 없이 전체 조회해오는거
+	@GetMapping("/MemberAllList")
+	public List<MemberVO> getMemberAllList(MemberVO memberVO){
+		return memberService.AllListMember(memberVO);
+	}
 }

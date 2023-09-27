@@ -36,15 +36,6 @@ function workList(email) {
                 let side = document.querySelector('#side');
                 let text = '<div class= "Work" data-id="'+item.workId+'">' + '<span class="workName">' + item.workName + '</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>'+'<input type="hidden" class ="num" value="0">'+ '<div>'
                 side.insertAdjacentHTML("beforeend", text);
-                let set = document.querySelectorAll('.setting');
-                set.forEach((tag) => {
-                    tag.addEventListener('click', setWork);
-                    tag.addEventListener('click', typeChange);
-                  //시인누나 커밋
-            <!--let sett = document.querySelectorAll('.setting');
-                sett.forEach((tag) => {
-                    tag.addEventListener('click', makeWid) -->
-                })
 
             })
             document.querySelectorAll('#side .workName').forEach(works => {

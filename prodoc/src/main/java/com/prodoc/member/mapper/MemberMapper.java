@@ -17,4 +17,7 @@ public interface MemberMapper {
 	
 	//탈퇴
 	public int myAuth(String email);
+	
+	//멤버 전체 조회(웹소켓??? 위한 전체 조회)
+	public List<MemberVO> selectListMember(MemberVO memberVO);
 }
