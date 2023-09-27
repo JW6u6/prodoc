@@ -46,6 +46,11 @@ public class DBServiceImpl implements DBService {
 		return vo.getResult();
 	}
 
+	@Override
+	public int deleteDBPage(String pageId) {
+		return mapper.deleteDBPage(pageId);
+	}
+
 
 
 }

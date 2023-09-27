@@ -43,4 +43,9 @@ public class DBAttrServiceImpl implements DBAttrService {
 		return mapper.pageAttrList();
 	}
 
+	@Override
+	public void deletePageAttr(String dbUseId) {
+		mapper.deletePageAttr(dbUseId);
+	}
+
 }

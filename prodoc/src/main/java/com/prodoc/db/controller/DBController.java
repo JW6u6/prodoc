@@ -104,4 +104,16 @@ public class DBController {
 		String result = vo.getResult();
 		return "{\"caseBlock\" : \""+result+"\"}";
 	}
+	
+	@GetMapping("deleteDbAttr")
+	public void deleteDbAttr(@RequestParam String dbUseId) {
+		attrService.deletePageAttr(dbUseId);
+	}
+	
+	@GetMapping("deleteDBPage")
+	public String deleteDBPage(@RequestParam String pageId) {
+		int result = dbService.deleteDBPage(pageId);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
 }

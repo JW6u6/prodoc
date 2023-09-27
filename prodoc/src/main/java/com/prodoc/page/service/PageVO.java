@@ -12,7 +12,7 @@ public class PageVO {
 	private String creUser;
 	private Date creDate;
 	private String workId;
-	private String delCheck;
+	private String deleteCheck;
 	private int numbering;
 	private String lockCheck;
 	private String caseId;

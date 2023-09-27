@@ -24,6 +24,13 @@
 							, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
+	
+	<!-- DB 하위 페이지 삭제 -->
+	<update id="deleteDBPage" parameterType="String" statementType="CALLABLE">
+		UPDATE tbl_page
+	    SET delete_check = 'TRUE'
+	    WHERE page_id = #{pageId}
+	</update>
 
 	<!-- DBCase페이지로 하위 페이지(블럭) 리스트 조회 -->	
 	<select id="getDBPageList" resultType="BlockVO" parameterType="String">
@@ -43,13 +50,6 @@
                           FROM tbl_dbblock
                           WHERE display_id = #{displayId})
 	</select>
-	
-	<!-- 특정 페이지 속성 조회 -->
-	<!-- <select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
-		SELECT * 
-		FROM view_pageattr 
-		WHERE display_id = #{displayId}
-	</select> -->
   
 	<update id="updateCase" parameterType="PageVO">
 		UPDATE tbl_page

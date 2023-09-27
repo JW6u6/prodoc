@@ -1,52 +1,4 @@
-.display-flex{
-	display: flex;
-}
-
-.db-block{
-    border: 1px solid gainsboro;
-}
-
-.db-layout-list{
-	display: inline;
-}
-
-.db-layout-list li{
-    display: inline;
-    list-style-type: none;
-}
-
-.db-search-option{
-	display: inline;
-	float: inline-end;
-}
-
-.inlineTags{
-	display: inline;
-}
-
-.attr {
-	
-}
-
-.attr-list {
-	display: inline;
-	float: inline-end;
-}
-
-div[data-block-id]{
-	border: 1px solid gray;
-	margin: 10px;
-}
-
-div[data-tagimg]{
-	display: inline;
-	border: 1px solid green;
-}
-
-div[data-pagename]{
-	display: inline;
-}
-
+/* DB 레이아웃 */
 div[data-dbtype="list"]{
 	width : 90%;
 }
@@ -55,10 +7,48 @@ div[data-dbtype="brd"]{
 	margin: auto;
 }
 
-div[data-dbtype="gal"]{
+.dbtype-gal{
 	width : 40%;
 	margin: auto;
 	display: inline-block;
+}
+
+.gal-thumbnail{
+	margin: 10px auto;
+	width: 280px;
+	height: 180px;
+	background-color: lightslategray;
+	text-align: center;
+	color: white;
+}
+
+.dbtype-table{
+	border: 1px solid black;
+	margin: 10px;
+}
+
+.table-thead{
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+div[data-block-id] .table-tr{
+	border: none;
+}
+
+.table-tr{
+	border-bottom: 1px solid lightgray;
+	display: grid;
+	grid-template-columns: repeat(auto-fill,120px);
+}
+
+.table-td{
+
+}
+
+div[data-gal-img]{
+	height: 80px;
+	width: 100px;
 }
 
 div[data-state]{
@@ -77,16 +67,61 @@ div[data-state-tags]{
 	display: inline-block;
 }
 
-div[data-page-attr]{
+/* 기타 */
+div[data-attr-option]{
+	border: 1px solid skyblue;
+	float: left;
+	background-color: white;
+}
+
+div[data-block-id]{
+	border: 1px solid gray;
+	margin: 10px;
+}
+
+div[data-tagimg]{
+	display: inline;
+}
+
+.display-flex{
+	display: flex;
+}
+
+.db-layout-list{
+	display: inline;
+}
+
+.db-layout-list li{
+    display: inline;
+    list-style-type: none;
+}
+
+.inlineTags{
+	display: inline;
+}
+
+.db-block{
+    border: 1px solid gainsboro;
+}
+
+/* 속성 */
+.attr {
 	font-size: small;
 	background-color: linen;
+	margin: 3px;
+	border: 1px solid white;
 }
 
-div[data-gal-img]{
-	height: 80px;
-	width: 100px;
+.attr-list{
+	float: right;
 }
 
+.del-db-page {
+	float: right;
+}
+
+
+/* 모달 css 중복 */
 .hide {
 	display: none;
 }

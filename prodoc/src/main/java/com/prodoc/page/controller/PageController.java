@@ -59,21 +59,21 @@ public class PageController {
 		return pageMapper.selectPageInfo(pageVO);
 	}
 	
-	@PostMapping("/pageInsert")
-	public String pageInsert(@RequestBody PageVO pageVO,HttpSession session ) {
-		MemberVO memberVO = new MemberVO();
-		UserVO user = (UserVO)session.getAttribute("logUser");
-		memberVO.setWorkId(pageVO.getWorkId());
-		List<MemberVO> list = memberserivce.listMember(memberVO);
-		for(int i=0;i<list.size();i++) {
-			if(!list.get(i).getEmail().equals(user.getEmail())) {
-				System.out.println("======================//////////////");
-				this.template.convertAndSendToUser(
-					list.get(i).getEmail() , "/topic/updatePage", new SocketVO("pageCreate",pageVO.getPageId()));
-			}
-		}
-		return pageService.insertPage(pageVO);
-	}
+//	@PostMapping("/pageInsert")
+//	public String pageInsert(@RequestBody PageVO pageVO,HttpSession session ) {
+//		MemberVO memberVO = new MemberVO();
+//		UserVO user = (UserVO)session.getAttribute("logUser");
+//		memberVO.setWorkId(pageVO.getWorkId());
+//		List<MemberVO> list = memberserivce.listMember(memberVO);
+//		for(int i=0;i<list.size();i++) {
+//			if(!list.get(i).getEmail().equals(user.getEmail())) {
+//				System.out.println("======================//////////////");
+//				this.template.convertAndSendToUser(
+//					list.get(i).getEmail() , "/topic/updatePage", new SocketVO("pageCreate",pageVO.getPageId()));
+//			}
+//		}
+//		return pageService.insertPage(pageVO);
+//	}
 	
 	//페이지 잠금/잠금해제(소유자, 관리자 권한)
 	@PostMapping("/pageLock")
