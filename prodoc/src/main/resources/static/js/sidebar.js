@@ -73,6 +73,9 @@ function workList(email) {
                         makeWid(e);
                     }
                 })
+                targetDiv.addEventListener('contextmenu', function(e) {
+                    contextWorkSpace(e);
+                });
             })
 
         })
@@ -122,12 +125,21 @@ function newWork() {
     document.body.style.overflow = "hidden";
     document.querySelector('#typeArea').classList.remove('hide');
     document.querySelector('#deleteBtn').classList.add('hide');
+    let own = document.querySelector('#ownArea').classList.add('hide');
+    let tTog = document.querySelector('#teamToggleArea').classList.add('hide');
     let creBtn = document.createElement('button');
     creBtn.id = 'wsCreate';
     creBtn.textContent = '생성';
     document.querySelector('#btnArea').firstElementChild.replaceWith(creBtn);
     document.querySelector('#wsCreate').addEventListener('click', newWorkSpace);
 }
+
+document.querySelector('#sidebar').children[1].addEventListener('click', function (e) {
+    let wid = document.querySelector('#wid');
+    if (wid) {
+        wid.value = '';
+    }
+})
 
 // 인사이트 내 사이드바에 페이지 목록 불러옴
 function pageList(wId, target) {
@@ -362,6 +374,32 @@ wp.addEventListener("focusout", (e) => {
 // }
 //======================================================================
 
+//하위 워크스페이스 생성 우클릭 메뉴 이벤트
+function contextWorkSpace(e) {
+
+    let subMenu = document.querySelector('#subWorkMenu');
+    console.log(e.pageY);
+    console.log(e.pageX);
+    subMenu.style.display = 'block';
+    subMenu.style.top = e.pageY + 'px';
+    subMenu.style.left = e.pageX + 'px';
+
+}
+
+document.addEventListener('click', function (e) {
+    let subMenu = document.querySelector('#subWorkMenu');
+
+    subMenu.style.display = 'none';
+    subMenu.style.top = null;
+    subMenu.style.left = null;
+
+})
+
+document.querySelector('#subWorkMenu').addEventListener('click', function (e) {
+    newWork();
+})
+
+
 //워크스페이스 설정창 여는..거
 async function setWork(e) {
     workModal.style.display = 'block';
@@ -575,44 +613,6 @@ function newWorkSpace() {
         .catch(err => console.log(err));
 }
 
-function subWorkSpace() {
-
-    let workType = document.querySelector('#wsType');
-    let publicCheck = document.querySelector('#wsPrivate');
-    let email = document.querySelector('#loginUser').value;
-    let workName = document.querySelector('#wsName');
-    let parentId = document.querySelector('#wid').value;
-
-    let val = {
-        parentId,
-        "workType": workType.value,
-        "workName": workName.value,
-        "publicCheck": publicCheck.value,
-        email
-    };
-    let url = '/workInsert';
-
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-
-            console.log(result);
-            if (workType == 'TEAM') {
-                inviteWork(result); //워크스페이스 초대하는 메소드
-            }
-            closeModal();
-            workList(email);
-
-        })
-        .catch(err => console.log(err));
-}
-
 //워크스페이스 타입별 select option 구분 / 초대 부분 노출여부
 document.querySelector('#wsType').addEventListener('change', typeChange);
 
@@ -667,7 +667,13 @@ function addList() {
             mail.focus();
         }
     } else if (workId.value != '') {
-        memberAllList(workId);
+        let member = memberList(workId);
+        let invite = listWorkJoin(workId);
+        if (mail.value != '') {
+            if (member.email != mail.value || invite != mail.value) {
+
+            }
+        }
     }
 };
 
@@ -705,14 +711,13 @@ function inviteWork(workId) {
 
 const arr = ['workId', 'email', 'auth'];
 
-//설정할때 필요한거
 async function memberList(workId) {
     let authAry = [{
         val: 'MANAGER',
         text: '관리자'
     }, {
         val: 'NOMAL',
-        text: '사용자'
+        text: '일반'
     }];
     let url = `/memberList?workId=${workId}`;
     let mail = [];
@@ -733,52 +738,65 @@ async function memberList(workId) {
                     auth: num.auth
                 });
 
-                let trTag = document.createElement('tr');
+                if (num.auth != 'OWNER') {
+                    let trTag = document.createElement('tr');
 
-                for (let field of arr) {
-                    if (field == 'workId') {
-                        let tdTag = document.createElement('td');
-                        let inputTag = document.createElement('input');
-                        inputTag.type = 'hidden';
-                        inputTag.value = num[field];
-                        tdTag.appendChild(inputTag);
-                        trTag.appendChild(tdTag);
-                    } else {
-                        let tdTag = document.createElement('td');
-                        tdTag.textContent = num[field];
-                        trTag.appendChild(tdTag);
+                    for (let field of arr) {
+                        if (field == 'workId') {
+                            let tdTag = document.createElement('td');
+                            let inputTag = document.createElement('input');
+                            inputTag.type = 'hidden';
+                            inputTag.value = num[field];
+                            tdTag.appendChild(inputTag);
+                            trTag.appendChild(tdTag);
+                        } else {
+                            let tdTag = document.createElement('td');
+                            tdTag.textContent = num[field];
+                            trTag.appendChild(tdTag);
+                        }
                     }
+                    //삭제 체크박스
+                    let tdTag = document.createElement('td');
+                    let check = document.createElement('input');
+                    check.name = 'member';
+
+                    //권한 select 생성
+                    let td = document.createElement('td');
+                    let authSelect = document.createElement('select');
+                    authSelect.id = 'memberAuth';
+
+                    //권한 option 생성
+                    for (let option of authAry) {
+                        let memOp = document.createElement('option');
+                        memOp.value = option.val;
+                        memOp.textContent = option.text;
+                        authSelect.appendChild(memOp);
+                    }
+                    authSelect.value = num.auth;
+
+                    authSelect.addEventListener('change', function (e) {
+                        let changeAuth = e.currentTarget.value;
+                        let targetMail = e.currentTarget.closest('tr').children[1].textContent;
+                        let val = [];
+                        val.push({
+                            workId,
+                            "email": targetMail,
+                            "auth": changeAuth
+                        });
+                        renewMemberAuth(val);
+                    })
+
+                    check.type = 'checkbox';
+                    tdTag.appendChild(check);
+                    td.appendChild(authSelect);
+
+                    trTag.appendChild(tdTag);
+                    trTag.appendChild(td);
+
+                    document.querySelector('#memList').append(trTag);
+                } else if (num.auth == 'OWNER') {
+                    document.querySelector('#ownArea').firstElementChild.value = num.email;
                 }
-                //삭제 체크박스
-                let tdTag = document.createElement('td');
-                let check = document.createElement('input');
-                check.name = 'member';
-
-                //권한 select 생성
-                let td = document.createElement('td');
-                let authSelect = document.createElement('select');
-                authSelect.id = 'memberAuth';
-
-                //권한 option 생성
-                for (let option of authAry) {
-                    let memOp = document.createElement('option');
-                    memOp.value = option.val;
-                    memOp.textContent = option.text;
-                    authSelect.appendChild(memOp);
-                }
-
-                authSelect.addEventListener('change', function (e) {
-                    console.log(e.currentTarget.value);
-                })
-
-                check.type = 'checkbox';
-                tdTag.appendChild(check);
-                td.appendChild(authSelect);
-
-                trTag.appendChild(tdTag);
-                trTag.appendChild(td);
-
-                document.querySelector('#memList').append(trTag);
             }
         })
         .catch(err => console.log(err));
@@ -907,7 +925,6 @@ function renewMemberAuth(list) {
         })
         .then(response => response.text())
         .then(result => {
-            console.log(result);
             if (result == list.length) {
                 alert('권한이 변경되었습니다.')
             } else {
@@ -926,7 +943,6 @@ document.querySelector('#ownArea').firstElementChild.addEventListener('change', 
     console.log(email.value);
     let val = []
 
-
     if (email != '') {
         val.push({
             workId,
@@ -935,16 +951,20 @@ document.querySelector('#ownArea').firstElementChild.addEventListener('change', 
         });
 
         let changemail = document.querySelector('#loginUser');
-        val.push({
-            workId,
-            "email": changemail.value,
-            "auth": "MANAGER"
-        });
+        if (changemail.value != email.value) {
+            val.push({
+                workId,
+                "email": changemail.value,
+                "auth": "MANAGER"
+            });
+        }
         renewMemberAuth(val);
     } else {
         alert('이메일의 형식과 맞지 않습니다. 다시 입력해주십시오.');
     }
 })
+
+
 
 //워크스페이스 초대 리스트 불러옴
 async function listWorkJoin(workId) {
@@ -965,29 +985,4 @@ async function listWorkJoin(workId) {
         .catch(err => console.log(err));
 
     return mailList;
-}
-
-async function memberAllList(workId) {
-    
-    let url = `/MemberAllList?workId=${workId}`;
-    let mail = [];
-
-    await fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            for (let num of result) {
-                mail.push({
-                    workId,
-                    email: num.email,
-                    auth: num.auth
-                });
-            }
-        })
-        .catch(err => console.log(err));
-    return mail;
 }

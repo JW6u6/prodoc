@@ -207,3 +207,8 @@ select::-ms-expand {
 .workIdVal, .pageIdVal {
 	display : none;
 }
+#subWorkMenu{
+	display: none;
+	position: absolute;
+	background-color: #ccc;
+}
