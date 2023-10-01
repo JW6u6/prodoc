@@ -41,8 +41,18 @@
 	    mention_list   = #{mentionList}
 		where reply_id = #{replyId}
 	</update>
-	<delete id="deleteComment">
+	<delete id="deleteComment" parameterType="ReplyVO">
 		delete from tbl_reply
-		where reply_id = #{replyId}
+		<choose>
+			<when test="replyId != null">
+				where reply_id = #{replyId}			
+			</when>
+			<when test="displayId != null">
+				where display_id = #{displayId}
+			</when>
+			<otherwise>
+				where replyId = ""
+			</otherwise>
+		</choose>
 	</delete>
 </mapper>
