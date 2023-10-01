@@ -1017,7 +1017,7 @@ document.querySelector('#ownArea').firstElementChild.addEventListener('change', 
 
 
 
-//워크스페이스 초대 리스트 불러옴
+//워크스페이스 초대 리스트 불러옴..뒤에 초대중 붙음
 async function listWorkJoin(workId) {
 
     let url = `/joinList?workId=${workId}`;
