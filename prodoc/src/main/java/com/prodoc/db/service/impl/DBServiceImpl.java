@@ -57,6 +57,11 @@ public class DBServiceImpl implements DBService {
 		return mapper.getDBblock(vo);
 	}
 
+	@Override
+	public PageVO getPageInfo(String PageId) {
+		return mapper.getPageInfo(PageId);
+	}
+
 
 
 }

@@ -49,4 +49,14 @@
 		FROM view_pageattr 
 		WHERE display_id = #{displayId}
 	</select>
+	
+	<update id="addCalendar" parameterType="PageAttrVO">
+		UPDATE tbl_page_attr
+		SET attr_content = #{attrContent}
+		WHERE page_use_id = (SELECT page_use_id
+		                                FROM view_pageattr
+		                                WHERE page_id = #{pageId}
+		                                            AND attr_id = 'CAL'
+		                                            AND attr_name = '날짜')
+	</update>
 </mapper>

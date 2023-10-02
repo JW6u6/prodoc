@@ -11,7 +11,6 @@ document.getElementById("pagecontainer").addEventListener("click", e =>{
     else if (e.target.matches(".del-attr")) deleteAttr(e);
     else if (e.target.matches(".del-db-page")) deleteDBpage(e);
     
-    
 })
 
 // 레이아웃 변경을 위한 정보 전달 => 레이아웃 변경 이벤트 실행
@@ -28,6 +27,8 @@ function layoutClick(e){
 function createDBblock(block){
     const dbBlockTemp = `
     <div class="db-block" data-block-id="` + block.displayId + `" data-block-order="`+ block.rowX +`">
+        <div data-attr-option="`+block.displayId+`" class='hide'></div>
+
         <div class="db-block-header">
             <div contenteditable="true">` + block.content + `</div>
             <div class="db-layout-list">
@@ -56,15 +57,13 @@ function createDBblock(block){
                     <input type="radio" name="date" value="upDate">최종수정일
                     <br>
                     <input type="date" name="startDate"> ~ <input type="date" name="endDate" disabled> 
-                </div> 
-            </div>
-            <div class="db-attr-option">
-                <button class="page-attr-option">속성</button>
+                </div>
+                <div class="db-attr-option">
+                    <button class="page-attr-option">속성</button>
+                </div>
             </div>
         </div>
         <div class="db-block-body"></div>
-
-        <div data-attr-option="`+block.displayId+`" class='hide'></div>
     </div>
     `;
     return dbBlockTemp;
@@ -151,10 +150,44 @@ function insertDBpage(e){
     })
     .then(response => response.json())
     .then(result => {
-        let pBlockId = result.result;
-        if (pBlockId != 'fail') getChildList(pBlockId);
-    })
+        let caseBody = caseBlock.querySelector('.db-block-body');
+        let targetNode = e.target.closest('.add-page-div');
+        console.log(result);
+        let block;
+        if(result != null && nowLayout != "DB_CAL"){
+            if(nowLayout == "DB_LIST"){
+                block = dblistBlock(result);
+            } else if(nowLayout == "DB_BRD"){
+                block = dbBrdBlock(result);
+            } else if(nowLayout == "DB_GAL"){
+                block = dbGalBlock(result);
+            } else if(nowLayout == "DB_TBL"){
+                block = dbTblBlock(result);
+            }
+            targetNode.insertAdjacentHTML("beforebegin", block);
 
+            if(nowLayout == "DB_LIST"){     // 리스트 형식일때 속성에 클래스 추가용
+                let selector = `[data-page-id="${result.page.pageId}"] .attr-list [data-attrid]`;
+                caseBody.querySelectorAll(selector).forEach(tag => {
+                    tag.classList.add("inlineTags");
+                })
+            }
+        } else if(result != null && nowLayout == "DB_CAL"){
+            // 캘린더에서 추가
+            let thisDate = e.target.parentElement.getAttribute("data-cal-date");
+            fetch("addCalendar", {
+                method : 'post',
+                body : JSON.stringify({'pageId' : result.page.pageId, 'attrContent' : thisDate}),
+                headers : {"Content-Type": "application/json"}
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                // ✅✅캘린더에 데이터 넣고 정상적으로 작동되는지 테스트 필요함.
+            })
+        }
+    })
+    .catch(err => console.log(err));
 }
 
 // case block 아이디로 해당 db에 사용된 속성 리스트 리턴하는 AJAX
@@ -183,18 +216,21 @@ async function createUesList(caseBlockId){
 
     let attrDiv = `<div class="hide">사용속성목록</div>`
     attrList.forEach(attr => {
-        let view = '⚪';
-        if(attr.displayCheck == 'FALSE') view ='⚫';
+        let viewOption = 'checked';
+        if(attr.displayCheck == 'FALSE') viewOption ='';
         attrDiv += `
             <div data-dbuseid=`+attr.dbUseId+`>
-                <div class="attr-view-selector inlineTags">`+view+`</div>
+                <input type="checkbox" class="attr-view-selector inlineTags" ${viewOption}>
                 <div class="inlineTags" data-attr-id="`+attr.attrId+`" data-attr-view="`+attr.displayCheck+`" 
                 contenteditable="true" data-attr-order="`+attr.numbering+`" white-space:nowrap>`+attr.attrName+`</div>
                 <div class="inlineTags del-attr">&#10005;</div>
             </div>
         `;
     })
-    attrDiv += `<button class="add-page-attr">속성추가</button>`;
+    attrDiv += `
+        <button class="add-page-attr">속성추가</button>
+        <button class="page-attr-option">취소</button>
+        `;
     div.insertAdjacentHTML("afterbegin", attrDiv);
 }
 
@@ -203,22 +239,21 @@ function attrViewChange(e){
     let caseId =  e.target.closest('[data-block-id]').getAttribute("data-block-id");
     console.log(caseId);
     let dbUseId = e.target.closest('[data-dbuseid]').getAttribute("data-dbuseid");
-    let viewOp = e.target.nextElementSibling.getAttribute("data-attr-view");
-    if(viewOp == 'TRUE') viewOp = 'FALSE';
-    else if (viewOp == 'FALSE') viewOp = 'TRUE';
+    let viewOp = e.target.nextElementSibling
+    if(viewOp.getAttribute("data-attr-view") == 'TRUE') viewOp.setAttribute("data-attr-view", "FALSE");
+    else if (viewOp.getAttribute("data-attr-view") == 'FALSE') viewOp.setAttribute("data-attr-view", "TRUE");
     console.log(viewOp);
     fetch('displayAttrChange', {
         method : 'post',
-        body : JSON.stringify({'dbUseId' : dbUseId, 'displayCheck' : viewOp}),
+        body : JSON.stringify({'dbUseId' : dbUseId, 'displayCheck' : viewOp.getAttribute("data-attr-view")}),
         headers : { "Content-Type": "application/json" }
     })
     .then(response => response.json())
     .then(result => {
         if(result.result == "success") getChildList(caseId);
+        // 아작스 호출X css만 변경하기
     })
     .catch(err => console.log(err));
-
-    createUesList(caseId);
 }
 
 // 속성 설정창 on/off
@@ -231,9 +266,11 @@ function pageAttrOption(e){
 }
 
 function addPageAttr(e){
-    let div = e.target.closest('[data-attr-option]');
+    let div = e.target.closest('[data-layout]').querySelector('[data-attr-option]');
     console.log(div);
+    div.setAttribute("class", "view-visible");
     div.innerHTML = "";
+
     let addTag = `<div>타입선택</div>`;
     fetch("pageAttrList")
     .then(response => response.json())
@@ -309,18 +346,22 @@ function deleteAttr(e){
     .catch(err => console.log(err));
 }
 
+// 속성 값 추가
+function addAttrContent(){
+
+}
+
 // DB 하위 페이지 삭제
 function deleteDBpage(e){
+    let delPageDiv = e.target.closest("[data-page-id]");
     let delPageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
-    let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
-    console.log(caseId);
-
+    let caseId = e.target.closest("[data-layout]").getAttribute('data-block-id'); 
     let url = "deleteDBPage?pageId=" + delPageId;
     fetch(url)
     .then(response => response.json())
     .then(result => {
-        console.log(result);
-        createUesList(caseId);
+        // if(result.result == 'success') getChildList(caseId);
+        if(result.result == 'success') delPageDiv.remove();
     })
     .catch(err => console.log(err));
 }

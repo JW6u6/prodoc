@@ -16,4 +16,6 @@ public interface DBMapper {
 	public void insertDBPage(DBdataVO vo);		// DBcase 하위에 DB페이지 생성	
 	public int deleteDBPage(String pageId);
 	public DBBlockVO getDBblock(DBBlockVO vo);
+	
+	public PageVO getPageInfo(String pageId);	// 페이지VO 따로 필요해서 만들었음
 }

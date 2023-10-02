@@ -9,4 +9,5 @@ public interface DBAttrService {
 	public List<PageAttrVO> getAllPageAttr(String parentId);
 	public int updateDbAttr(PageAttrVO vo);
 	public void deletePageAttr(String dbUseId);
+	public int addCalendar(PageAttrVO vo);
 }

@@ -13,4 +13,6 @@ public interface DBService {
 	public String insertDBPage(DBdataVO vo);
 	public int deleteDBPage(String pageId);
 	public DBBlockVO getDBblock(DBBlockVO vo);
+	
+	public PageVO getPageInfo(String PageId);
 }

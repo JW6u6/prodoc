@@ -1,4 +1,12 @@
 /* DB 레이아웃 */
+.db-block {
+	position: relative;
+}
+
+div[data-attr-option] {
+	position: absolute;
+}
+
 div[data-dbtype="list"]{
 	width : 90%;
 }
@@ -40,10 +48,6 @@ div[data-block-id] .table-tr{
 	border-bottom: 1px solid lightgray;
 	display: grid;
 	grid-template-columns: repeat(auto-fill,120px);
-}
-
-.table-td{
-
 }
 
 div[data-gal-img]{
@@ -104,6 +108,18 @@ div[data-tagimg]{
     border: 1px solid gainsboro;
 }
 
+.cal-date{
+	/* width: calc(100%/7); */
+	width: 90px;
+	height: 100px;
+	border: 1px solid skyblue;
+}
+
+.cal-date:hover .db-cal-adddata{
+	/* display: inline-block; */
+	visibility: visible;
+}
+
 /* 속성 */
 .attr {
 	font-size: small;
@@ -125,6 +141,6 @@ div[data-tagimg]{
 .hide {
 	display: none;
 }
-.view {
-	display: block;
+.view-visible {
+	visibility: visible;
 }

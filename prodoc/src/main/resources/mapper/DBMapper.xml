@@ -68,5 +68,11 @@
 			page_id = #{pageId}
 		</if>
 	</select>
+	
+	<select id="getPageInfo" parameterType="String" resultType="PageVO">
+		SELECT *
+		FROM tbl_page
+		WHERE page_id = #{pageId}
+	</select>
 
 </mapper>
