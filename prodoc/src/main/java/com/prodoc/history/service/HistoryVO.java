@@ -11,7 +11,7 @@ public class HistoryVO {
 	String creUser;
 	
 	Date upDate;
-	String historyType;	//생성,삭제,수정
+	String historyType;	//생성,삭제,수정,복구
 	String displayId;
 	String pageId;
 }
