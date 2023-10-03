@@ -19,6 +19,8 @@ import com.prodoc.user.service.SMSUtil;
 import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
 
+import retrofit2.http.POST;
+
 @Controller
 public class UserController {
 	@Autowired
@@ -58,9 +60,18 @@ public class UserController {
 	@ResponseBody
     @PostMapping("/sendSMS")
     public String PhoneAuthProcess(@RequestBody UserVO user) {
-		System.out.println(user.toString());
+		System.out.println("sendSMS: " + user.toString());
     	sms.init();
     	String result = sms.sendSMSAuth(user.getPhone());
     	return "{\"authNum\" : " + result + "}";
     }
+	
+	@ResponseBody
+	@PostMapping("/findME")
+	public UserVO findProcess(@RequestBody UserVO user) {
+		UserVO vo = service.getFind(user);
+		System.out.println("findME: " + user.toString());
+		System.out.println("findME: " + vo);
+		return vo;
+	}
 }

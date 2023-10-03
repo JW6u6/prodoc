@@ -137,9 +137,11 @@ function settingSearchResult(headers, data){
 	let headerTr = document.createElement('tr');
 	for(let head of headers){
 		for(let pair in head){
-			let td = document.createElement('td');
-			td.innerText = head[pair];
-			headerTr.appendChild(td);
+			if(pair != "pageId"){
+				let td = document.createElement('td');
+				td.innerText = head[pair];
+				headerTr.appendChild(td);
+			}
 		}
 	}
 	WKDBHeader.appendChild(headerTr);
@@ -163,10 +165,10 @@ function settingSearchResult(headers, data){
 					let td = document.createElement('td');	//컬럼 만들기
 					if(list.displayUpDate == null){
 						let date = new Date(list.displayCreDate);
-						let year = date.getFullYear().toString().substr(-2);
-						let month = (date.getMonth()+1) > 10?
+						let year = date.getFullYear().toString();
+						let month = (date.getMonth()+1) >= 10?
 									(date.getMonth()+1) : "0"+ (date.getMonth()+1);
-						let day = date.getDate() > 10?
+						let day = date.getDate() >= 10?
 									date.getDate() : "0" + date.getDate();
 						
 						td.innerText = `${year}-${month}-${day}`;
@@ -187,8 +189,14 @@ function settingSearchResult(headers, data){
 	}
 }
 
-function getPageBlock(e){	//TODO: 클릭 시 로우 이동
+function getPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
 console.log(e.currentTarget);
-	console.log(e.currentTarget.dataset.pageid);
-	//showBlocks(e.currentTarget.dataset.pageid);
+	//console.log(e.currentTarget.dataset.pageid);
+	
+	showBlocks(e.currentTarget.dataset.pageid);
+	if(e.currentTarget.dataset.blockid != null){
+		let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
+		let focusBlock = document.querySelector(blockId);
+		window.scrollTo({top:focusBlock, behavior:'smooth'});
+	}
 }

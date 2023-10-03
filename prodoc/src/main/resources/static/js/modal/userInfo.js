@@ -62,7 +62,13 @@ img.addEventListener('click', function(e){ 				//이미지 클릭
 //수정 저장
 userModForm.addEventListener('submit', function(e){
 	e.preventDefault();
-	if(!passTrue || !phoneTrue) return;		//비밀번호, 전화번호(인증) NO
+	if(!passTrue) {	//비밀번호, 전화번호(인증) NO
+		alert('비밀번호가 일치하지 않습니다.');
+		return;
+	}else if(!phoneTrue){
+		alert('전화번호 인증이 필요합니다.');
+		return;
+	}
 	
 	let list = document.querySelectorAll("form input[name]");
 	const formData = new FormData();
@@ -139,7 +145,8 @@ let phoneNumber = document.querySelector('input[name="phone"]');
 phoneNumber.addEventListener('input', (e)=> phoneNumber.value =
 					 phoneNumber.value.replace(/[^0-9]/gi, ""));
 
-phoneNumber.addEventListener('change', function(e){ //전화번호	인증 체크
+//전화번호	인증 체크
+phoneNumber.addEventListener('change', function(e){
 	//원래의 전화번호에서 변경이 일어나면 인증 여부 초기화
 	if(e.target.value == beforeN)	phoneTrue = true;
 	else 							phoneTrue = false;
@@ -150,10 +157,22 @@ let authMsg = "";	//불러올 인증번호
 let authBtn = document.querySelector("#authBtn")
 .addEventListener('click', function(e){
 	if(phoneTrue) return;	//인증이 된 번호
-	//TODO: 인증번호 전송 프로세스
-	//fetch("/sendSMS",{
-	//method: "post",
-	//body: {"phone": beforeN}})
+	
+	fetch("/sendSMS",{
+	method: "post",
+	headers: {"Content-Type": 'application/json'},
+	body: JSON.stringify({"phone" : phoneNumber.value})
+	}).then(response=> response.json())
+	.then(result=>{
+		if(result == null){
+			alert("인증번호 발송 실패"); return;
+		}
+		alert("인증번호 발송 성공");
+		authMsg = result.authNum;
+		console.log(authMsg + typeof(authMsg));
+	})
+	.catch(err=>console.log(err));
+	
 	console.log('전송');
 });
 
@@ -162,8 +181,12 @@ const authCheck = document.querySelector("#auth");
 let authCheckBtn = document.querySelector("#authCheckBtn")
 .addEventListener('click', function(e){
 	if(phoneTrue) return;	//인증이 된 번호
-	if(authMsg == authCheck.value){	//인증번호 일치
+	if(authMsg == authCheck.value && authMsg != ""){	//인증번호 일치
 		phoneTrue = true;
-		console.log('인증 확인');
+		beforeN = phoneNumber.value;
+		alert('인증 성공');
+	}else{
+		phoneTrue = false;
+		alert('인증번호가 일치하지 않습니다.');
 	}
 });

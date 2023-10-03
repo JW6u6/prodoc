@@ -39,9 +39,15 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	}
 
 	@Override
+	public UserVO getFind(UserVO user) {	//유저 찾기
+		return mapper.findUser(user);	
+	}
+	
+	@Override
 	public int join(UserVO user) {		//비밀번호 암호화 진행 후 insert
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		log.info(user.toString());
+		if(user.getPassword() != null)
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+		//log.info(user.toString());
  		return mapper.insertUser(user);
 	}
 
