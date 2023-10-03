@@ -21,13 +21,12 @@
  	
  	<!-- 멤버 조회 -->
  	<!-- auth 넣은 이유는 워크스페이스 권한 설정시 목록에서 owner를 제외하기 위해서.-->
- 	<select id="listMember" parameterType="String" resultType="MemberVO">
+ 	<select id="listMember" parameterType="MemberVO" resultType="MemberVO">
  		SELECT	work_id
 				, email
 				, auth
 		FROM TBL_MEMBER
 		WHERE work_id = #{workId}
-		AND auth != 'OWNER'
  	</select>
  	
  	<!-- 탈퇴: 내 소유팀 워크스페이스 개수 -->
