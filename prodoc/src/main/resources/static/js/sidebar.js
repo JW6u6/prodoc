@@ -68,13 +68,44 @@ function workList(email) {
                 })
             })
             document.querySelectorAll('#side .Work').forEach(items => {
-                items.addEventListener("dragstart",(e)=>{
-                    console.log(e);
+                items.addEventListener("dragstart",(event)=>{
+                    event.target.classList.add("dragSide");
+                    event.dataTransfer.dropEffect = "copy";
+                    console.log(event);
                 })
             })
+            dragEnd();
+            dragOver();
+            dropItem();
     })
 }
 
+function dragEnd(){
+    document.querySelectorAll('#side .Work').forEach(items => {
+        items.addEventListener("dragend",(event)=>{
+            event.target.classList.remove("dragSide");
+            console.log(event);
+        })
+    })
+}
+
+function dragOver(){
+    document.querySelectorAll('#side .Work').forEach(items => {
+        items.addEventListener("dragover",(event)=>{
+            event.preventDefault();
+            event.stopPropagation();
+            console.log();
+        })
+    })
+};
+
+function dropItem(){
+    document.querySelectorAll('#side .Work').forEach(items => {
+        items.addEventListener("dropItem",(event)=>{
+            console.log();
+        })
+    })
+}
 //setting 분리하려고 nameArea 아래에 input:hidden으로 워크아이디 넣음
 function makeWid(e) {
 
@@ -360,21 +391,9 @@ wp.addEventListener("focusout", (e) => {
 //     });
 // }
 
-//사이드바 블록화.
-sidebar.addEventListener("drop", (e) => {
-    let newOrder = null;
-    const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
-    console.log(dragItem);
-    insertAfter(dragItem, target);
-    newOrder = Number(target.dataset.blockOrder) + 1024;
-    dragItem.dataset.blockOrder = newOrder;
-    const updateObj = {
-      upUser: "pepsiman",
-      displayId: dragItem.dataset.blockId,
-      rowX: dragItem.dataset.blockOrder,
-    };
-    updateDBBlock(updateObj);
-  });
+
+
+
 
 
 
