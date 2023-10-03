@@ -108,11 +108,35 @@ div[data-tagimg]{
     border: 1px solid gainsboro;
 }
 
+.cal-row{
+	/* display: inline-flex;
+	white-space: nowrap; */
+	display: flex;
+	position: relative;
+
+}
+
 .cal-date{
 	/* width: calc(100%/7); */
 	width: 90px;
 	height: 100px;
 	border: 1px solid skyblue;
+	position: relative;
+}
+
+.cal-day{
+	width: 90px;
+	height: 20px;
+	border: 1px solid skyblue;
+
+	text-align: center;
+}
+
+.dbtype-cal{
+	display: block;
+	position: absolute;
+	background-color: white;
+	border-radius: 5px;
 }
 
 .cal-date:hover .db-cal-adddata{
