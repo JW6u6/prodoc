@@ -110,7 +110,7 @@ async function findWid(pageId) {
 
 //페이지 알림 끄기
 function toggleNotiPage() {
-    let url = '';
+    let url = '/pageNotify';
     let email = '';
     let pageId = '';
     let workId = findWid(pageId);
@@ -131,12 +131,19 @@ function toggleNotiPage() {
         .then(response => response.text())
         .then(result => {
             console.log(result);
+            let notiToggle = document.querySelector('#notifyPage');
+            if (result == 0) {
+                notiToggle.textContent = '페이지 알림 끄기';
+            } else if (result == 1) {
+                notiToggle.textContent = '페이지 알림 켜기';
+            }
         })
         .catch(err => console.log(err));
 }
 
 //링크복사(실험)
-//되긴 되는데 왜 되는지 저 밑에는 왜 오류나는지 모르곘음.
+//현재 execCommand는 사용되지 않는데 대체인 클립보드 api가 로컬호스트나 https 환경에서만 사용이 가능하다고 해서...
+//배포 환경을 여쭤보고 수정하던지 하는 게 나을듯
 function creLink() {
     let url = '';    // <a>태그에서 호출한 함수인 clip 생성
     let linkText = document.createElement("textarea");
