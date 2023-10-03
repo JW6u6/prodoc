@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.page.service.PageService;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
@@ -32,9 +33,12 @@ public class WorkSpaceController {
 	@Setter(onMethod_ = @Autowired)
 	WorkSpaceService workspaceService;
 
+	@Setter(onMethod_ = @Autowired)
+	PageService pageService;
+
 	// 사이드바에 워크스페이스 목록 출력
 	@GetMapping("/workList")
-	public List<WorkSpaceVO> workList(String email){
+	public List<WorkSpaceVO> workList(String email) {
 		return WorkSpaceMapper.workList(email);
 	}
 
@@ -66,7 +70,7 @@ public class WorkSpaceController {
 
 	// 워크스페이스 초대한 유저 리스트
 	@GetMapping("/joinList")
-	public List<WorkJoinVO> inviteList(String workId){
+	public List<WorkJoinVO> inviteList(String workId) {
 		return workspaceService.inviteListWorkspace(workId);
 	}
 
@@ -80,6 +84,7 @@ public class WorkSpaceController {
 	@PostMapping("/workDelete")
 	public void workspaceDeleteCheck(@RequestBody String workId) {
 		workspaceService.deleteCheckWorkspace(workId);
+		pageService.deleteIfWorkspace(workId);
 	}
 
 	// 워크스페이스 메인 페이지 지정
