@@ -18,9 +18,9 @@
 
 	<insert id="insertBlock" parameterType="BlockVO">
 		insert into tbl_display
-		(display_id,page_id,row_x,block_id,cre_user,content)
+		(display_id,page_id,row_x,block_id,cre_user,content,parent_id)
 		values
-		(#{displayId},#{pageId},#{rowX},#{blockId},#{creUser},#{content})
+		(#{displayId},#{pageId},#{rowX},#{blockId},#{creUser},#{content},#{parentId})
 	</insert>
 	<update id="updateBlock" parameterType="BlockVO">
 		update tbl_display

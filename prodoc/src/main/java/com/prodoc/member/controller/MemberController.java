@@ -20,8 +20,8 @@ public class MemberController {
 	MemberService memberService;
 
 	@GetMapping("/memberList")
-	public List<MemberVO> getMemberList(String workId) {
-		return memberService.listMember(workId);
+	public List<MemberVO> getMemberList(MemberVO memberVO) {
+		return memberService.listMember(memberVO);
 	}
 
 	// 멤버 내보내기
@@ -35,4 +35,5 @@ public class MemberController {
 	public int memberReAuth(@RequestBody List<MemberVO> memberVO) {
 		return memberService.renewAuthMember(memberVO);
 	}
+
 }

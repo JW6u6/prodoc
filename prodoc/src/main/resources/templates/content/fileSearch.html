@@ -34,22 +34,20 @@
         });
 		
     	// test 임시데이터 : 메인 페이지 하위 블럭 가져오기
-        function getBlockList(){
+        async function getBlockList(){
     		let url = 'block/get?pageId=aaaaa-bbbbb-cccccc'
-            fetch(url)
+            await fetch(url)
             .then(response => response.json())
             .then( blockList => {
-            	console.log(blockList);
                  blockList.forEach( block => {
                     let divCase = document.createElement("div");
                     divCase.setAttribute("data-block-id", block.displayId);
 
                     // ✅ blockId가 DB일 때 DB블럭의 정보 가져오기
                     if(block.blockId == "DB"){
-                        let createBlock = createDBblock(block);
+                        let createBlock = createDBblock(block);     //DB case 블럭 먼저 생성
                         container.insertAdjacentHTML("beforeend", createBlock);
-                        let list = getChildList(block.displayId);
-                        // listLayoutEditor(pageList, infoList['parent']['pageId'], infoList['parent']['caseId']);
+                        getChildList(block.displayId);
                     }
                  });
             })

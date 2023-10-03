@@ -98,10 +98,13 @@ public class BlockController {
             return map;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("error","error");
 			e.printStackTrace();
+			
+			return map;
 		}
 		
-		return null;
 	}
 	
 	@PostMapping("block/createBookMark")

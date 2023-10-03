@@ -10,8 +10,15 @@
 			<nav>
 				<img id="menuImg" class="menuBtn" th:src="@{/images/menu.svg}">
 				<ul id="menu" class="hide">
-					<li id="outOf">내보내기</li>
-					<li id="lockPg">페이지 잠금</li>
+					<li id="exportPg">내보내기</li>
+					<li id="lockPg">
+						<!-- th:if="${session.logUser.auth} == 'OWNER' or 'MANAGER'">-->
+						페이지 잠금
+					</li>
+					<li id="notiLockPg">
+						<!-- th:unless="${session.logUser.auth} == 'OWNER' or 'MANAGER'" -->
+						페이지 잠금 요청
+					</li>
 					<li id="copyLink">링크 복사</li>
 					<li id="copyPage">페이지 복사</li>
 					<li id="mainPage">이 페이지를 메인 페이지로 지정</li>
@@ -23,26 +30,11 @@
 			
 		    <img id="userImg" class="menuBtn profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" onerror="this.src='images/noneUser.jpg'"  style="width:30px; height:30px; border-radius: 15px;">
 			
-
 		</header>
 	</div>
 
 	<!-- 내보내기 모달 -->
-	<div id="outOfFile" class="hide">
-		<div class="modelBtnList">
-			<button class="closeBtn">&#10005;</button>
-		</div>
-		<div>내보내기</div>
-		<select>
-			<option selected="selected" disabled="disabled">파일 형식</option>
-			<option value=".pdf"></option>
-			<option value=".jpg"></option>
-			<option value=".png"></option>
-		</select>
-		파일형식 멀티미디어 제외 파일이름 저장위치
-		<button type="button">내보내기</button>
-		<button type="button">취소</button>
-	</div>
+	<div id="exportPage" th:insert="modal/exportModal.html :: exportFrag"></div>
 
 	<!-- 유저정보 모달 -->
 	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
@@ -63,4 +55,7 @@
 		}));
 </script>
 <script th:inline="javascript" src="js/modal/userInfo.js"></script>
+<script th:inline="javascript" src="js/modal/export.js"></script>
+<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
+<script th:inline="javascript" src="js/headerMenu.js"></script>
 </html>

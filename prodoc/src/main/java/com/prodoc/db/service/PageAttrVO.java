@@ -15,4 +15,5 @@ public class PageAttrVO {
 	private int numbering;
 	private String displayCheck;
 	private String displayId;
+	private String nickname;
 }

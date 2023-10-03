@@ -11,12 +11,17 @@ import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.BookMarkVO;
 import com.prodoc.file.service.FileVO;
+import com.prodoc.reply.mapper.ReplyMapper;
+import com.prodoc.reply.service.ReplyVO;
 
 @Service
 public class BlockServiceImpl implements BlockService {
 
 	@Autowired
 	BlockMapper blockmapper;
+	
+	@Autowired
+	ReplyMapper replymapper;
 	
 	@Override
 	public List<BlockVO> selectAllBlock(BlockVO blockVO) {
@@ -41,6 +46,10 @@ public class BlockServiceImpl implements BlockService {
 		// TODO Auto-generated method stub
 		blockmapper.deleteFileBlock(blockVO.getDisplayId());
 		blockmapper.deleteBookMark(blockVO.getDisplayId());
+		
+		ReplyVO vo = new ReplyVO();
+		vo.setDisplayId(blockVO.getDisplayId());
+		replymapper.deleteComment(vo);
 		return blockmapper.deleteBlock(blockVO);
 	}
 
