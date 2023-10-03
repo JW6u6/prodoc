@@ -102,5 +102,8 @@
 		   	  ,path       = #{path}
 		 where display_id = #{displayId}
 	</update>
-	
+	<update id="updateParentBlock" parameterType="BlockVO">
+		update (select * from tbl_display where parent_id = #{displayId})
+            set parent_id = null
+	</update>
 </mapper>
