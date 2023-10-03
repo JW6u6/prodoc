@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.db.mapper.DBAttrMapper">
+	<!-- DB 속성 추가 -->
 	<insert id="insertPageAttr" statementType="CALLABLE" parameterType="AddAttrVO">
 		{call INSERT_PAGE_ATTR(
 						#{caseBlockId}
@@ -12,6 +13,13 @@
 						, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
+	
+	<!-- DB 속성 삭제 -->
+	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
+		{call DELETE_DB_ATTR(
+					#{dbUseId}
+		)}
+	</delete>
 	
 	<!-- 속성 디스플레이 변경 -->
 	<update id="updateDbAttr" parameterType="PageAttrVO">
@@ -26,7 +34,7 @@
 		FROM view_pageattr
 		WHERE case_page_id = #{displayId}
 		GROUP BY db_use_id, attr_id, attr_name, numbering, display_check, case_page_id
-		ORDER BY display_check DESC
+		ORDER BY numbering, display_check DESC
 	</select>
 	
 	<!-- tbl_attr -->
@@ -41,4 +49,14 @@
 		FROM view_pageattr 
 		WHERE display_id = #{displayId}
 	</select>
+	
+	<update id="addCalendar" parameterType="PageAttrVO">
+		UPDATE tbl_page_attr
+		SET attr_content = #{attrContent}
+		WHERE page_use_id = (SELECT page_use_id
+		                                FROM view_pageattr
+		                                WHERE page_id = #{pageId}
+		                                            AND attr_id = 'CAL'
+		                                            AND attr_name = '날짜')
+	</update>
 </mapper>
