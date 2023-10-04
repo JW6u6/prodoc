@@ -15,8 +15,8 @@
 
 <insert id="insertHistory" parameterType="HistoryVO" statementType="CALLABLE">
 	{call history_block(#{workId}
-						, #{creUser}
 						, #{pageId}
+						, #{creUser}
 						, #{displayId})
 						}
 </insert>
