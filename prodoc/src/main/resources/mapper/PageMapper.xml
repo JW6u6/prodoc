@@ -35,7 +35,7 @@
  		}
  	</insert>
   
-  	<select id ="selectPageInfo" resultType="PageVO">
+  	<select id ="selectPageInfo" parameterType="String" resultType="PageVO">
   		SELECT *
   		FROM tbl_page
   		WHERE page_id = #{pageId}

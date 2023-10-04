@@ -56,8 +56,8 @@ public class PageController {
 		return pageMapper.pageInPage(pageId);
 	}
 	@GetMapping("/pageInfo")
-	public String pageInfo(PageVO pageVO) {
-		return pageMapper.selectPageInfo(pageVO);
+	public List<PageVO> pageInfo(@RequestParam String pageId) {
+		return pageMapper.selectPageInfo(pageId);
 	}
 	
 	@PostMapping("/pageInsert")

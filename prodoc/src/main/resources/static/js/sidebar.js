@@ -1,5 +1,5 @@
 
-const sidebar = document.querySelector('#sidebar');
+const sidebar = document.querySelector('#side');
 
 init();
 
@@ -36,7 +36,7 @@ function workList(email) {
             })
             data.forEach(item => {
                 let side = document.querySelector('#side');
-                let text = `<div class= "Work" data-id="${item.workId}"><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
+                let text = `<div class= "Work" data-id="${item.workId}"><span class="workListShow">ㅇ</span><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             <input type="hidden" class ="num" value="0"><div>`
                 side.insertAdjacentHTML("beforeend", text);
@@ -52,7 +52,7 @@ function workList(email) {
 
             })
         })
-            document.querySelectorAll('#side .workName').forEach(works => {
+            document.querySelectorAll('#side .workListShow').forEach(works => {
                 works.addEventListener('click', function (e) {
                     let target = e.target;
                     console.log(target);
@@ -67,45 +67,115 @@ function workList(email) {
                     }
                 })
             })
-            document.querySelectorAll('#side .Work').forEach(items => {
-                items.addEventListener("dragstart",(event)=>{
-                    event.target.classList.add("dragSide");
-                    event.dataTransfer.dropEffect = "copy";
-                    console.log(event);
-                })
+            document.querySelectorAll('#side .workName').forEach(items => {
+                items.addEventListener("dragstart", dragStart)
+                items.addEventListener("dragend", dragEnd);
+                items.addEventListener("dragover", dragOver);
+                items.addEventListener("drop", dropItem);
             })
-            dragEnd();
-            dragOver();
-            dropItem();
     })
 }
-
-function dragEnd(){
-    document.querySelectorAll('#side .Work').forEach(items => {
-        items.addEventListener("dragend",(event)=>{
-            event.target.classList.remove("dragSide");
-            console.log(event);
-        })
-    })
+function dragStart(e){
+    e.target.classList.add("dragSide");
+    e.dataTransfer.dropEffect = "copy";
+    console.log(e);
 }
 
-function dragOver(){
-    document.querySelectorAll('#side .Work').forEach(items => {
-        items.addEventListener("dragover",(event)=>{
-            event.preventDefault();
-            event.stopPropagation();
-            console.log();
-        })
-    })
-};
-
-function dropItem(){
-    document.querySelectorAll('#side .Work').forEach(items => {
-        items.addEventListener("dropItem",(event)=>{
-            console.log();
-        })
-    })
+function dragEnd(e){
+    e.target.classList.remove("dragSide");
+    e.target.classList.remove("dragging");
+    console.log(e);
 }
+
+function dragOver(e){
+    e.preventDefault();
+    e.stopPropagation();
+    console.log();
+    e.dataTransfer.dropEffect = "move";
+    const targetItem = e.currentTarget;
+    const targetHeight = targetItem.offsetHeight;
+    const { offsetX, offsetY } = e;
+    const targetWidth = targetItem.offsetWidth;
+    const center = targetHeight / 2;
+    const side = targetWidth - 50;
+    if (offsetX > side && dragState !== DRAG_STATE.SIDE) {
+        dragState = DRAG_STATE.SIDE;
+    } else if (
+        offsetY > center &&
+        offsetX < side &&
+        dragState !== DRAG_STATE.BOTTOM
+    ) {
+        dragState = DRAG_STATE.BOTTOM;
+    } else if (
+        offsetY < center &&
+        offsetX < side &&
+        dragState !== DRAG_STATE.TOP
+    ) {
+        dragState = DRAG_STATE.TOP;
+    }
+    console.log(targetItem.classList.value);
+    console.log(dragState);
+}
+function insertAfter(referenceNode, newNode) {
+    if (!!referenceNode.nextSibling) {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    } else {
+      referenceNode.parentNode.appendChild(newNode);
+    }
+  }
+function dropItem(e){
+    console.log(e);
+    e.stopPropagation();
+    const dragItem = document.querySelector(".dragging").closest(".Work");
+    const targetItem = e.currentTarget;
+    const targetHeight = e.target.offsetHeight;
+    const { offsetX, offsetY } = e;
+    const center = targetHeight / 2;
+    let parentId = null;
+    if (targetItem.closest(".Work") == dragItem) {
+        return;
+    }
+    if (offsetY < center) {
+        //만약 자리 이동이 없다면 return
+        console.log(targetItem.parentElement);
+        console.log(dragItem);
+        if (dragItem == targetItem.nextElementSibling) {
+          console.log("위치 결과가 같은 드래그이벤트");
+          return;
+        }
+        sidebar.insertBefore(dragItem,targetItem.parentElement.closest(".Work"));
+    }else if (offsetY > center){
+        insertAfter(dragItem,targetItem.parentElement.closest(".Work"));
+    }
+
+
+}
+function dropPage(e){
+    console.log(e);
+    e.stopPropagation();
+    const dragItem = document.querySelector(".dragging").closest(".Page");
+    const targetItem = e.currentTarget;
+    const targetHeight = e.target.offsetHeight;
+    const { offsetX, offsetY } = e;
+    const center = targetHeight / 2;
+    let parentId = null;
+    if (targetItem.closest(".Page") == dragItem) {
+        return;
+    }
+    if (offsetY > center) {
+        //만약 자리 이동이 없다면 return
+        console.log(targetItem.parentElement);
+        if (dragItem == targetItem.nextElementSibling) {
+          console.log("위치 결과가 같은 드래그이벤트");
+          return;
+        }
+    }
+
+
+}
+function insertAfter(newNode, existingNode) {
+    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+  }
 //setting 분리하려고 nameArea 아래에 input:hidden으로 워크아이디 넣음
 function makeWid(e) {
 
@@ -126,6 +196,7 @@ function makeWid(e) {
 
 // 선택한 워크스페이스와 DB내의 워크스페이스 일치과정.(DB ID로 조회하는거 추가해야함)
 function selectWork(workClick) {
+    let insertDiv = target.parentElement.querySelector('.pageMain');
     let url = '/workList';
     fetch(url, {
             method: 'GET'
@@ -167,13 +238,13 @@ function pageList(wId, target) {
     })
     .then(data => {
             data.forEach(item=> {
-                let text = `<div class= "Page" data-id="${item.pageId}" draggable="true"><span class="pageName">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+                let text = `<div class= "Page" data-id="${item.pageId}" draggable="true"><span class="pageListShow">ㅇ</span><span class="pageName">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <div class = "pageMain"></div>
                             <div>`
                 insertDiv.insertAdjacentHTML("beforeend", text);
             })
-            document.querySelectorAll('#side .pageName').forEach(Pages => {
+            document.querySelectorAll('#side .pageListShow').forEach(Pages => {
                 Pages.addEventListener('click', function(e){
                     let target = e.target;
                     if(target.classList.contains("clicked")){
@@ -186,22 +257,32 @@ function pageList(wId, target) {
                         pageInPage(pageClick,target);
                     }
                 })
+                document.querySelectorAll('#side .pageName').forEach(items => {
+                    items.addEventListener("dragstart", dragStart)
+                    items.addEventListener("dragend", dragEnd);
+                    items.addEventListener("dragover", dragOver);
+                    items.addEventListener("drop", dropItem);
+                })
+            })
+            document.querySelectorAll('#side .Page').forEach(Pages => {
+                Pages.addEventListener('click', function(e){
+                    let pageId = e.currentTarget.dataset.id;
+                    console.log(pageId);
+                    selectPage(pageId);
+                })
             })
     })
     .catch((err) => console.log('err: ', err));
 }
 // 페이지 선택시 PID 불러오기 + 리스트노출. 
-function selectPage(pageName) {
-    let insertDiv = target.parentElement.querySelector('.pageSub');
-    let url = '/pageInfo?pageId=' + pageName;
+function selectPage(pageId) {
+    let url = '/pageInfo?pageId='+pageId;
     fetch(url)
     .then(res => {
         return res.json();
       })
     .then((data) => {
-        data.forEach(item => {
-            let text = ''
-        })
+        console.log(data);
     })
 }
 // 새로운 페이지 생성.
@@ -237,8 +318,8 @@ function newPage() {
                     }else{
                         let works = document.querySelector('.Work[data-id='+workId+']');
                         let insertDiv = works.querySelector('.pageMain');
-                        let text =  `<div class= "Page"><span class="pageId" data-id='${pageId}'>${pageName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>`;
-                        insertDiv.insertAdjacentHTML("afterend", text);
+                        insertDiv.innerHTML="";
+                        pageList(workId,insertDiv);
                     }
                     // sendSocket(pageId);
                     closeModal();
@@ -270,7 +351,7 @@ function newPageModal(event) {
     .catch((err) => console.log('err: ', err));
     }
 
-
+let pageInPageCount = 0;
 //페이지 안의 페이지 여는 기능
 function pageInPage(pId,target){
     let insertDiv = target.parentElement.querySelector('.pageMain');
@@ -281,11 +362,11 @@ function pageInPage(pId,target){
     })
     .then(data => {
         data.forEach(item => {
-            let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
+            let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageListShow">ㅇ</span>'+ '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
             insertDiv.insertAdjacentHTML("beforeend",text)
         })
         let inPageDiv = target.parentElement.querySelector('.pageMain');
-        inPageDiv.querySelectorAll('.pageName').forEach(Pages => {
+        inPageDiv.querySelectorAll('.pageListShow').forEach(Pages => {
             Pages.addEventListener('click', function(e){
                 let target = e.target;
                 console.log(target);

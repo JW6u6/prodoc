@@ -11,7 +11,7 @@ public interface PageMapper {
 	
 	public List<PageVO> pageInPage(String pageId);
 	
-	public String selectPageInfo(PageVO pageVO);
+	public List<PageVO> selectPageInfo(String pageId);
 	
 	public void insertPage(PageVO pageVO);
 	
