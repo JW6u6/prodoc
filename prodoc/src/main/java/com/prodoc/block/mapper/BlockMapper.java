@@ -24,4 +24,5 @@ public interface BlockMapper {
 	public int insertFile(FileVO vo);
 	public int deleteFileBlock(String displayId);
 	public int updateFileBlock(FileVO vo);
+	public int updateParentBlock(BlockVO blockVO);
 }
