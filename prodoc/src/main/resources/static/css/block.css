@@ -4,19 +4,28 @@ pre {
 .hide {
   display: none;
 }
-/* body {
+/*body {
   width: 100vw;
   height: 100vh;
+  overflow-x: hidden;
   margin: 0;
   padding-top: 50px;
   box-sizing: border-box;
-} */
+}*/
 .block_wrapper {
   flex-grow: 1;
   box-sizing: border-box;
   width: 100%;
 }
+
+.prodoc_block[data-block-type="TOGGLE"] {
+  margin-bottom: 10px;
+  padding-top: 10px;
+}
+
 .container {
+  margin-left:10%;
+  width: 80%;
   padding-bottom: 150px;
   border: 1px solid black;
 }
@@ -118,4 +127,66 @@ a {
 
 .control_hide {
   animation: hiddens ease-in-out 0.05s forwards;
+}
+
+.block_img {
+  width: 300px;
+  aspect-ratio: 16/9;
+}
+
+.block_pointer {
+  position: absolute;
+  border: 2px solid;
+}
+.block_column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.block_bookmark {
+  display: flex;
+}
+
+.block_bookmark img {
+  aspect-ratio: 1/1;
+}
+
+.control {
+  position: absolute;
+  left: -50px;
+}
+
+.control > button {
+  border: none;
+}
+
+.reply_modal {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  position: absolute;
+  width: 300px;
+  max-height: 150px;
+}
+
+.reply_modal input {
+}
+
+.modal_reply_controller {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.reply_block--header {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr;
+}
+
+.page_reply {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  background-color: aquamarine;
+  width: 250px;
+  right: 0;
+  overflow-y: auto;
 }

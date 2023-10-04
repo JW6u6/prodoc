@@ -12,6 +12,13 @@
        	<if test="select != 'all'">	AND  HISTORY_TYPE = UPPER(#{select}) </if>
 	ORDER BY up_date desc
 </select>
-	
+
+<insert id="insertHistory" parameterType="HistoryVO" statementType="CALLABLE">
+	{call history_block(#{workId}
+						, #{creUser}
+						, #{pageId}
+						, #{displayId})
+						}
+</insert>
 	
 </mapper>

@@ -23,6 +23,8 @@ import com.prodoc.block.service.BookMarkVO;
 import com.prodoc.block.service.blockfileService;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.file.service.FileVO;
+import com.prodoc.history.mapper.HistoryMapper;
+import com.prodoc.history.service.HistoryVO;
 import com.prodoc.user.service.ProfileService;
 
 /*
@@ -42,6 +44,15 @@ public class BlockController {
 	
 	@Autowired
 	BlockMapper mapper;
+	
+	@Autowired
+	HistoryMapper historyMapper;
+	
+	//현재 워크, 현재 페이지, 로그인 유저, 해당 블럭 아이디
+	@PostMapping("block/history")
+	public void uploadHistory(@RequestBody HistoryVO histroyVO) {
+		historyMapper.insertHistory(histroyVO);
+	}
 	
 	@GetMapping("block/get")
 	public List<BlockVO> getBlock(@RequestParam String pageId) {

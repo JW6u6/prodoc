@@ -7,4 +7,5 @@ import com.prodoc.history.service.HistoryVO;
 
 public interface HistoryMapper {
 	public List<HistoryVO> selectList(HisSearchVO search);	//히스토리 목록
+	public void insertHistory(HistoryVO historyVO);
 }
