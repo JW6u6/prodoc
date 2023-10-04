@@ -30,12 +30,5 @@ public class TrashController {
 		return result;
 	}
 	
-	@PostMapping("/revokeTrash")
-	public String revokeProcess(int historyId) {
-		System.out.println("history revoke id: " + historyId);
-		HistoryVO history = new HistoryVO();
-		history.setHistoryId(historyId);
-		service.revokeTrash(history);
-		return "";
-	}
+	
 }

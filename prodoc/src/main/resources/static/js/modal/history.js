@@ -79,6 +79,10 @@ function formatDate(thisDate){
 	return `${year}-${month}-${date}`;
 }
 
+function formatTime(thisDate){
+	return `${thisDate.getHours()}:${thisDate.getMinutes()}:${thisDate.getSeconds()}`;
+}
+
 //결과 세팅
 function settingHistoryResult(history){
 	console.log(history);
@@ -90,73 +94,105 @@ function settingHistoryResult(history){
 		return;
 	}//검색 결과가 없음
 	
-	for(let i=0; i<history.length; i++){
+	for(let i=0; i<history.length; i++){//히스토리 내역 순회
 		//일자 구분선
-		if(i != 0){
+		if(i != 0){	//첫 데이터가 아님
 			let thisDate = new Date(history[i].upDate);
 			let beforeDate = new Date(history[i-1].upDate);
-			if(thisDate.date == beforeDate.date){
-				let dateLine = `<div style="float:left">${formatDate(thisDate)}
-								<div style="float:left"><hr></div></div>`;
+			if(thisDate.getDate() != beforeDate.getDate()){
+				let dateLine = `<div>${formatDate(thisDate)}<div style="float:left"><hr></div></div>`;
+				resultList.innerHTML += dateLine;
 			}
-			resultList.innerHTML += dateLine;
-			
-		}else{
-			let dateLine = `<div><h3 style="float:left; width:17%">${formatDate(new Date(history[i].upDate))}</h3>
-							<hr style="float:left; width:70%; margin:auto 0px;"></div>`;
+		}else{		//첫 데이터임
+			let dateLine = `<div>${formatDate(new Date(history[i].upDate))}<div style="float:left"><hr></div></div>`;
 			resultList.innerHTML += dateLine;
 		}
-
+		
+		//일자별 히스토리
 		let historyDIV = "";
-		
-		
-		if(list.pageName != null){
-			historyDIV = `<div class="historyItem" data-history="${list.historyId}" style="overflow:hidden; border:1px solid black;">
-							<div style="width:90%; float:left">
-								<p>${list.workName}</p>
-								<h2>${list.pageName}</h2>
-								<p>${list.workName} / ${(list.upDate).substr(0,10)}</p>
-							</div>
-							<div style="width:10%; float:left">
-								<button type="button" class="revokeBtn">복구</button>
-							</div>
-						</div>`;
-		}else{
-			historyDIV = `<div class="historyItem" data-history="${list.historyId}" style="overflow:hidden; border:1px solid black;">
-							<div style="width:90%; float:left">
-								<h2>${list.workName}</h2>
-								<p>${list.workName} / ${(list.upDate).substr(0,10)}</p>
-							</div>
-							<div style="width:10%; float:left">
-								<button type="button" class="revokeBtn">복구</button>
-							</div>
-						</div>`;
+		if(history[i].pageId != null){	//페이지에 관한 히스토리
+			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}"
+							data-pageid="${history[i].pageId}" data-blockid="${history[i].displayId}"
+							style="overflow:hidden; border:1px solid black; margin:5px 0px">
+							<div style="width:20%; float:left">
+						        <p>${history[i].historyType}</p>
+						        <p>${formatTime(new Date(history[i].upDate))}</p>
+						    </div>
+						    <div style="width:70%; float:left">
+						        <p>페이지</p>
+						        <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
+						        <p>${history[i].nickname}(${history[i].creUser})</p>
+						    </div>`;
+			if(history[i].historyType == 'DELETE'){
+				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+			}
+				historyDIV += `</div>`;
+		}else{							//워크에 관한 히스토리
+			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" style="overflow:hidden; border:1px solid black;">
+							<div style="width:20%; float:left">
+						        <p>${history[i].historyType}</p>
+						        <p>${formatTime(new Date(history[i].upDate))}</p>
+						    </div>
+						    <div style="width:70%; float:left">
+						    	<p>워크스페이스</p>
+						        <h3>${history[i].workName}</h3>
+						        <p>${history[i].nickname}(${history[i].creUser})</p>
+						    </div>`
+						    
+			if(history[i].historyType == 'DELETE'){
+				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+			}
+			historyDIV += `</div>`;
 		}
+		
 		resultList.innerHTML += historyDIV;
-	}
+	} //결과 세팅 끝
+	
+	//이동 이벤트
+	document.querySelectorAll("div.historyItem").forEach( divTag => {
+		if(divTag.children.length == 2){	//복구 버튼이 없는 div만 이동 이벤트
+			divTag.addEventListener('click', goPageBlock);
+		}
+	})
 	
 	
-	
-	
+	//복구 이벤트
 	document.querySelectorAll(".revokeBtn").forEach(btn =>{
 		btn.addEventListener('click', function(e){
 			let parent = this.closest('div.historyItem');
-			revokeFcn(parent.dataset.history);	//복구 이벤트
+			revokeFcn(parent.dataset.workid, parent.dataset.pageid);
 		});
 	});
 }
 
 
+function goPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
+	//console.log(e.currentTarget);
+	//console.log(e.currentTarget.dataset.pageid);
+	if(e.currentTarget.dataset.pageid == null)  return;	//pageId가 없으면 이벤트x
+	
+	showBlocks(e.currentTarget.dataset.pageid);
+	if(e.currentTarget.dataset.blockid != null){
+		let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
+		let focusBlock = document.querySelector(blockId);
+		window.scrollTo({top:focusBlock, behavior:'smooth'});
+	}
+	historyModal.className = "hide";
+}
 
-//TODO: 복구 프로세스 ajax
-function revokeFcn(historyId){
+
+function revokeFcn(workId, pageId){ //TODO: 복구 프로세스 ajax
 	console.log(historyId);
-	//fetch("/revokeTrash",{
-	//	method: 'post',
-	//	body: { "historyId" : historyId },
-	//	headers: {"Content_type" : "application/json"}
-	//})
-	//.then()
-	//.then()
-	//.error(err=>console.log(err));
+	let logUser = document.querySelector("#UserInfoMod p.email");
+	fetch("/revokeTrash",{
+		method: 'post',
+		body: { "workId" : workId,
+				"pageId" : pageId,
+				"logUser" : logUser },
+		headers: {"Content_type" : "application/json"}
+	})
+	.then(response=>response.json())
+	.then(result=>{
+		console.log(result);
+	}).error(err=>console.log(err));
 }

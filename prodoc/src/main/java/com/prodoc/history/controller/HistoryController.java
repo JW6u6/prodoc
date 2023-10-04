@@ -22,11 +22,21 @@ public class HistoryController {
 	
 	@ResponseBody
 	@PostMapping("/history")
-	public Map<String, Object> trashProcess(@RequestBody HisSearchVO search){
+	public Map<String, Object> historyProcess(@RequestBody HisSearchVO search){
 		System.out.println(search.toString());
 		List<HistoryVO> historyList = service.getHistory(search);
 		Map<String, Object> result = new HashMap<>();
 		result.put("historyList", historyList);
 		return result;
+	}
+	
+	@ResponseBody
+	@PostMapping("/revokeTrash")
+	public String revokeProcess(@RequestBody int historyId) {
+		System.out.println("history revoke id: " + historyId);
+		HistoryVO history = new HistoryVO();
+		history.setHistoryId(historyId);
+		//service.revokeTrash(history);
+		return "";
 	}
 }
