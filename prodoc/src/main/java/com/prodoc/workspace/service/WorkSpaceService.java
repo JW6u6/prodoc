@@ -12,6 +12,7 @@ public interface WorkSpaceService {
 	
 	//워크스페이스 초대
 	public int inviteWorkspaceUser(List<WorkJoinVO> joinVO);
+	
 	//워크스페이스 초대리스트
 	public List<WorkJoinVO> inviteListWorkspace(String workId);
 	
