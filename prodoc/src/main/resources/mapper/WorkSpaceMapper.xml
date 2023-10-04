@@ -20,7 +20,12 @@
  	
  	<!-- 워크스페이스 단건 조회 -->
  	<select id="selectOneWorkspace" resultType="WorkSpaceVO">
- 		SELECT work_id, work_type, work_name, public_check
+ 		SELECT work_id
+ 				, work_type
+ 				, work_name
+ 				, public_check
+ 				, parent_id
+ 				, main_page_id
  		FROM TBL_WORKSPACE
  		WHERE work_id = #{workId}
  	</select>
