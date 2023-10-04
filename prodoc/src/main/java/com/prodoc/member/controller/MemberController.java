@@ -35,4 +35,5 @@ public class MemberController {
 	public int memberReAuth(@RequestBody List<MemberVO> memberVO) {
 		return memberService.renewAuthMember(memberVO);
 	}
+
 }

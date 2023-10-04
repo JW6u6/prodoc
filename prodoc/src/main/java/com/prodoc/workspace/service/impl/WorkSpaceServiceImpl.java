@@ -37,10 +37,8 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 	@Override
 	public int inviteWorkspaceUser(List<WorkJoinVO> listVO) {
 		for (WorkJoinVO joinVO : listVO) {
-
 			workMapper.inviteWorkspace(joinVO);
 		}
-		
 		return listVO.size();
 	}
 	

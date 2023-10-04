@@ -17,4 +17,5 @@ public interface MemberMapper {
 	
 	//탈퇴
 	public int myAuth(String email);
+	
 }

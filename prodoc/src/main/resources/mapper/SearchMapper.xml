@@ -13,8 +13,9 @@
             	AND content LIKE '%' || #{keyword} || '%'
             </if>
             <if test="startDate != null or endDate != null">
-            	AND (case WHEN display_up_date IS NULL 
-            		then display_cre_date ELSE display_up_date end)
+            	AND  (case WHEN display_up_date IS NULL 
+						   THEN trunc(display_cre_date, 'dd') 
+						   ELSE trunc(display_up_date, 'dd') end)
                           between TO_DATE(#{startDate}, 'rrrr-MM-dd')  AND 
                           <if test="endDate == ''"> TO_DATE(#{startDate}, 'rrrr-MM-dd') </if>
                           <if test="endDate != ''"> TO_DATE(#{endDate}, 'rrrr-MM-dd') </if>

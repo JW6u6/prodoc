@@ -29,41 +29,44 @@ import lombok.Setter;
 public class PageController {
 	@Autowired
 	PageMapper pageMapper;
-	
+
 	@Autowired
 	MemberService memberserivce;
-	
-    private SimpMessagingTemplate template;
 
-    @Autowired
-    public PageController(SimpMessagingTemplate template) {
-        this.template = template;
-    }
-	
+	private SimpMessagingTemplate template;
+
+	@Autowired
+	public PageController(SimpMessagingTemplate template) {
+		this.template = template;
+	}
+
 	@Setter(onMethod_ = @Autowired)
 	PageService pageService;
-	
+
 	@GetMapping("/pageList")
-	public List<PageVO> pageList(@RequestParam String workId){
+	public List<PageVO> pageList(@RequestParam String workId) {
 		return pageMapper.pageList(workId);
 	}
+
 	@GetMapping("/findWork")
-	public String findWork(@RequestParam String pageId){
+	public String findWork(@RequestParam String pageId) {
 		return pageMapper.findWork(pageId);
 	}
+
 	@GetMapping("/pageInPage")
-	public List<PageVO> pageInPage(@RequestParam String pageId){
+	public List<PageVO> pageInPage(@RequestParam String pageId) {
 		return pageMapper.pageInPage(pageId);
 	}
+
 	@GetMapping("/pageInfo")
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-	
+
 	@PostMapping("/pageInsert")
-	public String pageInsert(@RequestBody PageVO pageVO,HttpSession session ) {
+	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();
-		UserVO user = (UserVO)session.getAttribute("logUser");
+		UserVO user = (UserVO) session.getAttribute("logUser");
 		memberVO.setWorkId(pageVO.getWorkId());
 		List<MemberVO> list = memberserivce.listMember(memberVO);
 		//해당 워크스페이스의 유저 목록을 받아서 그 중 세션로그인값(나)와 일치하는 값이 있으면 해당 워크스페이스의 멤버들 == 구독자 정함. ( 명령의 종류에 따른 소켓지정 = 소켓커맨드 번호)
@@ -76,25 +79,24 @@ public class PageController {
 		}
 		return pageService.insertPage(pageVO);
 	}
-	
-	//페이지 잠금/잠금해제(소유자, 관리자 권한)
+
+	// 페이지 잠금/잠금해제(소유자, 관리자 권한)
 	@PostMapping("/pageLock")
 	public String pageLockCheck(@RequestBody PageVO pageVO) {
 		pageService.LockCheckPage(pageVO);
 		return pageVO.getLockCheck();
 	}
-	
-	//페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
+
+	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/pageDelCheck")
 	public void pageDeleteCheck(String pageId) {
 		pageService.deleteCheckPage(pageId);
 	}
-	
-	
-	//페이지 알림 끄기/켜기
+
+	// 페이지 알림 끄기/켜기
 	@PostMapping("/pageNotify")
 	public int pageNotifyed(@RequestBody PageVO pageVO) {
 		return pageService.notifyPage(pageVO);
 	}
-	
+
 }

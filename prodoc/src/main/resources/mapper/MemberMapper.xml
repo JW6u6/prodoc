@@ -27,7 +27,6 @@
 				, auth
 		FROM TBL_MEMBER
 		WHERE work_id = #{workId}
-		AND auth != 'OWNER'
  	</select>
  	
  	<!-- 탈퇴: 내 소유팀 워크스페이스 개수 -->
