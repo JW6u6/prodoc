@@ -81,6 +81,7 @@
  		UPDATE TBL_WORKSPACE
  		SET DELETE_CHECK = 'TRUE'
  		WHERE work_id = #{workId}
+ 		OR parent_id = #{workId}
  	</update>
  	
  	<!-- 워크스페이스 메인 페이지 지정 -->

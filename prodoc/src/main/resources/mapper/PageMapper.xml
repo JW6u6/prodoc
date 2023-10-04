@@ -2,12 +2,13 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace ="com.prodoc.page.mapper.PageMapper">
-  	<select id = "pageList" resultType="PageVO">
-  		select page_id,page_name
+<mapper namespace="com.prodoc.page.mapper.PageMapper">
+	<select id="pageList" resultType="PageVO">
+		select page_id,page_name
 		from tbl_page
 		where work_id = #{workId}
-		and parent_id is NULL
+		and parent_id
+		is NULL
 		order by numbering
   	</select>
   	<select id = "findWork" resultType="String">
@@ -35,7 +36,7 @@
  		}
  	</insert>
   
-  	<select id ="selectPageInfo" resultType="PageVO">
+  	<select id ="selectPageInfo" parameterType="String" resultType="PageVO">
   		SELECT *
   		FROM tbl_page
   		WHERE page_id = #{pageId}
@@ -58,25 +59,33 @@
  		UPDATE tbl_page
 		SET lock_check = #{lockCheck}
 		WHERE page_id = #{pageId}
- 	</update>
- 	
- 	<!-- 페이지 삭제(체크) -->	
- 	<update id="RemoveCheckPage" parameterType="String">
- 		UPDATE tbl_page
- 		SET delete_check = 'TRUE'
- 		WHERE page_id = #{pageId}
- 	</update>
- 	
- 	<!-- 페이지 알림 끄기 -->
- 	<insert id="onOffPage" parameterType="PageVO" statementType="CALLABLE">
- 		{call PAGENOTI_TOGGLE(
- 								#{workId}
- 								, #{pageId}
- 								, #{email}
- 								, #{result, mode=OUT, jdbcType=INTEGER, javaType=int}
- 							)}
- 	</insert>
- 	
-  </mapper>
+	</update>
+
+	<!-- 페이지 삭제(체크) -->
+	<update id="RemoveCheckPage" parameterType="String">
+		UPDATE tbl_page
+		SET delete_check = 'TRUE'
+		WHERE page_id = #{pageId}
+	</update>
+
+	<!-- 워크스페이스 지우면 그 워크스페이스의 페이지까지 지워지도록 -->
+	<update id="ifWorkRemove" parameterType="String">
+		UPDATE tbl_page
+		SET delete_check = 'TRUE'
+		WHERE work_id = #{workId}
+	</update>
+
+	<!-- 페이지 알림 끄기 -->
+	<insert id="onOffPage" parameterType="PageVO"
+		statementType="CALLABLE">
+		{call PAGENOTI_TOGGLE(
+		#{workId}
+		, #{pageId}
+		, #{email}
+		, #{result, mode=OUT, jdbcType=INTEGER, javaType=int}
+		)}
+	</insert>
+
+</mapper>
   
   

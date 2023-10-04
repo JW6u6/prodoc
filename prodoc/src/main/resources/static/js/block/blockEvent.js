@@ -9,19 +9,23 @@ function handlingBlockEvent(element) {
   element.addEventListener("drop", drop_handler);
   element.addEventListener("keydown", keydown_handler);
   element.addEventListener("input", input_handler);
-  // element.addEventListener("mouseenter", mouseenter_handler);
-  // element.addEventListener("mouseleave", mouseleave_handler);
-  blockAttrEvent(element);
   blockClickEvent(element);
   hljs.highlightAll();
+  // 컬럼은 메뉴가 안뜸
+  if (element.dataset.blockType === "COLUMN") return;
+  blockAttrEvent(element);
+  element.addEventListener("mouseenter", mouseenter_handler);
+  element.addEventListener("mouseleave", mouseleave_handler);
 }
-
 const mouseenter_handler = (e) => {
   const control = e.currentTarget.querySelector(".control");
   control.classList.remove("control_hide");
 };
 
 const mouseleave_handler = (e) => {
+  // 메뉴가 열려있으면 닫지마세요~
+  const menu = e.target.querySelector("[data-block-type='modal']");
+  if (menu) return;
   const control = e.currentTarget.querySelector(".control");
   control.classList.add("control_hide");
 };
@@ -52,10 +56,16 @@ const blockClickEvent = (block) => {
   if (isOList) {
     oListEvent(isOList);
   }
+  const isImage = block.querySelector(".block_image");
+  if (isImage) {
+    imageEvent(isImage);
+  }
 };
 
 let count = 1;
-
+/**
+ * OList타입 블럭 의 넘버링을 초기화해주는 함수입니다.
+ */
 const resetOList = () => {
   const lists = document.querySelectorAll(".o_list");
   lists.forEach((item) => {
@@ -83,40 +93,102 @@ const oListEvent = (newBlock) => {
   blockNumber.innerHTML = count + ".&nbsp";
 };
 
-const fileEvent = async (newBlock) => {
-  const input = document.querySelector(".block_file-Uploader");
-  const { blockId } = newBlock.closest(".prodoc_block").dataset;
+/**
+ *
+ * @param {Element} element - image타입의 블럭
+ */
+const imageEvent = async (element) => {
+  const { blockId } = element.closest(".prodoc_block").dataset;
   const existFile = await getBlockFile(blockId); //블럭정보
-
   if (existFile.newName) {
-    console.log(existFile);
+    const imageBlockTemplate = createImageTemplate(
+      `./img/${existFile.newName}`
+    );
+    element.insertAdjacentHTML("afterend", imageBlockTemplate);
+    element.remove();
   } else {
-    newBlock.addEventListener("click", (e) => {
-      input.click();
-      input.addEventListener("change", async (e) => {
-        const formData = new FormData();
-        const file = input.files;
-        formData.append("file", file[0]);
-
-        const upName = file[0].name;
-        const newName = await uploadFile(formData);
-        console.log(newName);
-        updateFile({ displayId: blockId, path: null, newName, upName });
-      });
-    });
+    element.addEventListener("click", imageRegiClickEvent);
   }
 };
 
+/**
+ *   발생시 이미지를 등록하는 이벤트.
+ * @param {Event} e - 이벤트리스너의 이벤트.
+ */
+const imageRegiClickEvent = (e) => {
+  const block = e.currentTarget;
+  const input = document.querySelector(".block_file-Uploader");
+  const blockId = e.currentTarget.closest(".prodoc_block").dataset.blockId;
+  input.click();
+  input.addEventListener("change", async (e) => {
+    const file = input.files;
+    console.log(file);
+    if (file[0] !== null) {
+      let reader = new FileReader();
+      reader.onload = function (data) {
+        const imageBlockTemplate = createImageTemplate(data.target.result);
+        block.insertAdjacentHTML("afterend", imageBlockTemplate);
+        block.remove();
+      };
+      reader.readAsDataURL(file[0]);
+      const formData = new FormData();
+      formData.append("file", file[0]);
+
+      const upName = file[0].name;
+      const newName = await uploadFile(formData);
+
+      updateFile({ displayId: blockId, path: null, newName, upName });
+    }
+  });
+};
+
+/**
+ * 파일블럭이 가져야할 블럭 이벤트
+ * @param {Element} element - fileEvent를 걸어줄 fileType의 블럭
+ */
+const fileEvent = async (element) => {
+  const { blockId } = element.closest(".prodoc_block").dataset;
+  const existFile = await getBlockFile(blockId); //블럭정보
+
+  if (existFile.newName) {
+    const fileBlockTemp = createFileTemplate({ fileName: existFile.upName });
+    element.insertAdjacentHTML("afterend", fileBlockTemp);
+    element.remove();
+  } else {
+    element.addEventListener("click", fileRegiClickEvent);
+  }
+};
+
+/**
+ * 발생시 파일을 등록하는 이벤트
+ * @param {Event} e - 이벤트리스너의 이벤트
+ */
+const fileRegiClickEvent = (e) => {
+  const input = document.querySelector(".block_file-Uploader");
+  input.click();
+  input.addEventListener("change", async (e) => {
+    const file = input.files;
+    if (file[0] !== null) {
+      const formData = new FormData();
+      formData.append("file", file[0]);
+      console.log(file[0]);
+      const upName = file[0].name;
+      const newName = await uploadFile(formData);
+      updateFile({ displayId: blockId, path: null, newName, upName });
+    }
+  });
+};
+
 //TODO 블럭의 이벤트
-const todoEvent = async (newBlock) => {
-  const { blockId } = newBlock.closest(".prodoc_block").dataset;
+const todoEvent = async (element) => {
+  const { blockId } = element.closest(".prodoc_block").dataset;
   const obj = await getOneBlock(blockId);
   if (obj.checked === "true") {
-    newBlock.querySelector("input").checked = true;
-    newBlock.querySelector(".content").classList.add("done");
+    element.querySelector("input").checked = true;
+    element.querySelector(".content").classList.add("done");
   }
 
-  newBlock.addEventListener("change", (e) => {
+  element.addEventListener("change", (e) => {
     if (e.target.checked) {
       console.log("체크");
       e.target.nextElementSibling.classList.add("done");
@@ -129,8 +201,15 @@ const todoEvent = async (newBlock) => {
 };
 
 // TOGGLE 이벤트
-const toggleBtnEvent = (newBlock) => {
+const toggleBtnEvent = async (newBlock) => {
+  const id = newBlock.dataset.blockId;
   const toggleBtn = newBlock.querySelector(".block_toggle_btn");
+  const childItem = newBlock.querySelector(".child_item");
+  const checked = (await getOneBlock(id)).checked;
+
+  // 만약 체크가 true면 숨기기 체크가 false면 보이기
+  if (checked === "true") childItem.classList.add("hide");
+  else if (checked === "false") childItem.classList.remove("hide");
   toggleBtn.addEventListener("click", handleSideBtn);
 };
 
@@ -144,8 +223,12 @@ const blockAttrEvent = (newBlock) => {
 
 //사이드 버튼(지금은 토글)
 function handleSideBtn(event) {
+  const displayId = this.closest(".prodoc_block").dataset.blockId;
   const child = this.closest(".prodoc_block").querySelector(".child_item");
   child.classList.toggle("hide");
+  let checked = child.classList.contains("hide") ? true : false;
+  console.log(checked);
+  updateDBBlock({ displayId, checked });
 }
 
 /**
@@ -153,78 +236,58 @@ function handleSideBtn(event) {
  * @param {Element} element - 비디오 블럭
  */
 async function videoEvent(element) {
+  const target = element.closest(".prodoc_block");
+  const content = target.querySelector(".content");
   const { blockId } = element.closest(".prodoc_block").dataset;
   const block = await getOneBlock(blockId);
   if (block.content) {
     displayVideo(block.content, element.parentElement);
   } else {
     element.addEventListener("click", (e) => {
-      const block = e.currentTarget;
-      const target = e.target.closest(".prodoc_block");
-      const infoMsg = "영상주소를 입력해주세요";
-      makeInputModal(infoMsg, target);
-      const modalItem = document.querySelector(".input_modal");
-      modalItem.querySelector("input").addEventListener("keydown", (e) => {
-        if (e.code == "Enter") {
-          const text = e.target.value;
-          const pattern = /v=([^&]+)/;
-          const match = text.match(pattern);
-          if (match) {
-            const result = match[1];
-            displayVideo(result, block);
-            updateDBBlock({ content: result, displayId: blockId });
-          } else {
-            alert("주소를 찾을 수 없습니다.");
-          }
-        }
-      });
-      makeModalBackground(modalItem);
+      videoClickEvent(content, target, blockId);
     });
   }
 }
 
 /**
+ * 비디오 이벤트
+ * @param {Element} block - 비디오 블럭의 wrapper
+ * @param {Element} target - 모달위치의 기준이 될 element
+ * @param {string} blockId - video블럭의 아이디
+ */
+const videoClickEvent = (block, target, blockId) => {
+  const infoMsg = "영상주소를 입력해주세요";
+  makeInputModal(infoMsg, target);
+  const modalItem = document.querySelector(".input_modal");
+  modalItem.querySelector("input").addEventListener("keydown", (e) => {
+    if (e.code == "Enter") {
+      const text = e.target.value;
+      const pattern = /v=([^&]+)/;
+      const match = text.match(pattern);
+      if (match) {
+        const result = match[1];
+        displayVideo(result, block);
+        updateDBBlock({ content: result, displayId: blockId });
+      } else {
+        alert("주소를 찾을 수 없습니다.");
+      }
+    }
+  });
+  makeModalBackground(modalItem);
+};
+
+// 한 함수에 두개의 기능이!?
+/**
  *  북마크 이벤트
- * @param {Element} element - 북마크 블럭
+ * @param {Element} element - 북마크 컨텐츠 블럭
  */
 async function bookMarkEvent(element) {
-  const { blockId } = element.closest(".prodoc_block").dataset;
+  const block = element.closest(".prodoc_block");
+  const { blockId } = block.dataset;
   const book = await getBookMark(blockId);
-  console.log(book.url);
   if (book.url === null) {
     element.addEventListener("click", (e) => {
-      const infoMsg = "북마크할 주소를 입력해주세요";
-      const target = e.target.closest(".prodoc_block");
-
-      makeInputModal(infoMsg, target);
-      const modalItem = document.querySelector(".input_modal");
-      modalItem
-        .querySelector("input")
-        .addEventListener("keydown", async (e) => {
-          if (e.code == "Enter") {
-            const url = addHttps(e.target.value);
-            let obj = await getBookMarkInfo(url);
-            if (obj) {
-              const temp = createBookMarkTemplate({
-                title: obj.title,
-                description: obj.desc,
-                imgAdrs: obj.img,
-                url,
-              });
-              element.insertAdjacentHTML("afterend", temp);
-              element.remove();
-              updateDBBookMark({
-                displayId: blockId,
-                title: obj.title,
-                description: obj.desc,
-                imgAdrs: obj.img,
-                url,
-              });
-              document.querySelector(".modalBackground").click();
-            }
-          }
-        });
-      makeModalBackground(modalItem);
+      bookmarkClickEvent(block, element, blockId);
     });
   } else {
     const temp = createBookMarkTemplate({
@@ -233,11 +296,53 @@ async function bookMarkEvent(element) {
       imgAdrs: book.imgAdrs,
       url: book.url,
     });
-
     element.insertAdjacentHTML("afterend", temp);
     element.remove();
   }
 }
+
+// 북마크 클릭이벤트 (메뉴 바꾸기때문에.)
+
+/**
+ *
+ * @param {Element} target - 클릭된 블럭
+ * @param {Element} content - 컨텐츠로 바뀔 요소
+ * @param {string} blockId - 클릭된 블럭의 아이디
+ */
+const bookmarkClickEvent = (target, content, blockId) => {
+  const infoMsg = "북마크할 주소를 입력해주세요";
+
+  makeInputModal(infoMsg, target);
+  const modalItem = document.querySelector(".input_modal");
+  modalItem.querySelector("input").addEventListener("keydown", async (e) => {
+    if (e.code == "Enter") {
+      const url = addHttps(e.target.value);
+      let obj = await getBookMarkInfo(url);
+      if (obj.error) {
+        return;
+      }
+      if (obj) {
+        const temp = createBookMarkTemplate({
+          title: obj.title,
+          description: obj.desc,
+          imgAdrs: obj.img,
+          url,
+        });
+        content.insertAdjacentHTML("afterend", temp);
+        content.remove();
+        updateDBBookMark({
+          displayId: blockId,
+          title: obj.title,
+          description: obj.desc,
+          imgAdrs: obj.img,
+          url,
+        });
+        document.querySelector(".modalBackground").click();
+      }
+    }
+  });
+  makeModalBackground(modalItem);
+};
 
 /**
  *
@@ -262,7 +367,8 @@ function handleAttrBtn(e) {
   if (
     blockType === "BOOKMARK" ||
     blockType === "FILE" ||
-    blockType === "VIDEO"
+    blockType === "VIDEO" ||
+    blockType === "IMAGE"
   ) {
     menuArr.push(menuTemplateObject.default);
     menuArr.push(menuTemplateObject.urlMenu);
@@ -300,7 +406,29 @@ function menuItemClickEvent(e) {
   }
 }
 
-// 블록체인지 이벤트입니다.
+function blockColorMenuEvent(e) {
+  const clickedMenu = e.currentTarget;
+  const block = clickedMenu.closest(".prodoc_block");
+  const blockId = block.dataset.blockId;
+  const content = block.querySelector(".content");
+  const menuData = clickedMenu.dataset;
+  if (menuData.blockColor) {
+    const color = menuData.blockColor;
+    console.log(color);
+    console.log(block);
+
+    content.style.color = `#${color}`;
+
+    updateDBBlock({ displayId: blockId, color });
+  } else if (menuData.blockBackColor) {
+    const backColor = menuData.blockBackColor;
+    console.log(backColor);
+    content.style.backgroundColor = `#${backColor}`;
+    updateDBBlock({ displayId: blockId, backColor });
+  }
+}
+
+// 블록체인지 이벤트.
 async function blockChangeMenuEvent(e) {
   const blockId = e.target.closest("div").dataset.blockId;
   let targetBlock = document.querySelector(`[data-block-id="${blockId}"]`);
@@ -309,8 +437,11 @@ async function blockChangeMenuEvent(e) {
   // 바꾸려는 블럭의 값
   let text = "";
   const content = targetBlock.querySelector(".content");
+  let colorArr = null;
   if (content) {
     text = content.innerHTML;
+    const contentClassList = content.classList;
+    colorArr = [...contentClassList].filter((word) => word !== "content");
   }
 
   // 해당 블럭의 순서
@@ -328,8 +459,14 @@ async function blockChangeMenuEvent(e) {
   targetBlock.remove();
   targetBlock = document.querySelector(`[data-block-id="${blockId}"]`);
 
+  //색입히기
+  colorArr.forEach((cls) => {
+    const targetContent = targetBlock.querySelector(".content");
+    targetContent.classList.add(cls);
+  });
+
   // 전환이 불가능한 블럭 처리
-  // 블럭이 생성되기전 처리해야할것
+  // 블럭업데이트 전에 처리해야할것
   if (blockType === "VIDEO") {
     const blockUpdateObj = {
       displayId: blockId,
@@ -342,7 +479,7 @@ async function blockChangeMenuEvent(e) {
     await createBookMark(blockId);
   }
 
-  if (blockType === "FILE") {
+  if (blockType === "FILE" || blockType === "IMAGE") {
     await createFileBlock(blockId);
   }
 
@@ -371,9 +508,14 @@ function keydown_handler(e) {
   }
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함
-    if (e.currentTarget.previousElementSibling.querySelector(".content")) {
+    if (e.currentTarget.previousElementSibling) {
       e.currentTarget.previousElementSibling.querySelector(".content").focus();
       // if(e.currentTarget.previousSibling)
+    }
+    const delBlockType = e.currentTarget.dataset.blockType;
+    if (delBlockType === "TOGGLE") {
+      const children = e.currentTarget.querySelectorAll(".prodoc_block");
+      console.log(children);
     }
     e.currentTarget.remove();
     deleteDBBlock({ displayId: e.currentTarget.dataset.blockId });
@@ -392,4 +534,25 @@ function input_handler(event) {
     content: event.target.innerText,
   };
   saveTran(updateObj);
+}
+
+// 블럭 포인터 이벤트
+function blockPointerEvent(targetBlock, state, color = "RED") {
+  console.log(color);
+  const block_pointer = document.querySelector(".block_pointer");
+  if (block_pointer) {
+    block_pointer.remove();
+  }
+  let newPointer = null;
+  if (state === DRAG_STATE.RSIDE) {
+    newPointer = createPointer({ top: 0, bottom: 0, right: 0, color });
+  } else if (state === DRAG_STATE.TOP) {
+    newPointer = createPointer({ top: 0, left: 0, right: 0, color });
+  } else if (state === DRAG_STATE.BOTTOM) {
+    newPointer = createPointer({ bottom: 0, left: 0, right: 0, color });
+  }
+  console.log(state);
+  if (newPointer) {
+    targetBlock.insertAdjacentHTML("beforeend", newPointer);
+  }
 }

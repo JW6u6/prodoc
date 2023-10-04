@@ -1,11 +1,31 @@
+// Spring에 등록시 빈값으로 만들기
 const SERVER_URL = "";
 
 const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
+
+showBlocks(pageId);
+
 //어떻게 해결방법이 없나?
 let isReady = true;
 let isExistData = [];
 
-//일단은 input 이벤트만
+/*
+  saveTran Obj의 예시
+
+  const saveTranObj = {
+    eventType: "input",
+    upUser: "pepsiman",
+    displayId,
+    content: event.target.innerText,
+  };
+
+*/
+
+/**
+ * content 저장요청함수
+ *
+ * @param {Object} obj
+ */
 function saveTran(obj) {
   isExistData.push(obj);
   save();
@@ -20,11 +40,10 @@ function saveTran(obj) {
             inputEvent.push(item);
           }
         });
-        const last_event = inputEvent[inputEvent.length - 1];
         // delete last_event.eventType;
         //필요한 값 넣기
-        console.log(isExistData);
-        updateDBBlock(last_event);
+        sendData(isExistData);
+        //  updateDBBlock(last_event);
         isExistData = [];
         isReady = true;
         if (isExistData.length != 0) {
@@ -36,11 +55,41 @@ function saveTran(obj) {
   }
 }
 
+function sendData(isExistData) {
+  const groupedData = {};
+  isExistData.forEach((item, idx) => {
+    const { eventType, displayId, ...rest } = item;
+    if (!groupedData[eventType]) {
+      groupedData[eventType] = {};
+    }
+    if (!groupedData[eventType][displayId]) {
+      groupedData[eventType][displayId] = [];
+    }
+    groupedData[eventType][displayId].push(rest);
+  });
+  console.log(groupedData);
+
+  const groupedArray = Object.keys(groupedData).map((eventType) => ({
+    eventType,
+    data: groupedData[eventType],
+  }));
+  groupedArray.forEach((obj) => {
+    const { eventType, data } = obj;
+    for (let displayId in data) {
+      const dataList = data[displayId];
+      const lastObjOfList = dataList[dataList.length - 1];
+      updateDBBlock({ displayId, ...lastObjOfList });
+    }
+  });
+}
+
 /**
- *
+ *  페이지 요청함수
  * @param {string} pageId - 페이지아이디
  */
 function showBlocks(pageId) {
+  const container = document.querySelector(".container");
+  container.innerHTML = "";
   fetch(SERVER_URL + "/block/get?pageId=" + pageId, {
     method: "GET",
     headers: {
@@ -49,24 +98,57 @@ function showBlocks(pageId) {
   })
     .then((res) => res.json())
     .then((data) => {
-      let parentNode = null;
       blockCount = data.length + 1;
+      let parentBlocks = [];
+      let childBlocks = [];
 
       data.forEach((item) => {
-        const { displayId, blockId, content, rowX, parentId } = item;
-        const blockObj = updateTemplate({
+        const {
+          displayId,
+          blockId,
+          content,
+          rowX,
+          parentId,
+          color,
+          backColor,
+        } = item;
+        const blockObj = {
           displayId,
           type: blockId,
           text: content ? content : "",
           order: rowX,
-        });
-        parentNode = document.querySelector(`[data-block-id="${parentId}"]`);
-        if (parentNode) {
-          displayChildBlock(blockObj, parentNode);
+          parentId,
+          color,
+          backColor,
+        };
+        if (blockObj.parentId) {
+          childBlocks.push(blockObj);
         } else {
-          displayBlock(blockObj);
+          parentBlocks.push(blockObj);
         }
       });
+      parentBlocks.forEach((parent) => {
+        const temp = updateTemplate(parent);
+        displayBlock(temp);
+      });
+      let count = 0;
+      while (childBlocks.length > 0) {
+        const parents = document.querySelectorAll(".prodoc_block");
+        parents.forEach((parentBlock) => {
+          const parentId = parentBlock.dataset.blockId;
+          for (let i = 0; i < childBlocks.length; i++) {
+            if (childBlocks[i].parentId === parentId) {
+              const temp = updateTemplate(childBlocks[i]);
+              displayChildBlock(temp, parentBlock);
+              childBlocks.splice(i, 1);
+              i--;
+            }
+          }
+          if (childBlocks.length == 0) return false;
+        });
+        if (count > 1000) break;
+      }
+
       hljs.highlightAll();
     })
     .catch((reject) => {
@@ -74,10 +156,8 @@ function showBlocks(pageId) {
     });
 }
 
-showBlocks(pageId);
-
 /**
- *
+ * displayId의 블럭의 정보를 요청하는 함수
  * @param {string} displayId
  * @returns {Promise<{
  * displayId: String,
@@ -128,6 +208,7 @@ async function getOneBlock(displayId) {
  *  @param {String} blockObj.blockId 블럭의 blockId입니다 (type)
  *  @param {String} blockObj.creUser 블럭을 만든 사람의 이메일입니다.
  *  @param {String} blockObj.content 블럭의 내용입니다.
+ *  @param {string} blockObj.parentId 블럭의 부모입니다.
  *
  */
 function createDBBlock(blockObj) {
@@ -153,7 +234,9 @@ function createDBBlock(blockObj) {
  *  content:String,
  *  rowX:Number,
  *  colY:Number,
- *  checked:String}} blockObj  - 업데이트할 블럭 정보 OBJECT
+ *  checked:String,
+ *  color:string,
+ *  backColor:string}} blockObj  - 업데이트할 블럭 정보 OBJECT
  * @returns {number} 0 or 1
  */
 function updateDBBlock(blockObj) {
@@ -170,7 +253,7 @@ function updateDBBlock(blockObj) {
 }
 
 /**
- *
+ *  블럭 삭제를 요청하는 함수
  * @param {{displayId:String}} blockObj - 삭제할 블럭이 가지고있는 displayId
  */
 function deleteDBBlock(blockObj) {
@@ -185,23 +268,12 @@ function deleteDBBlock(blockObj) {
     .then((data) => console.log(data));
 }
 
-function getDBBookMark(blockId) {
-  fetch(SERVER_URL + `/block/getBookMark?displayId=${blockId}`)
-    .then((res) => res.json())
-    .then((data) => console.log(data))
-    .catch((reject) => {
-      console.log("getDBBookMark rejected");
-      console.log(reject);
-    });
-}
-
 /**
- *
- * @param {{title:string,description:string,img_adrs:string}} bookMarkObj
+ *  북마크 업데이트를 요청하는 함수
+ * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string}} bookMarkObj
  */
-function updateDBBookMark(bookMarkObj) {
-  console.log(bookMarkObj);
-  fetch(SERVER_URL + `/block/updateBookMark`, {
+async function updateDBBookMark(bookMarkObj) {
+  await fetch(SERVER_URL + `/block/updateBookMark`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -214,7 +286,7 @@ function updateDBBookMark(bookMarkObj) {
 }
 
 /**
- *
+ * 북마크 DB생성을 요청하는 함수
  * @param {String} id - 북마크로 만들 블록의 아이디
  */
 async function createBookMark(id) {
@@ -231,7 +303,7 @@ async function createBookMark(id) {
 }
 
 /**
- *
+ *  매개변수로 주어진 url로 크롤링 요청을 보내는 함수
  * @param {string} url - 북마크할 url
  * @returns {Promise<{title:string,desc:string,img:string,url:string}>}
  */
@@ -254,6 +326,7 @@ async function getBookMarkInfo(url) {
 }
 
 /**
+ * DB에 있는 북마크 정보를 요청하는 함수
  * @param {String} displayId - 북마크블럭의 아이디
  * @returns {Promise<{displayId:String,title:String,description:String,imgAdrs:String,url:String}>}
  */
@@ -270,23 +343,30 @@ async function getBookMark(displayId) {
 }
 
 /**
- *
+ * 파일블럭의 내용물을 가져오는 함수
  * @param {string} displayId - 해당 블럭의 아이디
  * @returns {Promise<{displayId:string,path:string,saveDate:Date,upName:string,newName:string}>}
  */
 async function getBlockFile(displayId) {
   let fileObj = {};
   await fetch(SERVER_URL + `/block/getFile?displayId=${displayId}`)
-    .then((res) => res.json())
-    .then((data) => (fileObj = data))
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      fileObj = data;
+    })
     .catch((reject) => {
       console.log("getBlockFile rejected..");
       console.error(reject);
     });
-  console.log(fileObj);
   return fileObj;
 }
 
+/**
+ * 파일 블럭으로 전환했을때의 함수.
+ * @param {string} displayId - 해당 블럭의 아이디
+ */
 async function createFileBlock(displayId) {
   await fetch(SERVER_URL + "/block/createFileBlock", {
     method: "POST",
@@ -298,8 +378,8 @@ async function createFileBlock(displayId) {
 }
 
 /**
- *
- * @param {FormData} formData
+ * 파일 업로드 함수
+ * @param {FormData} formData - 파일 데이터
  * @returns {Promise<string>}
  */
 async function uploadFile(formData) {
@@ -310,23 +390,92 @@ async function uploadFile(formData) {
   })
     .then((res) => res.text())
     .then((data) => {
-      fileName = data;
       console.log(data);
+      fileName = data;
     })
     .catch((reject) => console.error(reject));
   return fileName;
 }
 
 /**
- *
- * @param {{displayId,path,upName,newName}} fileObj
+ * 파일을 업데이트하는 함수.
+ * @param {{displayId,path,upName,newName}} fileObj - 파일DB의 구성요소
  */
-function updateFile(fileObj) {
-  fetch(SERVER_URL + "/block/upFileBlock", {
+async function updateFile(fileObj) {
+  await fetch(SERVER_URL + "/block/upFileBlock", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(fileObj),
   });
+}
+
+/**
+ *  해당아이디 블럭의 댓글 리스트를 불러오는 함수
+ *
+ * @param {string} blockId - 댓글버튼이 클릭된 댓글
+ * @returns {Promise<[{
+ *          pageId:string,
+ *          content:string,
+ *          creUser:string,
+ *          creDate:Date,
+ *          upDate:string,
+ *          displayId:string,
+ *          replyId:string,
+ *          mentionList:string}]>
+ * }
+ */
+async function getBlockreplyList(blockId) {
+  let replyData = [];
+  await fetch(SERVER_URL + `/reply/block?displayId=${blockId}`)
+    .then((res) => res.json())
+    .then((data) => (replyData = [...data]));
+
+  return replyData;
+}
+
+/**
+ * 댓글을 DB에 등록하는 함수
+ * @param {{creUser:string,
+ *          content:string,
+ *          displayId:string,
+ *          mentionList?:string,
+ *          pageId:string}} replyObj
+ */
+function registReply(replyObj) {
+  const replyId = self.crypto.randomUUID();
+  replyObj.replyId = replyId;
+  fetch(SERVER_URL + "/reply/regist", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(replyObj),
+  });
+}
+
+/**
+ *  페이지 리스트를 불러오는 함수
+ * @param {string} pageId
+ * @returns {Promise<[{replyId:string,
+ *                     pageId:string,
+ *                     displyId:string
+ *                     content:string,
+ *                     creUser:string,
+ *                     creDate:string,
+ *                     upDate:string,
+ *                     mentionList:string}]>}
+ */
+async function getPageReplyList(pageId) {
+  let replyData = [];
+
+  await fetch(SERVER_URL + `/reply/page?pageId=${pageId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      replyData = data;
+    });
+
+  return replyData;
 }
