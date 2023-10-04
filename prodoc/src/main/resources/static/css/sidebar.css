@@ -210,6 +210,8 @@ select::-ms-expand {
 #subWorkMenu{
 	display: none;
 	position: absolute;
-	background-color: #ccc;
+	background-color: #f6f6f6;
 	z-index: 999;
+	padding: 2px;
+	border: solid 0.4px;
 }
