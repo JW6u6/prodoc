@@ -159,8 +159,10 @@ function updateContent(e){
     let attrId = e.target.getAttribute("data-attrid");
     if(attrId == 'A_TEXT'){
         console.log("텍스트");
+        e.target.setAttribute("contenteditable", "true");
     } else if(attrId == 'NUM'){
         console.log("숫자");
+        e.target.setAttribute("contenteditable", "true");
     }else if(attrId == 'IMG'){
         console.log("이미지");
     }else if(attrId == 'TAG'){
@@ -168,32 +170,46 @@ function updateContent(e){
     }else if(attrId == 'STATE'){
         console.log("상태");
     }else if(attrId == 'CAL'){
+        // ✅ 캘린더 모달로 따로 만들어야할듯
         console.log("날짜");
+        let input = e.target.querySelector('input')
+        let event = new KeyboardEvent("keydown", {
+            keyCode : 113
+        })
+        input.dispatchEvent(event);
+
     }else if(attrId == 'USER'){
         console.log("유저");
+        // 태그할 유저 데려오기
+        let tag = e.target
+        let pageId = e.target.closest('[data-layout]').getAttribute('data-page-id');
+        getMembers(pageId, tag);
     }else if(attrId == 'MEDIA'){
         console.log("미디어");
     }else if(attrId == 'CHECK'){
         console.log("체크박스");
     }else if(attrId == 'URL'){
-        console.log("URL");
-        e.target.setAttribute("contenteditable", "true");
+        let aTag = e.target.querySelector('a')  // 클래스 : hide 지우기
+        aTag.classList.remove('hide');
+        aTag.setAttribute("contenteditable", "true");
+        aTag.focus();
     }
 }
 
 
+
 // 페이지에 해당하는 속성 div
 function getAttrList(attrs){    // 속성
+    // attrList 재생성(중복값)
     let useAttr = '';
-
     attrs.forEach(attr => {
         let displayOption = 'view-visible';
         let content = attr.attrContent;
-        if(content == null) content = '';
-        if(attr.attrId == 'CUSER' || attr.attrId == 'UUSER') content = attr.nickname + '(' + content + ')';
+        if(attr.attrId == 'CUSER' || attr.attrId == 'UUSER' || attr.attrId == 'USER') content = attr.nickname + '(' + content + ')';
         if(attr.displayCheck == "FALSE") displayOption = 'hide';
+        if(attr.attrContent == null) content = '';
 
-        if(attr.attrId == 'CHECK'){
+        if(attr.attrId == 'CHECK'){ // 체크박스 생성
             let checkOp = ''
             if(attr.attrContent == 'TRUE') checkOp = 'checked';
             useAttr += `
@@ -202,16 +218,32 @@ function getAttrList(attrs){    // 속성
             </div>
             `
         }
-        if(attr.attrId == 'URL'){
+        if(attr.attrId == 'URL'){   // URL aTag 생성
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr" data-attr-order="${attr.numbering}">
-                <a href=${attr.attrContent}>${attr.attrContent}</a>
+                <a class="attr attrAtag ${attr.attrContent == null ? 'hide' : ''}" href="${attr.attrContent == null ? '' : attr.attrContent}">${attr.attrContent == null ? '' : attr.attrContent}</a>
+            </div>
+            `
+        }
+        if(attr.attrId == 'CAL'){   // 날짜 input date 생성
+            useAttr += `
+            <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr" data-attr-order="${attr.numbering}">
+                <input class="hide" type="date" value="${attr.attrContent == null? '' : attr.attrContent}">
             </div>
             `
         }
 
+        // 다중값 dbUseId, pageId, attrName, attrId가 같은 것들 하나로
+        // 태그, 유저, 파일
+        // if(attr.attrId == 'TAG' || attr.attrId == 'USER' || attr.attrId == 'MEDIA' ){
+        //     useAttr += `
+        //     <div>
+                
+        //     </div>
+        //     `
+        // }
 
-        if(attr.attrId != 'CHECK' && attr.attrId != 'URL'){
+        if(attr.attrId != 'CHECK' && attr.attrId != 'URL' && attr.attrId != 'CAL'){ // 일반 텍스트 박스
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr" data-attr-order="${attr.numbering}">
                 ${content}
@@ -222,19 +254,7 @@ function getAttrList(attrs){    // 속성
     return useAttr;
 }
 
-// 체크박스 이벤트
-function attrCheck(e){
-    let data = {};
-    data['pageUseId'] = e.target.closest('[data-puse-id]').getAttribute("data-puse-id");
-    if(e.target.checked == true){
-        data['attrContent'] = 'TRUE';
-    }else if (e.target.checked == false){
-        data['attrContent'] = 'FALSE';
-    }
-    addAttrContent(data);
-}
-
-// 속성 값 추가 ✅히스토리 업데이트
+// 속성 값 수정 ✅히스토리 업데이트
 function addAttrContent(data){
     // data = pageUseId, attrContent 필요
     fetch("addAttrContent", {
@@ -249,11 +269,112 @@ function addAttrContent(data){
     .catch(err=>console.log(err));
 }
 
-
+// 속성 div textcontent 수정
 function attrContentUpdate(e){
+    let pui = e.target.getAttribute("data-puse-id");
+    let targetAttr = e.target.getAttribute("data-attrid");
+    let data = {};      // 속성 update ajax에 넘겨줄 데이터
+
+    if(targetAttr == 'NUM'){
+        // ✅✅✅ 한글입력하지 말라고!!!!!
+        // if(e.key >= 0 && e.key <= 9)
+        let numKey = ''
+        e.target.innerText.replace(/[^0-9]/g,'');
+        console.log(e.keyCode)
+        if((e.keyCode > 48 && e.keyCode < 57 // 숫자
+            || e.keyCode == 8 // 백스페이스
+            || e.keyCode == 37 || e.keyCode == 39 // 방향키 <-, ->
+            || e.keyCode == 46 // delete
+            || e.keyCode == 17)){
+            console.log("true");
+        }  else e.preventDefault();
+    }
+
     if(e.keyCode === 13){
         e.preventDefault();
-        console.log(e.target.innerText);
-        e.target.setAttribute("contenteditable", "false");
+        e.target.blur();        // 엔터 이벤트 막기
+
+        if(targetAttr != null){
+            data['pageUseId'] = pui;
+            data['attrContent'] = e.target.innerText;
+            // addAttrContent(data);
+        }
+
+        // url -> aTag 수정
+        if(e.target.classList.contains('attrAtag') == true){
+            let insertUrl = urlPatternCheck(e.target.innerText);
+            e.target.innerText = insertUrl;
+            e.target.setAttribute("href", insertUrl);
+            console.log(insertUrl);
+            if (insertUrl=='') e.target.classList.add('hide');
+            data['pageUseId'] = e.target.closest('[data-puse-id]').getAttribute("data-puse-id");
+            data['attrContent'] = insertUrl;
+            addAttrContent(data);
+        }
+
+        e.target.removeAttribute("contenteditable");    // contenteditable 제거
     }
+}
+
+// 체크박스 이벤트
+function attrCheck(e){
+    let data = {};
+    data['pageUseId'] = e.target.closest('[data-puse-id]').getAttribute("data-puse-id");
+    if(e.target.checked == true){
+        data['attrContent'] = 'TRUE';
+    }else if (e.target.checked == false){
+        data['attrContent'] = 'FALSE';
+    }
+    addAttrContent(data);
+}
+
+// url 패턴 체크
+function urlPatternCheck(text){
+    let url = text;
+    let check = text.substr(0, 4);
+    console.log("check : ", check);
+    if(check == "http"){
+        return url;
+    } else if(check == "www."){
+        return "http://" + url;
+    } else if(text == ''){
+        return url;
+    } else  return "http://www." + url;
+}
+
+// 해당 워크스페이스의 모든 멤버 조회
+function getMembers(pageId, tag){
+    fetch("/dbAttr/getWorkMembers", {
+        method : 'post',
+        body : pageId,
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(result => {
+        // let modal = tag.closest('[data-layout]').querySelector('[data-attr-modal]');
+        let modal = document.createElement('div');
+        modal.setAttribute("data-attr-modal", "");
+        modal.classList.add('db-modal');
+        tag.append(modal);
+        tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
+        modal.style.top = -100%
+        modal.setAttribute("class", "view");
+        let option = '<div class="close-modal">✕</div>';
+        result.forEach(user => {
+            option += `
+            <div data-user-email="${user.email}" class="get-value">${user.nickname}(${user.email})</div>
+            `
+        });
+        modal.innerHTML = option;
+
+
+        // 멤버 추가 이벤트
+        document.querySelectorAll('.get-value').forEach(tag => {
+            tag.addEventListener("click", e => {
+                console.log(e.target.innerText);    // 일시적으로 보여줄 값
+                console.log(e.target.getAttribute("data-user-email"));   //DB에 넣어줄 값
+            })
+        })
+    })
+    .catch(err => console.log(err))
 }

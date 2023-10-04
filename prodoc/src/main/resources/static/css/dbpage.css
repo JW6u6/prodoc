@@ -152,14 +152,40 @@ div[data-tagimg]{
 	border: 1px solid white;
 }
 
+.attr:hover {
+	overflow: visible;
+}
+
 .attr-list{
 	float: right;
+}
+
+div[data-layout="DB_TBL"] .attrAtag {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
 }
 
 .del-db-page {
 	float: right;
 }
 
+div[data-attr-modal]{
+	position: absolute;
+	background-color: white;
+	top: 100%;
+}
+
+.get-value {
+	font-size: small;
+	border-bottom: 1px solid gray;
+	background-color: white;
+}
+
+.get-value:hover {
+	background-color: cadetblue;
+	color: white;
+}
 
 /* 모달 css 중복 */
 .hide {
@@ -167,4 +193,8 @@ div[data-tagimg]{
 }
 .view-visible {
 	visibility: visible;
+}
+
+.modal-top {
+	position: relative;
 }

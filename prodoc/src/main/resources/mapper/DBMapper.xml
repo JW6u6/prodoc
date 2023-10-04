@@ -74,5 +74,12 @@
 		FROM tbl_page
 		WHERE page_id = #{pageId}
 	</select>
+	
+	<select id="getWorkMembers" resultType="UserVO" parameterType="String">
+	SELECT u.email, u.nickname
+	FROM tbl_user u JOIN tbl_member m ON u.email = m.email
+	        JOIN tbl_page p ON p.work_id = m.work_id
+	WHERE p.page_id = #{pageId}
+	</select>
 
 </mapper>

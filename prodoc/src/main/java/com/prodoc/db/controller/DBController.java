@@ -151,4 +151,9 @@ public class DBController {
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
 	}
+	
+	@PostMapping("/dbAttr/getWorkMembers")
+	public List<UserVO> getWorkMembers(@RequestBody String pageId){
+		return dbService.getWorkMembers(pageId);
+	}
 }

@@ -1,7 +1,7 @@
 async function listLayoutEditor(dataList, pageId, layout){
     let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[2];
     dbbody.innerHTML = "";
-    let pageList = [];  // 삭제되지 않은 페이지 목록
+    let pageList = [];  // 삭제되지 않은 페이지 목록  
     dataList.forEach(item => {
         if (item['page']['deleteCheck'] == 'FALSE') pageList.push(item);
     });
@@ -64,22 +64,30 @@ async function listLayoutEditor(dataList, pageId, layout){
             break;
 
         case 'DB_TBL' :
-            /*
-               MAX(pageList['attrList'].length) + 1 => td(col)
-            */
-               let col = 1;
-               pageList.forEach(block => {
-                   if(col < block['attrList'].length + 1) col = block['attrList'].length + 1;
-               })
+               let mainAttr = [];
+               pageList.forEach( block => {
+                   let minAttr = [];    // 중복값 없는 속성 리스트(이름 컬럼 생성용)
+                    // if(col != 1 && col > block['attrList'].length + 1) col = block['attrList'].length + 1;
+                    block.attrList.forEach(attr => {
+                        minAttr.push(attr);
+                    });
 
-                let tr = document.createElement('div');
+                    minAttr.forEach((item, idx, list) => {
+                        if (idx!=0 && item.dbUseId == list[idx-1].dbUseId){
+                            minAttr.splice(idx);
+                            idx--;
+                        } 
+                    })
+                    mainAttr = minAttr;
+                });
+                console.log(mainAttr);
+                let tr = document.createElement('div'); //
                 let block = pageList[0];
-                tr.setAttribute("data-block-id", block['block']['blockId']);
-                tr.setAttribute("data-page-id", block['page']['pageId']);                    
-                tr.setAttribute("data-block-order", block['block']['rowX']);
+                console.log(block);                   
                 tr.setAttribute("class", "dbtype-tbl prodoc_block");
                 tr.setAttribute("class", "table-tr");
-                for(let j=0; j<col; j++){   // 속성수 + 1만큼 열 생성
+
+                for(let j=0; j<mainAttr.length+1; j++){   // 속성수 + 1만큼 열 생성
                     let td = document.createElement('div');
                     td.setAttribute("class", "table-td");
                     if(j == 0){
@@ -87,7 +95,7 @@ async function listLayoutEditor(dataList, pageId, layout){
                         let className = tr.getAttribute("class");
                         tr.setAttribute("class", className + " table-thead");
                     } else if(j > 0){
-                        // db에 사용된 속성이름 넘버링순
+                        // ✅✅✅minAttr > for : thead 작성
                         let attr = pageList[0]['attrList'][j-1];
                         let displayOption = "view-visible";
                         if(attr['displayCheck'] == "FALSE") displayOption = "hide";

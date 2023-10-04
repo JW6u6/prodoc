@@ -16,11 +16,20 @@ document.getElementById("pagecontainer").addEventListener("click", e =>{
     else if (e.target.matches(".attr")) updateContent(e);
     else if (e.target.matches(".dbattr-check")) attrCheck(e);
 
+    // 모달
+    else if (e.target.matches(".close-modal")) closeModal(e);
 })
-document.getElementById("pagecontainer").addEventListener("keyup", e => {
+document.getElementById("pagecontainer").addEventListener("keydown", e => {
     if (e.target.matches(".attr")) attrContentUpdate(e);
 
 })
+
+function closeModal(e){
+    let modal = e.target.parentElement;
+    console.log(modal.parentElement);
+    modal.parentElement.classList.remove("modal-top");
+    modal.remove();
+}
 
 // 레이아웃 변경을 위한 정보 전달 => 레이아웃 변경 이벤트 실행
 function layoutClick(e){
@@ -37,7 +46,6 @@ function createDBblock(block){
     const dbBlockTemp = `
     <div class="db-block" data-block-id="` + block.displayId + `" data-block-order="`+ block.rowX +`">
         <div data-attr-option="`+block.displayId+`" class='hide'></div>
-
         <div class="db-block-header">
             <div contenteditable="true">` + block.content + `</div>
             <div class="db-layout-list">
@@ -73,6 +81,8 @@ function createDBblock(block){
             </div>
         </div>
         <div class="db-block-body"></div>
+
+        <div data-attr-modal="`+block.displayId+`" class='hide'></div>
     </div>
     `;
     return dbBlockTemp;
@@ -102,6 +112,7 @@ async function getChildList(disId){
             }
             
         }
+        console.log(caseInfo);
         listLayoutEditor(caseInfo, infoList['parent']['pageId'], infoList['parent']['caseId']);
 	})
 	.catch(err => console.log(err));
