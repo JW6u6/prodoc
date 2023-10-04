@@ -592,7 +592,11 @@ function newWorkSpace() {
     let workName = document.querySelector('#wsName');
     let parentId = document.querySelector('#wid');
 
-    !parentId ? '' : parentId.value;
+    if(parentId){
+    	parentId = parentId.value;
+    }else{
+    	parentId = '';
+    }
 
     let val = {
         "parentId": parentId,

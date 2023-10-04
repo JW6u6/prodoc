@@ -67,9 +67,9 @@ public class PageController {
 		MemberVO memberVO = new MemberVO();
 		UserVO user = (UserVO) session.getAttribute("logUser");
 		memberVO.setWorkId(pageVO.getWorkId());
-		List<MemberVO> list = memberserivce.listMember(memberVO.getWorkId());
-		for(int i=0;i<list.size();i++) {
-			if(!list.get(i).getEmail().equals(user.getEmail())) {
+		List<MemberVO> list = memberserivce.listMember(memberVO);
+		for (int i = 0; i < list.size(); i++) {
+			if (!list.get(i).getEmail().equals(user.getEmail())) {
 				System.out.println("======================//////////////");
 				this.template.convertAndSendToUser(list.get(i).getEmail(), "/topic/updatePage",
 						new SocketVO("pageCreate", pageVO.getPageId()));
