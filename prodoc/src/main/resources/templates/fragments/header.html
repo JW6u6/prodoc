@@ -27,10 +27,9 @@
 				</ul>
 			</nav>
 
-			<img id="userImg" class="menuBtn profile"
-				th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|"
-				style="width: 30px; border-radius: 15px;">
-
+			
+		    <img id="userImg" class="menuBtn profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" onerror="this.src='images/noneUser.jpg'"  style="width:30px; height:30px; border-radius: 15px;">
+			
 		</header>
 	</div>
 

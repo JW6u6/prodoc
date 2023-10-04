@@ -2,7 +2,10 @@
 <div th:fragment="userInfoFrag">
 	<!-- 유저정보 모달 -->
 	<div id="UserInfoMod" class="hide">
-	    <img class="profile" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:200px; border-radius:100px">
+		
+	    <img class="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" 
+	    onerror="this.src='images/noneUser.jpg'" style="width:200px; border-radius:100px">
+		
 	    <p class="email">[[${session.logUser.email}]]</p>
 	    <p class="nickname">[[${session.logUser.nickname}]]</p>
 	    <button type="button" id="modInfoBtn">정보수정</button>
@@ -16,7 +19,11 @@
 	        <input name="email" type="text" th:value="${session.logUser.email}" style="display:none;">
 		    <input name="file" type="file" accept="image/*" style="display:none;">
 	        <div>
-		        <img class="profile" id="profile" th:src="|/files/${session.logUser.profile != null? session.logUser.profile : 'noneUser.jpg'}|" style="width:200px; border-radius:100px">
+	        
+		        
+		        <img class="profile" id="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"  onerror="this.src='images/noneUser.jpg'"  style="width:200px; border-radius:100px">
+		         
+				
 				<button type="submit" id="infoSaveBtn">저장</button>
 				<button type="button" id="joinOutBtn">탈퇴</button>
 	        </div>

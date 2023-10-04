@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prodoc.history.mapper.HistoryMapper">
+<select id="selectList" resultType="HistoryVO">
+	SELECT * FROM tbl_history 
+	WHERE work_id IN (SELECT work_id FROM tbl_member WHERE email = #{logUser})
+		<if test="startDate != null and endDate == null">AND TRUNC(UP_DATE, 'dd') BETWEEN #{startDate} AND #{startDate}</if>
+		<if test="startDate != null and endDate != null">AND TRUNC(UP_DATE, 'dd') BETWEEN #{startDate} AND #{endDate}</if>
+       	
+       	<if test="select != 'all'">	AND  HISTORY_TYPE = UPPER(#{select}) </if>
+	ORDER BY up_date desc
+</select>
+
+<insert id="insertHistory" parameterType="HistoryVO" statementType="CALLABLE">
+	{call history_block(#{workId}
+						, #{creUser}
+						, #{pageId}
+						, #{displayId})
+						}
+</insert>
+	
+</mapper>

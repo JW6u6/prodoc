@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- 
+□ 클릭 시 히스토리 열기
+□ 첫 목록 전체 세팅
+□ 선택값에 맞게 목록 재설정
+□ 클릭 시 이동 or 복구 + 창 닫기
+ -->
+<div th:fragment="historyFrag">
+	<div id="modHistory" class="hide" style="width:1000px; overflow:auto">
+		<h3>히스토리</h3>
+	    <div><button class="closeBtn">&#10005;</button></div>
+	    <br>
+	    <label>내역: </label>
+	        <select id="historyType">
+	        	<option value="all" selected>전체</option>
+	        	<option value="create" >생성</option>
+	        	<option value="update" >수정</option>
+	        	<option value="delete" >삭제</option>
+	        	<option value="revoke" >복구</option>
+	        </select>
+	         <label>기간 : </label> 
+	         <input type="date" onClick="hisMinDate(); this.max=settingDates()" name="startDate"> ~ 
+	         <input type="date" onClick="this.max=settingDates()" name="endDate" disabled>
+	         <button type="button" id="hisResetBtn">기간 초기화</button>
+	         <button type="button" id="hisSearchBtn">검색</button>
+		<br>
+		<div class="historyList" style="width:70%; height:200px; overflow:auto">
+		</div>
+	</div>
+</div>
+</html>

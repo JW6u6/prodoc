@@ -47,6 +47,12 @@ public class BlockServiceImpl implements BlockService {
 		blockmapper.deleteFileBlock(blockVO.getDisplayId());
 		blockmapper.deleteBookMark(blockVO.getDisplayId());
 		
+		
+		BlockVO block = new BlockVO();
+		block.setDisplayId(blockVO.getDisplayId());
+		blockmapper.updateParentBlock(block);
+		
+		
 		ReplyVO vo = new ReplyVO();
 		vo.setDisplayId(blockVO.getDisplayId());
 		replymapper.deleteComment(vo);
