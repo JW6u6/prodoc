@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.prodoc.history.service.HisSearchVO;
 import com.prodoc.history.service.HistoryService;
 import com.prodoc.history.service.HistoryVO;
-import com.prodoc.history.service.RevokeVO;
-import com.prodoc.page.service.PageVO;
 
 @Controller
 public class HistoryController {
@@ -34,14 +32,11 @@ public class HistoryController {
 	
 	@ResponseBody
 	@PostMapping("/revokeTrash")
-	public RevokeVO revokeProcess(@RequestBody RevokeVO revoke) {
-		System.out.println("history revoke: " + revoke.toString());
-		Map<String, Object> map = new HashMap<>();
-		if(revoke.getPageId() == null) {	//워크 복구
-			revoke = service.revokeWork(revoke);
-		}else {				//페이지 복구
-			revoke = service.revokePage(revoke);
-		}
-		return revoke;
+	public String revokeProcess(@RequestBody int historyId) {
+		System.out.println("history revoke id: " + historyId);
+		HistoryVO history = new HistoryVO();
+		history.setHistoryId(historyId);
+		//service.revokeTrash(history);
+		return "";
 	}
 }
