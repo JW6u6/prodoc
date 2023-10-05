@@ -408,6 +408,7 @@ function pageInPage(pId, target) {
                 }
             })
         })
+	})
 }
 
 function clickPage() {

@@ -66,7 +66,7 @@ const blockHandler = {
     //복제된 블럭에 "블럭이벤트" 생성
     handlingBlockEvent(copyblock);
 
-    closeModal();
+    closeBlockModal();
   },
   // 블럭 삭제 함수 호출
   handleMenuDeleteEvent: (e) => {
@@ -76,7 +76,7 @@ const blockHandler = {
       `.prodoc_block[data-block-id="${blockId}"]`
     );
     deleteBlock(targetBlock);
-    closeModal();
+    closeBlockModal();
   },
   // 댓글 관련 함수 호출
   handleMenuCommentEvent: async (e) => {
@@ -115,7 +115,7 @@ const blockHandler = {
       replyInput.value = "";
       blockReply.scrollTop = blockReply.scrollHeight;
     });
-    // closeModal();
+    // closeBlockModal();
   },
   // 블럭 변경 함수 호출
   handleBlockChangeEvent: (e) => {
@@ -197,6 +197,6 @@ function deleteToggle(toggleBlock) {
 
 // 메뉴와 함께 닫기위한 함수
 // 메뉴 하이드 처리때문에 추가
-const closeModal = () => {
+const closeBlockModal = () => {
   document.querySelector(".modalBackground").click();
 };
