@@ -3,7 +3,8 @@
 	xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="headerFragment">
-
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/header.css}" rel="stylesheet" />
 	<!-- header -->
 	<div class="wrap">
 		<header>
@@ -26,9 +27,11 @@
 					<li id="notifyPage">페이지 알림 켜기</li>
 				</ul>
 			</nav>
-
+			
+			<button>로그인</button>
 			
 		    <img id="userImg" class="menuBtn profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" onerror="this.src='images/noneUser.jpg'"  style="width:30px; height:30px; border-radius: 15px;">
+
 			
 		</header>
 	</div>

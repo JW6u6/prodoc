@@ -18,11 +18,10 @@
 <title>home</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
 <body>
-        
+	
 	<th:block layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
 	<th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
-	
-	
+
 	<div layout:fragment="content" class="app">
 		<div class="container"></div>
 	</div>	
@@ -37,10 +36,6 @@
 	<div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
 	<script th:inline="javascript" src="js/modal/history.js"></script>
 	
-	<!-- 휴지통 모달 -->
-	<div id="TrashFrag" th:insert="modal/trashModal.html :: trachFrag"></div>
-	<script th:inline="javascript" src="js/modal/trash.js"></script>
-	
 	
 	<div id="FileSearchModal" th:insert="modal/fileModal.html :: FileSearchModal"></div>	<!-- 파일 검색 모달 -->
 	<script th:inline="javascript" src="js/block/blockMaker.js"></script>
@@ -48,6 +43,7 @@
 	<script th:inline="javascript" src="js/block/block.js"></script>
 	<script th:inline="javascript" src="js/block/menuEvent.js"></script>
 	<script th:inline="javascript" src="js/block/blockMove.js"></script>
+
 </body>
 <script src="js/modal/close.js"></script>
 </html>

@@ -1,10 +1,13 @@
 // Spring에 등록시 빈값으로 만들기
-const SERVER_URL = "";
+const SERVER_URL = "http://localhost:8099";
 
 const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
 
-showBlocks(pageId);
-
+function makeBlockPage(pageId) {
+  document.querySelector(".container").innerHTML = "";
+  showBlocks(pageId);
+}
+makeBlockPage(pageId);
 //어떻게 해결방법이 없나?
 let isReady = true;
 let isExistData = [];
@@ -79,7 +82,23 @@ function sendData(isExistData) {
       const dataList = data[displayId];
       const lastObjOfList = dataList[dataList.length - 1];
       updateDBBlock({ displayId, ...lastObjOfList });
+      sendHistory({
+        workId: "work1",
+        creUser: "pepsiman",
+        pageId: "p1",
+        displayId,
+      });
     }
+  });
+}
+
+function sendHistory(historyObj) {
+  fetch(SERVER_URL + "/block/history", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(historyObj),
   });
 }
 

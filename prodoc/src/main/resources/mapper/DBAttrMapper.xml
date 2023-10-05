@@ -18,7 +18,6 @@
 	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
 		{call DELETE_DB_ATTR(
 					#{dbUseId}
-					, #{email}
 		)}
 	</delete>
 	
@@ -44,7 +43,7 @@
 		FROM tbl_attr
 	</select>
 	
-	<!-- 특정 페이지 속성 조회   -->
+	<!-- 특정 페이지 속성 조회 -->
 	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
 		SELECT * 
 		FROM view_pageattr 

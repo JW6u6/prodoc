@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.db.service.AddAttrVO;
@@ -27,8 +27,8 @@ import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.db.service.dbattrFileService;
 import com.prodoc.page.mapper.PageMapper;
-import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
 
@@ -39,6 +39,7 @@ public class DBController {
 	@Autowired DBAttrService attrService;
 	@Autowired PageMapper pageMapper;
 	@Autowired BlockServiceImpl blockService;
+	@Autowired dbattrFileService fileService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
 	public String InsertDBCase(DBCaseVO casePage) {
@@ -122,11 +123,8 @@ public class DBController {
 	}
 	
 	@GetMapping("deleteDbAttr")
-	public void deleteDbAttr(@RequestParam String dbUseId, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		UserVO user = (UserVO)session.getAttribute("logUser");
-		String email = user.getEmail();
-		attrService.deletePageAttr(dbUseId, email);
+	public void deleteDbAttr(@RequestParam String dbUseId) {
+		attrService.deletePageAttr(dbUseId);
 	}
 	
 	@GetMapping("deleteDBPage")
@@ -139,12 +137,11 @@ public class DBController {
 	}
 	
 	@PostMapping("addCalendar")
-	public String addCalendar(@RequestBody PageAttrVO vo) {
+	public String addCalendar(@RequestParam PageAttrVO vo) {
 		int result = attrService.addCalendar(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
 	}
-	
 	@PostMapping("updateAttrContent")
 	public String updateAttrContent(@RequestBody PageAttrVO vo) {
 		int result = attrService.updateAttrContent(vo);
@@ -168,5 +165,11 @@ public class DBController {
 		int result = attrService.deleteAttrContent(pageUseId);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("dbattr/fileUpload")	// 파일업로드
+	public String attrFileupload(MultipartFile file) {
+		String uploadName = fileService.fileUploadName(file);
+		return uploadName;
 	}
 }

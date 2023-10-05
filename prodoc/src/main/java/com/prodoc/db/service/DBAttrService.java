@@ -8,7 +8,7 @@ public interface DBAttrService {
 	public List<AttrVO> pageAttrList();
 	public List<PageAttrVO> getAllPageAttr(String parentId);
 	public int updateDbAttr(PageAttrVO vo);
-	public void deletePageAttr(String dbUseId, String email);
+	public void deletePageAttr(String dbUseId);
 	public int addCalendar(PageAttrVO vo);
 	
 	public int updateAttrContent(PageAttrVO vo);

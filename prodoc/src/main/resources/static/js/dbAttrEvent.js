@@ -362,6 +362,7 @@ function attrContentUpdate(e){
 
 // 이미지 추가
 function addAttrImage(e){
+    // 화면에 추가
     if(e.target.files[0] != null){
         let reader = new FileReader;
         console.log(reader);
@@ -370,8 +371,17 @@ function addAttrImage(e){
             e.target.previousElementSibling.setAttribute("src", data.target.result);
         }
         reader.readAsDataURL(e.target.files[0]);
-        
+    
+    // 업로드 진행
+    let formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    // let fileName = e.target.files[0].name;
+    let newName = dbattrFileUpload(formData);
+    
+    // attrContent Update
     }
+
+    
 }
 
 // 체크박스 이벤트
@@ -556,4 +566,19 @@ async function pageAttrCheck(data){
     })
     .catch(err => console.log(err));
     return ckeck;
+}
+
+
+// 파일업로드
+function dbattrFileUpload(data){
+
+    fetch("dbattr/fileUpload", {
+        method : 'post',
+        body : data
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
 }

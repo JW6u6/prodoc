@@ -44,8 +44,8 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public void deletePageAttr(String dbUseId, String email) {
-		mapper.deletePageAttr(dbUseId, email);
+	public void deletePageAttr(String dbUseId) {
+		mapper.deletePageAttr(dbUseId);
 	}
 
 	@Override
@@ -68,7 +68,5 @@ public class DBAttrServiceImpl implements DBAttrService {
 	public int deleteAttrContent(String pageUseId) {
 		return mapper.deleteAttrContent(pageUseId);
 	}
-
-	
 
 }

@@ -72,6 +72,23 @@ function workList(email) {
                 items.addEventListener("dragover", dragOver);
                 items.addEventListener("drop", dropItem);
             })
+            let list = side.querySelectorAll('.workName');
+            list.forEach(targetDiv => {
+
+            //원래 우클릭하면 일어나는 이벤트 막음(사이드 name에서만 막음)
+            targetDiv.oncontextmenu = function () {
+                return false;
+            }
+            //우클릭하면 input에서 makeWid이벤트 일어나게함
+            targetDiv.addEventListener('mouseup', function (e) {
+                if (e.which == 3 || e.button == 2) {
+                    makeWid(e);
+                }
+            })
+            targetDiv.addEventListener('contextmenu', function (e) {
+                contextWorkSpace(e);
+            });
+        })
     })
 }
 function dragStart(e){
@@ -85,23 +102,8 @@ function dragEnd(e){
     e.target.classList.remove("dragging");
     console.log(e);
 }
-            let list = side.querySelectorAll('.Work');
-            list.forEach(targetDiv => {
 
-                //원래 우클릭하면 일어나는 이벤트 막음(사이드 name에서만 막음)
-                targetDiv.firstElementChild.oncontextmenu = function () {
-                    return false;
-                }
-                //우클릭하면 input에서 makeWid이벤트 일어나게함
-                targetDiv.firstElementChild.addEventListener('mouseup', function (e) {
-                    if (e.which == 3 || e.button == 2) {
-                        makeWid(e);
-                    }
-                })
-                targetDiv.addEventListener('contextmenu', function (e) {
-                    contextWorkSpace(e);
-                });
-            })
+
 
 function dragOver(e){
     e.preventDefault();
@@ -291,10 +293,9 @@ function pageList(wId, target) {
                     items.addEventListener("drop", dropItem);
                 })
             })
-            document.querySelectorAll('#side .Page').forEach(Pages => {
+            document.querySelectorAll('#side .pageName').forEach(Pages => {
                 Pages.addEventListener('click', function(e){
-                    let pageId = e.currentTarget.dataset.id;
-                    console.log(pageId);
+                    let pageId = e.currentTarget.parentElement.dataset.id;
                     selectPage(pageId);
                 })
             })
@@ -309,7 +310,13 @@ function selectPage(pageId) {
         return res.json();
       })
     .then((data) => {
-        console.log(data);
+        data.forEach(item => {
+            console.log(item.pageName);
+            console.log(item.workId);
+            let app = document.querySelector('.container');
+            let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/> </div>`
+            app.insertAdjacentHTML("beforebegin" , pageTitle);
+        })
     })
 }
 // 새로운 페이지 생성.
@@ -380,9 +387,9 @@ function newPageModal(event) {
 
 let pageInPageCount = 0;
 //페이지 안의 페이지 여는 기능
-function pageInPage(pId, target) {
+function pageInPage(pId,target){
     let insertDiv = target.parentElement.querySelector('.pageMain');
-    let url = '/pageInPage?pageId=' + pId;
+    let url = '/pageInPage?pageId='+pId;
     fetch(url)
     .then(res => {
         return res.json();
@@ -408,6 +415,14 @@ function pageInPage(pId, target) {
                 }
             })
         })
+        document.querySelectorAll('#side .pageName').forEach(Pages => {
+            Pages.addEventListener('click', function(e){
+                let pageId = e.currentTarget.parentElement.dataset.id;
+                console.log(pageId);
+                selectPage(pageId);
+            })
+        })
+    })
 }
 
 function clickPage() {
