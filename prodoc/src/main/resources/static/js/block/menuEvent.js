@@ -55,7 +55,7 @@ const blockHandler = {
       blockId: copyObj.type,
       rowX: copyObj.order,
       content: copyObj.text,
-      upUser: "pepsiman",
+      upUser: blockSessionUserId,
     });
 
     //실질적 DOM 생성
@@ -106,7 +106,7 @@ const blockHandler = {
       const replyTemp = makeReplyBlock("pepsiman", replyInput.value, "지금");
       replyWrapper.insertAdjacentHTML("beforebegin", replyTemp);
       registReply({
-        creUser: "pepsiman",
+        creUser: blockSessionUserId,
         content: replyInput.value,
         displayId: blockId,
         pageId: pageId,

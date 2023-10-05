@@ -44,7 +44,7 @@ function makeBlockTemplate() {
     rowX,
     pageId,
     blockId: "TEXT",
-    creUser: "pepsiman",
+    creUser: blockSessionUserId,
     content: "",
   };
   createDBBlock(blockObj);

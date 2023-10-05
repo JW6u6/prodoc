@@ -26,7 +26,7 @@
 		<div class="container"></div>
 	</div>	
 	<input type="file" class="block_file-Uploader" style="display: none" />
-	
+	<script> const blockSessionUserId = "[[${session.logUser.email}]]"; </script>
 
 	<!-- 워크/디비 검색 모달 -->
 	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>

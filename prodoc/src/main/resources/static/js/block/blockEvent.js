@@ -488,7 +488,7 @@ async function blockChangeMenuEvent(e) {
   // 블럭 업데이트 해줘야함 (타입변경)
   const blockUpdateObj = {
     displayId: blockId,
-    upUser: "pepsiman",
+    upUser: blockSessionUserId,
     blockId: blockType,
   };
   updateDBBlock(blockUpdateObj);
@@ -529,7 +529,7 @@ function input_handler(event) {
 
   const updateObj = {
     eventType: "input",
-    upUser: "pepsiman",
+    upUser: blockSessionUserId,
     displayId,
     content: event.target.innerText,
   };
