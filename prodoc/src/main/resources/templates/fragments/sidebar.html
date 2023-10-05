@@ -17,7 +17,6 @@
 				<div id="workspaces"></div>
 			</div>
 			<div id="searchWKDB">검색</div>
-			<div id="trashBasket">휴지통</div>
 			<div id="history">히스토리</div>
 		</div>
 
@@ -52,7 +51,7 @@
 				<!--caseId값 -->
 
 				<button type="button" id="insert-page" class="close">생성</button>
-				<button id="close-modal" class="close" onclick="closeModal()">닫기</button>
+				<button id="close-modal" class="close" onclick="closeSideModal()">닫기</button>
 			</div>
 		</div>
 	</div>
@@ -60,7 +59,7 @@
 	<!--/* 워크스페이스 모달 시작 */-->
 	<div id="workModal">
 		<div class="modal-content">
-			<button id="close-modal" class="closeBtn" onclick="closeModal()">&#10005;</button>
+			<button id="close-modal" class="closeBtn" onclick="closeSideModal()">&#10005;</button>
 			<br>
 
 			<!--/* 워크스페이스 설정 토글(팀) */-->
@@ -78,7 +77,7 @@
 
 			<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
 			<div class="selectBox" id="typeArea">
-				<select id="wsType" name="workType" class="select">
+				<select id="wsType" name="workType" class="select" onchange="typeChange">
 					<option disabled selected="selected">워크스페이스 타입</option>
 					<option value="TEAM">팀 워크스페이스</option>
 					<option value="PERSONAL">개인 워크스페이스</option>
@@ -137,7 +136,7 @@
 			<!--/* 워크스페이스 모달 버튼 영역. 생성 -> 설정으로 열 시 삭제, 저장으로 바뀜. */-->
 			<div id="btnArea" class="btn">
 				<button id="wsCreate" type="button">생성</button>
-				<button id="cancel" type="button" onclick="closeModal()">취소</button>
+				<button id="cancel" type="button" onclick="closeSideModal()">취소</button>
 			</div>
 		</div>
 	</div>

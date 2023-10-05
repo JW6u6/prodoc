@@ -10,47 +10,53 @@
 		and parent_id
 		is NULL
 		order by numbering
-	</select>
-	<select id="findWork" resultType="String">
-		select work_id
-		from tbl_page
-		where page_id = #{pageId}
-	</select>
-	<select id="pageInPage" resultType="PageVO">
-		select page_id,page_name
-		from tbl_page
-		where parent_id = #{pageId}
-		order by numbering
-	</select>
-
-	<insert id="insertPage" parameterType="PageVO"
-		statementType="CALLABLE">
-		{call insert_page(
-		#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
-		, #{parentId}
-		, #{pageName}
-		, #{creUser}
-		, #{workId}
-		, #{caseId}
-		, #{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string}
-		)
-		}
-	</insert>
-
-	<select id="selectPageInfo" resultType="PageVO">
-		SELECT *
-		FROM tbl_page
-		WHERE page_id = #{pageId}
-	</select>
-	<!-- 등록 -->
-	<!-- <insert id="insertPage" parameterType="PageVO" statementType ="CALLABLE"> 
-		{call INSERT_PAGE( #{pid, mode=OUT, jdbcType=VARCHER, javaType=string} , 
-		#{parentId} , #{pageName} , #{creUser} , #{workId} , #{caseId} , #{result, 
-		mode=OUT, jdbcType=VARCHER, javaType=string} )} </insert> -->
-
-	<!-- 페이지 잠금(관리자, 소유자) -->
-	<update id="LockPage" parameterType="PageVO">
-		UPDATE tbl_page
+  	</select>
+  	<select id = "findWork" resultType="String">
+  		select work_id
+  		from tbl_page
+  		where page_id = #{pageId}
+  	</select>
+  	<select id = "pageInPage" resultType="PageVO">
+  		select page_id,page_name
+  		from tbl_page
+  		where parent_id = #{pageId}
+  		order by numbering
+  	</select>
+  	
+  	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">
+ 		{call insert_page(
+ 						#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
+ 					,	#{parentId}
+ 					,	#{pageName}
+ 					,	#{creUser}
+ 					,	#{workId}
+ 					,	#{caseId}
+ 					,	#{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string}
+ 						)
+ 		}
+ 	</insert>
+  
+  	<select id ="selectPageInfo" parameterType="String" resultType="PageVO">
+  		SELECT *
+  		FROM tbl_page
+  		WHERE page_id = #{pageId}
+  	</select>
+  	<!-- 등록 -->
+  	<!-- <insert id="insertPage" parameterType="PageVO" statementType ="CALLABLE">
+  		{call INSERT_PAGE(
+  							#{pid, mode=OUT, jdbcType=VARCHER, javaType=string}
+  						,	#{parentId}
+  						,	#{pageName}
+  						,	#{creUser}
+  						,	#{workId}
+  						,	#{caseId}
+  						,	#{result, mode=OUT, jdbcType=VARCHER, javaType=string}
+  		)}
+ 	</insert> -->
+ 	
+ 	<!-- 페이지 잠금(관리자, 소유자) -->
+ 	<update id="LockPage" parameterType="PageVO">
+ 		UPDATE tbl_page
 		SET lock_check = #{lockCheck}
 		WHERE page_id = #{pageId}
 	</update>

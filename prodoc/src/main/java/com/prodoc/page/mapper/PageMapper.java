@@ -10,9 +10,9 @@ public interface PageMapper {
 	public String findWork(String pageId);
 
 	public List<PageVO> pageInPage(String pageId);
-
-	public String selectPageInfo(PageVO pageVO);
-
+	
+	public List<PageVO> selectPageInfo(String pageId);
+	
 	public void insertPage(PageVO pageVO);
 
 	// 페이지 잠금 요청이 들어오면 잠금(관리자, 소유자)

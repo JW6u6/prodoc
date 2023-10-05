@@ -1,50 +1,53 @@
+#side {
+	height: 100%;
+	float: left;
+}
 
 #side {
-	height:100%;
-	float:left;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	width: 300px;
+	background: lightsalmon;
+	height: 1000px;
+	overflow: auto;
+	display: block;
 }
-#side {
-  list-style: none;
-  padding: 0px;
-  margin: 0px;
-  width: 300px;
-  background: lightsalmon;
-  height: 1000px;
-  overflow: auto;
-  display:block;
-}
+
 #side a {
-  text-decoration: none;
-  padding: 10px;
-  display: block;
-  color: #000;
-  font-weight: bold;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+	color: #000;
+	font-weight: bold;
 }
 
 #side li a:hover {
-  background: #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 #side li a.home {
-  background : #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 .cd1 {
-  margin-left: 120px;
-}
-.app {
-	background-color: lightyellow;
-	width:calc(100% - 300px);
-	margin:0px;
-	float:left;
-}
-#content1{
-	margin:0px;
+	margin-left: 120px;
 }
 
-header{
+.app {
+	background-color: lightyellow;
+	width: calc(100% - 300px);
+	margin: 0px;
+	float: left;
+}
+
+#content1 {
+	margin: 0px;
+}
+
+header {
 	background-color: #d3feef;
 	display: flex;
 	ling-height: 50px;
@@ -58,7 +61,7 @@ header{
 	align-iems: center;
 }
 
-header > ul{
+header>ul {
 	display: flex;
 	gap: 20px;
 }
@@ -68,19 +71,23 @@ header > ul{
 	font-size: 14px;
 	position: absolute;
 	border: black solid 0.4px;
+	z-index: 999;
 }
 
-#menu > ul {
+#menu>ul {
 	display: flex;
+	padding: 0;
+	margin: 0;
 }
-#menu > li {
+
+#menu>li {
 	text-align: center;
 	border-bottom: #ccc solid 0.4px;
 	list-style: none;
-	padding: 0;
-	margin: 0;
+	padding: 1px;
 	z-index: 999;
 }
+
 #userBtn {
 	border-radius: 50%;
 	display: flex;
