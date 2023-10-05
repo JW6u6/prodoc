@@ -18,9 +18,9 @@
 
 	<insert id="insertBlock" parameterType="BlockVO">
 		insert into tbl_display
-		(display_id,page_id,row_x,block_id,cre_user,content,parent_id)
+		(display_id,page_id,row_x,block_id,cre_user,content,parent_id,cre_date)
 		values
-		(#{displayId},#{pageId},#{rowX},#{blockId},#{creUser},#{content},#{parentId})
+		(#{displayId},#{pageId},#{rowX},#{blockId},#{creUser},#{content},#{parentId},sysdate)
 	</insert>
 	<update id="updateBlock" parameterType="BlockVO">
 		update tbl_display
@@ -50,6 +50,12 @@
 		<if test="checked != null">
 			,checked = #{checked}
 		</if>
+		<if test="color != null">
+			,color = #{color}
+		</if>
+		<if test="backColor != null">
+			,back_color = #{backColor}
+		</if>
 		where display_id = #{displayId}
 	</update>
 	<delete id="deleteBlock" parameterType="BlockVO">
@@ -57,7 +63,7 @@
 		where display_id = #{displayId}
 	</delete>
 	
-	<select id="getBookMark" resultType="bookMarkVO">
+	<select id="getBookMark" resultType="BookMarkVO">
 		select display_id,title,description,img_adrs,url
 		from tbl_book_mark 
 		where display_id = #{displayId}
@@ -102,5 +108,8 @@
 		   	  ,path       = #{path}
 		 where display_id = #{displayId}
 	</update>
-	
+	<update id="updateParentBlock" parameterType="BlockVO">
+		update (select * from tbl_display where parent_id = #{displayId})
+            set parent_id = null
+	</update>
 </mapper>

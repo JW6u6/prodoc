@@ -1,37 +1,3 @@
-/**
- * 블럭만들기 함수입니다.
- * @param {Object} template - 생성된 템플릿 오브젝트.
- *
- */
-function displayBlock(template) {
-  //부모가 있으면 부모의 아이템으로 아니면 문서쪽으로.
-  container.insertAdjacentHTML("beforeend", template.template);
-  const newblock = document.querySelector(
-    `[data-block-id="${template.displayId}"]`
-  );
-  handlingBlockEvent(newblock);
-
-  if (newblock.querySelector(".content")) {
-    newblock.querySelector(".content").focus();
-  }
-}
-
-/**
- *
- * @param {{template:string,displayId:string}} template - 생성된 템플릿 오브젝트
- * @param {Element} parent - 부모Element
- */
-const displayChildBlock = (template, parent) => {
-  parent
-    .querySelector(".child_item")
-    .insertAdjacentHTML("beforeend", template.template);
-
-  const newblock = document.querySelector(
-    `[data-block-id="${template.displayId}"]`
-  );
-
-  handlingBlockEvent(newblock);
-};
 
 function makeBlockTemplate() {
   // 블럭을 새로 생성하면
@@ -52,8 +18,8 @@ function makeBlockTemplate() {
   const block = templateMaker();
 
   const template = `
-        <div class="prodoc_block" data-block-type="TEXT"  data-block-id="${displayId}" data-block-order="${rowX}">
-            <div class="control control_hide" data-block-id="${displayId}" draggable="true">
+        <div class="prodoc_block" data-block-id="${displayId}" data-block-order="${rowX}">
+            <div class="control" style="position:relative" data-block-id="${displayId}" draggable="true">
             <button class="attrBtn">A</button>
             <button>H</button>
             </div>
@@ -65,38 +31,17 @@ function makeBlockTemplate() {
 
 /**
  * 블럭을 만드는 함수입니다. HTML형식 String을 반환합니다.
- * @param {{displayId:string,type:string,text:string,order:number}} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order이 필요합니다.
- * @returns {{template:string,displayId:string}}
+ * @param {object} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order이 필요합니다.
+ * @returns {Object}
  */
-function updateTemplate({
-  displayId,
-  type,
-  text = "",
-  order,
-  color,
-  backColor,
-}) {
-  if (!displayId) {
-    displayId = self.crypto.randomUUID();
-  }
-
-  const block = templateMaker(
-    type,
-    text,
-    color ? color : "",
-    backColor ? backColor : ""
-  );
-  let controlPanel = `
-  <div class="control control_hide" data-block-id="${displayId}" draggable="true">
-  <button class="attrBtn">A</button>
-  <button>H</button>
-  </div>`;
-  if (type === "COLUMN") {
-    controlPanel = "";
-  }
+function updateTemplate({ displayId, type, text = "", order }) {
+  const block = templateMaker(type, text);
   const template = `
         <div class="prodoc_block" data-block-type="${type}" data-block-id="${displayId}" data-block-order="${order}">
-            ${controlPanel}
+            <div class="control" data-block-id="${displayId}" draggable="true">
+            <button class="attrBtn">A</button>
+            <button>H</button>
+            </div>
             ${block}
         </div>
         `;
@@ -110,36 +55,31 @@ function updateTemplate({
  * @param {String} text - 블럭이 원래 가지고 있는 텍스트값
  * @returns {String}
  */
-function templateMaker(
-  type = "TEXT",
-  text = "",
-  color = "black",
-  backColor = "white"
-) {
+function templateMaker(type = "TEXT", text = "") {
   // 기본적인 텍스트 블록(생성시 기본값)
   const textblock = ` 
   <div class="block_wrapper">
-    <div class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</div>
+    <div class="content" contenteditable="true">${text}</div>
   </div>`;
 
   // h1
   const h1 = `
   <div class="block_wrapper">
-    <h2 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h2>
+    <h2 class="content" contenteditable="true">${text}</h2>
   <div>
   `;
 
   // h2
   const h2 = `
   <div class="block_wrapper">
-    <h3 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h3>
+    <h3 class="content" contenteditable="true">${text}</h3>
   </div>
   `;
 
   // h3
   const h3 = `
   <div class="block_wrapper">
-    <h4 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h4>
+    <h4 class="content" contenteditable="true">${text}</h4>
   </div>`;
 
   // hr
@@ -159,14 +99,14 @@ function templateMaker(
   <div style="width:100%" class="block_wrapper">
     <div style="display:flex;" class="block_todo">
       <input type="checkbox" >
-      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+      <div style="width:100%" class="content" contenteditable="true">${text}</div>
     </div>
   </div>`;
 
   // 파일 블록
   const block_file = `
     <div class="block_wrapper">
-    <div class="content block_file">파일을 업로드하려면 클릭하세요.</div>
+    <div class="content block_file">파일을 업로드하려면 클릭하세요 제발 진자운동</div>
     </div>
   `;
 
@@ -175,7 +115,7 @@ function templateMaker(
   <div style="width:100%" class="block_wrapper">
     <div style="display:flex;" class="u_list">
       <div>●</div>
-      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+      <div style="width:100%" class="content" contenteditable="true">${text}</div>
     </div>
   </div> 
   `;
@@ -185,15 +125,22 @@ function templateMaker(
     <div style="width:100%" class="block_wrapper">
       <div style="display:flex;" class="o_list">
         <div></div>
-        <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+        <div style="width:100%" class="content" contenteditable="true">${text}</div>
       </div>
+    </div>
+  `;
+
+  // 표
+  const block_brd = `
+    <div class="block_wrapper">
+      <div class="content">TABLE<div>
     </div>
   `;
 
   // 토글블럭
   const block_toggle = `
     <div class="block_wrapper">
-      <div class="toggle_block content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+      <div class="toggle_block content" contenteditable="true">${text}</div>
       <div class="child_item"></div>
     </div>
     <div><button class="block_toggle_btn">></button></div>
@@ -211,8 +158,8 @@ function templateMaker(
   // 이미지 블럭
   const block_img = `
   <div class="block_wrapper">
-    <div class="content block_image">
-      이미지를 추가하려면 클릭해주세요.
+    <div class="content">
+      img
     </div>
   </div>`;
 
@@ -227,7 +174,15 @@ function templateMaker(
   const block_video = `
   <div class="block_wrapper">
     <div class="content block_video">
-      <div>비디오를 추가하려면 클릭하세요</div>
+      <div>Click ME</div>
+    </div>
+  </div>`;
+
+  //코드블럭.... 맨 마지막
+  const block_codeBlock = `
+  <div class="block_wrapper">
+    <div class="content">
+      <pre class="js"><code contenteditable="true" class=" code_block"></code></pre>
     </div>
   </div>`;
 
@@ -254,15 +209,6 @@ function templateMaker(
     db
   </div>
 </div>`;
-
-  // 2개의 열이 있는 블럭 (사이드 드래그)
-  const block_column = `
-    <div class="block_wrapper">
-      <div class="content block_column child_item">
-      </div>
-    </div>
-  `;
-
   let block = null;
 
   const blockType = {
@@ -276,14 +222,15 @@ function templateMaker(
     FILE: block_file,
     ULIST: block_uList,
     OLIST: block_oList,
+    TABLE: block_brd,
     TOGGLE: block_toggle,
     PLINK: block_pLink,
     IMAGE: block_img,
     VIDEO: block_video,
+    CODE: block_codeBlock,
     BOOKMARK: block_bookMark,
     DATABASE: block_db,
     SYNC: block_sync,
-    COLUMN: block_column,
   };
 
   // 템플릿 블럭
@@ -299,13 +246,13 @@ function templateMaker(
  * @returns
  */
 function makeDropDownMenu(id, option = {}, menuTemp) {
-  const { top = 0, left = 0, width = 100, modalClass = "" } = option;
+  const { top = 0, left = 0, width = 100, cls = "" } = option;
   let extendsMenu = "";
   menuTemp.forEach((temp) => {
     extendsMenu += temp;
   });
   const template = `
-  <div role="dialog" data-block-id="${id}" data-block-type="modal" class="block_modal block_dropdown_menu ${modalClass}" style="position:absolute;top:${top}px;left:${left}px;width:${width}px">
+  <div role="dialog" data-block-id="${id}" data-block-type="modal" class="block_modal block_dropdown_menu ${cls}" style="position:absolute;top:${top}px;left:${left}px;width:${width}px">
     <ul class="block_dropdown_menu_list" data-menu-type="control">
     ${extendsMenu}
     </ul>
@@ -324,6 +271,7 @@ const menuTemplateObject = {
             `,
   urlMenu: `<li data-block-menu="urlChange">바꾸기</li>`,
   changeMenu: `
+  <ul class="block_dropdown_menu_list">
     <li data-block-type="TEXT">텍스트</li>
     <li data-block-type="H1">h1</li>
     <li data-block-type="H2">h2</li>
@@ -335,30 +283,19 @@ const menuTemplateObject = {
     <li data-block-type="SYNC">동기화</li>
     <li data-block-type="LINK">링크</li>
     <li data-block-type="IMAGE">이미지</li>
+    <li data-block-type="CODE">코드블럭</li>
     <li data-block-type="FILE">파일</li>
+    <li data-block-type="INDEX">목차</li>
+    <li data-block-type="BUTTON">버튼</li>
     <li data-block-type="TOGGLE">토글</li>
+    <li data-block-type="CHECK">체크</li>
     <li data-block-type="BOOKMARK">북마크</li>
     <li data-block-type="OLIST">순서있는리스트</li>
     <li data-block-type="ULIST">순서없는리스트</li>
+    <li data-block-type="TABLE">표</li>
     <li data-block-type="VIDEO">비디오</li>
+  </ul>
 `,
-  color: `
-      <li data-block-color="faa0a0">빨간색</li>
-      <li data-block-color="99b5e9">파란색</li>
-      <li data-block-color="1db37b">초록색</li>
-      <li data-block-color="f9f871">노랑색</li>
-      <li data-block-color="a200ff">보라색</li>
-      <li data-block-color="ffffff">하얀색</li>
-      <li data-block-color="000000">검은색</li>
-      <hr>
-      <li data-block-back-color="faa0a0">빨간색</li>
-      <li data-block-back-color="99b5e9">파란색</li>
-      <li data-block-back-color="1db37b">초록색</li>
-      <li data-block-back-color="f9f871">노란색</li>
-      <li data-block-back-color="a200ff">보라색</li>
-      <li data-block-back-color="ffffff">하얀색</li>
-      <li data-block-back-color="000000">검은색</li>
-  `,
 };
 
 function createMessage(text) {
@@ -370,7 +307,7 @@ function createInput() {
 }
 
 function makeInputModal(text) {
-  const template = `<div>${text}</div><div></div>`;
+  const template = `<div>${text}</div><div></div></div>`;
   return template;
 }
 /**
@@ -408,43 +345,6 @@ function makeVideo(vId) {
 }
 
 /**
- *
- * @param {string} displayId - 해당 블럭의 아이디.
- * @param {Element} target - 모달을 달아줄 김치
- */
-function makeReplyModal(displayId, target) {
-  const template = `
-    <div data-block-id="${displayId}" 
-    class="reply_modal block_modal input_modal modal_item">
-      <div class="replyWrapper"></div>
-      <div class="modal_reply_controller"><input placeholder="소가죽으면다이소" type="txet"/><button class="reply_regi_btn">등록</button></div>
-    </div>
-  `;
-  displayModal(target, template);
-}
-
-/**
- *
- * @param {string} user - 댓글을 단 사람
- * @param {string} text - 댓글 내용
- * @param {string} date - 댓글을 단 시간 or 업데이트된 시간
- * @returns {string} 댓글블럭템플릿
- */
-function makeReplyBlock(user, text, date) {
-  const replyTemp = `
-    <div class="block_reply">
-      <div class="reply_block--header">
-        <div>img</div>
-        <div>${user}</div>
-        <div>${date}</div>
-      </div>
-      <div class="reply_block--content">${text}</div>
-    </div>
-  `;
-  return replyTemp;
-}
-
-/**
  * 비디오를 그려주는 함수입니다.
  * @param {string} result - 유튜브의 비디오 아이디
  * @param {Element} target - 해당 블럭의 blockWrapper
@@ -477,57 +377,9 @@ function createBookMarkTemplate({ title, description, imgAdrs, url }) {
   return bookTemp;
 }
 
-function createFileTemplate({ fileName }) {
-  const fileTemp = `
-    <div class="content block_file">
-      <div>❤</div>
-      <div>${fileName}</div>
-    <div>
-  `;
-  return fileTemp;
-}
-
-function createImageTemplate(imgSrc) {
-  const imageTemp = `
-    <div class="content block_image">
-      <img class="block_img" src="${imgSrc}" />
-    </div>
-  `;
-  return imageTemp;
-}
-
-function createPointer({
-  top = "",
-  bottom = "",
-  left = "",
-  right = "",
-  color = "",
-}) {
+function createPointer() {
   const pointerTemp = `
-    <div class="block_pointer" style="top:${top};bottom:${bottom};left:${left};right:${right};border-color:${color}"></div>
+    <div class="block_pointer"></div>
   `;
   return pointerTemp;
-}
-
-// 블럭만들기
-/**
- * 모달 뒷배경을 만들어주는 함수.
- * 클릭시 modal과 함께 제거됨
- * @param {Element} modal - 화면에 보여주는 모달창
- */
-function makeModalBackground() {
-  const modalBackground = document.createElement("div");
-  modalBackground.classList.add("modalBackground");
-  modalBackground.addEventListener("click", (e) => {
-    const modal = document.querySelector("[data-block-type='modal']");
-    if (modal) {
-      const control = modal.closest(".control");
-      if (control) {
-        control.classList.toggle("control_hide");
-      }
-    }
-    e.target.remove();
-    document.querySelectorAll(".block_modal").forEach((menu) => menu.remove());
-  });
-  document.querySelector("body").appendChild(modalBackground);
 }

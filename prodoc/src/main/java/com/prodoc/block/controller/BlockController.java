@@ -1,6 +1,5 @@
 package com.prodoc.block.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,7 @@ import com.prodoc.block.service.BookMarkVO;
 import com.prodoc.block.service.blockfileService;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.file.service.FileVO;
-import com.prodoc.user.service.ProfileService;
+import com.prodoc.history.service.HistoryService;
 
 /*
  * 개발자 : 이명석
@@ -42,6 +41,15 @@ public class BlockController {
 	
 	@Autowired
 	BlockMapper mapper;
+	
+	@Autowired
+	HistoryService historyService;
+	
+	//현재 워크, 현재 페이지, 로그인 유저, 해당 블럭 아이디
+//	@PostMapping("block/history")
+//	public void uploadHistory(@RequestBody HistoryVO histroyVO) {
+//		historyMapper.blockHistory(histroyVO);
+//	}
 	
 	@GetMapping("block/get")
 	public List<BlockVO> getBlock(@RequestParam String pageId) {
@@ -64,18 +72,21 @@ public class BlockController {
 	
 	@PostMapping("block/create")
 	public String createBlock(@RequestBody BlockVO block) {
+		//historyService.blockHistory(block); //제목에서 workId 받아와서 넣어주세요
 		int result = service.createBlock(block);
 		return result + "";
 	}
 	@PostMapping("block/update")
 	public String updateBlock(@RequestBody BlockVO block) {
 		System.out.println(block);
+		//historyService.blockHistory(block);
 		int result = service.updateBlock(block);
 		System.out.println(result);
 		return result +"";
 	}
 	@PostMapping("block/delete")
 	public String deleteBlock(@RequestBody BlockVO block) {
+		//historyService.blockHistory(block);
 		int result = service.deleteBlock(block);
 		return result+"";
 	}

@@ -122,8 +122,11 @@ public class DBController {
 	}
 	
 	@GetMapping("deleteDbAttr")
-	public void deleteDbAttr(@RequestParam String dbUseId) {
-		attrService.deletePageAttr(dbUseId);
+	public void deleteDbAttr(@RequestParam String dbUseId, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		UserVO user = (UserVO)session.getAttribute("logUser");
+		String email = user.getEmail();
+		attrService.deletePageAttr(dbUseId, email);
 	}
 	
 	@GetMapping("deleteDBPage")
@@ -136,9 +139,21 @@ public class DBController {
 	}
 	
 	@PostMapping("addCalendar")
-	public String addCalendar(@RequestParam PageAttrVO vo) {
+	public String addCalendar(@RequestBody PageAttrVO vo) {
 		int result = attrService.addCalendar(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("addAttrContent")
+	public String addAttrContent(@RequestBody PageAttrVO vo) {
+		int result = attrService.addAttrContent(vo);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("/dbAttr/getWorkMembers")
+	public List<UserVO> getWorkMembers(@RequestBody String pageId){
+		return dbService.getWorkMembers(pageId);
 	}
 }
