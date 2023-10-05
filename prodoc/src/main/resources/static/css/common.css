@@ -19,6 +19,7 @@ body {
   overflow: auto;
   display: block;
   border-right: 1px solid #ddd;
+  z-index:999
 }
 #side a {
   text-decoration: none;
