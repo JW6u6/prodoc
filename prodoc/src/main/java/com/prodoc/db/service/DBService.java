@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.page.service.PageVO;
+import com.prodoc.user.service.UserVO;
 
 public interface DBService {
 	public String insertDBCase(DBCaseVO vo);
@@ -13,6 +14,7 @@ public interface DBService {
 	public String insertDBPage(DBdataVO vo);
 	public int deleteDBPage(String pageId);
 	public DBBlockVO getDBblock(DBBlockVO vo);
+	public List<UserVO> getWorkMembers(String pageId);
 	
 	public PageVO getPageInfo(String PageId);
 }

@@ -2,7 +2,8 @@
 const SERVER_URL = "";
 
 const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
-
+const blockSessionUserEmail = document.querySelector(".email").innerHTML;
+console.log(blockSessionUserEmail);
 showBlocks(pageId);
 
 //어떻게 해결방법이 없나?
