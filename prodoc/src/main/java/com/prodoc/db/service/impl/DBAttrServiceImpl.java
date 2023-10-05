@@ -44,13 +44,18 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public void deletePageAttr(String dbUseId) {
-		mapper.deletePageAttr(dbUseId);
+	public void deletePageAttr(String dbUseId, String email) {
+		mapper.deletePageAttr(dbUseId, email);
 	}
 
 	@Override
 	public int addCalendar(PageAttrVO vo) {
 		return mapper.addCalendar(vo);
+	}
+
+	@Override
+	public int addAttrContent(PageAttrVO vo) {
+		return mapper.addAttrContent(vo);
 	}
 
 }

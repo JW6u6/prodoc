@@ -63,7 +63,7 @@
 		where display_id = #{displayId}
 	</delete>
 	
-	<select id="getBookMark" resultType="bookMarkVO">
+	<select id="getBookMark" resultType="BookMarkVO">
 		select display_id,title,description,img_adrs,url
 		from tbl_book_mark 
 		where display_id = #{displayId}

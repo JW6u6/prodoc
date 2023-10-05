@@ -218,9 +218,20 @@ select::-ms-expand {
 .pageIdVal {
   display: none;
 }
+<<<<<<< HEAD
 #subWorkMenu {
   display: none;
   position: absolute;
   background-color: #ccc;
   z-index: 999;
 }
+=======
+#subWorkMenu{
+	display: none;
+	position: absolute;
+	background-color: #f6f6f6;
+	z-index: 999;
+	padding: 2px;
+	border: solid 0.4px;
+}
+>>>>>>> branch 'master' of https://github.com/ParkSangg/YD1JO.git

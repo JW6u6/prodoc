@@ -142,8 +142,6 @@ function toggleNotiPage() {
 }
 
 //링크복사(실험)
-//현재 execCommand는 사용되지 않는데 대체인 클립보드 api가 로컬호스트나 https 환경에서만 사용이 가능하다고 해서...
-//배포 환경을 여쭤보고 수정하던지 하는 게 나을듯
 function creLink() {
     let url = '';    // <a>태그에서 호출한 함수인 clip 생성
     let linkText = document.createElement("textarea");
