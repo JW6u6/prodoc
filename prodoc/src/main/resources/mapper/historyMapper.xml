@@ -13,7 +13,7 @@
 	ORDER BY up_date desc
 </select>
 
-<insert id="insertHistory" parameterType="HistoryVO" statementType="CALLABLE">
+<insert id="blockHistory" parameterType="BlockVO" statementType="CALLABLE">
 	{call history_block(#{workId}
 						, #{creUser}
 						, #{pageId}
