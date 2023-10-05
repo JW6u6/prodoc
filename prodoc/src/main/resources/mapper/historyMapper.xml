@@ -17,8 +17,8 @@
 <!-- 블럭 생성/수정/삭제 (=페이지 수정) -->
 <insert id="blockHistory" parameterType="BlockVO" statementType="CALLABLE">
 	{call history_block(#{workId}
-						, #{creUser}
 						, #{pageId}
+						, #{creUser}
 						, #{displayId})
 						}
 </insert>
