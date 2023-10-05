@@ -58,7 +58,7 @@ public class PageController {
 		return pageMapper.pageInPage(pageId);
 	}
 
-	@GetMapping({"/pageInfo","/invite"})
+	@GetMapping("/pageInfo")
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
