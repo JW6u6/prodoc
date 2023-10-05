@@ -1,3 +1,4 @@
+
 const sidebar = document.querySelector('#side');
 
 init();
