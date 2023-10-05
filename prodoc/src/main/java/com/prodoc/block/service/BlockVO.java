@@ -22,6 +22,4 @@ public class BlockVO {
 	private String color;
 	private String backColor;
 	private String checked;
-	
-	private String workId;
 }

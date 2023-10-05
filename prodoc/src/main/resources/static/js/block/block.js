@@ -2,19 +2,12 @@
 const SERVER_URL = "http://localhost:8099";
 
 const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
-<<<<<<< HEAD
 
 function makeBlockPage(pageId) {
   document.querySelector(".container").innerHTML = "";
   showBlocks(pageId);
 }
 makeBlockPage(pageId);
-=======
-const blockSessionUserEmail = document.querySelector(".email").innerHTML;
-console.log(blockSessionUserEmail);
-showBlocks(pageId);
-
->>>>>>> branch 'master' of https://github.com/ParkSangg/YD1JO.git
 //어떻게 해결방법이 없나?
 let isReady = true;
 let isExistData = [];

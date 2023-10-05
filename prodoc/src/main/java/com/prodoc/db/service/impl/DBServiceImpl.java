@@ -14,7 +14,6 @@ import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
 import com.prodoc.page.service.PageVO;
-import com.prodoc.user.service.UserVO;
 
 @Service
 public class DBServiceImpl implements DBService {
@@ -61,11 +60,6 @@ public class DBServiceImpl implements DBService {
 	@Override
 	public PageVO getPageInfo(String PageId) {
 		return mapper.getPageInfo(PageId);
-	}
-
-	@Override
-	public List<UserVO> getWorkMembers(String pageId) {
-		return mapper.getWorkMembers(pageId);
 	}
 
 
