@@ -67,7 +67,6 @@ async function listLayoutEditor(dataList, pageId, layout){
                let mainAttr = [];
                pageList.forEach( block => {
                    let minAttr = [];    // 중복값 없는 속성 리스트(이름 컬럼 생성용)
-                    // if(col != 1 && col > block['attrList'].length + 1) col = block['attrList'].length + 1;
                     block.attrList.forEach(attr => {
                         minAttr.push(attr);
                     });
@@ -80,14 +79,11 @@ async function listLayoutEditor(dataList, pageId, layout){
                     })
                     mainAttr = minAttr;
                 });
-                console.log(mainAttr);
-                let tr = document.createElement('div'); //
-                let block = pageList[0];
-                console.log(block);                   
+                let tr = document.createElement('div');
                 tr.setAttribute("class", "dbtype-tbl prodoc_block");
                 tr.setAttribute("class", "table-tr");
 
-                for(let j=0; j<mainAttr.length+1; j++){   // 속성수 + 1만큼 열 생성
+                for(let j=0; j<mainAttr.length+1; j++){   // 속성수 + 1만큼 열 생성(페이지명 있어야함)
                     let td = document.createElement('div');
                     td.setAttribute("class", "table-td");
                     if(j == 0){
@@ -95,8 +91,7 @@ async function listLayoutEditor(dataList, pageId, layout){
                         let className = tr.getAttribute("class");
                         tr.setAttribute("class", className + " table-thead");
                     } else if(j > 0){
-                        // ✅✅✅minAttr > for : thead 작성
-                        let attr = pageList[0]['attrList'][j-1];
+                        let attr = mainAttr[j-1];
                         let displayOption = "view-visible";
                         if(attr['displayCheck'] == "FALSE") displayOption = "hide";
                         td.textContent = attr['attrName'];
@@ -111,18 +106,18 @@ async function listLayoutEditor(dataList, pageId, layout){
                     let blockDiv = dbTblBlock(block);
                     dbbody.insertAdjacentHTML("beforeend", blockDiv);
                 })
-               let crePage = document.createElement("div");
-               crePage.setAttribute("class", "caseTags table-tr add-dbpage add-page-div");
-               crePage.innerHTML = "&#10010; 새로 만들기";
-               dbbody.append(crePage);
+                let crePage = document.createElement("div");
+                crePage.setAttribute("class", "caseTags table-tr add-dbpage add-page-div");
+                crePage.innerHTML = "&#10010; 새로 만들기";
+                dbbody.append(crePage);
    
-               document.querySelectorAll(".table-thead").forEach( tr => {
-                   if( tr.querySelector(".add-page-attr") != null ) return; // 재생성 방지
-                   let addAttr = document.createElement("div");
-                   addAttr.setAttribute("class", "inlineTags add-page-attr");
-                   addAttr.innerHTML = "&#10010;";
-                   tr.append(addAttr);
-               })
+                document.querySelectorAll(".table-thead").forEach( tr => {
+                    if( tr.querySelector(".add-page-attr") != null ) return; // 재생성 방지
+                    let addAttr = document.createElement("div");
+                    addAttr.setAttribute("class", "inlineTags add-page-attr");
+                    addAttr.innerHTML = "&#10010;";
+                    tr.append(addAttr);
+                })
                break;
             
         case 'DB_CAL' : 

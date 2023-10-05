@@ -61,20 +61,24 @@
 		                                            AND attr_name = '날짜')
 	</update>
 	
-	<update id="addAttrContent" parameterType="PageAttrVO">
+	<update id="updateAttrContent" parameterType="PageAttrVO">
 		UPDATE tbl_page_attr
 		SET attr_content = #{attrContent}
 		WHERE page_use_id = #{pageUseId}
 	</update>
 	
-	<!-- 다중값을 가지는 속성의 모든 속성값 -->
-	<select id="" parameterType="PageAttrVO" resultType="PageAttrVO">
-		SELECT *
-		FROM view_pageattr
-		WHERE 
-		<if test="pageId != '' and pageId != null">
-				page_id = #{pageId} AND
-		</if>
-		        db_use_id = #{dbUseId};
-	</select>
+	<insert id="insertAttrContent" statementType="CALLABLE" parameterType="PageAttrVO">
+		{call INSERT_ATTR_CONTENT(
+			#{pageId}
+			, #{attrContent}
+			, #{dbUseId}
+			, #{pageUseId, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		)}
+	</insert>
+	
+	<delete id="deleteAttrContent" parameterType="String">
+		DELETE
+		FROM tbl_page_attr
+		WHERE page_use_id = #{pageUseId}
+	</delete>
 </mapper>

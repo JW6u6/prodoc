@@ -9,6 +9,7 @@ div[data-attr-option] {
 
 div[data-dbtype="list"]{
 	width : 90%;
+	padding: 3px;
 }
 
 div[data-dbtype="brd"]{
@@ -149,7 +150,6 @@ div[data-tagimg]{
 	font-size: small;
 	background-color: linen;
 	margin: 3px;
-	border: 1px solid white;
 }
 
 .attr:hover {
@@ -185,6 +185,27 @@ div[data-attr-modal]{
 .get-value:hover {
 	background-color: cadetblue;
 	color: white;
+}
+
+.attr-case {
+	padding: 3px;
+	border: 1px solid antiquewhite;
+}
+
+.this-value {
+	font-size: small;
+	position: relative;
+	background-color: lightgray;
+	display: inline-block;
+}
+
+.delete-attr {
+	display: none;
+	position: absolute;
+}
+
+.this-value:hover .delete-attr{
+	display: inline-block;
 }
 
 /* 모달 css 중복 */

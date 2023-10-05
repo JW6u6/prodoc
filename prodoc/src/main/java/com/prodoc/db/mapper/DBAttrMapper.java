@@ -15,5 +15,7 @@ public interface DBAttrMapper {
 	public void deletePageAttr(String dbUseId, String email);	// DB 속성 삭제
 	public int addCalendar(PageAttrVO vo);		// 캘린더 등록
 	
-	public int addAttrContent(PageAttrVO vo);
+	public int updateAttrContent(PageAttrVO vo);
+	public void insertAttrContent(PageAttrVO vo);
+	public int deleteAttrContent(String pageUseId);
 }

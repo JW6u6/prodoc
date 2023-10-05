@@ -1,5 +1,5 @@
 // 그룹이벤트
-document.getElementById("pagecontainer").addEventListener("click", e =>{
+document.getElementById("pagecontainer").addEventListener("click", e =>{    // 클릭 이벤트
     if (e.target.matches(".database-search")) databaseSearch(e);
     else if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
@@ -13,16 +13,21 @@ document.getElementById("pagecontainer").addEventListener("click", e =>{
 
 
     // 속성 이벤트
-    else if (e.target.matches(".attr")) updateContent(e);
+    else if (e.target.matches(".attr-case")) updateContent(e);
     else if (e.target.matches(".dbattr-check")) attrCheck(e);
 
     // 모달
     else if (e.target.matches(".close-modal")) closeModal(e);
 })
-document.getElementById("pagecontainer").addEventListener("keydown", e => {
+document.getElementById("pagecontainer").addEventListener("keydown", e => { // 키보드 이벤트
     if (e.target.matches(".attr")) attrContentUpdate(e);
 
 })
+document.getElementById("pagecontainer").addEventListener("change", e => { // 체인지 이벤트
+    if (e.target.matches(".db-img-upload")) addAttrImage(e);
+
+})
+
 
 function closeModal(e){
     let modal = e.target.parentElement;

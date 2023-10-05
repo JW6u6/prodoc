@@ -11,5 +11,7 @@ public interface DBAttrService {
 	public void deletePageAttr(String dbUseId, String email);
 	public int addCalendar(PageAttrVO vo);
 	
-	public int addAttrContent(PageAttrVO vo);
+	public int updateAttrContent(PageAttrVO vo);
+	public String insertAttrContent(PageAttrVO vo);
+	public int deleteAttrContent(String pageUseId);
 }

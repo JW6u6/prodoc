@@ -145,9 +145,9 @@ public class DBController {
 		else return "{\"result\" : \"fail\"}";
 	}
 	
-	@PostMapping("addAttrContent")
-	public String addAttrContent(@RequestBody PageAttrVO vo) {
-		int result = attrService.addAttrContent(vo);
+	@PostMapping("updateAttrContent")
+	public String updateAttrContent(@RequestBody PageAttrVO vo) {
+		int result = attrService.updateAttrContent(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
 	}
@@ -155,5 +155,18 @@ public class DBController {
 	@PostMapping("/dbAttr/getWorkMembers")
 	public List<UserVO> getWorkMembers(@RequestBody String pageId){
 		return dbService.getWorkMembers(pageId);
+	}
+	
+	@PostMapping("insertAttrContent")
+	public String insertAttrContent(@RequestBody PageAttrVO vo) {
+		String pageUseId = attrService.insertAttrContent(vo);
+		return "{\"result\" : \""+pageUseId+"\"}";
+	}
+	
+	@PostMapping("deleteAttrContent")
+	public String deleteAttrContent(@RequestBody String pageUseId) {
+		int result = attrService.deleteAttrContent(pageUseId);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
 	}
 }

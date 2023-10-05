@@ -54,8 +54,21 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public int addAttrContent(PageAttrVO vo) {
-		return mapper.addAttrContent(vo);
+	public int updateAttrContent(PageAttrVO vo) {
+		return mapper.updateAttrContent(vo);
 	}
+
+	@Override
+	public String insertAttrContent(PageAttrVO vo) {
+		mapper.insertAttrContent(vo);
+		return vo.getPageUseId();
+	}
+
+	@Override
+	public int deleteAttrContent(String pageUseId) {
+		return mapper.deleteAttrContent(pageUseId);
+	}
+
+	
 
 }
