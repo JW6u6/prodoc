@@ -63,7 +63,7 @@
 		where display_id = #{displayId}
 	</delete>
 	
-	<select id="getBookMark" resultType="BookMarkVO">
+	<select id="getBookMark" resultType="bookMarkVO">
 		select display_id,title,description,img_adrs,url
 		from tbl_book_mark 
 		where display_id = #{displayId}
@@ -112,4 +112,11 @@
 		update (select * from tbl_display where parent_id = #{displayId})
             set parent_id = null
 	</update>
+	
+	<delete id="deleteBlockCheck" parameterType="BlockVO" statementType="CALLABLE">
+		{call delete_block_check(
+							#{pageId},
+							#{creUser}
+		)}
+	</delete>
 </mapper>

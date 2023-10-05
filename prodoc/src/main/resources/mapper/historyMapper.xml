@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.history.mapper.HistoryMapper">
-<!-- 히스토리 조회 -->
 <select id="selectList" resultType="HistoryVO">
 	SELECT * FROM tbl_history 
 	WHERE work_id IN (SELECT work_id FROM tbl_member WHERE email = #{logUser})
@@ -14,8 +13,7 @@
 	ORDER BY up_date desc
 </select>
 
-<!-- 블럭 생성/수정/삭제 (=페이지 수정) -->
-<insert id="blockHistory" parameterType="BlockVO" statementType="CALLABLE">
+<insert id="insertHistory" parameterType="HistoryVO" statementType="CALLABLE">
 	{call history_block(#{workId}
 						, #{creUser}
 						, #{pageId}
