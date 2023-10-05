@@ -21,4 +21,30 @@
 						}
 </insert>
 	
+
+<!-- 페이지(생성/삭제)/워크(생성/수정/삭제) -->
+<insert id="insertHistory" parameterType="HistoryVO">
+	INSERT INTO TBL_HISTORY(
+	   history_id, history_type, work_id, cre_user, up_date,
+	   <if test="pageId != '' and pageId != null"> page_id </if>
+	)VALUES(history_seq.nextval, #{historyType}, #{workID}, #{creUser}, sysdate
+	   <if test="pageId != '' and pageId != null">#{pageId} </if>
+	 )
+</insert>
+
+<!-- 삭제 페이지 복구: 페이지 아이디, 로그인유저, 워크 id-->
+<insert id="revokePage" parameterType="RevokeVO" statementType="CALLABLE">
+	{call PAGE_REVOKE_PROCESS(#{pageId}, #{logUser}, #{workId},
+		#{msg, mode=OUT, jdbcType=VARCHAR, javaType=string}
+	)}
+</insert>
+
+<!-- 삭제 워크 복구: 로그인유저, 워크 아이디, 반환 메시지 -->
+<insert id="revokeWork" parameterType="RevokeVO" statementType="CALLABLE">
+	{call  WORK_REVOKE_PROCESS (
+    	#{logUser},     
+    	#{workId},      
+    	#{msg, mode=OUT, jdbcType=VARCHAR, javaType=string}     
+		)}
+</insert>
 </mapper>
