@@ -82,6 +82,12 @@ function sendData(isExistData) {
       const dataList = data[displayId];
       const lastObjOfList = dataList[dataList.length - 1];
       updateDBBlock({ displayId, ...lastObjOfList });
+      sendHistory({
+        workId: "work1",
+        creUser: "pepsiman",
+        pageId: "p1",
+        displayId,
+      });
     }
   });
 }
