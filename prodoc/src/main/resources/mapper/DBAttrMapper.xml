@@ -18,6 +18,7 @@
 	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
 		{call DELETE_DB_ATTR(
 					#{dbUseId}
+					, #{email}
 		)}
 	</delete>
 	
@@ -43,7 +44,7 @@
 		FROM tbl_attr
 	</select>
 	
-	<!-- 특정 페이지 속성 조회 -->
+	<!-- 특정 페이지 속성 조회   -->
 	<select id="getPageAttr" resultType="PageAttrVO" parameterType="String">
 		SELECT * 
 		FROM view_pageattr 
@@ -59,4 +60,21 @@
 		                                            AND attr_id = 'CAL'
 		                                            AND attr_name = '날짜')
 	</update>
+	
+	<update id="addAttrContent" parameterType="PageAttrVO">
+		UPDATE tbl_page_attr
+		SET attr_content = #{attrContent}
+		WHERE page_use_id = #{pageUseId}
+	</update>
+	
+	<!-- 다중값을 가지는 속성의 모든 속성값 -->
+	<select id="" parameterType="PageAttrVO" resultType="PageAttrVO">
+		SELECT *
+		FROM view_pageattr
+		WHERE 
+		<if test="pageId != '' and pageId != null">
+				page_id = #{pageId} AND
+		</if>
+		        db_use_id = #{dbUseId};
+	</select>
 </mapper>
