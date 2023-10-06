@@ -25,12 +25,12 @@
   	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">
  		{call insert_page(
- 						#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
- 					,	#{parentId}
+ 						#{parentId}
  					,	#{pageName}
  					,	#{creUser}
  					,	#{workId}
  					,	#{caseId}
+ 					,	#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
  					,	#{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string}
  						)
  		}

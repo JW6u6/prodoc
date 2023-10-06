@@ -26,4 +26,5 @@ public class PageVO {
 	
 	//프로시저용
 	private String insertResult;
+	
 }

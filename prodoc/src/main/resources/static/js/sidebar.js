@@ -35,7 +35,7 @@ function workList(email) {
             })
             data.forEach(item => {
                 let side = document.querySelector('#side');
-                let text = `<div class= "Work" data-id="${item.workId}"><span class="workListShow">ㅇ</span><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
+                let text = `<div class= "Work" data-id="${item.workId}" data-level="1"><span class="workListShow">ㅇ</span><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             <input type="hidden" class ="num" value="0"><div>`
                 side.insertAdjacentHTML("beforeend", text);
@@ -116,6 +116,7 @@ function dragOver(e){
     const targetWidth = targetItem.offsetWidth;
     const center = targetHeight / 2;
     const side = targetWidth - 50;
+    let dragState = null;
     if (offsetX > side && dragState !== DRAG_STATE.SIDE) {
         dragState = DRAG_STATE.SIDE;
     } else if (
@@ -142,38 +143,45 @@ function insertAfter(referenceNode, newNode) {
     }
   }
 function dropItem(e){
-    console.log(e);
     e.stopPropagation();
-    const dragItem = document.querySelector(".dragging").closest(".Work");
-    const targetItem = e.currentTarget;
-    const targetHeight = e.target.offsetHeight;
-    const { offsetX, offsetY } = e;
-    const center = targetHeight / 2;
-    let parentId = null;
-    if (targetItem.closest(".Work") == dragItem) {
-        return;
-    }
-    if (offsetY < center) {
-        //만약 자리 이동이 없다면 return
-        console.log(targetItem.parentElement);
+    console.log(e.target);
+    //타겟이 들어가지는거고 dragItem이 끌어가는 아이템..
+        const dragItem = document.querySelector(".dragging").parentElement;
         console.log(dragItem);
-        if (dragItem == targetItem.nextElementSibling) {
-          console.log("위치 결과가 같은 드래그이벤트");
-          return;
+        const targetItem = e.currentTarget;
+        const targetHeight = e.target.offsetHeight;
+        const { offsetX, offsetY } = e;
+        const center = targetHeight / 2;
+        let parentId = null;
+        if (targetItem.closest(".Work") == dragItem) {
+            return;
         }
-        sidebar.insertBefore(dragItem,targetItem.parentElement.closest(".Work"));
-    }else if (offsetY > center){
-        insertAfter(dragItem,targetItem.parentElement.closest(".Work"));
-    }
+        if (offsetY < center) {
+            //만약 자리 이동이 없다면 return
+            console.log(targetItem.parentElement);
+            console.log(dragItem);
+            if (dragItem == targetItem.nextElementSibling) {
+            console.log("위치 결과가 같은 드래그이벤트");
+            return;
+            }
+            sidebar.insertBefore(dragItem,targetItem.parentElement.closest(".Work"));
+        }else if (offsetY > center){
+            insertAfter(dragItem,targetItem.parentElement.closest(".Work"));
+        }
 
 
 }
 function dropPage(e){
     console.log(e);
     e.stopPropagation();
-    const dragItem = document.querySelector(".dragging").closest(".Page");
+    const dragItem = document.querySelector(".dragging").parentElement;
+    console.log(dragItem);
     const targetItem = e.currentTarget;
+    console.log(targetItem.parentElement);
+    const pageMain = e.currentTarget.parentElement.parentElement;
+    console.log(pageMain);
     const targetHeight = e.target.offsetHeight;
+    console.log(targetHeight);
     const { offsetX, offsetY } = e;
     const center = targetHeight / 2;
     let parentId = null;
@@ -183,10 +191,13 @@ function dropPage(e){
     if (offsetY > center) {
         //만약 자리 이동이 없다면 return
         console.log(targetItem.parentElement);
-        if (dragItem == targetItem.nextElementSibling) {
-          console.log("위치 결과가 같은 드래그이벤트");
-          return;
-        }
+        // if (dragItem == targetItem.nextElementSibling) {
+        //   console.log("위치 결과가 같은 드래그이벤트");
+        //   return;
+        // }
+        insertAfter(dragItem,targetItem.parentElement);
+    }else if (offsetY < center){
+        pageMain.insertBefore(dragItem,targetItem.parentElement);
     }
 
 
@@ -267,7 +278,7 @@ function pageList(wId, target) {
     })
     .then(data => {
             data.forEach(item=> {
-                let text = `<div class= "Page" data-id="${item.pageId}" draggable="true"><span class="pageListShow">ㅇ</span><span class="pageName">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+                let text = `<div class= "Page" data-id="${item.pageId}" data-level="2" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <div class = "pageMain"></div>
                             <div>`
@@ -286,11 +297,12 @@ function pageList(wId, target) {
                         pageInPage(pageClick, target);
                     }
                 })
+                console.log(document.querySelectorAll('#side .pageName'));
                 document.querySelectorAll('#side .pageName').forEach(items => {
                     items.addEventListener("dragstart", dragStart)
                     items.addEventListener("dragend", dragEnd);
                     items.addEventListener("dragover", dragOver);
-                    items.addEventListener("drop", dropItem);
+                    items.addEventListener("drop", dropPage);
                 })
             })
             document.querySelectorAll('#side .pageName').forEach(Pages => {
@@ -326,6 +338,7 @@ function newPage() {
     let caseId = document.querySelector('#caseId').value;
     let creUser = document.querySelector('#loginUser').value;
     let pageName = document.querySelector('#pgName').value;
+    let parentLevel = document.querySelector('#parentLevel').value;
     let val = {
         parentId,
         pageName,
@@ -345,12 +358,14 @@ function newPage() {
                 .then(response => response.text())
                 .then((pageId) => {
                     if(parentId){
-                        let parent = document.querySelector('.Page[data-id='+parentId+']');
+                        let pId = document.querySelector('#parentId').value;
+                        let parent = document.querySelector('.Page[data-id="' + pId + '"]');
                         let insertDiv = parent.querySelector('.pageMain');
                         insertDiv.innerHTML="";
                         pageInPage(parentId,insertDiv);
                     }else{
-                        let works = document.querySelector('.Work[data-id='+workId+']');
+                        let wId = document.querySelector('#workId').value;
+                        let works = document.querySelector('.Work[data-id="' + wId + '"]');
                         let insertDiv = works.querySelector('.pageMain');
                         insertDiv.innerHTML="";
                         pageList(workId,insertDiv);
@@ -362,12 +377,14 @@ function newPage() {
 }
 
 
+
 //새로운 페이지 삽입 모달창생성(+ 클릭시)
 function newPageModal(event) {
     pageModal.style.display = "block";
     document.body.style.overflow = "hidden";
     let wId = event.target.closest('.Work').dataset.id;
     let pId = '';
+    let  = '';
     if (event.target.closest('.pageMain')) {
         pId = event.target.closest('.Page').dataset.id;
     }
@@ -385,18 +402,23 @@ function newPageModal(event) {
         .catch((err) => console.log('err: ', err));
 }
 
-let pageInPageCount = 0;
 //페이지 안의 페이지 여는 기능
 function pageInPage(pId,target){
     let insertDiv = target.parentElement.querySelector('.pageMain');
     let url = '/pageInPage?pageId='+pId;
+    let parentLevel = insertDiv.parentElement.dataset.level;
     fetch(url)
     .then(res => {
         return res.json();
     })
     .then(data => {
         data.forEach(item => {
-            let text = '<div class= "Page" data-id="'+item.pageId+'">' + '<span class="pageListShow">ㅇ</span>'+ '<span class="pageName">' + ' ' + item.pageName + '</span>' + '<span class="workIdVal">'+ item.workId +'</span>' + ' <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span> <div class = "pageMain"></div> <div>';
+            let addBtn = "";
+            if(parentLevel < 4){
+                addBtn = `<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>`;
+            }
+            let text = `<div class= "Page" data-id="${item.pageId}"><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">
+             ${item.pageName}</span><span class="workIdVal">${item.workId}</span>${addBtn}<div class="pageMain"></div> <div>`
             insertDiv.insertAdjacentHTML("beforeend",text)
         })
         let inPageDiv = target.parentElement.querySelector('.pageMain');
@@ -414,6 +436,13 @@ function pageInPage(pId,target){
                     pageInPage(pageClick,target);
                 }
             })
+        })
+        console.log(inPageDiv.querySelectorAll('.pageName'))
+        inPageDiv.querySelectorAll('.pageName').forEach(items => {
+            items.addEventListener("dragstart", dragStart)
+            items.addEventListener("dragend", dragEnd);
+            items.addEventListener("dragover", dragOver);
+            items.addEventListener("drop", dropPage);
         })
         document.querySelectorAll('#side .pageName').forEach(Pages => {
             Pages.addEventListener('click', function(e){
