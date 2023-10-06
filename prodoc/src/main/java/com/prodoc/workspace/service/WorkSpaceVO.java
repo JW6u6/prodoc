@@ -15,7 +15,7 @@ public class WorkSpaceVO {
 	private Date workCredate;
 	private String deleteCheck;
 	private String publicCheck;
-	private String MainPageId;
+	private String mainPageId;
 	
 	//프로시저 out 담아오기 위한 필드명
 	private String result; //결과 받아옴

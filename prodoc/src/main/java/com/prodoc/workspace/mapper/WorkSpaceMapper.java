@@ -33,4 +33,7 @@ public interface WorkSpaceMapper {
 	//워크스페이스 메인페이지 지정
 	public int MainPgWorkspace(WorkSpaceVO workVO);
 	
+	//초대코드로 워크스페이스 정보 가져오기
+	public WorkSpaceVO InviteWorkInfo(String inviteId);
+	
 }

@@ -6,6 +6,7 @@
 	<!-- Sidebar -->
 	<div id="side">
 	<input type="text" class="logUser" style="display:none; "th:value="${session.logUser.email}">
+	<input type="text" id="homePg" style="display:none; "th:value="${session.logUser.defaultPage}">
 		<div>
 			<div id="">알림</div>
 			<div id="fileList">파일</div>
@@ -17,7 +18,6 @@
 				<div id="workspaces"></div>
 			</div>
 			<div id="searchWKDB">검색</div>
-			<div id="trashBasket">휴지통</div>
 			<div id="history">히스토리</div>
 		</div>
 
@@ -71,9 +71,8 @@
 
 			<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
 			<div id="nameArea">
-				<input type="text" id="wsName" name="workName" class="box"
-					placeholder="워크스페이스명"> <input type="hidden" id="loginUser"
-					name="email" th:value="${session.logUser.email}">
+				<input type="text" id="wsName" name="workName" class="box" placeholder="워크스페이스명"> 
+				<input type="hidden" id="loginUser" name="email" th:value="${session.logUser.email}">
 			</div>
 
 			<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
