@@ -1,3 +1,10 @@
+.hide {
+	display: none;
+}
+.view {
+	display: block;
+}
+
 body {
   margin: 0px;
 }
@@ -19,7 +26,7 @@ body {
   overflow: auto;
   display: block;
   border-right: 1px solid #ddd;
-  z-index:999
+  z-index:10
 }
 #side a {
 	text-decoration: none;
@@ -87,7 +94,8 @@ header > ul {
 }
 
 #menu > li {
-   text-align: left;
+  width: 220px; height:40px;
+  text-align: left;
   border-bottom: #ccc solid 0.4px;
   list-style: none;
   padding: 0;

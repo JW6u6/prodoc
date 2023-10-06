@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.prodoc.page.service.PageService;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
@@ -80,6 +81,15 @@ public class WorkSpaceController {
 		return workspaceService.inviteListWorkspace(workId);
 	}
 
+	@GetMapping("/invite/{inviteId}")
+	public String mappingPath(@PathVariable("inviteId") String inviteId, Model model) {
+	    //인바이트 아이디로 워크 아이디 찾기
+		//워크 아이디로 메인 페이지 찾기
+		//메인 페이지 아이디 모달에 담아 전송
+		model.addAttribute("pageId", "pageId");
+		return "이거 모르게썽";
+	}
+	
 	// 워크스페이스 수정
 	@PostMapping("/workEdit")
 	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
