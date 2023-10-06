@@ -1,14 +1,12 @@
 // Spring에 등록시 빈값으로 만들기
 const SERVER_URL = "";
 
-const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
-const workId = "workId";
+let pageBlockId = "";
+let workBlockId = "";
 function makeBlockPage(pageId) {
   document.querySelector(".container").innerHTML = "";
   showBlocks(pageId);
 }
-
-makeBlockPage(pageId);
 
 //어떻게 해결방법이 없나?
 let isReady = true;
@@ -217,7 +215,7 @@ async function getOneBlock(displayId) {
  *
  */
 function createDBBlock(blockObj) {
-  blockObj.workId = workId;
+  blockObj.workId = workBlockId;
   fetch(SERVER_URL + "/block/create", {
     method: "POST",
     headers: {
@@ -247,8 +245,8 @@ function createDBBlock(blockObj) {
  * @returns {number} 0 or 1
  */
 function updateDBBlock(blockObj) {
-  blockObj.workId = workId;
-  blockObj.pageId = pageId;
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
   console.log(blockObj);
   fetch(SERVER_URL + "/block/update", {
     method: "POST",
@@ -267,8 +265,8 @@ function updateDBBlock(blockObj) {
  * @param {{displayId:String,workId:string}} blockObj - 삭제할 블럭이 가지고있는 displayId
  */
 function deleteDBBlock(blockObj) {
-  blockObj.workId = workId;
-  blockObj.pageId = pageId;
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
   fetch(SERVER_URL + "/block/delete", {
     method: "POST",
     headers: {

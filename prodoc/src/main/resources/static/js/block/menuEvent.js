@@ -109,7 +109,7 @@ const blockHandler = {
         creUser: blockSessionUserId,
         content: replyInput.value,
         displayId: blockId,
-        pageId: pageId,
+        pageId: workBlockId,
         mentionList: null, // 어케할까
       });
       replyInput.value = "";

@@ -34,8 +34,9 @@ container.addEventListener("drop", (e) => {
   }
 });
 
-//컨테이너 클릭 이벤트 (click은 마우스를 클릭하고 놨을때 발생함...)
-container.addEventListener("mousedown", (e) => {
+//컨테이너 클릭 이벤트
+container.addEventListener("mouseup", (e) => {
+  let newElement = null;
   if (e.target !== e.currentTarget) return;
   e.stopPropagation();
   const paddingBottom = 150;
@@ -267,7 +268,7 @@ function drop_handler(event) {
       createDBBlock({
         blockId: "COLUMN",
         creUser: blockSessionUserId,
-        pageId,
+        pageId: workBlockId,
         rowX: order,
         displayId: temp.displayId,
         parentId: isParent.dataset.blockId,
@@ -276,7 +277,7 @@ function drop_handler(event) {
       createDBBlock({
         blockId: "COLUMN",
         creUser: blockSessionUserId,
-        pageId,
+        pageId: workBlockId,
         rowX: order,
         displayId: temp.displayId,
       });

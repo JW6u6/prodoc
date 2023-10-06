@@ -23,7 +23,7 @@ function showReply(e) {
 }
 //페이지 댓글 리스트 만드는 함수
 async function makeReplyList(appendTarget) {
-  const replylist = await getPageReplyList(pageId);
+  const replylist = await getPageReplyList(workBlockId);
   replylist.forEach((reply) => {
     const date = reply.upDate ? reply.upDate : reply.creDate;
     const temp = makeReplyBlock(reply.creUser, reply.content, date);

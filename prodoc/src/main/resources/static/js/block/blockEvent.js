@@ -505,6 +505,7 @@ function keydown_handler(e) {
     const temp = makeBlockTemplate();
     //블럭 배치 및 이벤트 부여
     displayBlock(temp); //문서쪽으로 만듦
+    //만약 e.target이 TODO블럭이면 TODO블럭을 생성
   }
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함

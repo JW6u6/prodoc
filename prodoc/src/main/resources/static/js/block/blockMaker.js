@@ -42,7 +42,7 @@ function makeBlockTemplate() {
   const blockObj = {
     displayId,
     rowX,
-    pageId,
+    pageId: pageBlockId,
     blockId: "TEXT",
     creUser: blockSessionUserId,
     content: "",
