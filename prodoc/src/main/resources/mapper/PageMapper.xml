@@ -67,6 +67,13 @@
 		SET delete_check = 'TRUE'
 		WHERE page_id = #{pageId}
 	</update>
+	
+	<!-- 페이지 삭제시 자식 페이지들까지 모조리 삭제 -->
+	<update id="RemoveChildPage" parameterType="String" statementType ="CALLABLE">
+		{CALL DELETE_PAGE_PROCESS(
+									#{pageId}
+			)}
+	</update>
 
 	<!-- 워크스페이스 지우면 그 워크스페이스의 페이지까지 지워지도록 -->
 	<update id="ifWorkRemove" parameterType="String">

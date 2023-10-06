@@ -8,11 +8,11 @@
 body {
   margin: 0px;
 }
-
 #side {
   height: 100%;
   float: left;
 }
+
 #side {
   position: fixed;
   list-style: none;
@@ -29,16 +29,16 @@ body {
   z-index:10
 }
 #side a {
-  text-decoration: none;
-  padding: 10px;
-  display: block;
-  color: #000;
-  font-weight: bold;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+	color: #000;
+	font-weight: bold;
 }
 
 #side li a:hover {
-  background: #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 #side li a.home {
@@ -47,8 +47,9 @@ body {
 }
 
 .cd1 {
-  margin-left: 120px;
+	margin-left: 120px;
 }
+
 .app {
   background-color: #ffffff;
   width: calc(100vw - 300px);
@@ -75,7 +76,7 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  z-index: 999;
+  z-index: 1;
 }
 
 header > ul {
