@@ -48,6 +48,7 @@ public class PageServiceImpl implements PageService {
 		history.setWorkId(pageVO.getWorkId());
 		history.setCreUser(pageVO.getCreUser());
 		history.setHistoryType("CREATE");
+
 		if (pageVO.getInsertResult().equals("success")) {
 			history.setPageId(pageVO.getPageId());
 			historyService.insertHistory(history);

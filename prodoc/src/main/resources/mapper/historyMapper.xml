@@ -15,8 +15,15 @@
 
 <insert id="blockHistory" parameterType="BlockVO" statementType="CALLABLE">
 	{call history_block(#{workId}
-						, #{creUser}
 						, #{pageId}
+						<choose>
+						<when test="creUser != null">
+						, #{creUser}
+						</when>
+						<otherwise>
+						, #{upUser}
+						</otherwise>
+						</choose>
 						, #{displayId})
 						}
 </insert>
