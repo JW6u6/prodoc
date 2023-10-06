@@ -3,4 +3,6 @@
 }
 .view {
 	display: block;
+	position: absolute;
+	z-index: 50;
 }

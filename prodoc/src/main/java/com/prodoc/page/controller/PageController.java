@@ -32,7 +32,7 @@ public class PageController {
 
 	@Autowired
 	MemberService memberserivce;
-
+	
 	private SimpMessagingTemplate template;
 
 	@Autowired

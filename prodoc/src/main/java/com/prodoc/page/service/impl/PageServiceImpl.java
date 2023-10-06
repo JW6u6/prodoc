@@ -43,15 +43,15 @@ public class PageServiceImpl implements PageService {
 	@Override
 	@Transactional
 	public String insertPage(PageVO pageVO) {
+		pageMapper.insertPage(pageVO);
 		HistoryVO history = new HistoryVO();
 		history.setWorkId(pageVO.getWorkId());
 		history.setCreUser(pageVO.getCreUser());
 		history.setHistoryType("CREATE");
-		pageMapper.insertPage(pageVO);
-		history.setPageId(pageVO.getPageId());
-		
-		historyService.insertHistory(history);
+
 		if (pageVO.getInsertResult().equals("success")) {
+			history.setPageId(pageVO.getPageId());
+			historyService.insertHistory(history);
 			return pageVO.getPageId();
 		} else {
 			return pageVO.getPageId();

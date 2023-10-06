@@ -1,6 +1,7 @@
 package com.prodoc.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 		vo.setEmail(authentication.getName());
 		HttpSession session = request.getSession();
 		session.setAttribute("logUser", service.getUser(vo));
-		
 		response.sendRedirect("/home");
 	}
 

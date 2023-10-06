@@ -17,7 +17,6 @@
 				<div id="workspaces"></div>
 			</div>
 			<div id="searchWKDB">검색</div>
-			<div id="trashBasket">휴지통</div>
 			<div id="history">히스토리</div>
 		</div>
 
@@ -70,7 +69,7 @@
 			</div>
 
 			<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
-			<div id="nameArea">
+			<div id="nameArea" >
 				<input type="text" id="wsName" name="workName" class="box"
 					placeholder="워크스페이스명"> <input type="hidden" id="loginUser"
 					name="email" th:value="${session.logUser.email}">
