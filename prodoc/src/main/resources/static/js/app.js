@@ -4,14 +4,19 @@ const stompClient = new StompJs.Client({
 });
 connect();
 //해당 updatePage를 구독중인 사람
+
 stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
+    // 페이지 업데이트
     stompClient.subscribe('/user/topic/updatePage', (data) => {
         let socketVO = JSON.parse(data.body);
         if(socketVO.cmd == 1){
             console.log("생성완료");
         }
     });
+    
+    // 테스트
+    
 };
 
 stompClient.onWebSocketError = (error) => {
@@ -32,4 +37,5 @@ function disconnect() {
     console.log("Disconnected");
 }
 // 각자 만들기
+
 

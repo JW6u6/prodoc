@@ -1,13 +1,13 @@
 // Spring에 등록시 빈값으로 만들기
-const SERVER_URL = "http://localhost:8099";
+const SERVER_URL = "";
 
-const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
-
+let pageBlockId = "";
+let workBlockId = "";
 function makeBlockPage(pageId) {
   document.querySelector(".container").innerHTML = "";
   showBlocks(pageId);
 }
-makeBlockPage(pageId);
+
 //어떻게 해결방법이 없나?
 let isReady = true;
 let isExistData = [];
@@ -81,24 +81,8 @@ function sendData(isExistData) {
     for (let displayId in data) {
       const dataList = data[displayId];
       const lastObjOfList = dataList[dataList.length - 1];
-      updateDBBlock({ displayId, ...lastObjOfList });
-      sendHistory({
-        workId: "work1",
-        creUser: "pepsiman",
-        pageId: "p1",
-        displayId,
-      });
+      updateDBBlock({ displayId, workId, ...lastObjOfList });
     }
-  });
-}
-
-function sendHistory(historyObj) {
-  fetch(SERVER_URL + "/block/history", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(historyObj),
   });
 }
 
@@ -231,6 +215,7 @@ async function getOneBlock(displayId) {
  *
  */
 function createDBBlock(blockObj) {
+  blockObj.workId = workBlockId;
   fetch(SERVER_URL + "/block/create", {
     method: "POST",
     headers: {
@@ -255,10 +240,14 @@ function createDBBlock(blockObj) {
  *  colY:Number,
  *  checked:String,
  *  color:string,
- *  backColor:string}} blockObj  - 업데이트할 블럭 정보 OBJECT
+ *  backColor:string
+ *  workId:string}} blockObj  - 업데이트할 블럭 정보 OBJECT
  * @returns {number} 0 or 1
  */
 function updateDBBlock(blockObj) {
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
+  console.log(blockObj);
   fetch(SERVER_URL + "/block/update", {
     method: "POST",
     headers: {
@@ -273,9 +262,11 @@ function updateDBBlock(blockObj) {
 
 /**
  *  블럭 삭제를 요청하는 함수
- * @param {{displayId:String}} blockObj - 삭제할 블럭이 가지고있는 displayId
+ * @param {{displayId:String,workId:string}} blockObj - 삭제할 블럭이 가지고있는 displayId
  */
 function deleteDBBlock(blockObj) {
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
   fetch(SERVER_URL + "/block/delete", {
     method: "POST",
     headers: {
@@ -289,7 +280,7 @@ function deleteDBBlock(blockObj) {
 
 /**
  *  북마크 업데이트를 요청하는 함수
- * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string}} bookMarkObj
+ * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string,workId:string}} bookMarkObj
  */
 async function updateDBBookMark(bookMarkObj) {
   await fetch(SERVER_URL + `/block/updateBookMark`, {
