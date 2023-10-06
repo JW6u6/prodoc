@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.history.mapper.HistoryMapper">
-<!-- 히스토리 조회 -->
 <select id="selectList" resultType="HistoryVO">
 	SELECT * FROM tbl_history 
 	WHERE work_id IN (SELECT work_id FROM tbl_member WHERE email = #{logUser})
@@ -14,11 +13,10 @@
 	ORDER BY up_date desc
 </select>
 
-<!-- 블럭 생성/수정/삭제 (=페이지 수정) -->
 <insert id="blockHistory" parameterType="BlockVO" statementType="CALLABLE">
 	{call history_block(#{workId}
-						, #{pageId}
 						, #{creUser}
+						, #{pageId}
 						, #{displayId})
 						}
 </insert>
@@ -27,12 +25,10 @@
 <!-- 페이지(생성/삭제)/워크(생성/수정/삭제) -->
 <insert id="insertHistory" parameterType="HistoryVO">
 	INSERT INTO TBL_HISTORY(
-	   history_id, history_type, work_id, cre_user, up_date,
-	   <if test="displayId != '' and displayId != null"> display_id, </if>
-	   <if test="pageId != '' and pageId != null"> page_id </if>
-	)VALUES(history_seq.nextval, #{historyType}, #{workID}, #{creUser}, sysdate
-	   <if test="displayId != '' and displayId != null"> #{displayId}, </if>
-	   <if test="pageId != '' and pageId != null">#{pageId} </if>
+	   history_id, history_type, work_id, cre_user, up_date
+	   <if test="pageId != '' and pageId != null"> , page_id </if>
+	)VALUES(history_seq.nextval, #{historyType}, #{workId}, #{creUser}, sysdate
+	   <if test="pageId != '' and pageId != null"> , #{pageId} </if>
 	 )
 </insert>
 

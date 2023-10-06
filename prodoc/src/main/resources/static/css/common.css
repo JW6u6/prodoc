@@ -1,19 +1,26 @@
+body {
+  margin: 0px;
+}
 #side {
-	height: 100%;
-	float: left;
+  height: 100%;
+  float: left;
 }
 
 #side {
-	list-style: none;
-	padding: 0px;
-	margin: 0px;
-	width: 300px;
-	background: lightsalmon;
-	height: 1000px;
-	overflow: auto;
-	display: block;
+  position: fixed;
+  list-style: none;
+  padding: 0px;
+  padding-top: 50px;
+  box-sizing: border-box;
+  margin: 0px;
+  width: 300px;
+  background: #fbfbfa;
+  height: 1000px;
+  overflow: auto;
+  display: block;
+  border-right: 1px solid #ddd;
+  z-index:999
 }
-
 #side a {
 	text-decoration: none;
 	padding: 10px;
@@ -28,8 +35,8 @@
 }
 
 #side li a.home {
-	background: #fcb7ad;
-	color: #fff;
+  background: #fcb7ad;
+  color: #fff;
 }
 
 .cd1 {
@@ -37,61 +44,60 @@
 }
 
 .app {
-	background-color: lightyellow;
-	width: calc(100% - 300px);
-	margin: 0px;
-	float: left;
+  background-color: #ffffff;
+  width: calc(100vw - 300px);
+  margin: 0px;
+  padding-top: 70px;
+  padding-left: 300px;
 }
-
 #content1 {
-	margin: 0px;
+  margin: 0px;
 }
 
 header {
-	background-color: #d3feef;
-	display: flex;
-	ling-height: 50px;
-	margin: 0px;
-	padding: 10px;
-	/*
+  width: calc(100% - 300px);
+  margin: 0px;
+  margin-left: 300px;
+  position: fixed;
+  background-color: #ffffff;
+  display: flex;
+  line-height: 50px;
+  padding: 10px;
+  /*
 	width:calc(100% - 300px);
 	float:right;*/
-	flex-direction: row;
-	justify-content: space-between;
-	align-iems: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
 }
 
-header>ul {
-	display: flex;
-	gap: 20px;
+header > ul {
+  display: flex;
+  gap: 20px;
 }
 
 #menu {
-	background-color: white;
-	font-size: 14px;
-	position: absolute;
-	border: black solid 0.4px;
-	z-index: 999;
+  background-color: white;
+  font-size: 14px;
+  position: absolute;
+  border: black solid 0.4px;
+  padding: 0 10px;
+
 }
 
-#menu>ul {
-	display: flex;
-	padding: 0;
-	margin: 0;
+#menu > li {
+   text-align: left;
+  border-bottom: #ccc solid 0.4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 999;
 }
-
-#menu>li {
-	text-align: center;
-	border-bottom: #ccc solid 0.4px;
-	list-style: none;
-	padding: 1px;
-	z-index: 999;
-}
-
 #userBtn {
-	border-radius: 50%;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }

@@ -1,96 +1,103 @@
-
 /* 모달창 크기 */
-#pageModal,#workModal {
-		position: fixed;
-		z-index: 1;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-		background-color: rgba(0, 0, 0, 0.4);
-		display: none;
+#pageModal,
+#workModal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
 }
 /* 워크 생성 모달창 콘텐츠 박스크기 */
 .box {
-	border : 3px solid pink;
-	padding : 7px;
-	text-align : center;
-	width: 400px;
-	border-radius: 10px;
+  border: 3px solid pink;
+  padding: 7px;
+  text-align: center;
+  width: 400px;
+  border-radius: 10px;
 }
 /* 모달창 본문 */
 .modal-content {
-		background-color: #fefefe;
-		margin: 10% auto;
-		padding: 20px;
-		border: 3px solid #888;
-		border-radius: 10px;
-		width: 800px;
-		height: 500px;
-		text-align: center;
-		z-index: 1;
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 3px solid #888;
+  border-radius: 10px;
+  width: 800px;
+  height: 500px;
+  text-align: center;
+  z-index: 1;
 }
-#temPage,#dbPage,#subTemPage,#subDbPage {
-		display:inherit;
-		z-index: 2;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-		display: none;
+#temPage,
+#dbPage,
+#subTemPage,
+#subDbPage {
+  display: inherit;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: none;
 }
-#pageContent,#subPageContent {
-	z-index: 1;
-		left: 0;
-		top: 0;
-		width: 500px;
-		float:left;
-		height: 70%;
-		margin: 0 auto;
-		margin-top : 30px;
-		border:solid 2px pink;
-		border-radius: 10px;
+#pageContent,
+#subPageContent {
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 500px;
+  float: left;
+  height: 70%;
+  margin: 0 auto;
+  margin-top: 30px;
+  border: solid 2px pink;
+  border-radius: 10px;
 }
-.tem,.db {
-	background-color:yellow;
-	width : 100px;
-	margin : 40px;
-	margin-top : 30px;
-	padding : 10px;
-	float : left;
-} 
+.tem,
+.db {
+  background-color: yellow;
+  width: 100px;
+  margin: 40px;
+  margin-top: 30px;
+  padding: 10px;
+  float: left;
+}
 /* 모달 내 닫기창 스타일 */
 .close {
-		color: #aaa;
-		float: right;
-		font-size: 28px;
-		font-weight: bold;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 .close:hover,
 .close:focus {
-		color: black;
-		text-decoration: none;
-		cursor: pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 /* +에 마우스 올렸을때 포인터 변경 */
-.addWS{
-	    cursor: pointer;
-	    float:right;
+.addWS {
+  cursor: pointer;
+  float: right;
 }
 /* 하위 워크,페이지의 하위 표시를 위한 간격. */
 .Work {
-    	margin-left : 20px;
+  margin-left: 20px;
 }
 .Page {
-    	margin-left : 20px;
+  margin-left: 20px;
 }
 /* 드롭다운(셀렉트박스) */
-.selectBox * { box-sizing: border-box; }
+.selectBox * {
+  box-sizing: border-box;
+}
 .selectBox {
   position: relative;
-  padding:0px;
+  padding: 0px;
   width: 150px;
   height: 35px;
   border-radius: 4px;
@@ -99,54 +106,54 @@
   cursor: pointer;
 }
 .selectBox {
-	position: relative;
-	margin: 0 auto;
-	margin-top : 20px;
-	width: 414px;
-	height: 35px;
-	border-radius: 10px;
-	border: 3px solid blue;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 414px;
+  height: 35px;
+  border-radius: 10px;
+  border: 3px solid blue;
 }
 .selectBox .select {
-	width: inherit;
-	height: inherit;
-	background: transparent;
-	border: 0 none;
-	outline: 0 none;
-	padding: 7px;
-	position: relative;
-	z-index: 3;
-	text-align: center;
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  border: 0 none;
+  outline: 0 none;
+  padding: 7px;
+  position: relative;
+  z-index: 3;
+  text-align: center;
 }
 .selectBox .select option {
-	background: lightcoral;
-	color: #fff;
-	padding: 0;
-	font-size: 16px;
+  background: lightcoral;
+  color: #fff;
+  padding: 0;
+  font-size: 16px;
 }
 .selectBox .icoArrow {
-position: absolute; 
-top: 0; 
-right: 0; 
-z-index: 1; 
-width: 35px; 
-height: inherit;
-display: flex;
-justify-content: center;
-align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 35px;
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .selectBox .icoArrow {
-width: 20%;
-transition: .3s;
+  width: 20%;
+  transition: 0.3s;
 }
 .turn {
-	transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 /* IE */
-select::-ms-expand { 
-	display: none;
+select::-ms-expand {
+  display: none;
 }
 .select {
   -o-appearance: none;
@@ -155,63 +162,65 @@ select::-ms-expand {
   appearance: none;
 }
 .Type {
-	margin : 10px;
-	box-shadow:inset 1px 1px 0px 1px #ffffff;
-	background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
-	background-color:#ededed;
-	border-radius:6px;
-	border:1px solid #dcdcdc;
-	display:block;
-	cursor:pointer;
-	color:#777777;
-	font-family:Arial;
-	font-size:17px;
-	font-weight:bold;
-	padding:12px;
-	width: 150px;
-	height: 50px;
-	text-decoration:none;
-	text-shadow:1px 2px 0px #ffffff;
-	margin-top : 80px;
+  margin: 10px;
+  box-shadow: inset 1px 1px 0px 1px #ffffff;
+  background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+  background-color: #ededed;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  display: block;
+  cursor: pointer;
+  color: #777777;
+  font-family: Arial;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 12px;
+  width: 150px;
+  height: 50px;
+  text-decoration: none;
+  text-shadow: 1px 2px 0px #ffffff;
+  margin-top: 80px;
 }
 .Type:hover {
-	background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
-	background-color:#dfdfdf;
+  background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+  background-color: #dfdfdf;
 }
 .Type:active {
-	position:relative;
-	top:1px;
+  position: relative;
+  top: 1px;
 }
-.btnDiv{
-	float:left;
+.btnDiv {
+  float: left;
 }
-.pageDiv{
-	width : 300px;
-	height : 40px;
-	margin: 0 auto;
-	border:solid 2px pink;
-	border-radius: 10px;
+.pageDiv {
+  width: 300px;
+  height: 40px;
+  margin: 0 auto;
+  border: solid 2px pink;
+  border-radius: 10px;
 }
-#temPage,#dbPage,#subTemPage,#subDbPage{
-		z-index: 1;
-		left: 0;
-		top: 0;
-		width: 500px;
-		float:left;
-		height: 70%;
-		margin: 0 auto;
-		margin-top : 30px;
-		border:solid 2px pink;
-		border-radius: 10px;
+#temPage,
+#dbPage,
+#subTemPage,
+#subDbPage {
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 500px;
+  float: left;
+  height: 70%;
+  margin: 0 auto;
+  margin-top: 30px;
+  border: solid 2px pink;
+  border-radius: 10px;
 }
-.workIdVal, .pageIdVal {
-	display : none;
+.workIdVal,
+.pageIdVal {
+  display: none;
 }
-#subWorkMenu{
-	display: none;
-	position: absolute;
-	background-color: #f6f6f6;
-	z-index: 999;
-	padding: 2px;
-	border: solid 0.4px;
+#subWorkMenu {
+  display: none;
+  position: absolute;
+  background-color: #ccc;
+  z-index: 999;
 }

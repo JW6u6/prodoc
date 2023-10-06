@@ -77,7 +77,7 @@
 
  	
  	<!-- 워크스페이스 삭제 -->
- 	<update id="removeCheckWorkspace" parameterType="String">
+ 	<update id="removeCheckWorkspace" parameterType="WorkSpaceVO">
  		UPDATE TBL_WORKSPACE
  		SET DELETE_CHECK = 'TRUE'
  		WHERE work_id = #{workId}

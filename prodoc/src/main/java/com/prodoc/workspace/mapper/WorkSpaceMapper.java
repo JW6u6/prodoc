@@ -28,7 +28,7 @@ public interface WorkSpaceMapper {
 	//워크스페이스(팀) 설정에서 소유자 수정하는건 member패키지로 따로 뺌
 
 	// 워크스페이스 삭제(체크)
-	public int removeCheckWorkspace(String workId);
+	public int removeCheckWorkspace(WorkSpaceVO workVO);
 	
 	//워크스페이스 메인페이지 지정
 	public int MainPgWorkspace(WorkSpaceVO workVO);

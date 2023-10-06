@@ -1,4 +1,3 @@
-
 const sidebar = document.querySelector('#side');
 
 init();
@@ -1203,7 +1202,11 @@ async function selectOneWork(workId) {
 function deleteWorkS(workId) {
     let workNm = document.querySelector('#wsName');
     let nameCheck = document.querySelector('#delCheck');
-
+    let email = document.querySelector('#loginUser').value;
+    let val = {
+        workId,
+        email
+    }
 
     if (nameCheck.value == workNm.value) {
 
@@ -1213,12 +1216,11 @@ function deleteWorkS(workId) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: workId
+                body: JSON.stringify(val)
             })
             .then(response => response.text())
             .then(result => {
                 alert('워크스페이스가 삭제되었습니다.');
-                let email = document.querySelector('#loginUser').value;
 
                 closeSideModal();
                 workList(email);
@@ -1236,10 +1238,13 @@ function deleteWorkS(workId) {
 function editWorkSpace(workId) {
     let publicCheck = document.querySelector('#wsPrivate');
     let workName = document.querySelector('#wsName');
+    let email = document.querySelector('#loginUser').value;
+
     let val = {
         workId,
         "workName": workName.value,
         "publicCheck": publicCheck.value,
+        email
     };
     let url = '/workEdit';
 
@@ -1253,7 +1258,6 @@ function editWorkSpace(workId) {
         .then(response => response.text())
         .then(result => {
             alert('워크스페이스가 수정되었습니다.')
-            let email = document.querySelector('#loginUser').value;
 
             closeSideModal();
             workList(email);

@@ -2,7 +2,10 @@ package com.prodoc.page.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.prodoc.history.service.HistoryService;
+import com.prodoc.history.service.HistoryVO;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
@@ -14,7 +17,10 @@ public class PageServiceImpl implements PageService {
 
 	@Setter(onMethod_ = @Autowired)
 	PageMapper pageMapper;
-
+	
+	@Autowired
+	HistoryService historyService;
+	
 	// 페이지 잠금/잠금해제(소유자,관리자 권한)
 	@Override
 	public boolean LockCheckPage(PageVO pageVO) {
@@ -35,8 +41,15 @@ public class PageServiceImpl implements PageService {
 	}
 
 	@Override
+	@Transactional
 	public String insertPage(PageVO pageVO) {
+		HistoryVO history = new HistoryVO();
+		history.setPageId(pageVO.getPageId());
+		history.setWorkId(pageVO.getWorkId());
+		history.setCreUser(pageVO.getCreUser());
+		history.setHistoryType("CREATE");
 		pageMapper.insertPage(pageVO);
+		historyService.insertHistory(history);
 		if (pageVO.getInsertResult().equals("success")) {
 			return pageVO.getPageId();
 		} else {

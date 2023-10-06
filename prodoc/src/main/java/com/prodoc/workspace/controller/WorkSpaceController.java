@@ -83,9 +83,8 @@ public class WorkSpaceController {
 
 	// 워크스페이스 삭제(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/workDelete")
-	public void workspaceDeleteCheck(@RequestBody String workId) {
-		workspaceService.deleteCheckWorkspace(workId);
-		pageService.deleteIfWorkspace(workId);
+	public void workspaceDeleteCheck(@RequestBody WorkSpaceVO workVO) {
+		workspaceService.deleteCheckWorkspace(workVO);
 	}
 
 	// 워크스페이스 메인 페이지 지정
