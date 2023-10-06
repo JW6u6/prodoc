@@ -34,12 +34,14 @@ public class HistoryServiceImpl implements HistoryService {
 	
 	@Override
 	public RevokeVO revokePage(RevokeVO revoke) {
-		return mapper.revokePage(revoke);
+		mapper.revokePage(revoke);
+		return revoke;
 	}
 	
 	@Override
 	public RevokeVO revokeWork(RevokeVO revoke) {	
-		return mapper.revokeWork(revoke);
+		mapper.revokeWork(revoke);
+		return revoke;
 	}
 
 }
