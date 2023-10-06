@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.db.service.AddAttrVO;
@@ -27,8 +27,9 @@ import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.db.service.dbattrFileService;
+import com.prodoc.file.service.FileVO;
 import com.prodoc.page.mapper.PageMapper;
-import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
 
@@ -39,6 +40,7 @@ public class DBController {
 	@Autowired DBAttrService attrService;
 	@Autowired PageMapper pageMapper;
 	@Autowired BlockServiceImpl blockService;
+	@Autowired dbattrFileService fileService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
 	public String InsertDBCase(DBCaseVO casePage) {
@@ -140,5 +142,62 @@ public class DBController {
 		int result = attrService.addCalendar(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
+	}
+	@PostMapping("updateAttrContent")
+	public String updateAttrContent(@RequestBody PageAttrVO vo) {
+		int result = attrService.updateAttrContent(vo);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("/dbAttr/getWorkMembers")
+	public List<UserVO> getWorkMembers(@RequestBody String pageId){
+		return dbService.getWorkMembers(pageId);
+	}
+	
+	@PostMapping("insertAttrContent")
+	public String insertAttrContent(@RequestBody PageAttrVO vo) {
+		String pageUseId = attrService.insertAttrContent(vo);
+		return "{\"result\" : \""+pageUseId+"\"}";
+	}
+	
+	@PostMapping("deleteAttrContent")
+	public String deleteAttrContent(@RequestBody String pageUseId) {
+		int result = attrService.deleteAttrContent(pageUseId);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("dbattr/fileUpload")	// 파일업로드
+	public String attrFileupload(MultipartFile file) {
+		String uploadName = fileService.fileUploadName(file);
+		return uploadName;
+	}
+	
+	@PostMapping("/dbattr/selectAllTags")
+	public List<PageAttrVO> selectAllTags(@RequestBody String dbUseId){
+		return attrService.selectAllTags(dbUseId);
+	}
+	
+	@PostMapping("/dbattr/insertFileAttr")
+	public void insertFileAttr(@RequestBody String displayId) {
+		attrService.insertFileAttr(displayId);
+	}
+	
+	@PostMapping("/dbattr/updateFileAttr")
+	public void updateFileAttr(@RequestBody FileVO file) {
+		attrService.updateFileAttr(file);
+	}
+	
+	@PostMapping("/dbattr/deleteFileAttr")
+	public String deleteFileAttr(@RequestBody String displayId) {
+		int result = attrService.deleteFileAttr(displayId);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("/dbattr/selectFileAttr")
+	public FileVO selectFileAttr(@RequestBody String displayId) {
+		return attrService.selectFileAttr(displayId);
 	}
 }

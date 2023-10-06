@@ -7,6 +7,7 @@ import com.prodoc.db.service.DBBlockVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.page.service.PageVO;
+import com.prodoc.user.service.UserVO;
 
 public interface DBMapper {
 	public void insertDBCase(DBCaseVO page);				// DBcase가 되는 페이지 insert
@@ -16,6 +17,7 @@ public interface DBMapper {
 	public void insertDBPage(DBdataVO vo);		// DBcase 하위에 DB페이지 생성	
 	public int deleteDBPage(String pageId);
 	public DBBlockVO getDBblock(DBBlockVO vo);
+	public List<UserVO> getWorkMembers(String pageId);
 	
 	public PageVO getPageInfo(String pageId);	// 페이지VO 따로 필요해서 만들었음
 }
