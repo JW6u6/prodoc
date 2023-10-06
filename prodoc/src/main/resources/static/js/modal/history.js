@@ -80,7 +80,11 @@ function formatDate(thisDate){
 }
 
 function formatTime(thisDate){
-	return `${thisDate.getHours()}:${thisDate.getMinutes()}:${thisDate.getSeconds()}`;
+	let hour = thisDate.getHours() >= 10? thisDate.getHours() : '0'+thisDate.getHours();
+	let minute = thisDate.getMinutes() >= 10? thisDate.getMinutes() : '0'+thisDate.getMinutes();
+	let second = thisDate.getSeconds() >= 10? thisDate.getSeconds() : '0'+thisDate.getSeconds();
+	
+	return `TIME: ${hour}:${minute}:${second}`;
 }
 
 //결과 세팅

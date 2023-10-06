@@ -25,10 +25,10 @@
 <!-- 페이지(생성/삭제)/워크(생성/수정/삭제) -->
 <insert id="insertHistory" parameterType="HistoryVO">
 	INSERT INTO TBL_HISTORY(
-	   history_id, history_type, work_id, cre_user, up_date,
-	   <if test="pageId != '' and pageId != null"> page_id </if>
-	)VALUES(history_seq.nextval, #{historyType}, #{workID}, #{creUser}, sysdate
-	   <if test="pageId != '' and pageId != null">#{pageId} </if>
+	   history_id, history_type, work_id, cre_user, up_date
+	   <if test="pageId != '' and pageId != null">, page_id </if>
+	)VALUES(history_seq.nextval, #{historyType}, #{workId}, #{creUser}, sysdate
+	   <if test="pageId != '' and pageId != null">,#{pageId} </if>
 	 )
 </insert>
 
