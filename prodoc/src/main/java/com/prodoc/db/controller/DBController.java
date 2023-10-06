@@ -28,6 +28,7 @@ import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
 import com.prodoc.db.service.dbattrFileService;
+import com.prodoc.file.service.FileVO;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
@@ -171,5 +172,32 @@ public class DBController {
 	public String attrFileupload(MultipartFile file) {
 		String uploadName = fileService.fileUploadName(file);
 		return uploadName;
+	}
+	
+	@PostMapping("/dbattr/selectAllTags")
+	public List<PageAttrVO> selectAllTags(@RequestBody String dbUseId){
+		return attrService.selectAllTags(dbUseId);
+	}
+	
+	@PostMapping("/dbattr/insertFileAttr")
+	public void insertFileAttr(@RequestBody String displayId) {
+		attrService.insertFileAttr(displayId);
+	}
+	
+	@PostMapping("/dbattr/updateFileAttr")
+	public void updateFileAttr(@RequestBody FileVO file) {
+		attrService.updateFileAttr(file);
+	}
+	
+	@PostMapping("/dbattr/deleteFileAttr")
+	public String deleteFileAttr(@RequestBody String displayId) {
+		int result = attrService.deleteFileAttr(displayId);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("/dbattr/selectFileAttr")
+	public FileVO selectFileAttr(@RequestBody String displayId) {
+		return attrService.selectFileAttr(displayId);
 	}
 }

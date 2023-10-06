@@ -109,11 +109,35 @@ div[data-tagimg]{
     border: 1px solid gainsboro;
 }
 
+.cal-row{
+	/* display: inline-flex;
+	white-space: nowrap; */
+	display: flex;
+	position: relative;
+
+}
+
 .cal-date{
 	/* width: calc(100%/7); */
 	width: 90px;
 	height: 100px;
 	border: 1px solid skyblue;
+	position: relative;
+}
+
+.cal-day{
+	width: 90px;
+	height: 20px;
+	border: 1px solid skyblue;
+
+	text-align: center;
+}
+
+.dbtype-cal{
+	display: block;
+	position: absolute;
+	background-color: white;
+	border-radius: 5px;
 }
 
 .cal-date:hover .db-cal-adddata{
@@ -128,14 +152,42 @@ div[data-tagimg]{
 	margin: 3px;
 }
 
+.attr:hover {
+	overflow: visible;
+}
+
 .attr-list{
 	float: right;
+}
+
+div[data-layout="DB_TBL"] .attrAtag {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
 }
 
 .del-db-page {
 	float: right;
 }
 
+div[data-attr-modal]{
+	position: absolute;
+	background-color: white;
+	top: 100%;
+	width:200px
+}
+
+.get-value {
+	font-size: small;
+	border-bottom: 1px solid gray;
+	background-color: white;
+	padding:3px;
+}
+
+.get-value:hover {
+	background-color: cadetblue;
+	color: white;
+}
 
 .attr-case {
 	padding: 3px;
@@ -146,12 +198,21 @@ div[data-tagimg]{
 	font-size: small;
 	position: relative;
 	background-color: lightgray;
-	display: inline-block;
+	display: block;
+	padding: 3px
 }
 
 .delete-attr {
 	display: none;
 	position: absolute;
+}
+
+.del-attr-file {
+	display: none;
+}
+
+.file-content:hover .del-attr-file{
+	display: inline-block;
 }
 
 .this-value:hover .delete-attr{
@@ -164,4 +225,8 @@ div[data-tagimg]{
 }
 .view-visible {
 	visibility: visible;
+}
+
+.modal-top {
+	position: relative;
 }

@@ -80,4 +80,40 @@
 		FROM tbl_page_attr
 		WHERE page_use_id = #{pageUseId}
 	</delete>
+	
+	<!-- 태그리스트 조회용 -->
+	<select id="selectAllTags" resultType="PageAttrVO" parameterType="String">
+		SELECT *
+		FROM view_pageattr
+		WHERE db_use_id = #{dbUseId}
+	</select>
+	
+	<!-- 파일 insert -->
+	<insert id="insertFileAttr" parameterType="String">
+		INSERT INTO tbl_file(display_id)
+		VALUES (#{displayId})
+	</insert>
+	
+	<!-- 파일 update -->
+	<update id="updateFileAttr" parameterType="FileVO">
+		UPDATE tbl_file
+		SET path = #{path}
+			, save_date = sysdate
+			, up_name = #{upName}
+			, new_name = #{newName}
+		WHERE display_id = #{displayId}
+	</update>
+	
+	<!-- 파일 delete -->
+	<delete id="deleteFileAttr" parameterType="String">
+		DELETE FROM tbl_file
+		WHERE display_id = #{displayId}
+	</delete>
+	
+	<!-- 파일 select -->
+	<select id="selectFileAttr" parameterType="String" resultType="FileVO">
+		SELECT *
+		FROM tbl_file
+		WHERE display_id = #{displayId}
+	</select>
 </mapper>

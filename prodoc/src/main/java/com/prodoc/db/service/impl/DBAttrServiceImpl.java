@@ -10,6 +10,7 @@ import com.prodoc.db.service.AddAttrVO;
 import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBAttrService;
 import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.file.service.FileVO;
 
 @Service
 public class DBAttrServiceImpl implements DBAttrService {
@@ -67,6 +68,31 @@ public class DBAttrServiceImpl implements DBAttrService {
 	@Override
 	public int deleteAttrContent(String pageUseId) {
 		return mapper.deleteAttrContent(pageUseId);
+	}
+
+	@Override
+	public List<PageAttrVO> selectAllTags(String dbUseId) {
+		return mapper.selectAllTags(dbUseId);
+	}
+
+	@Override
+	public int insertFileAttr(String displayId) {
+		return mapper.insertFileAttr(displayId);
+	}
+
+	@Override
+	public int updateFileAttr(FileVO file) {
+		return mapper.updateFileAttr(file);
+	}
+
+	@Override
+	public int deleteFileAttr(String displayId) {
+		return mapper.deleteFileAttr(displayId);
+	}
+
+	@Override
+	public FileVO selectFileAttr(String displayId) {
+		return mapper.selectFileAttr(displayId);
 	}
 
 }

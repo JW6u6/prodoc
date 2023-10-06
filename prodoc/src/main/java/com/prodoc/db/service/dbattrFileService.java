@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class dbattrFileService {
-	@Value("&{dbattr.file.upload.path}")
+	@Value("${dbattr.file.upload.path}")
 	private String uploadPath;
 	
 	public String fileUploadName(MultipartFile mfile) {

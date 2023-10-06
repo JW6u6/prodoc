@@ -210,10 +210,17 @@ function dbBrdBlock(block){
 
 function dbGalBlock(block){
     let useAttr = getAttrList(block['attrList']);
+    let backImg = ''
+    block.attrList.forEach(attr => {
+        if(attr.attrId == "IMG" && attr.attrContent != null){
+            backImg = attr.attrContent;
+        }
+    })
+
     const galType = `
     <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail">이미지 추가</div>
+        <div class="gal-thumbnail"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
             <div>`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
