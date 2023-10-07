@@ -45,8 +45,8 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public void deletePageAttr(String dbUseId) {
-		mapper.deletePageAttr(dbUseId);
+	public void deletePageAttr(PageAttrVO attrvo) {
+		mapper.deletePageAttr(attrvo);
 	}
 
 	@Override
@@ -76,23 +76,13 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public int insertFileAttr(String displayId) {
-		return mapper.insertFileAttr(displayId);
+	public void modifyAttrName(PageAttrVO vo) {
+		mapper.modifyAttrName(vo);
 	}
 
 	@Override
-	public int updateFileAttr(FileVO file) {
-		return mapper.updateFileAttr(file);
-	}
-
-	@Override
-	public int deleteFileAttr(String displayId) {
-		return mapper.deleteFileAttr(displayId);
-	}
-
-	@Override
-	public FileVO selectFileAttr(String displayId) {
-		return mapper.selectFileAttr(displayId);
+	public void modifyDBPage(PageAttrVO vo) {
+		mapper.modifyDBPage(vo);
 	}
 
 }

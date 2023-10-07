@@ -28,7 +28,7 @@ import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
 import com.prodoc.db.service.dbattrFileService;
-import com.prodoc.file.service.FileVO;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
@@ -41,6 +41,7 @@ public class DBController {
 	@Autowired PageMapper pageMapper;
 	@Autowired BlockServiceImpl blockService;
 	@Autowired dbattrFileService fileService;
+	@Autowired HistoryService hisService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
 	public String InsertDBCase(DBCaseVO casePage) {
@@ -76,7 +77,7 @@ public class DBController {
 			DBBlockVO dbblock = new DBBlockVO();
 			dbblock.setPageId(pageId);
 			result.put("result", dbService.getDBblock(dbblock));
-		} else result.put("result", "fail");
+		} else result.put("result", "fail"); 
 		return result;
 	}
 	
@@ -123,18 +124,15 @@ public class DBController {
 		return "{\"caseBlock\" : \""+result+"\"}";
 	}
 	
-	@GetMapping("deleteDbAttr")
-	public void deleteDbAttr(@RequestParam String dbUseId) {
-		attrService.deletePageAttr(dbUseId);
+	@PostMapping("deleteDbAttr")
+	public void deleteDbAttr(@RequestBody PageAttrVO attrvo) {
+		attrService.deletePageAttr(attrvo);
 	}
 	
-	@GetMapping("deleteDBPage")
-	public String deleteDBPage(@RequestParam String pageId) {
-		int result = dbService.deleteDBPage(pageId);
-		if(result > 0) {
-			return "{\"result\" : \"success\"}";
-		}
-		else return "{\"result\" : \"fail\"}";
+	@PostMapping("deleteDBPage")
+	public String deleteDBPage(@RequestBody BlockVO vo) {
+		dbService.deleteDBPage(vo);
+		return "{\"result\" : \"success\"}";
 	}
 	
 	@PostMapping("addCalendar")
@@ -146,6 +144,7 @@ public class DBController {
 	@PostMapping("updateAttrContent")
 	public String updateAttrContent(@RequestBody PageAttrVO vo) {
 		int result = attrService.updateAttrContent(vo);
+		attrService.modifyDBPage(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
 	}
@@ -168,7 +167,7 @@ public class DBController {
 		else return "{\"result\" : \"fail\"}";
 	}
 	
-	@PostMapping("dbattr/fileUpload")	// 파일업로드
+	@PostMapping("/dbattr/fileUpload")	// 파일업로드
 	public String attrFileupload(MultipartFile file) {
 		String uploadName = fileService.fileUploadName(file);
 		return uploadName;
@@ -179,25 +178,8 @@ public class DBController {
 		return attrService.selectAllTags(dbUseId);
 	}
 	
-	@PostMapping("/dbattr/insertFileAttr")
-	public void insertFileAttr(@RequestBody String displayId) {
-		attrService.insertFileAttr(displayId);
-	}
-	
-	@PostMapping("/dbattr/updateFileAttr")
-	public void updateFileAttr(@RequestBody FileVO file) {
-		attrService.updateFileAttr(file);
-	}
-	
-	@PostMapping("/dbattr/deleteFileAttr")
-	public String deleteFileAttr(@RequestBody String displayId) {
-		int result = attrService.deleteFileAttr(displayId);
-		if(result > 0) return "{\"result\" : \"success\"}";
-		else return "{\"result\" : \"fail\"}";
-	}
-	
-	@PostMapping("/dbattr/selectFileAttr")
-	public FileVO selectFileAttr(@RequestBody String displayId) {
-		return attrService.selectFileAttr(displayId);
+	@PostMapping("modifyAttrName")
+	public void modifyAttrName(@RequestBody PageAttrVO vo) {
+		attrService.modifyAttrName(vo);
 	}
 }
