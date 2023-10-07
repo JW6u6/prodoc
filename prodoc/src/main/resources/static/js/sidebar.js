@@ -169,6 +169,7 @@ function insertAfter(referenceNode, newNode) {
   } else {
     referenceNode.parentNode.appendChild(newNode);
   }
+}
 function dropItem(e){
     e.stopPropagation();
     console.log(e.target);
@@ -228,7 +229,6 @@ function dropPage(e) {
         pageMain.insertBefore(dragItem,targetItem.parentElement);
     }
   }
-}
 
 function insertAfter(newNode, existingNode) {
   existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
