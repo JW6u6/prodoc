@@ -32,6 +32,10 @@ const mouseleave_handler = (e) => {
 
 // 특수한 블럭들의 이벤트
 const blockClickEvent = (block) => {
+  const isDBBlock = block.closest("[data-block-type='DATABASE']")
+  if(isDBBlock){
+    getChildList(block.dataset.blockId);
+  }
   const isBookMark = block.querySelector(".block_bookmark");
   if (isBookMark) {
     bookMarkEvent(isBookMark);
@@ -453,7 +457,7 @@ async function blockChangeMenuEvent(e) {
     text: blockType === "VIDEO" ? "" : text,
     order,
   };
-  const block = updateTemplate(blockChangeObj);
+  const block = await updateTemplate(blockChangeObj);
 
   targetBlock.insertAdjacentHTML("afterend", block.template);
   targetBlock.remove();
@@ -483,6 +487,21 @@ async function blockChangeMenuEvent(e) {
     await createFileBlock(blockId);
   }
 
+  if(blockType === "DATABASE"){
+    console.log(pageBlockId);
+    const dbObject = {
+      parentId:pageBlockId,
+      email:blockSessionUserId,
+      pageNum:999,
+      displayId:blockId,
+    }
+    console.log(dbObject)
+    // 데이터베이스 db에 생성
+    await createDB2DBblock(dbObject)
+    // 데이터 배치
+    await getChildList(blockId);
+  }
+
   handlingBlockEvent(targetBlock);
 
   // 블럭 업데이트 해줘야함 (타입변경)
@@ -496,16 +515,54 @@ async function blockChangeMenuEvent(e) {
 }
 
 // 키보드 이벤트
-function keydown_handler(e) {
+async function keydown_handler(e) {
   e.stopPropagation();
+  if(e.target.classList.contains("attr")){ attrContentUpdate(e); return;};
   const isContentBlock = e.target.classList.contains("content");
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
+    const enteredBlock = e.currentTarget;
+    const order = Number(enteredBlock.dataset.blockOrder);
     e.preventDefault();
     //블럭만들기
-    const temp = makeBlockTemplate();
-    //블럭 배치 및 이벤트 부여
-    displayBlock(temp); //문서쪽으로 만듦
-    //만약 e.target이 TODO블럭이면 TODO블럭을 생성
+    //만약 e.target이 TODO블럭이면 TODO블럭으로 변경!
+
+    if (e.currentTarget.dataset.blockType === "TODO") {
+      if (e.target.innerHTML !== "") {
+        const temp = await updateTemplate({
+          displayId: null,
+          type: "TODO",
+          order: order + 1,
+        });
+        displayBlock(temp);
+      } else {
+        let block = e.currentTarget;
+        const blockId = block.dataset.blockId;
+        const blockChangeObj = {
+          displayId: blockId,
+          type: "TEXT",
+          text: "",
+          order: block.dataset.blockOrder,
+        };
+        const newBlock = await updateTemplate(blockChangeObj);
+        block.insertAdjacentHTML("afterend", newBlock.template);
+        block.remove();
+        block = document.querySelector(
+          `[data-block-id="${newBlock.displayId}"]`
+        );
+        handlingBlockEvent(block);
+        updateDBBlock({
+          displayId: blockId,
+          upUser: blockSessionUserId,
+          blockId: block.dataset.blockType,
+        });
+        console.log(block.querySelector(".content"));
+        block.querySelector(".content").focus();
+      }
+    } else {
+      const temp = makeBlockTemplate();
+      //블럭 배치 및 이벤트 부여
+      displayBlock(temp); //문서쪽으로 만듦
+    }
   }
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함

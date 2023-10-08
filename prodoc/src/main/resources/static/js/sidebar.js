@@ -372,7 +372,6 @@ function pageList(wId, target) {
                         pageInPage(pageClick, target);
                     }
                 })
-                console.log(document.querySelectorAll('#side .pageName'));
                 document.querySelectorAll('#side .pageName').forEach(items => {
                     items.addEventListener("dragstart", dragStart)
                     items.addEventListener("dragend", dragEnd);

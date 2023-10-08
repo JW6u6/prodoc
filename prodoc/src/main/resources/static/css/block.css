@@ -98,7 +98,7 @@ h4 {
 }
 
 .block_dropdown_menu {
-  z-index: 2;
+  z-index: 999;
 }
 
 .block_dropdown_menu ul {

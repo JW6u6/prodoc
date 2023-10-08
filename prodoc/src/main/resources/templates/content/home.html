@@ -15,6 +15,7 @@
 <!--/* css */-->
 <link th:href="@{/css/common.css}" rel="stylesheet" />
 <link th:href="@{/css/block.css}" rel="stylesheet" />
+<link th:href="@{/css/dbpage.css}" rel="stylesheet" />
 <link th:href="@{/css/toggleClass.css}" rel="stylesheet" />
 <title>PRODOC</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
@@ -38,6 +39,11 @@
 	<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
 	<script th:inline="javascript" src="js/modal/alarm.js"></script>
 
+	<!-- db 스크립트 -->
+	<script th:inline="javascript" src="js/dbEvent.js"></script>
+	<script th:inline="javascript" src="js/dbAttrEvent.js"></script>
+	<script th:inline="javascript" src="js/dbPageLayout.js"></script>
+	<script th:inline="javascript" src="js/dbMove.js"></script>
 	<!-- 워크/디비 검색 모달 -->
 	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
 	<script th:inline="javascript" src="js/modal/search.js"></script>

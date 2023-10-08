@@ -163,7 +163,6 @@ function toggleEvent(targetItem, dragItem) {
 
 // 새로만든 drophandler. 바뀐게 있나?
 function drop_handler(event) {
-  console.log(event);
   event.stopPropagation();
   let parentId = null;
   let newOrder = null;
@@ -178,6 +177,9 @@ function drop_handler(event) {
   const targetContent = event.target;
   const targetType = targetItem.dataset.blockType;
   const targetBlockOrder = Number(targetItem.dataset.blockOrder);
+
+
+  if(document.querySelector(".dragging").classList.contains("db_block")) return;
 
   //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
   if (dragItem.parentElement.classList.contains("block_column")) {

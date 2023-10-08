@@ -49,8 +49,8 @@ public class DBServiceImpl implements DBService {
 	}
 
 	@Override
-	public int deleteDBPage(String pageId) {
-		return mapper.deleteDBPage(pageId);
+	public int deleteDBPage(BlockVO vo) {
+		return mapper.deleteDBPage(vo);
 	}
 
 	@Override
