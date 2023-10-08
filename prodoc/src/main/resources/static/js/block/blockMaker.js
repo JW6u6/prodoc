@@ -66,9 +66,9 @@ function makeBlockTemplate() {
 /**
  * 블럭을 만드는 함수입니다. HTML형식 String을 반환합니다.
  * @param {{displayId:string,type:string,text:string,order:number}} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order이 필요합니다.
- * @returns {{template:string,displayId:string}}
+ * @returns {Promise<{template:string,displayId:string}>}
  */
-function updateTemplate({
+async function updateTemplate({
   displayId,
   type,
   text = "",
@@ -76,16 +76,23 @@ function updateTemplate({
   color,
   backColor,
 }) {
-  if (!displayId) {
-    displayId = self.crypto.randomUUID();
-  }
-
   const block = templateMaker(
     type,
     text,
     color ? color : "",
     backColor ? backColor : ""
   );
+  if (!displayId) {
+    displayId = self.crypto.randomUUID();
+    console.log(type);
+    const blockSaveObj = {
+      displayId,
+      blockId: type,
+      rowX: order,
+      pageId: pageBlockId,
+    };
+    await createDBBlock(blockSaveObj);
+  }
   let controlPanel = `
   <div class="control control_hide" data-block-id="${displayId}" draggable="true">
   <button class="attrBtn">A</button>
