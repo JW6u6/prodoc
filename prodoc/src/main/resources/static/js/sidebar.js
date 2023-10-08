@@ -230,9 +230,6 @@ function dropPage(e) {
     }
   }
 
-function insertAfter(newNode, existingNode) {
-  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
-}
 //setting 분리하려고 nameArea 아래에 input:hidden으로 워크아이디 넣음
 function makeWid(e) {
   let workId = e.currentTarget.closest(".Work").dataset.id;

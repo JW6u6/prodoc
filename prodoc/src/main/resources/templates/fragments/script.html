@@ -5,15 +5,17 @@
 <th:block th:fragment="scriptFragment">
 
 
-    <!-- Bootstrap core JavaScript-->
-    <script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<!-- Bootstrap core JavaScript-->
+	<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+	<script
+		th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 	.... 스크립트 코드 작성
 
     <!-- Page level custom scripts -->
-    <script th:src="@{/bootstrap/js/demo/chart-area-demo.js}"></script>
-    <script th:src="@{/bootstrap/js/demo/chart-pie-demo.js}"></script>
+	<script th:src="@{/bootstrap/js/demo/chart-area-demo.js}"></script>
+	<script th:src="@{/bootstrap/js/demo/chart-pie-demo.js}"></script>
+	<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.es.min.js"></script>
 
 </th:block>
 </html>

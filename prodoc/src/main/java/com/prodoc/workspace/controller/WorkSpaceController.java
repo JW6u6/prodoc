@@ -95,8 +95,8 @@ public class WorkSpaceController {
 
 	// 워크스페이스 메인 페이지 지정
 	@PostMapping("/workMainPg")
-	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
-		workspaceService.assignMainPage(workVO);
+	public boolean workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
+		return workspaceService.assignMainPage(workVO);
 	}
 
 	@GetMapping("/invite/{inviteId}")
