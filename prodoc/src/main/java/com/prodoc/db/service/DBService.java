@@ -12,7 +12,7 @@ public interface DBService {
 	public PageVO getDBPageInfo(String displayId);
 	public int updateCase(PageVO vo);
 	public String insertDBPage(DBdataVO vo);
-	public int deleteDBPage(String pageId);
+	public int deleteDBPage(BlockVO vo);
 	public DBBlockVO getDBblock(DBBlockVO vo);
 	public List<UserVO> getWorkMembers(String pageId);
 	

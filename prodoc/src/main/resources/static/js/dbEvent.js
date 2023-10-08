@@ -17,14 +17,14 @@ document.getElementById("pagecontainer").addEventListener("click", e =>{    // �
     else if (e.target.matches(".dbattr-check")) attrCheck(e);
     else if (e.target.matches(".delete-attr")) deleteThisAttr(e);
     else if (e.target.matches(".file-content")) selectFileAttr(e);
-    else if (e.target.matches(".del-attr-file")) deleteFileAttr(e);
+    else if (e.target.matches(".attr-name")) modifyAttrName(e);
 
     // 모달
     else if (e.target.matches(".close-attr-modal")) closeModal(e);
 })
 document.getElementById("pagecontainer").addEventListener("keydown", e => { // 키보드 이벤트
     if (e.target.matches(".attr")) attrContentUpdate(e);
-
+    else if (e.target.matches(".attr-name")) modifyAttrName(e);
 })
 document.getElementById("pagecontainer").addEventListener("change", e => { // 체인지 이벤트
     if (e.target.matches(".db-img-upload")) addAttrImage(e);
@@ -56,38 +56,18 @@ function createDBblock(block){
     <div class="db-block" data-block-id="` + block.displayId + `" data-block-order="`+ block.rowX +`">
         <div data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
-            <div contenteditable="true">` + block.content + `</div>
+            <div>` + block.content + `</div>
             <div class="db-layout-list">
                 <ul>
                     <li class="change-layout" data-dblayout="DB_LIST">리스트</li>
                     <li class="change-layout" data-dblayout="DB_BRD">칸반보드</li>
                     <li class="change-layout" data-dblayout="DB_GAL">갤러리</li>
                     <li class="change-layout" data-dblayout="DB_TBL">표</li>
-                    <li class="change-layout" data-dblayout="DB_CAL">캘린더</li>
                 </ul>
             </div>
-            <div class="db-search-option">
-                <div class="select-date-btn">날짜</div>
-                <select>
-                    <option disabled selected>검색옵션</option>
-                    <option value="STATE">상태</option>
-                    <option value="TAG">태그</option>
-                    <option value="page_name">페이지명</option>
-                    <option value="CUSER">생성자</option>
-                </select>
-                <input type="text" name="keyword" placeholder="검색어">
-                <button class="database-search">검색</button>
-                <div id="selectDate" visibility="hidden" style="display: none;">
-                    <input type="radio" name="date" value="period" checked>기간
-                    <input type="radio" name="date" value="creDate">등록일
-                    <input type="radio" name="date" value="upDate">최종수정일
-                    <br>
-                    <input type="date" name="startDate"> ~ <input type="date" name="endDate" disabled> 
-                </div>
                 <div class="db-attr-option">
                     <button class="page-attr-option">속성</button>
                 </div>
-            </div>
         </div>
         <div class="db-block-body"></div>
 
@@ -208,16 +188,24 @@ function insertDBpage(e){
     .catch(err => console.log(err));
 }
 
-// DB 하위 페이지 삭제 ✅프로시저 수정
+// DB 하위 페이지 삭제
 function deleteDBpage(e){
+    let data = {};
     let delPageDiv = e.target.closest("[data-page-id]");
-    let delPageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
-    let caseId = e.target.closest("[data-layout]").getAttribute('data-block-id'); 
-    let url = "deleteDBPage?pageId=" + delPageId;
-    fetch(url)
+    let caseId =  e.target.closest("[data-layout]").getAttribute('data-block-id');
+    data['pageId'] = e.target.closest("[data-page-id]").getAttribute("data-page-id");
+    data['displayId'] = e.target.closest("[data-block-id]").getAttribute('data-block-id');
+    data['creUser'] = 'user1@user1' //⭐⭐
+    // data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = 'TESTWORK'     //⭐⭐워크id 가져오기
+    console.log(data);
+    fetch("deleteDBPage", {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : {'Content-Type' : 'application/json'}
+    })
     .then(response => response.json())
     .then(result => {
-        // if(result.result == 'success') getChildList(caseId);
         if(result.result == 'success') delPageDiv.remove();
     })
     .catch(err => console.log(err));

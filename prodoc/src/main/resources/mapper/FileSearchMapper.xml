@@ -11,11 +11,9 @@
             SELECT work_id
             FROM tbl_member
             WHERE email = #{email})
-        <choose>
-        	<when test="startDate != null">
-        		AND save_date BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND (TO_DATE(#{startDate}, 'yyyy-MM-dd') + 1)
-        	</when>
-        </choose>
+       	<if test="startDate != null">
+       		AND save_date BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') AND (TO_DATE(#{endDate}, 'yyyy-MM-dd') + 1)
+       	</if>
         <choose>
         	<when test="keyword != null || keyword != ''">
         	<trim prefix="AND(" suffix=")"  suffixOverrides="OR">
