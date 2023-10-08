@@ -47,7 +47,7 @@ function makeBlockTemplate() {
     creUser: blockSessionUserId,
     content: "",
   };
-  createDBBlock(blockObj);
+  createBlock2DB(blockObj);
 
   const block = templateMaker();
 
@@ -76,12 +76,15 @@ async function updateTemplate({
   color,
   backColor,
 }) {
-  const block = templateMaker(
+  let block = templateMaker(
     type,
     text,
     color ? color : "",
     backColor ? backColor : ""
-  );
+    );
+    if(type==="DATABASE"){
+       block = createDBblock({displayId,content:"새 데이터베이스"})
+    }
   if (!displayId) {
     displayId = self.crypto.randomUUID();
     console.log(type);
@@ -91,7 +94,7 @@ async function updateTemplate({
       rowX: order,
       pageId: pageBlockId,
     };
-    await createDBBlock(blockSaveObj);
+    await createBlock2DB(blockSaveObj);
   }
   let controlPanel = `
   <div class="control control_hide" data-block-id="${displayId}" draggable="true">
@@ -348,6 +351,7 @@ const menuTemplateObject = {
     <li data-block-type="OLIST">순서있는리스트</li>
     <li data-block-type="ULIST">순서없는리스트</li>
     <li data-block-type="VIDEO">비디오</li>
+    <li data-block-type="DATABASE">데이터베이스</li>
 `,
   color: `
       <li data-block-color="faa0a0">빨간색</li>

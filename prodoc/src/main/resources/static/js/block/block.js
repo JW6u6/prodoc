@@ -6,6 +6,7 @@ let workBlockId = "";
 function makeBlockPage(pageId) {
   document.querySelector(".container").innerHTML = "";
   showBlocks(pageId);
+
 }
 
 //어떻게 해결방법이 없나?
@@ -132,7 +133,6 @@ function showBlocks(pageId) {
       });
       parentBlocks.forEach(async (parent) => {
         const temp = await updateTemplate(parent);
-        console.log(temp);
         displayBlock(temp);
       });
       let count = 0;
@@ -215,7 +215,7 @@ async function getOneBlock(displayId) {
  *  @param {string} blockObj.parentId 블럭의 부모입니다.
  *
  */
-async function createDBBlock(blockObj) {
+async function createBlock2DB(blockObj) {
   blockObj.workId = workBlockId;
   await fetch(SERVER_URL + "/block/create", {
     method: "POST",
@@ -490,4 +490,30 @@ async function getPageReplyList(pageId) {
     });
 
   return replyData;
+}
+
+
+// public String parentID;	//DB의 부모 페이지 id
+// 		public String email;
+// 	public String pageNum;	//페이지넘버링
+// 		public String displayId;
+// 	public String blockNum;	//블럭넘버링
+//✔️public String result;	//생성성공시 페이지 아이디 반환
+
+/**
+ * 
+ * @param {{parentId:string,email:string,pageNum:String,displayId:string,blockNum:Number}} dbObj 
+ */
+async function createDB2DBblock(dbObj){
+  console.log(dbObj)
+  await fetch(`/InsertDBCase`,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    }
+    ,body:JSON.stringify(dbObj)
+  }).then(res=>res.text())
+    .then((result)=>{
+    console.log(result)
+  })
 }

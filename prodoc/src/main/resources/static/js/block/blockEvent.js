@@ -32,6 +32,10 @@ const mouseleave_handler = (e) => {
 
 // 특수한 블럭들의 이벤트
 const blockClickEvent = (block) => {
+  const isDBBlock = block.closest("[data-block-type='DATABASE']")
+  if(isDBBlock){
+    getChildList(block.dataset.blockId);
+  }
   const isBookMark = block.querySelector(".block_bookmark");
   if (isBookMark) {
     bookMarkEvent(isBookMark);
@@ -483,6 +487,21 @@ async function blockChangeMenuEvent(e) {
     await createFileBlock(blockId);
   }
 
+  if(blockType === "DATABASE"){
+    console.log(pageBlockId);
+    const dbObject = {
+      parentId:pageBlockId,
+      email:blockSessionUserId,
+      pageNum:999,
+      displayId:blockId,
+    }
+    console.log(dbObject)
+    // 데이터베이스 db에 생성
+    await createDB2DBblock(dbObject)
+    // 데이터 배치
+    await getChildList(blockId);
+  }
+
   handlingBlockEvent(targetBlock);
 
   // 블럭 업데이트 해줘야함 (타입변경)
@@ -498,6 +517,7 @@ async function blockChangeMenuEvent(e) {
 // 키보드 이벤트
 async function keydown_handler(e) {
   e.stopPropagation();
+  if(e.target.classList.contains("attr")){ attrContentUpdate(e); return;};
   const isContentBlock = e.target.classList.contains("content");
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
     const enteredBlock = e.currentTarget;

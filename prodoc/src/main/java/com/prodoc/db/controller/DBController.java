@@ -44,7 +44,7 @@ public class DBController {
 	@Autowired HistoryService hisService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
-	public String InsertDBCase(DBCaseVO casePage) {
+	public String InsertDBCase(@RequestBody DBCaseVO casePage) {
 		dbService.insertDBCase(casePage);
 		return casePage.getResult(); 
 	}
