@@ -106,7 +106,7 @@ async function listLayoutEditor(dataList, pageId, layout){
                 });
                 dbbody.append(tr);
             }
-
+            dbbody.insertAdjacentHTML("beforeend", addDbpage());   
             break;
     };
     
@@ -218,16 +218,76 @@ function dbTblAttrBlock(attrs, uniqueList){
         td.classList.add("attr-case", (item.displayCheck=="TRUE"?"view-visible":"hide"));
         if(item.attrId=="USER" || item.attrId=="TAG") td.classList.add("attrs");
         attrs.forEach(attr => {
-            if(attr.dbUseId != item.dbUseId) return;
-            let innerDiv = document.createElement("div");
-            innerDiv.textContent = attr.attrContent == null ? '' : attr.attrContent;
+            if(attr.dbUseId != item.dbUseId) return;    // 같은 속성끼리 묶기 위한 조건
+            let innerDiv;
+            let content = attr.attrContent;     // 내용 처리
+            if(attr.attrContent == null) content = '';
+            if(['UUSER', 'CUSER', 'USER'].includes(attr.attrId)){
+                content = content==''?'':`${attr.nickname}(${attr.attrContent})`;
+                innerDiv = document.createElement("div");
+            }
+            // 속성별 레이아웃
+            if(['TAG', 'USER'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                innerDiv.classList.add("attr");
+                innerDiv.setAttribute("data-duse-id", attr.dbUseId);
+                innerDiv.setAttribute("data-puse-id", attr.pageUseId);
+                innerDiv.setAttribute("data-attrid", attr.attrId);
+                innerDiv.setAttribute("data-attr-order", attr.numbering);
+            }
+            if(attr.attrId == 'CHECK'){
+                innerDiv = document.createElement("input");
+                innerDiv.type = "checkbox";
+                innerDiv.classList.add("dbattr-check");
+                if(attr.attrContent == 'TRUE') innerDiv.checked = true;
+            }
+            if(attr.attrId == 'URL'){
+                innerDiv = document.createElement("a");
+                if(content=='') innerDiv.classList.add("hide");
+                innerDiv.classList.add("attrAtag");
+                innerDiv.href = content;
+            }
+            if(attr.attrId == 'MEDIA'){
+                innerDiv = document.createElement("div");
+                let div = document.createElement("div");
+                div.textContent = content == '' ? '' : content.substring(13);
+                div.classList.add("attr", "inlineTags", "file-conten");
+                let btn = document.createElement("div");
+                btn.classList.add("inlineTags", "del-attr-file");
+                div.append(btn);
+                let input = document.createElement("input");
+                input.type="file";
+                input.style.display = "none";
+                input.classList.add("db-file-upload");
+                innerDiv.append(div, input);
+            }
+            if(attr.attrId == 'IMG'){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+                let img = document.createElement("img");
+                img.width = 50;
+                img.classList.add("attr", "inlineTags", "db-img");
+                img.src = content;
+                let input = document.createElement("input");
+                input.type = "file";
+                input.style.display = "none";
+                input.classList.add("db-img-upload");
+                input.accept = "image/*";
+                innerDiv.append(img, input);
+            }
+            if(['CAL', 'A_TEXT', 'NUM', 'STATE', 'CSUER', 'CDATE', 'UUSER', 'UDATE'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+            }
+            if(!['CHECK', 'IMG', 'MEDIA'].includes(attr.attrId)) innerDiv.textContent = content;
             innerDiv.setAttribute("data-duse-id", attr.dbUseId);
             innerDiv.setAttribute("data-puse-id", attr.pageUseId);
             innerDiv.setAttribute("data-attrid", attr.attrId);
-            innerDiv.classList.add("attr")
+            innerDiv.classList.add("attr");
             td.append(innerDiv);
         })
         divList.push(td);
     })
     return divList;
 }
+

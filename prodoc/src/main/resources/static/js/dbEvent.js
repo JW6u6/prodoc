@@ -20,7 +20,7 @@ document.getElementById("pagecontainer").addEventListener("click", e =>{    // �
     else if (e.target.matches(".attr-name")) modifyAttrName(e);
 
     // 모달
-    else if (e.target.matches(".close-attr-modal")) closeModal(e);
+    else if (e.target.matches(".close-attr-modal")) closeAttrModal(e);
 })
 document.getElementById("pagecontainer").addEventListener("keydown", e => { // 키보드 이벤트
     if (e.target.matches(".attr")) attrContentUpdate(e);
@@ -33,9 +33,8 @@ document.getElementById("pagecontainer").addEventListener("change", e => { // �
 })
 
 
-function closeModal(e){
+function closeAttrModal(e){
     let modal = e.target.parentElement;
-    console.log(modal.parentElement);
     modal.parentElement.classList.remove("modal-top");
     modal.remove();
 }
