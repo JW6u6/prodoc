@@ -130,18 +130,19 @@ function showBlocks(pageId) {
           parentBlocks.push(blockObj);
         }
       });
-      parentBlocks.forEach((parent) => {
-        const temp = updateTemplate(parent);
+      parentBlocks.forEach(async (parent) => {
+        const temp = await updateTemplate(parent);
+        console.log(temp);
         displayBlock(temp);
       });
       let count = 0;
       while (childBlocks.length > 0) {
         const parents = document.querySelectorAll(".prodoc_block");
-        parents.forEach((parentBlock) => {
+        parents.forEach(async (parentBlock) => {
           const parentId = parentBlock.dataset.blockId;
           for (let i = 0; i < childBlocks.length; i++) {
             if (childBlocks[i].parentId === parentId) {
-              const temp = updateTemplate(childBlocks[i]);
+              const temp = await updateTemplate(childBlocks[i]);
               displayChildBlock(temp, parentBlock);
               childBlocks.splice(i, 1);
               i--;
@@ -214,12 +215,13 @@ async function getOneBlock(displayId) {
  *  @param {string} blockObj.parentId 블럭의 부모입니다.
  *
  */
-function createDBBlock(blockObj) {
+async function createDBBlock(blockObj) {
   blockObj.workId = workBlockId;
-  fetch(SERVER_URL + "/block/create", {
+  await fetch(SERVER_URL + "/block/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      allow: "POST",
     },
     body: JSON.stringify(blockObj),
   }).catch((reject) => {
