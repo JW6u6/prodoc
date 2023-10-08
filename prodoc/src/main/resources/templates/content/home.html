@@ -34,6 +34,10 @@
 	<input type="file" class="block_file-Uploader" style="display: none" />
 	<script> const blockSessionUserId = "[[${session.logUser.email}]]"; </script>
 
+	<!-- 알람 모달 -->
+	<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
+	<script th:inline="javascript" src="js/modal/alarm.js"></script>
+
 	<!-- 워크/디비 검색 모달 -->
 	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
 	<script th:inline="javascript" src="js/modal/search.js"></script>

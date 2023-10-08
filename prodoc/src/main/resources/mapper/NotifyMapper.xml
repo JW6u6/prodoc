@@ -4,14 +4,21 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.prodoc.notify.mapper.NotifyMapper">
   
-  	<!-- 타겟 지정 알림 프로시저 -->
-  	<insert id="targetNotify" parameterType="NotifyVO" statementType="CALLABLE" >
-  		{call TARGET_NOTIFY(
-	 								#{reciveUser}
-	 								, #{noteType}
-	 								, #{displayId}
-	 								, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
- 								)}
+  	<insert id="insertTargetNotify" parameterType="NotifyVO">
+  		{call insert_notify(
+  							#{displayId}
+  						,	#{noteType}
+  						,	#{creUser}
+  						,	#{pageId}
+  						,	#{replyId}
+  						)
+  		}
   	</insert>
-  
+  	<!-- 댓글, 멘션(, 페이지 잠금) 목록 -->
+  	<select id="selectNotify" resultType="NotifyResultVO">
+  		select * 
+		from view_notify
+		where note_type=#{type};
+  	</select>
+  	<!-- 초대 목록 -->
   </mapper>

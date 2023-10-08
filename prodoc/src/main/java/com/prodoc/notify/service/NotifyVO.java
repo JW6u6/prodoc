@@ -11,7 +11,8 @@ public class NotifyVO {
 	private String noteId;
 	private String reciveUser;
 	private String noteType;
-	
-	//프로시저 결과 받아오기 위한거
-	private String result;
+	private String readCheck;
+	private String creUser;
+	private String pageId;
+	private String replyId;
 }
