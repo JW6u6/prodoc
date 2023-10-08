@@ -1,5 +1,6 @@
-async function listLayoutEditor(dataList, pageId, layout){
-    let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[2];
+async function listLayoutEditor(dataList, displayId, layout){
+    let dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
+    console.log(dbbody);
     dbbody.innerHTML = "";
     let pageList = [];  // 삭제되지 않은 페이지 목록  
     dataList.forEach(item => {
@@ -65,11 +66,13 @@ async function listLayoutEditor(dataList, pageId, layout){
         case 'DB_TBL' :
             let uniqueAttr = [];
             let getAttr = {};
-            for(let attr of pageList[0].attrList){
-                let dui = attr.dbUseId;
-                if(!getAttr[dui]){  // getAttr[dui]이 null 또는 undefined인지 체크
-                    uniqueAttr.push(attr);
-                    getAttr[dui] = true;
+            if(pageList[0]){
+                for(let attr of pageList[0].attrList){
+                    let dui = attr.dbUseId;
+                    if(!getAttr[dui]){  // getAttr[dui]이 null 또는 undefined인지 체크
+                        uniqueAttr.push(attr);
+                        getAttr[dui] = true;
+                    }
                 }
             }
             // thead 생성
@@ -81,6 +84,7 @@ async function listLayoutEditor(dataList, pageId, layout){
                     td.textContent = "이름";
                 }else{
                     td.textContent = uniqueAttr[i].attrName;
+                    td.draggable = true;
                     td.setAttribute("data-duse-id", uniqueAttr[i].dbUseId);
                     td.setAttribute("data-attr-order", uniqueAttr[i].numbering);
                     td.setAttribute("data-attrid", uniqueAttr[i].attrId);
@@ -106,10 +110,10 @@ async function listLayoutEditor(dataList, pageId, layout){
                 });
                 dbbody.append(tr);
             }
-
+            dbbody.insertAdjacentHTML("beforeend", addDbpage());   
             break;
     };
-    
+    helloWorld();
 }
 
 const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
@@ -150,7 +154,7 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block"  data-block-order="`+ block['block']['rowX'] +`">
             <div class="inlineTags">📄</div>
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
@@ -163,7 +167,7 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block"  data-block-order="`+ block['block']['rowX'] +`">
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
@@ -182,7 +186,7 @@ function dbGalBlock(block){
     })
 
     const galType = `
-    <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block"  data-block-order="`+ block['block']['rowX'] +`">
         <div class="inlineTags del-db-page">&#10005;</div>
         <div class="gal-thumbnail"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
@@ -196,10 +200,11 @@ function dbGalBlock(block){
 
 function dbTblBlock(block){
     let tr = document.createElement("div");
+    tr.draggable = true;
     tr.setAttribute("data-block-id", block.block.displayId);
     tr.setAttribute("data-page-id", block.page.pageId);
     tr.setAttribute("data-block-order", block.block.rowX);
-    tr.classList.add("dbtype-tbl", "table-tr", "prodoc_block")
+    tr.classList.add("dbtype-tbl", "table-tr", "db_block")
     let td = document.createElement("div");
     td.textContent = block.page.pageName;
     tr.append(td);
@@ -218,16 +223,76 @@ function dbTblAttrBlock(attrs, uniqueList){
         td.classList.add("attr-case", (item.displayCheck=="TRUE"?"view-visible":"hide"));
         if(item.attrId=="USER" || item.attrId=="TAG") td.classList.add("attrs");
         attrs.forEach(attr => {
-            if(attr.dbUseId != item.dbUseId) return;
-            let innerDiv = document.createElement("div");
-            innerDiv.textContent = attr.attrContent == null ? '' : attr.attrContent;
+            if(attr.dbUseId != item.dbUseId) return;    // 같은 속성끼리 묶기 위한 조건
+            let innerDiv;
+            let content = attr.attrContent;     // 내용 처리
+            if(attr.attrContent == null) content = '';
+            if(['UUSER', 'CUSER', 'USER'].includes(attr.attrId)){
+                content = content==''?'':`${attr.nickname}(${attr.attrContent})`;
+                innerDiv = document.createElement("div");
+            }
+            // 속성별 레이아웃
+            if(['TAG', 'USER'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                innerDiv.classList.add("attr");
+                innerDiv.setAttribute("data-duse-id", attr.dbUseId);
+                innerDiv.setAttribute("data-puse-id", attr.pageUseId);
+                innerDiv.setAttribute("data-attrid", attr.attrId);
+                innerDiv.setAttribute("data-attr-order", attr.numbering);
+            }
+            if(attr.attrId == 'CHECK'){
+                innerDiv = document.createElement("input");
+                innerDiv.type = "checkbox";
+                innerDiv.classList.add("dbattr-check");
+                if(attr.attrContent == 'TRUE') innerDiv.checked = true;
+            }
+            if(attr.attrId == 'URL'){
+                innerDiv = document.createElement("a");
+                if(content=='') innerDiv.classList.add("hide");
+                innerDiv.classList.add("attrAtag");
+                innerDiv.href = content;
+            }
+            if(attr.attrId == 'MEDIA'){
+                innerDiv = document.createElement("div");
+                let div = document.createElement("div");
+                div.textContent = content == '' ? '' : content.substring(13);
+                div.classList.add("attr", "inlineTags", "file-conten");
+                let btn = document.createElement("div");
+                btn.classList.add("inlineTags", "del-attr-file");
+                div.append(btn);
+                let input = document.createElement("input");
+                input.type="file";
+                input.style.display = "none";
+                input.classList.add("db-file-upload");
+                innerDiv.append(div, input);
+            }
+            if(attr.attrId == 'IMG'){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+                let img = document.createElement("img");
+                img.width = 50;
+                img.classList.add("attr", "inlineTags", "db-img");
+                img.src = content;
+                let input = document.createElement("input");
+                input.type = "file";
+                input.style.display = "none";
+                input.classList.add("db-img-upload");
+                input.accept = "image/*";
+                innerDiv.append(img, input);
+            }
+            if(['CAL', 'A_TEXT', 'NUM', 'STATE', 'CSUER', 'CDATE', 'UUSER', 'UDATE'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+            }
+            if(!['CHECK', 'IMG', 'MEDIA'].includes(attr.attrId)) innerDiv.textContent = content;
             innerDiv.setAttribute("data-duse-id", attr.dbUseId);
             innerDiv.setAttribute("data-puse-id", attr.pageUseId);
             innerDiv.setAttribute("data-attrid", attr.attrId);
-            innerDiv.classList.add("attr")
+            innerDiv.classList.add("attr");
             td.append(innerDiv);
         })
         divList.push(td);
     })
     return divList;
 }
+

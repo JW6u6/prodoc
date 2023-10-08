@@ -321,6 +321,7 @@ function getAttrList(attrs){    // 속성
 function updateAttrContent(data){
     // data = pageUseId, attrContent 필요(수정)
     let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
+    console.log(eventDiv)
     data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
     data['email'] = 'user1@user1';   // ⭐⭐
     // data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
@@ -633,7 +634,7 @@ function selectCalAttr(eTarget){
 
 // 날짜 선택 처리
 function inputAttrDate(e){
-    let caseDiv = e.target.closest("[data-puse-id]");
+    let caseDiv = e.target.closest(".attr-case");
     let input = caseDiv.querySelector(".date-value");
     let startDiv = e.target.parentElement.querySelector(".startDate");
     let endDiv = e.target.parentElement.querySelector(".endDate");
@@ -743,7 +744,6 @@ function getMembers(pageId, tag){
                         valDiv.innerText = content;
                     } else {
                         let pui = await insertAttrContent(data);
-                        console.log(pui);
                         let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
                         let insertDiv = `
                         <div data-duse-id="${dUseId}" data-puse-id="${pui}" data-attrid="USER" class="view-visible attr" data-attr-order="${number}">
@@ -840,13 +840,15 @@ function deleteThisAttr(e){
         console.log(check)
         if(check>1){
             deleteAttrContent(pui);
-        } else if(check==1){
+            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).remove();
+        } else if(check<=1){
             data['pageUseId'] = pui;
             data['attrContent'] = null;
             updateAttrContent(data);
+            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).textContent = '';
         }
-        e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).remove();
         e.target.parentElement.remove();
+
     }
 
     if(attrId == "TAG"){
