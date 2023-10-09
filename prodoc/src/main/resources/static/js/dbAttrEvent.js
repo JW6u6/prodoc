@@ -352,6 +352,7 @@ function attrContentUpdate(e){
             let insertUrl = urlPatternCheck(e.target.innerText);
             e.target.innerText = insertUrl;
             e.target.setAttribute("href", insertUrl);
+            console.log(e.target);
             console.log(insertUrl);
             if (insertUrl=='') e.target.classList.add('hide');
             data['pageUseId'] = e.target.closest('[data-puse-id]').getAttribute("data-puse-id");

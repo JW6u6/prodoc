@@ -72,13 +72,15 @@ async function listLayoutEditor(dataList, pageId, layout){
                     });
 
                     minAttr.forEach((item, idx, list) => {
-                        if (idx!=0 && item.dbUseId == list[idx-1].dbUseId){
+                        if (idx!=0 && (item.dbUseId == list[idx-1].dbUseId)){
                             minAttr.splice(idx);
                             idx--;
                         } 
                     })
                     mainAttr = minAttr;
                 });
+                console.log(mainAttr)
+                console.log(pageList)
                 let tr = document.createElement('div');
                 tr.setAttribute("class", "dbtype-tbl prodoc_block");
                 tr.setAttribute("class", "table-tr");
