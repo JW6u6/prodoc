@@ -1,5 +1,6 @@
 //모달창 열었을 때 전체 파일 조회
-//getAllList();
+let data = {};
+getAllList(data);
 
 //이벤트 등록
 document.getElementById("fileSearchBtn").addEventListener("click", getSearchList);

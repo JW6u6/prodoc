@@ -16,4 +16,7 @@ public class PageAttrVO {
 	private String displayCheck;
 	private String displayId;
 	private String nickname;
+	
+	private String email;
+	private String workId;
 }
