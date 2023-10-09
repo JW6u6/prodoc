@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -13,9 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.prodoc.page.service.PageService;
+import com.prodoc.user.service.UserVO;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
@@ -70,7 +71,9 @@ public class WorkSpaceController {
 
 	// 워크스페이스 유저 초대
 	@PostMapping("/workJoin")
-	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
+	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		((WorkJoinVO) joinVO).setCreUser(user.getEmail());
 		int result = workspaceService.inviteWorkspaceUser(joinVO);
 		return result;
 	}

@@ -1,4 +1,3 @@
-
 //나중에 따로 다른데로 옮기던가 해도 괜찮을거같은데...(이걸 왜 여기서?하고있지?)
 
 document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
@@ -49,11 +48,11 @@ async function pageInfoFromMenu() {
     let info;
 
     await fetch(url, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then((response) => response.json())
         .then((result) => {
             info = result;
@@ -86,15 +85,21 @@ async function pageLock() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
-            console.log(result);
+            if (lockCheck == 'TRUE') {
+                alert('페이지 잠금이 설정되었습니다.');
+            } else if (lockCheck == 'FALSE') {
+                alert('페이지 잠금이 해제되었습니다.');
+            } else if (result == 'FALSE') {
+                alert('페이지 잠금 설정에 실패했습니다.');
+            }
         })
         .catch(err => console.log(err));
 
@@ -122,16 +127,18 @@ function pageDelCheck() {
     let url = '/pageDelCheck';
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             if (result == 'true') {
+                let email = document.querySelector("#side input.logUser").value;
                 alert('페이지가 삭제되었습니다.')
+                workList(email);
             } else if (result == 'false') {
                 alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
             }
@@ -151,12 +158,12 @@ function ThisMainPage() {
     let url = '/workMainPg';
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             if (result == 'true') {
@@ -180,12 +187,12 @@ function toggleNotiPage() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             console.log(result);
@@ -207,11 +214,11 @@ function areUTurnOn() {
     let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
 
     fetch(url, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then(response => response.text())
         .then(result => {
             let notiToggle = document.querySelector('#notifyPage');
@@ -229,23 +236,42 @@ function areUTurnOn() {
 //배포 환경을 여쭤보고 수정하던지 하는 게 나을듯
 async function creLink() {
 
-    let info = await pageInfoFromMenu();
-    if (info.publicCheck == 'P_PRIV') {
+    let infos = await pageInfoFromMenu();
+    let pubCheck = false;
+
+    for (let info of infos) {
+        console.log(info);
+        if (info.publicCheck == 'P_PRIV') {
+            pubCheck = false;
+        } else if (info.publicCheck == 'P_PUB' || info.publicCheck == 'P_MEM') {
+            pubCheck = true;
+        }
+    }
+
+    if (pubCheck == false) {
         alert('이 페이지는 공유할 수 없습니다.');
     } else {
-
-        let url = '';    // <a>태그에서 호출한 함수인 clip 생성
+        let url = ''; // <a>태그에서 호출한 함수인 clip 생성
         let linkText = document.createElement("textarea");
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
-        document.body.appendChild(linkText); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
-        url = window.document.location.href;  //url에는 현재 주소값을 넣어줌
-        linkText.value = url;  // textarea 값에 url를 넣어줌
-        linkText.select();  //textarea를 설정
-        document.execCommand("copy");   // 복사
-        document.body.removeChild(linkText); //extarea 요소를 없애줌
+        if (navigator.clipboard !== undefined) {
+            document.body.appendChild(linkText); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
+            url = window.document.location.href; //url에는 현재 주소값을 넣어줌
+            linkText.value = url; // textarea 값에 url를 넣어줌
 
-        alert("URL이 복사되었습니다.")  // 알림창
+            navigator.clipboard
+                .writeText(linkText.value)
+                .then(() => {
+                    alert('링크가 복사되었습니다.')
+                })
+        } else {
+            linkText.select(); //textarea를 설정
+            document.execCommand("copy"); // 복사
+            document.body.removeChild(linkText); //extarea 요소를 없애줌
+
+            alert("링크가 복사되었습니다.") // 알림창
+        }
     }
 }
 
