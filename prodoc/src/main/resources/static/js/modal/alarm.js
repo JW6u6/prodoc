@@ -10,22 +10,42 @@ document.querySelector('#alarm').addEventListener('click', function(e){
 });
 
 //알림 탭 별 목록 재설정
-armMenu.forEach(tag, idx, list => {
+armMenu.forEach((tag, idx, list) => {
 	tag.addEventListener('click', function(e){
 		if(idx == 0){//allAlarm
-		
-		}else if(idx == 1){//mentionAlarm
-		
-		}else if(idx == 2){//replyAlarm
-		
+			console.log("전체알림")
+			showAlarmList('all');
+		}else if(idx == 1){//replyAlarm
+			console.log("댓글 알림")
+			showAlarmList('REPLY_TG')
 		}else{//inviteAlarm
-		
+			console.log("초대 알림")
+			showAlarmList('invite')
 		}
 	});
 });
 
 //목록 가져오는 함수
-function allArm(){
+function showAlarmList(type){
+	let obj = {};
+	obj.noteType = type;
+	let insertDiv = document.querySelector('#alarmList');
+	fetch('/alarmList',{
+		method: 'POST',
+		body:JSON.stringify(obj),
+		headers: {'Content-Type': 'application/json'}
+	})
+	.then(response => response.json())
+	.then(data => {
+	    data.result.forEach(item=>{
+			console.log(item)
+	    	let text = `<div class="alarms"><img src = "images/${item.profile}"><span class="whoTagMe">${item.creUserName}</span></div>`
+	    	insertDiv.innerHTML = text;
+	    })
+	})
+	.catch(error => {
+    console.error('오류 발생:', error);
+})
 	
 }
 

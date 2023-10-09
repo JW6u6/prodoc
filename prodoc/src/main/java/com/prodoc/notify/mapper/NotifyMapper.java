@@ -12,9 +12,13 @@ public interface NotifyMapper {
 	//알림 읽음 설정 - 상우: targetnote
 	public int readCheck(NotifyVO vo);
 	
-	//알림 목록 불러오기 -상우
-	public List<NotifyResultVO> selectNotify(String type);
+	public int redReadCheck(NotifyVO vo);
 	
+	//알림 목록 불러오기 -상우
+	public List<NotifyResultVO> selectNotify(String logUser, String type);
+	
+	//초대 목록 불러오기
+	public List<NotifyResultVO> selectNotifyInv(String logUser);
 	//알림 삭제 - 상우
 	public int deleteNotify(NotifyVO vo);
 	
