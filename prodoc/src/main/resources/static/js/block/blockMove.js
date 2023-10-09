@@ -20,7 +20,7 @@ container.addEventListener("drop", (e) => {
   newOrder = Number(target.dataset.blockOrder) + 1024;
   dragItem.dataset.blockOrder = newOrder;
   const updateObj = {
-    upUser: "pepsiman",
+    upUser: blockSessionUserId,
     displayId: dragItem.dataset.blockId,
     rowX: dragItem.dataset.blockOrder,
   };
@@ -34,8 +34,9 @@ container.addEventListener("drop", (e) => {
   }
 });
 
-//컨테이너 클릭 이벤트 (click은 마우스를 클릭하고 놨을때 발생함...)
-container.addEventListener("mousedown", (e) => {
+//컨테이너 클릭 이벤트
+container.addEventListener("mouseup", (e) => {
+  let newElement = null;
   if (e.target !== e.currentTarget) return;
   e.stopPropagation();
   const paddingBottom = 150;
@@ -81,6 +82,7 @@ function dragover_handler(event) {
   //dragover의 기본 동작 막기 (drop을 위한 작업)
   event.preventDefault();
   event.stopPropagation();
+  
 
   //드래그중 마우스 커서 모양을 정하기
   event.dataTransfer.dropEffect = "move";
@@ -162,7 +164,6 @@ function toggleEvent(targetItem, dragItem) {
 
 // 새로만든 drophandler. 바뀐게 있나?
 function drop_handler(event) {
-  console.log(event);
   event.stopPropagation();
   let parentId = null;
   let newOrder = null;
@@ -177,6 +178,9 @@ function drop_handler(event) {
   const targetContent = event.target;
   const targetType = targetItem.dataset.blockType;
   const targetBlockOrder = Number(targetItem.dataset.blockOrder);
+
+  if(document.querySelector(".dragging").classList.contains("db_block")) return;
+  if(event.target.nodeName==="IMG") return;
 
   //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
   if (dragItem.parentElement.classList.contains("block_column")) {
@@ -266,8 +270,8 @@ function drop_handler(event) {
     if (columnBlock.parentElement.classList.contains("child_item")) {
       createDBBlock({
         blockId: "COLUMN",
-        creUser: "pepsimen",
-        pageId,
+        creUser: blockSessionUserId,
+        pageId: workBlockId,
         rowX: order,
         displayId: temp.displayId,
         parentId: isParent.dataset.blockId,
@@ -275,8 +279,8 @@ function drop_handler(event) {
     } else {
       createDBBlock({
         blockId: "COLUMN",
-        creUser: "pepsimen",
-        pageId,
+        creUser: blockSessionUserId,
+        pageId: workBlockId,
         rowX: order,
         displayId: temp.displayId,
       });
@@ -326,7 +330,7 @@ function drop_handler(event) {
     deleteBlock(block);
   }
   const updateObj = {
-    upUser: "pepsiman",
+    upUser: blockSessionUserId,
     displayId: dragItem.dataset.blockId,
     rowX: dragItem.dataset.blockOrder,
     parentId,
@@ -334,189 +338,6 @@ function drop_handler(event) {
   console.log(updateObj);
   updateDBBlock(updateObj);
 }
-
-// 지금은 안씀
-// function drop_handler_old(event) {
-//   event.stopPropagation();
-
-//   // drop handler을 위한 선언들.
-//   const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
-//   const targetItem = event.currentTarget;
-//   const targetHeight = event.target.offsetHeight;
-//   const targetWidth = event.target.offsetWidth;
-//   const { offsetX, offsetY } = event;
-//   const center = targetHeight / 2;
-//   const side = targetWidth - 50;
-
-//   let parentId = null;
-//   let newOrder = null;
-//   let isChild = null;
-
-//   // 포인터가 있으면 제거
-//   const pointer = document.querySelector(".block_pointer");
-//   console.log(pointer);
-//   if (pointer) {
-//     pointer.remove();
-//   }
-//   //같은블럭을 드래그하면 이벤트 종료
-//   if (targetItem.closest(".prodoc_block") == dragItem) {
-//     return;
-//   }
-
-//   if (dragItem.parentElement.classList.contains("child_item")) {
-//     isChild = dragItem.parentElement;
-//   }
-
-//   // 블럭 이동을 위한 변수
-//   const targetBlockOrder = Number(targetItem.dataset.blockOrder);
-
-//   // --------------------- if문 시작-------------------------------
-//   // 만약 토글블럭이면?
-//   if (event.target.classList.contains("toggle_block")) {
-//     const toggleTarget = event.target.closest(".prodoc_block");
-//     const list = toggleTarget.querySelector(".child_item");
-//     const countTarget = list.querySelectorAll(".prodoc_block");
-//     let count = countTarget.length;
-//     newOrder = (count + 1) * 1024;
-//     dragItem.dataset.blockOrder = newOrder;
-//     list.appendChild(dragItem);
-//     parentId = targetItem.dataset.blockId;
-
-//     // 토글 블럭의 끝 ----------------------------------------------
-//   } else if (offsetX > side) {
-//     //사이드 이벤트 ------------------------------------------------
-
-//     //컬럼의 컬럼을 막기
-//     if (targetItem.dataset.blockType === "COLUMN") return;
-
-//     // 사이드 이동시 새로운 컬럼이라는 블럭을 생성.
-//     const order = targetItem.dataset.blockOrder;
-//     // 새로운 템플릿 컬럼
-//     const temp = updateTemplate({
-//       displayId: null,
-//       type: "COLUMN",
-//       order,
-//     });
-//     targetItem.insertAdjacentHTML("afterend", temp.template);
-//     //새로만든 컬럼
-//     const columnBlock = document.querySelector(
-//       `[data-block-id="${temp.displayId}"]`
-//     );
-
-//     // 부모가 있다면
-//     const isParent = columnBlock.parentElement.closest(".prodoc_block");
-//     // 새로만든 컬럼의 컨텐츠영역
-//     const content = columnBlock.querySelector(".content");
-//     // 컨텐츠에 이벤트 등록
-//     handlingBlockEvent(columnBlock);
-
-//     // 컬럼에 값을 넣기
-//     content.appendChild(targetItem);
-//     content.appendChild(dragItem);
-
-//     //컬럼블럭 자체를 데이터 베이스에 insert
-//     //만약 컬럼블럭이 부모가 있는 블럭쪽에 위치해있다면 parentId를 넣어주기. 아니면 parentId = null
-//     if (columnBlock.parentElement.classList.contains("child_item")) {
-//       createDBBlock({
-//         blockId: "COLUMN",
-//         creUser: "pepsimen",
-//         pageId,
-//         rowX: order,
-//         displayId: temp.displayId,
-//         parentId: isParent.dataset.blockId,
-//       });
-//     } else {
-//       createDBBlock({
-//         blockId: "COLUMN",
-//         creUser: "pepsimen",
-//         pageId,
-//         rowX: order,
-//         displayId: temp.displayId,
-//       });
-//     }
-//   }
-//   //중앙보다 아래쪽이면
-//   else if (offsetY > center) {
-//     //만약 자리 이동이 없다면 return
-//     if (dragItem == targetItem.nextElementSibling) {
-//       console.log("위치 결과가 같은 드래그이벤트");
-//       return;
-//     }
-//     const isParent = targetItem.closest(".child_item");
-
-//     if (!isParent) {
-//       parentId = null;
-//     }
-
-//     // (타겟아이템 + 타겟아이템 아래 아이템) / 2 의 order 부여
-//     if (targetItem.nextElementSibling) {
-//       const nextTarget = Number(
-//         targetItem.nextElementSibling.dataset.blockOrder
-//       );
-//       newOrder = (targetBlockOrder + nextTarget) / 2;
-//     } else {
-//       // 맨 뒤
-//       newOrder = targetBlockOrder + 1024;
-//     }
-//     insertAfter(dragItem, targetItem.closest(".prodoc_block"));
-//   } else {
-//     //만약 자리 이동이 없다면 return
-//     if (dragItem == targetItem.previousElementSibling) {
-//       console.log("위치 결과가 같은 드래그이벤트");
-//       return;
-//     }
-
-//     // --------------------- if문 끝-------------------------------
-
-//     //(타겟아이템 + 타겟아이템 위의 아이템) / 2 의 order 부여
-//     if (targetItem.previousElementSibling) {
-//       const prevTarget = Number(
-//         targetItem.previousElementSibling.dataset.blockOrder
-//       );
-//       newOrder = (targetBlockOrder + prevTarget) / 2;
-//       console.log(newOrder);
-//     } else {
-//       // 맨 앞
-//       newOrder = targetBlockOrder / 2;
-//     }
-//     //insertBefore - 요소 앞에 삽입
-//     targetItem.parentElement.insertBefore(
-//       dragItem,
-//       targetItem.closest(".prodoc_block")
-//     );
-//   }
-
-//   // 만약 숫자가 이상하면 새로부여
-//   if (!Number.isInteger(newOrder)) {
-//     resetOrder();
-//   } else if (dragItem.dataset.blockOrder === targetItem.dataset.blockOrder) {
-//     resetOrder();
-//   }
-
-//   // 드래그한게 OLIST면 OList의
-//   if (
-//     targetItem.dataset.blockType === "OLIST" ||
-//     dragItem.dataset.blockType === "OLIST"
-//   ) {
-//     resetOList();
-//   }
-
-//   if (isChild && isChild.children.length <= 0) {
-//     const block = isChild.closest(".prodoc_block");
-//     deleteBlock(block);
-//   }
-
-//   dragItem.dataset.blockOrder = newOrder;
-
-//   const updateObj = {
-//     upUser: "pepsiman",
-//     displayId: dragItem.dataset.blockId,
-//     rowX: dragItem.dataset.blockOrder,
-//     parentId,
-//   };
-//   updateDBBlock(updateObj);
-// }
-//  drop_handler 끝------------------------------------------------
 
 function resetOrder() {
   const allBlock = document.querySelectorAll(".container > .prodoc_block");

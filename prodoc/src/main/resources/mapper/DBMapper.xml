@@ -6,11 +6,14 @@
 	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">
 		{call INSERT_DB(
-						#{wordId}
+						#{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
+						, #{parentId}
+						, #{pageName}
 						, #{email}
-						, #{prentPage}
+						, #{pageNum}
+						, #{caseId}
 						, #{displayId}
-						, #{result}
+						, #{blockNum}
 		)}
 	</insert>
 	
@@ -26,10 +29,12 @@
 	</insert>
 	
 	<!-- DB 하위 페이지 삭제 -->
-	<update id="deleteDBPage" parameterType="String" statementType="CALLABLE">
-		UPDATE tbl_page
-	    SET delete_check = 'TRUE'
-	    WHERE page_id = #{pageId}
+	<update id="deleteDBPage" parameterType="BlockVO">
+		{ call DB_PAGE_DELETE_PROCESS (
+						#{pageId}
+						, #{creUser}
+						, #{workId}
+		)}
 	</update>
 
 	<!-- DBCase페이지로 하위 페이지(블럭) 리스트 조회 -->	
@@ -49,6 +54,7 @@
 		WHERE page_id = ( SELECT page_id
                           FROM tbl_dbblock
                           WHERE display_id = #{displayId})
+        ORDER BY numbering
 	</select>
   
 	<update id="updateCase" parameterType="PageVO">
@@ -81,5 +87,13 @@
 		        JOIN tbl_page p ON p.work_id = m.work_id
 		WHERE p.page_id = #{pageId}
 	</select>
-
+	
+	<update id="databaseUpdate" parameterType="PageAttrVO">
+		{call DB_HISTORY_PROCESS(
+			#{email}
+			, #{casePageId}
+			, #{pageId}
+			, #{workId}
+		)}
+	</update>
 </mapper>

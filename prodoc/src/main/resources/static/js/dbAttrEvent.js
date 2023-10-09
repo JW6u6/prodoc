@@ -108,14 +108,14 @@ function selectAttr(e){
     e.target.parentElement.querySelector('[name="useAttrName"]').value = attrName;
 }
 
-// 사용자가 속성 추가
+// 사용자가 속성 추가 ✅테이블 : 추가된 속성 컬럼 append
 async function registAttr(e){
     let check = 'true';    //중복체크를위한 변수
     let attrInfo = {};
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
     attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
     attrInfo['caseBlockId'] = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
-
+    attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     let attrList = await getUseAttrList(attrInfo['caseBlockId']);
     attrList.forEach(item => {
         if(item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
@@ -139,12 +139,18 @@ async function registAttr(e){
     }
 }
 
-// DB 속성 삭제 ✅프로시저 수정하기
+// DB 속성 삭제
 function deleteAttr(e){
+    let data = {
+        'dbUseId' : e.target.closest('[data-dbuseid]').getAttribute("data-dbuseid"),
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent    // ⭐⭐
+    }
     let caseId = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
-    let dbUseId = e.target.closest('[data-dbuseid]').getAttribute("data-dbuseid");
-    let url = "deleteDbAttr?dbUseId=" + dbUseId;
-    fetch(url)
+    fetch('deleteDbAttr', {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : { "Content-Type": "application/json" }
+    })
     .then(response => {
         let attrDiv = e.target.closest('[data-dbuseid]');
         attrDiv.remove();
@@ -267,7 +273,7 @@ function getAttrList(attrs){    // 속성
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr-case" data-attr-order="${attr.numbering}">
                 <div class="attr inlineTags file-content">
-                    ${content}
+                    ${content==''? content : content.substring(13)}
                     <button class="inlineTags del-attr-file">✕</button>
                 </div>
                 <input type="file" style="display:none;" class="db-file-upload">
@@ -309,9 +315,15 @@ function getAttrList(attrs){    // 속성
     return useAttr;
 }
 
-// 속성 값 수정 ✅히스토리 업데이트
+// 속성 값 수정
 function updateAttrContent(data){
-    // data = pageUseId, attrContent 필요
+    // data = pageUseId, attrContent 필요(수정)
+    let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
+    console.log(eventDiv)
+    data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
+    data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = document.getElementById("TitleWid").value;
+    data['casePageId'] = eventDiv.closest("[data-block-id]").getAttribute("data-block-id");
     fetch("updateAttrContent", {
         method : 'post',
         body : JSON.stringify(data),
@@ -327,42 +339,45 @@ function updateAttrContent(data){
 // 속성 div textcontent 수정
 function attrContentUpdate(e){
     if(e.keyCode === 13){
+        let attrId =  e.target.closest("[data-attrid]").getAttribute("data-attrid");
         let pui = e.target.parentElement.getAttribute("data-puse-id");
         let targetAttr = e.target.parentElement.getAttribute("data-attrid");
         let data = {};      // 속성 update ajax에 넘겨줄 데이터
-
+		
         e.preventDefault();
         e.target.blur();        // 엔터 이벤트 막기
-
-        let attrCase = e.target.parentElement;
-        let value = e.target.value
-        e.target.remove();  // input tag 삭제
-        let addContent = `
-        <div class="attr inlineTags">${value}</div>
-        `
-        attrCase.insertAdjacentHTML("afterbegin", addContent);
-        if(targetAttr != null){
-            data['pageUseId'] = pui;
-            data['attrContent'] = value;
-            updateAttrContent(data);
+        // 텍스트, 숫자 태그 처리
+        if(attrId == 'A_TEXT' || attrId == 'NUM'){
+            console.log(e.target)
+            let attrCase = e.target.parentElement;
+            let value = e.target.value;
+            let addContent = `
+            <div class="attr inlineTags">${value}</div>
+            `;
+            e.target.remove();  // input tag 삭제
+            attrCase.insertAdjacentHTML("afterbegin", addContent);
+            if(targetAttr != null){
+                data['pageUseId'] = pui;
+                data['attrContent'] = value;
+                updateAttrContent(data);
+            }
         }
 
         // url -> aTag 수정
-        if(e.target.classList.contains('attrAtag') == true){
+        if(attrId == 'URL'){
             let insertUrl = urlPatternCheck(e.target.innerText);
             e.target.innerText = insertUrl;
             e.target.setAttribute("href", insertUrl);
-            console.log(e.target);
-            console.log(insertUrl);
             if (insertUrl=='') e.target.classList.add('hide');
+            console.log(e.target.closest('[data-puse-id]'));
             data['pageUseId'] = e.target.closest('[data-puse-id]').getAttribute("data-puse-id");
             data['attrContent'] = insertUrl;
             updateAttrContent(data);
         }
 
-        if(e.target.classList.contains(tag-value) == true){
-            console.log("태그 인풋 이벤트")
-        }
+        // if(e.target.classList.contains(tag-value) == true){
+        //     console.log("태그 인풋 이벤트")
+        // }
 
         e.target.removeAttribute("contenteditable");    // contenteditable 제거
     }
@@ -476,7 +491,7 @@ async function addPageTags(e){
             data['attrContent'] = addTag;
             let newPui = await insertAttrContent(data);
             let newTag = document.createElement("div");
-            let num = caseDiv.querySelector("[data-attr-order]").getAttribute("data-attr-order");
+            let num = caseDiv.getAttribute("data-attr-order");
             newTag.setAttribute("data-duse-id", data['dbUseId']);
             newTag.setAttribute("data-puse-id", newPui);
             newTag.setAttribute("data-attrid", "TAG");
@@ -514,103 +529,33 @@ async function addAttrImage(e){
 
 // 속성에 파일 업로드
 async function addAttrFile(e){
-    let displayId = e.target.closest("[data-block-id]").getAttribute("data-block-id");
-    console.log("블럭아이디: ", displayId)
-    let contentText =  e.target.previousElementSibling.innerText;
     let formData = new FormData();
     formData.append("file", e.target.files[0]);
-    let fileName = e.target.files[0].name;
     let newName = await dbattrFileUpload(formData);
-    let data = {};
-    data['pageUseId'] = e.target.closest("[data-puse-id]").getAttribute("data-puse-id");
-    data['attrContent'] = fileName;
-    if(contentText == '') await insertAttrFile(displayId);    // 기존에 등록된 파일이 없을 때
-    let file = {};
-    file['path'] = null;    // ✅나중에 경로 등록하기
-    file['upName'] = fileName;
-    file['newName'] = newName;
-    file['displayId'] = displayId;
-    console.log(file);
-    await updateFileAttr(file);
-    e.target.previousElementSibling.innerText = fileName;
+    let fileDiv = e.target.previousElementSibling;
+    fileDiv.innerText = newName.substring(13);
+    fileDiv.setAttribute("data-file-name", newName);
+    let data = {
+        'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
+        'attrContent' : newName
+    }
     updateAttrContent(data);
-
     let delBtn = document.createElement("button");
     delBtn.classList.add("inlineTags", "del-attr-file");
     delBtn.innerText = "✕";
     e.target.parentElement.querySelector(".attr").append(delBtn);
 }
 
-// 파일테이블 insert
-async function insertAttrFile(displayId){
-    await fetch("/dbattr/insertFileAttr",{
-        method : 'post',
-        body : displayId,
-        headers : {'Content-Type' : 'application/json'}
-    })
-    .then(response => response.json)
-    .catch(err => console.log(err));
-}
-
-// 파일테이블 update
-async function updateFileAttr(data){
-    await fetch("/dbattr/updateFileAttr",{
-        method : 'post',
-        body : JSON.stringify(data),
-        headers : {'Content-Type' : 'application/json'}
-    })
-    .then(response => response.json)
-    .catch(err => console.log(err));
-}
-
-// 파일테이블 delete
-function deleteFileAttr(e){
-    let displayId = e.target.closest("[data-block-id]").getAttribute("data-block-id");
-    let aaa = e.target.closest("[data-puse-id]").getAttribute("data-puse-id")
-console.log(displayId, aaa);
-    fetch("/dbattr/deleteFileAttr",{
-        method : 'post',
-        body : displayId,
-        headers : {'Content-Type' : 'application/json'}
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result);
-        if(result.result == "success"){
-            let data = {};
-            data['pageUseId'] = e.target.closest("[data-puse-id]").getAttribute("data-puse-id");
-            data['attrContent'] = null;
-            updateAttrContent(data);
-            e.target.parentElement.innerText = "";
-            let delBtn = document.createElement("button");
-            delBtn.classList.add("inlineTags", "del-attr-file");
-            delBtn.innerText = "✕";
-            e.target.parentElement.querySelector(".attr").append(delBtn);
-        }
-    })
-    .catch(err => console.log(err));
-}
-
 // 파일 클릭 이벤트(조회)
 function selectFileAttr(e){
     let displayId = e.target.closest("[data-block-id]").getAttribute("data-block-id");
-
-    fetch("/dbattr/selectFileAttr",{
-        method : 'post',
-        body : displayId,
-        headers : {'Content-Type' : 'application/json'}
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result);
-    })
-    .catch(err => console.log(err));
+    
 }
 
 
 // 상태 속성 변경
 function changeState(eTarget){
-    let states = ['WAIT', 'RUNT', 'END', 'CANCLE']
+    let states = ['WAIT', 'RUN', 'END', 'CANCLE']
     let pui = eTarget.getAttribute("data-puse-id");
     let nowStateDiv = eTarget.querySelector(".attr");
 
@@ -635,7 +580,15 @@ function changeState(eTarget){
             data['attrContent'] = e.target.innerText;
             nowStateDiv.innerText = e.target.innerText;
             closeBtn.click();
-            updateAttrContent(data);
+            // updateAttrContent(data);
+            console.log(eTarget.closest("[data-layout]"))
+            // 보드 레이아웃에서 속성 변경했을 때 element 이동
+            if(eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
+                let moveState = data['attrContent'];
+                let moveDiv = eTarget.closest(".db_block");
+                let stateDiv = eTarget.closest(".state-container").querySelector(`[data-state="${moveState}"]`);
+                stateDiv.prepend(moveDiv);
+            }
         })
         modal.append(selector);
     })
@@ -685,7 +638,7 @@ function selectCalAttr(eTarget){
 
 // 날짜 선택 처리
 function inputAttrDate(e){
-    let caseDiv = e.target.closest("[data-puse-id]");
+    let caseDiv = e.target.closest(".attr-case");
     let input = caseDiv.querySelector(".date-value");
     let startDiv = e.target.parentElement.querySelector(".startDate");
     let endDiv = e.target.parentElement.querySelector(".endDate");
@@ -718,7 +671,6 @@ function attrCheck(e){
 function urlPatternCheck(text){
     let url = text;
     let check = text.substr(0, 4);
-    console.log("check : ", check);
     if(check == "http"){
         return url;
     } else if(check == "www."){
@@ -796,7 +748,6 @@ function getMembers(pageId, tag){
                         valDiv.innerText = content;
                     } else {
                         let pui = await insertAttrContent(data);
-                        console.log(pui);
                         let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
                         let insertDiv = `
                         <div data-duse-id="${dUseId}" data-puse-id="${pui}" data-attrid="USER" class="view-visible attr" data-attr-order="${number}">
@@ -836,9 +787,14 @@ async function insertAttrContent(data){
 }
 
 function deleteAttrContent(pui){
+    let data = {
+        'pageUseId' : pui,
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+        'workId' : document.getElementById("TitleWid").value
+    }
     fetch("deleteAttrContent",{
         method : 'post',
-        body : pui,
+        body : JSON.stringify(data),
         headers : { "Content-Type": "application/json" }
     })
     .then(response => response.json())
@@ -893,13 +849,15 @@ function deleteThisAttr(e){
         console.log(check)
         if(check>1){
             deleteAttrContent(pui);
-        } else if(check==1){
+            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).remove();
+        } else if(check<=1){
             data['pageUseId'] = pui;
             data['attrContent'] = null;
             updateAttrContent(data);
+            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).textContent = '';
         }
-        e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).remove();
         e.target.parentElement.remove();
+
     }
 
     if(attrId == "TAG"){
@@ -921,4 +879,65 @@ function deleteThisAttr(e){
             updateAttrContent(data);
         }
     }
+}
+
+// 속성 이름 변경
+async function modifyAttrName(e){
+    let dui = e.target.getAttribute("data-duse-id");
+    let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
+    let attrId = e.target.getAttribute("data-attrid");;
+    if(e.type == 'click'){
+        if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
+        e.target.setAttribute("contenteditable", true);
+    }else if(e.type == 'keydown'){
+        if(e.keyCode === 13){
+            e.preventDefault();
+            e.target.setAttribute("contenteditable", false);
+            let attrName = e.target.innerText;
+            let check = true;
+            let attrList = await getUseAttrList(caseId);
+            console.log(attrId, attrName)
+            attrList.forEach(useAttr => {
+                if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+            });
+            if(check == false){
+                alert("해당 속성이 이미 존재합니다.");
+                return;
+            }
+            let data = {
+                'dbUseId' : dui,
+                'attrName' : attrName,
+                'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent, // ⭐⭐
+                'casePageId' : caseId,  // 블럭아이디
+                'workId' : document.getElementById("TitleWid").value   // ⭐⭐
+            };
+
+            fetch("modifyAttrName", {
+                method : 'post',
+                body : JSON.stringify(data),
+                headers : { "Content-Type": "application/json" }
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+            })
+            .catch(err => console.log(err));
+        }
+
+    }
+}
+
+// DB에 속성 넘버링 업데이트
+function attrNumberUpdate(data){
+    fetch("attrNameUpdate", {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
 }

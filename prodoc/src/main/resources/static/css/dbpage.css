@@ -1,6 +1,10 @@
 /* DB 레이아웃 */
+.db-block-body{
+	overflow : auto;
+}
 .db-block {
 	position: relative;
+	padding: 10px;
 }
 
 div[data-attr-option] {
@@ -48,7 +52,7 @@ div[data-block-id] .table-tr{
 .table-tr{
 	border-bottom: 1px solid lightgray;
 	display: grid;
-	grid-template-columns: repeat(auto-fill,120px);
+	grid-template-columns: repeat(100,120px);
 }
 
 div[data-gal-img]{
@@ -77,12 +81,9 @@ div[data-attr-option]{
 	border: 1px solid skyblue;
 	float: left;
 	background-color: white;
+	z-index:99;
 }
 
-div[data-block-id]{
-	border: 1px solid gray;
-	margin: 10px;
-}
 
 div[data-tagimg]{
 	display: inline;
@@ -106,6 +107,8 @@ div[data-tagimg]{
 }
 
 .db-block{
+	width:100%;
+	margin:0;
     border: 1px solid gainsboro;
 }
 

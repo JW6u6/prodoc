@@ -1,11 +1,18 @@
+.hide {
+	display: none;
+}
+.view {
+	display: block;
+}
+
 body {
   margin: 0px;
 }
-
 #side {
   height: 100%;
   float: left;
 }
+
 #side {
   position: fixed;
   list-style: none;
@@ -19,19 +26,19 @@ body {
   overflow: auto;
   display: block;
   border-right: 1px solid #ddd;
-  z-index:999
+  z-index:10
 }
 #side a {
-  text-decoration: none;
-  padding: 10px;
-  display: block;
-  color: #000;
-  font-weight: bold;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+	color: #000;
+	font-weight: bold;
 }
 
 #side li a:hover {
-  background: #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 #side li a.home {
@@ -40,8 +47,9 @@ body {
 }
 
 .cd1 {
-  margin-left: 120px;
+	margin-left: 120px;
 }
+
 .app {
   background-color: #ffffff;
   width: calc(100vw - 300px);
@@ -68,7 +76,7 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  z-index: 999;
+  z-index: 1;
 }
 
 header > ul {
@@ -86,7 +94,8 @@ header > ul {
 }
 
 #menu > li {
-   text-align: left;
+  width: 220px; height:40px;
+  text-align: left;
   border-bottom: #ccc solid 0.4px;
   list-style: none;
   padding: 0;

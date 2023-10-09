@@ -9,15 +9,16 @@
 						#{caseBlockId}
 						, #{attrId}
 						, #{attrName}
-						, #{attrContent}
+						, #{email}
 						, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
 	
 	<!-- DB 속성 삭제 -->
-	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
+	<delete id="deletePageAttr" parameterType="PageAttrVO">
 		{call DELETE_DB_ATTR(
 					#{dbUseId}
+					, #{email}
 		)}
 	</delete>
 	
@@ -75,10 +76,12 @@
 		)}
 	</insert>
 	
-	<delete id="deleteAttrContent" parameterType="String">
-		DELETE
-		FROM tbl_page_attr
-		WHERE page_use_id = #{pageUseId}
+	<delete id="deleteAttrContent" parameterType="PageAttrVO">
+		{call DELETE_ATTR_CONTENT(
+			#{pageUesId}
+			, #{email}
+			, #{workId}
+		)}
 	</delete>
 	
 	<!-- 태그리스트 조회용 -->
@@ -88,32 +91,32 @@
 		WHERE db_use_id = #{dbUseId}
 	</select>
 	
-	<!-- 파일 insert -->
-	<insert id="insertFileAttr" parameterType="String">
-		INSERT INTO tbl_file(display_id)
-		VALUES (#{displayId})
-	</insert>
-	
-	<!-- 파일 update -->
-	<update id="updateFileAttr" parameterType="FileVO">
-		UPDATE tbl_file
-		SET path = #{path}
-			, save_date = sysdate
-			, up_name = #{upName}
-			, new_name = #{newName}
-		WHERE display_id = #{displayId}
+	<!-- 속성 이름 수정(pageUseId로 워크아이디 대신 받음 -->
+	<update id="modifyAttrName" parameterType="PageAttrVO">
+		{ call MODIFY_ATTR_NAME(
+				#{dbUseId}
+				, #{attrName}
+				, #{pageId}
+				, #{email}
+				, #{casePageId}
+				, #{workId}
+		)}
 	</update>
 	
-	<!-- 파일 delete -->
-	<delete id="deleteFileAttr" parameterType="String">
-		DELETE FROM tbl_file
-		WHERE display_id = #{displayId}
-	</delete>
+	<!-- DB하위페이지 수정시 하위페이지의 속성, 히스토리 업데이트 -->
+	<update id="modifyDBPage" parameterType="PageAttrVO">
+		{call MODIFY_DB_PAGE(
+				#{pageId}
+				, #{email}
+				, #{casePageId}
+				, #{workId}
+		)}
+	</update>
 	
-	<!-- 파일 select -->
-	<select id="selectFileAttr" parameterType="String" resultType="FileVO">
-		SELECT *
-		FROM tbl_file
-		WHERE display_id = #{displayId}
-	</select>
+	<!-- 속성 넘버링 변경 -->
+	<update id="attrNumberUpdate" parameterType="PageAttrVO">
+		UPDATE tbl_db_attr
+		SET numbering = #{numbering}
+		WHERE db_use_id = #{dbUseId}
+	</update>
 </mapper>

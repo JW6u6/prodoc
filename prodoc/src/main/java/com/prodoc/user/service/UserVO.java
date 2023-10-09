@@ -22,7 +22,7 @@ public class UserVO implements UserDetails{
 	Date birth;
 	String profile;
 	String platform;
-	
+	String defaultPage;
 	String pMain;
 	
 	@Override

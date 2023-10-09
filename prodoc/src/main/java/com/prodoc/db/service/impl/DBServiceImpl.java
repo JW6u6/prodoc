@@ -49,8 +49,8 @@ public class DBServiceImpl implements DBService {
 	}
 
 	@Override
-	public int deleteDBPage(String pageId) {
-		return mapper.deleteDBPage(pageId);
+	public int deleteDBPage(BlockVO vo) {
+		return mapper.deleteDBPage(vo);
 	}
 
 	@Override
@@ -66,6 +66,11 @@ public class DBServiceImpl implements DBService {
 	@Override
 	public List<UserVO> getWorkMembers(String pageId) {
 		return mapper.getWorkMembers(pageId);
+	}
+
+	@Override
+	public void databaseUpdate(PageAttrVO vo) {
+		mapper.databaseUpdate(vo);
 	}
 
 

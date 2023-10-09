@@ -1,13 +1,19 @@
 package com.prodoc.workspace.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.prodoc.page.service.PageService;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
@@ -57,7 +63,7 @@ public class WorkSpaceController {
 	// 워크스페이스 새로 생성
 	@PostMapping("/workInsert")
 	public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
-		//워크스페이스 생성
+		// 워크스페이스 생성
 		return workspaceService.insertWorkspace(workVO);
 		// 워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
 	}
@@ -65,8 +71,8 @@ public class WorkSpaceController {
 	// 워크스페이스 유저 초대
 	@PostMapping("/workJoin")
 	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
-		int r = workspaceService.inviteWorkspaceUser(joinVO);
-		return r;
+		int result = workspaceService.inviteWorkspaceUser(joinVO);
+		return result;
 	}
 
 	// 워크스페이스 초대한 유저 리스트
@@ -74,7 +80,7 @@ public class WorkSpaceController {
 	public List<WorkJoinVO> inviteList(String workId) {
 		return workspaceService.inviteListWorkspace(workId);
 	}
-
+	
 	// 워크스페이스 수정
 	@PostMapping("/workEdit")
 	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
@@ -83,15 +89,27 @@ public class WorkSpaceController {
 
 	// 워크스페이스 삭제(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/workDelete")
-	public void workspaceDeleteCheck(@RequestBody String workId) {
-		workspaceService.deleteCheckWorkspace(workId);
-		pageService.deleteIfWorkspace(workId);
+	public void workspaceDeleteCheck(@RequestBody WorkSpaceVO workVO) {
+		workspaceService.deleteCheckWorkspace(workVO);
 	}
 
 	// 워크스페이스 메인 페이지 지정
 	@PostMapping("/workMainPg")
 	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
 		workspaceService.assignMainPage(workVO);
+	}
+
+	@GetMapping("/invite/{inviteId}")
+	public void mappingPath(@PathVariable("inviteId") String inviteId, Model model, HttpServletResponse response) {
+		WorkSpaceVO workVO = WorkSpaceMapper.InviteWorkInfo(inviteId);// 인바이트 아이디로 워크 아이디 찾기
+		String mainP = workVO.getMainPageId();// 워크 아이디로 메인 페이지 찾기
+		// 메인 페이지 아이디 모달에 담아 전송
+		model.addAttribute("pageId", mainP);
+		try {
+			response.sendRedirect("/test1");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

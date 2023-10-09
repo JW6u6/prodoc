@@ -8,9 +8,11 @@
 	<!-- header -->
 	<div class="wrap">
 		<header>
+		<th:block th:if="${session.logUser != null}">
 			<nav>
 				<img id="menuImg" class="menuBtn" th:src="@{/images/menu.svg}">
-				<ul id="menu" class="hide">
+				<div id="ulMenu" class="hide">
+				<ul id="menu" >
 					<li id="exportPg">내보내기</li>
 					<li id="lockPg">
 						<!-- th:if="${session.logUser.auth} == 'OWNER' or 'MANAGER'">-->
@@ -26,21 +28,22 @@
 					<li id="delPage">페이지 삭제</li>
 					<li id="notifyPage">페이지 알림 켜기</li>
 				</ul>
+				</div>
 			</nav>
-			
-			<button>로그인</button>
-			
 		    <img id="userImg" class="menuBtn profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" onerror="this.src='images/noneUser.jpg'"  style="width:30px; height:30px; border-radius: 15px;">
-
-			
+		</th:block>
+		
+			<button th:if="${session.logUser == null}" id="logBtn" onClick="location='/'">로그인</button>
 		</header>
 	</div>
 
-	<!-- 내보내기 모달 -->
-	<div id="exportPage" th:insert="modal/exportModal.html :: exportFrag"></div>
-
-	<!-- 유저정보 모달 -->
-	<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
+	<th:block th:if="${session.logUser != null}">
+		<!-- 내보내기 모달 -->
+		<div id="exportPage" th:insert="modal/exportModal.html :: exportFrag"></div>
+	
+		<!-- 유저정보 모달 -->
+		<div  id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
+	</th:block>
 </th:block>
 
 <script>
@@ -49,7 +52,7 @@
 			let id = e.target.id;
 			let menu = "";
 			if(id == "menuImg"){
-				menu = document.querySelector("#menu");
+				menu = document.querySelector("#ulMenu");
 			}else{
 				menu = document.querySelector("#UserInfoMod");
 			}
@@ -57,8 +60,10 @@
 			menu.classList.toggle('view');
 		}));
 </script>
-<script th:inline="javascript" src="js/modal/userInfo.js"></script>
-<script th:inline="javascript" src="js/modal/export.js"></script>
-<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
-<script th:inline="javascript" src="js/headerMenu.js"></script>
+<th:block th:if="${session.logUser != null}">
+	<script th:inline="javascript" src="js/modal/userInfo.js"></script>
+	<script th:inline="javascript" src="js/modal/export.js"></script>
+	<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
+	<script th:inline="javascript" src="js/headerMenu.js"></script>
+</th:block>
 </html>

@@ -42,12 +42,12 @@ function makeBlockTemplate() {
   const blockObj = {
     displayId,
     rowX,
-    pageId,
+    pageId: pageBlockId,
     blockId: "TEXT",
-    creUser: "pepsiman",
+    creUser: blockSessionUserId,
     content: "",
   };
-  createDBBlock(blockObj);
+  createBlock2DB(blockObj);
 
   const block = templateMaker();
 
@@ -66,9 +66,9 @@ function makeBlockTemplate() {
 /**
  * 블럭을 만드는 함수입니다. HTML형식 String을 반환합니다.
  * @param {{displayId:string,type:string,text:string,order:number}} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order이 필요합니다.
- * @returns {{template:string,displayId:string}}
+ * @returns {Promise<{template:string,displayId:string}>}
  */
-function updateTemplate({
+async function updateTemplate({
   displayId,
   type,
   text = "",
@@ -76,16 +76,26 @@ function updateTemplate({
   color,
   backColor,
 }) {
-  if (!displayId) {
-    displayId = self.crypto.randomUUID();
-  }
-
-  const block = templateMaker(
+  let block = templateMaker(
     type,
     text,
     color ? color : "",
     backColor ? backColor : ""
-  );
+    );
+    if(type==="DATABASE"){
+       block = createDBblock({displayId,content:"새 데이터베이스"})
+    }
+  if (!displayId) {
+    displayId = self.crypto.randomUUID();
+    console.log(type);
+    const blockSaveObj = {
+      displayId,
+      blockId: type,
+      rowX: order,
+      pageId: pageBlockId,
+    };
+    await createBlock2DB(blockSaveObj);
+  }
   let controlPanel = `
   <div class="control control_hide" data-block-id="${displayId}" draggable="true">
   <button class="attrBtn">A</button>
@@ -341,6 +351,7 @@ const menuTemplateObject = {
     <li data-block-type="OLIST">순서있는리스트</li>
     <li data-block-type="ULIST">순서없는리스트</li>
     <li data-block-type="VIDEO">비디오</li>
+    <li data-block-type="DATABASE">데이터베이스</li>
 `,
   color: `
       <li data-block-color="faa0a0">빨간색</li>
