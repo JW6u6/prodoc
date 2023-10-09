@@ -25,8 +25,6 @@ public class UserVO implements UserDetails{
 	String defaultPage;
 	String pMain;
 	
-	String defaultPage;
-	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> list = new ArrayList<SimpleGrantedAuthority>();
