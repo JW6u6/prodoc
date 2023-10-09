@@ -7,6 +7,6 @@ public class AddAttrVO {
 	private String caseBlockId;
 	private String attrId;
 	private String attrName;
-	private String attrContent;
+	private String email;
 	private String result;
 }
