@@ -32,7 +32,7 @@ public class PageController {
 
 	@Autowired
 	MemberService memberserivce;
-	
+
 	private SimpMessagingTemplate template;
 
 	@Autowired
@@ -90,14 +90,22 @@ public class PageController {
 
 	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/pageDelCheck")
-	public void pageDeleteCheck(@RequestBody PageVO pageVO) {
-		pageService.deleteCheckPage(pageVO);
+	public boolean pageDeleteCheck(@RequestBody PageVO pageVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		pageVO.setCreUser(user.getEmail());
+		return pageService.deleteCheckPage(pageVO);
 	}
 
 	// 페이지 알림 끄기/켜기
 	@PostMapping("/pageNotify")
 	public int pageNotifyed(@RequestBody PageVO pageVO) {
 		return pageService.notifyPage(pageVO);
+	}
+
+	// 페이지 끄기켜기알려주는거
+	@GetMapping("/pageNotify")
+	public int selectPageOnOff(PageVO pageVO) {
+		return pageService.onOff(pageVO);
 	}
 
 }

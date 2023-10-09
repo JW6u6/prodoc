@@ -16,4 +16,6 @@ public interface PageService {
 	// 페이지 알림 끄기켜기
 	public int notifyPage(PageVO pageVO);
 
+	public int onOff(PageVO pageVO);
+	
 }
