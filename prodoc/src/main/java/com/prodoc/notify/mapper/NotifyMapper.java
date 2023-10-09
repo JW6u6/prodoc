@@ -23,5 +23,6 @@ public interface NotifyMapper {
 	public int deleteNotify(NotifyVO vo);
 	
 	//빨간 점 알림 안받기 - 시인언니
-	public int noNotify(NotifyVO vo);
+//	public int noNotify(NotifyVO vo);
+	//페이지, 페이지메뉴js에 구현되어있음.
 }
