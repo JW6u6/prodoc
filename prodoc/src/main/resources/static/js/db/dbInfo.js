@@ -70,7 +70,7 @@ function getDataInfo(pageId){
                 uniqueAttr.push(attr);
                 getAttr[dui] = true;
             }
-        })
+        });
 
         let attrDiv = document.createElement("div");
         uniqueAttr.forEach( uniqueAttr => {
@@ -81,7 +81,7 @@ function getDataInfo(pageId){
             attrCase.setAttribute("data-attrid", uniqueAttr.attrId);
             let viewClass = uniqueAttr.displayCheck == 'TRUE' ? 'view-visible' : 'hide';
             attrCase.classList.add(viewClass, "attr-name");
-
+            // ✅속성 이동 이벤트 어떻게 할것인가
 
         })
 
@@ -93,6 +93,13 @@ function getDataInfo(pageId){
     
 }
 
+// 데이터베이스에서 하위 페이지 클릭
+function getDatapageId(e){
+    let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
+    console.log(pageId);
+    openDapaPage(pageId);
+}
+
 // 데이터베이스에서 페이지를 클릭했을때 페이지 모달
 function openDapaPage(pageId){
     // 페이지 정보 가져오세요
@@ -101,12 +108,13 @@ function openDapaPage(pageId){
         headers : {'Content-Type' : 'application/json'}
     })
     .then(response => response.json())
-    .then(pageVO => {
+    .then( pageList => {
+        let pageVO = pageList[0];
         let container = document.querySelector(".container");
         let pageModal = `
             <div class="db_dagePage">
                 <div>
-                    <button class="view_change">□</button>
+                    <button class="view_change">❒</button>
                     <button class="dbPage_close">✕</button>
                 </div>
                 <div class="pageName">${pageVO.pageName}</div>
@@ -120,14 +128,18 @@ function openDapaPage(pageId){
         `
         // 모달 틀 insert
         container.insertAdjacentHTML("afterend", pageModal);
-    
-    
+
+
         // insert된 div 내부에 속성 append
+        let attrDiv = document.querySelector(".db_attrList");
+        let attrList = '';
+        attrDiv.append(attrList);
     })
     .catch(err => console.log(err));
 }
 
 // 데이터베이스 페이지를 오픈했을 때
+// ✅하위페이지 안들어가져서 미완성
 function openDatabase(pageId){
     fetch(`getDatabaseBlock?pageId=${pageId}`,{
         method : 'get',
@@ -136,8 +148,12 @@ function openDatabase(pageId){
     .then(response => response.text())
     .then(displayId => {
         console.log(displayId);
-        // let div = createDBblock(displayId);
-        
+        let database = createDBblock(displayId);
+        let targetDom = document.querySelector(".container");
+        // ✅ insert 위치 확인
+        targetDom.insertAdjacentHTML("afterend", database);
+        //INSERT 후에 db_block 클래스 제거
+        document.querySelector(`[data-block-id="${displayId}"]`).classList.remove("db-block");
     })
     .catch(err => console.log(err));
 }

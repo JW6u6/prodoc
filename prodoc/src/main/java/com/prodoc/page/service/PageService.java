@@ -1,5 +1,7 @@
 package com.prodoc.page.service;
 
+import java.util.List;
+
 public interface PageService {
 
 	public String insertPage(PageVO pageVO);
@@ -16,4 +18,9 @@ public interface PageService {
 	// 페이지 알림 끄기켜기
 	public int notifyPage(PageVO pageVO);
 
+	public int onOff(PageVO pageVO);
+	
+	//페이지 잠금해제 요청(일반 사용자)
+	public void LockAlam(PageVO pageVO);
+	
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
-import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBBlockVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;

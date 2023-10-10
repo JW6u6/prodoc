@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -13,9 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.prodoc.page.service.PageService;
+import com.prodoc.user.service.UserVO;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
@@ -80,7 +81,7 @@ public class WorkSpaceController {
 	public List<WorkJoinVO> inviteList(String workId) {
 		return workspaceService.inviteListWorkspace(workId);
 	}
-	
+
 	// 워크스페이스 수정
 	@PostMapping("/workEdit")
 	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
@@ -95,8 +96,8 @@ public class WorkSpaceController {
 
 	// 워크스페이스 메인 페이지 지정
 	@PostMapping("/workMainPg")
-	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
-		workspaceService.assignMainPage(workVO);
+	public boolean workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
+		return workspaceService.assignMainPage(workVO);
 	}
 
 	@GetMapping("/invite/{inviteId}")

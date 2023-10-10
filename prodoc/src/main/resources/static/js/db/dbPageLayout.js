@@ -155,8 +155,8 @@ function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
         <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
-            <div class="inlineTags">📄</div>
-            <div class="inlineTags">`+block['page']['pageName']+`</div>
+            <div class="inlineTags data_page">📄</div>
+            <div class="inlineTags data_page">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div class="attr-list inlineTags">`+useAttr+`</div>
         </div>
@@ -168,7 +168,8 @@ function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
         <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
-            <div class="inlineTags">`+block['page']['pageName']+`</div>
+            <div class="inlineTags data_page">📄</div>
+            <div class="inlineTags data_page">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
         </div>
@@ -188,9 +189,9 @@ function dbGalBlock(block){
     const galType = `
     <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
+        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
-            <div>`+block['page']['pageName']+`</div>
+            <div class="data_page">`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
         </div>
     </div>
@@ -205,7 +206,7 @@ function dbTblBlock(block){
     tr.setAttribute("data-page-id", block.page.pageId);
     tr.setAttribute("data-block-order", block.block.rowX);
     tr.setAttribute("data-page-order", block.page.numbering);
-    tr.classList.add("dbtype-tbl", "table-tr", "db_block")
+    tr.classList.add("dbtype-tbl", "table-tr", "db_block", "data_page");
     let td = document.createElement("div");
     td.textContent = block.page.pageName;
     tr.append(td);

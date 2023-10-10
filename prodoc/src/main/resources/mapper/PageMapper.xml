@@ -9,6 +9,7 @@
 		where work_id = #{workId}
 		and parent_id
 		is NULL
+		and delete_check != 'TRUE'
 		order by numbering
   	</select>
   	<select id = "findWork" resultType="String">
@@ -25,12 +26,12 @@
   	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">
  		{call insert_page(
- 						#{parentId}
+ 						#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
+ 					,	#{parentId}
  					,	#{pageName}
  					,	#{creUser}
  					,	#{workId}
  					,	#{caseId}
- 					,	#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
  					,	#{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string}
  						)
  		}
@@ -86,12 +87,19 @@
 	<insert id="onOffPage" parameterType="PageVO"
 		statementType="CALLABLE">
 		{call PAGENOTI_TOGGLE(
-		#{workId}
-		, #{pageId}
+		#{pageId}
 		, #{email}
 		, #{result, mode=OUT, jdbcType=INTEGER, javaType=int}
 		)}
 	</insert>
+	
+	<!-- 페이지 알림 꺼져있는지 켜져있는지 알려줌 -->
+	<select id="selectTurnOn" resultType="int">
+		select count(*)
+		from tbl_no_notifyed
+		where page_id = #{pageId}
+		and email = #{email}
+	</select>
 
 </mapper>
   

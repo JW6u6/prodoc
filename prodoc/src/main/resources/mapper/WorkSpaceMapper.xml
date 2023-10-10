@@ -59,10 +59,9 @@
 		{call workjoin_register(
 		#{workId}
 		, #{inviteEmail}
-		,
-		#{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
-		, #{inviteId,
-		mode=OUT, jdbcType=VARCHAR, javaType=string}
+		, #{creUser}
+		, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+		, #{inviteId, mode=OUT, jdbcType=VARCHAR, javaType=string}
 		)}
 	</insert>
 
