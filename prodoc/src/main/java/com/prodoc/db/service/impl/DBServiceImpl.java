@@ -73,6 +73,17 @@ public class DBServiceImpl implements DBService {
 		mapper.databaseUpdate(vo);
 	}
 
+	@Override
+	public void dbpageNumbering(PageAttrVO vo) {
+		mapper.dbpageNumbering(vo);
+	}
+
+	@Override
+	public String pageTypeCheck(PageVO pageVO) {
+		mapper.pageTypeCheck(pageVO);
+		return pageVO.getCaseId();
+	}
+
 
 
 }

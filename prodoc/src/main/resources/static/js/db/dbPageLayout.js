@@ -1,11 +1,11 @@
 async function listLayoutEditor(dataList, displayId, layout){
+    console.log(dataList);
     let dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
     dbbody.innerHTML = "";
-    let pageList = [];  // 삭제되지 않은 페이지 목록  
+    let pageList = [];  // 삭제되지 않은 페이지 목록
     dataList.forEach(item => {
-        if (item['page']['deleteCheck'] == 'FALSE') pageList.push(item);
+        if (item.page.deleteCheck == 'FALSE') pageList.push(item);
     });
-
 
     switch(layout){
         case 'DB_LIST' :
@@ -36,7 +36,6 @@ async function listLayoutEditor(dataList, displayId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        // caseDiv.setAttribute("class", "display-flex");
         caseDiv.classList.add("display-flex", "state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");

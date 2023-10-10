@@ -124,30 +124,47 @@ function dbNumberingUpdate(blockNode){
     let prevEle = blockNode.previousElementSibling;
     let nextEle = blockNode.nextElementSibling;
 
-    let pageNum = dbPageNumbering(prevEle, nextEle);
-    let blockNum = dbDisplayNumbering(prevEle, nextEle);
-
-    let data = {
-        'pageId' : '',
-        'email' : '',
-        'workId' : '',
-        'casePageId' : ''       // DB의 디스플레이 아이디
-    }
-
-    // 레이아웃 != 칸반보드
+    // 레이아웃이 칸반보드가 아닐 때 => 넘버링 업데이트
     if(layout != 'DB_BRD'){
-        // 1. 앞, 뒤에 위치한 Node 정보 가져오기
-        // 2. 페이지, 블럭 넘버링
-        // 3. DB에 업데이트
-
+        // 데이터베이스 하위의 데이터들은 display, page넘버링을 같이 관리
+        let blockNum = dbDisplayNumbering(prevEle, nextEle);
+        // db 업데이트용 데이터
+        let data = {
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'workId' : document.getElementById("TitleWid").value,
+            'casePageId' : blockNode.closest("[data-layout]").getAttribute("data-block-id"),       // DB의 디스플레이 아이디
+            'numbering' : blockNum
+        }
+        if(blockNum==nextEle.getAttribute("data-block-order")){
+            // 전체 다시 넘버링
+            let blocks = blockNode.closest('.db-block-body').querySelectorAll('.db_block');
+            console.log(blocks);
+            blocks.forEach((block, idx)=>{
+                console.log(block);
+                let num = 512 * (idx+1);
+                block.setAttribute("data-block-order", num); 
+                block.setAttribute("data-page-order", num);
+                data['pageId'] = block.getAttribute("data-page-id");
+            })
+        }else{
+            // 해당 블럭만 넘버링
+            blockNode.setAttribute("data-block-order", blockNum); 
+            blockNode.setAttribute("data-page-order", blockNum);
+            data['pageId'] = blockNode.getAttribute("data-page-id");
+        }
+        // DB에 업데이트
+        console.log(data);
+        dbpageNumbering(data);
     }
 
-    // 레이아웃 == 칸반보드
+    // 레이아웃이 칸반보드일 때 => 넘버링 업데이트X, 상태속성값만 업데이트
     if(layout == 'DB_BRD'){
-        // console.log(blockNode.closest("[data-state]"))
         let moveState = blockNode.closest("[data-state]").getAttribute("data-state")
         let blockAttrContent = blockNode.querySelector('[data-attrid="STATE"] .attr');
         blockAttrContent.innerText = moveState;
+        //DB에 속성값 업데이트 진행
+        let pui = blockNode.querySelector('[data-attrid="STATE"]').getAttribute("data-puse-id");
+        updateAttrContent({'pageUseId' : pui, 'attrContent' : moveState});
     }
 }
 
@@ -178,7 +195,6 @@ function AttrNumberingUpdate(blockNode){
             data['numbering'] = num;
             attrNumberUpdate(data);
         console.log(data);
-
         });
     } else {
         blockNode.setAttribute("data-attr-order", newNum);
@@ -189,17 +205,15 @@ function AttrNumberingUpdate(blockNode){
     }
 }
 
-// 페이지 넘버링 계산 > 계산값 리턴
-function dbPageNumbering(prevEle, nextEle){
-    // data-page-order
-    return '';
-}
-
 // 디스플레이 넘버링 계산 > 계산값 리턴
 function dbDisplayNumbering(prevEle, nextEle){
     // data-block-order
-    return '';
+    let prevNum = Number(prevEle.getAttribute("data-block-order"));
+    let nextNum = Number(nextEle.getAttribute("data-block-order"));
 
+    let averNum = Math.ceil((nextNum - prevNum)/2);
+    let newNum = prevNum + averNum;
+    return newNum;
 }
 
 // 속성 넘버링 계산

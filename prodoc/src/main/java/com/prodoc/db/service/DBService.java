@@ -17,6 +17,10 @@ public interface DBService {
 	public List<UserVO> getWorkMembers(String pageId);
 	
 	public void databaseUpdate(PageAttrVO vo);
+	public void dbpageNumbering(PageAttrVO vo);
 	
 	public PageVO getPageInfo(String PageId);
+	
+	// 페이지 호출시 페이지 타입을 조회
+	public String pageTypeCheck(PageVO pageVO);
 }

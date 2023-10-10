@@ -21,6 +21,7 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
 
     // 모달
     else if (e.target.matches(".close-attr-modal")) closeAttrModal(e);
+
 })
 document.querySelector(".container").addEventListener("keydown", e => { // 키보드 이벤트
     if (e.target.matches(".attr")) attrContentUpdate(e);
@@ -85,25 +86,24 @@ async function getChildList(disId){
 	})
 	.then( response => response.json())
 	.then( infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
-        console.log(infoList)
-        for(let key in infoList){
-            if(key == "parent") {   
-                console.log(infoList[key]);
-                let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');                
-                parentDiv.forEach(tag => {
-                    let tagId = tag.getAttribute("data-block-id");
+        let layout = infoList[0].parent.caseId;
+        infoList.forEach((pagevo, idx) => {
+            if(idx == 0){
+                let parentVO = pagevo.parent;
+                let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');
+                // DB블럭에 DB의 페이지 정보를 속성에 추가
+                parentDiv.forEach(DBele => {
+                    let tagId = DBele.getAttribute("data-block-id");
                     if(tagId == disId){
-                        tag.setAttribute("data-page-id", infoList[key]["pageId"]);
-                        tag.setAttribute("data-layout", infoList[key]["caseId"]);
+                        DBele.setAttribute("data-page-id", parentVO["pageId"]);
+                        DBele.setAttribute("data-layout", parentVO["caseId"]);
                     }
                 });
             } else {
-                caseInfo.push(infoList[key]);
+                caseInfo.push(pagevo);
             }
-            
-        }
-        console.log(caseInfo);
-        listLayoutEditor(caseInfo, disId, infoList['parent']['caseId']);
+        })
+        listLayoutEditor(caseInfo, disId, layout);
 	})
 	.catch(err => console.log(err));
 }
