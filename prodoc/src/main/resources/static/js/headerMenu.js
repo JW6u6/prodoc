@@ -4,6 +4,7 @@ document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
 document.querySelector('#delPage').addEventListener('click', pageDelCheck);
 document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
+document.querySelector('#notiLockPg').addEventListener('click', pageLockNoti);
 
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
@@ -106,13 +107,37 @@ async function pageLock() {
 }
 
 //페이지 잠금해제 요청(일반 사용자)
-function pageLockNoti() {
-    let pageInfo = '';
+async function pageLockNoti() {
+    let infos = await pageInfoFromMenu();
+    let lockCheck;
 
-    if (pageInfo) {
-        //페이지 정보에서 잠금여부가 true면 잠금해제하고 아니면 잠금요청 보내는 걸... 작성해야됨
-        //웹소켓어케함요...
+    let url = '/LockNotify';
+    for (let info of infos) {
+        if (info.lockCheck == 'FALSE') {
+            lockCheck = 'FALSE';
+        } else if (info.lockCheck == 'TRUE') {
+            lockCheck = 'TRUE';
+        }
     }
+
+    fetch(url, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "pageId": pageBlockId
+            })
+        })
+        .then(response => response.text())
+        .then(result => {
+            if (lockCheck == 'FALSE') {
+                alert('페이지 잠금 요청을 보냈습니다.');
+            } else if (lockCheck == 'TRUE') {
+                alert('페이지 잠금 해제 요청을 보냈습니다.');
+            }
+        })
+        .catch(err => console.log(err));
 }
 
 //페이지 삭제 체크

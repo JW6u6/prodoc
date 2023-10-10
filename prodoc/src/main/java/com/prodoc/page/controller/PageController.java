@@ -108,4 +108,11 @@ public class PageController {
 		return pageService.onOff(pageVO);
 	}
 
+	@PostMapping("/LockNotify")
+	public void pageLockNoti(@RequestBody PageVO pageVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		((PageVO) pageVO).setCreUser(user.getEmail());
+		pageService.LockAlam(pageVO);
+	}
+
 }

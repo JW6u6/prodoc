@@ -38,10 +38,10 @@ public class NotifyServiceImpl implements NotifyService {
 		return 0;
 	}
 
-	@Override
-	public int noNotify(NotifyVO vo) {
-		return 0;
-	}
+//	@Override
+//	public int noNotify(NotifyVO vo) {
+//		return 0;
+//	}
 
 	
 }

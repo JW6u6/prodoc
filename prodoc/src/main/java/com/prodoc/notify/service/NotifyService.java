@@ -16,7 +16,8 @@ public interface NotifyService {
 	//알림 삭제 - 상우
 	public int deleteNotify(NotifyVO vo);
 	
-	//빨간 점 알림 안받기 - 시인언니
-	public int noNotify(NotifyVO vo);
+//	//빨간 점 알림 안받기 - 시인언니
+//	public int noNotify(NotifyVO vo);
+	//페이지쪽에 있음.
 
 };

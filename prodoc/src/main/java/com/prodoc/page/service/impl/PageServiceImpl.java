@@ -1,11 +1,15 @@
 package com.prodoc.page.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.prodoc.history.service.HistoryService;
 import com.prodoc.history.service.HistoryVO;
+import com.prodoc.notify.mapper.NotifyMapper;
+import com.prodoc.notify.service.NotifyVO;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
@@ -20,6 +24,9 @@ public class PageServiceImpl implements PageService {
 
 	@Autowired
 	HistoryService historyService;
+
+	@Setter(onMethod_ = @Autowired)
+	NotifyMapper notifyMapper;
 
 	// 페이지 잠금/잠금해제(소유자,관리자 권한)
 	@Override
@@ -38,9 +45,9 @@ public class PageServiceImpl implements PageService {
 			history.setWorkId(pageVO.getWorkId());
 			history.setCreUser(pageVO.getCreUser());
 			history.setHistoryType("DELETE");
-			
+
 			historyService.insertHistory(history);
-			
+
 			pageMapper.RemoveChildPage(pageVO.getPageId());
 
 			return true;
@@ -82,6 +89,16 @@ public class PageServiceImpl implements PageService {
 	@Override
 	public int onOff(PageVO pageVO) {
 		return pageMapper.selectTurnOn(pageVO);
+	}
+
+	@Override
+	public void LockAlam(PageVO pageVO) {
+			NotifyVO note = new NotifyVO();
+
+			note.setPageId(pageVO.getPageId());
+			note.setNoteType("LOCK_NT");
+			note.setCreUser(pageVO.getCreUser());
+			notifyMapper.insertTargetNotify(note);
 	}
 
 }

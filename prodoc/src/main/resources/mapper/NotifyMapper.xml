@@ -18,7 +18,7 @@
   	<select id="selectNotify" resultType="NotifyResultVO">
   		select * 
 		from view_notify
-		where note_type=#{type};
+		where note_type=#{noteType};
   	</select>
   	<!-- 초대 목록 -->
   </mapper>
