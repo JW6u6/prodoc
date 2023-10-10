@@ -14,6 +14,8 @@ public interface PageMapper {
 	public List<PageVO> selectPageInfo(String pageId);
 
 	public void insertPage(PageVO pageVO);
+	
+	public int updatePage(PageVO pageVO);
 
 	// 페이지 잠금 요청이 들어오면 잠금(관리자, 소유자)
 	public int LockPage(PageVO pageVO);

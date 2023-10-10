@@ -10,7 +10,7 @@
   							#{displayId}
   						,	#{noteType}
   						,	#{creUser}
-  						,	#{pageId}
+  						,	#{workId}
   						,	#{replyId} )}
   	</insert>
   	
