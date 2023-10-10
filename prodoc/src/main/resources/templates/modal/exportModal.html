@@ -2,7 +2,7 @@
 <div th:fragment="exportFrag">
 	<div id="exportModal" class="hide">
 		<div class="modelBtnList">
-			<button class="closeBtn">&#10005;</button>
+			<button onclick="exportModal()">&#10005;</button>
 		</div>
 		<div>내보내기</div>
 		<select>
@@ -10,11 +10,14 @@
 			<option value=".pdf">*.pdf</option>
 			<option value=".jpg">*.jpg</option>
 			<option value=".png">*.png</option>
-		</select> 멀티미디어 제외 
-		<input type="text" placeholder="파일 이름을 입력해주세요.">
+		</select> 멀티미디어 제외 <input type="text" placeholder="파일 이름을 입력해주세요.">
 		저장위치
-		<button type="button">내보내기</button>
-		<button type="button" class="closeBtn">취소</button>
+		<button type="button" id="fromExport">내보내기</button>
+		<button type="button" onclick="exportModal()">취소</button>
 	</div>
+
+	<script th:inline="javascript" src="js/font/font.js"></script>
+	<script th:inline="javascript" src="js/modal/export.js"></script>
+	<script type="module" src="js/modal/jspdf.js"></script>
 </div>
 </html>

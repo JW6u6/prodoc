@@ -29,4 +29,7 @@ public interface PageMapper {
 
 	// 페이지 알림 끄기/켜기(값이 없으면(알림이 켜진 상태면) 입력하고 있으면(알림이 꺼진 상태면) 삭제)
 	public void onOffPage(PageVO pageVO);
+	
+	//페이지메뉴 알림 끄기켜기 표시
+	public int selectTurnOn(PageVO pageVO);
 }

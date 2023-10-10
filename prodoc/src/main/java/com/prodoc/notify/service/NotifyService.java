@@ -10,13 +10,15 @@ public interface NotifyService {
 	//알림 읽음 설정 - 상우: targetnote
 	public int readCheck(NotifyVO vo);
 	
+	public int redReadCheck(NotifyVO vo);
+	
 	//알림 목록 불러오기 -상우
-	public List<NotifyResultVO> selectNotify(String type);
+	public List<NotifyResultVO> selectNotify(String logUser,String type);
 	
 	//알림 삭제 - 상우
-	public int deleteNotify(NotifyVO vo);
+	public int deleteNotify(List<NotifyVO> list);
 	
 	//빨간 점 알림 안받기 - 시인언니
-	public int noNotify(NotifyVO vo);
+	//public int noNotify(NotifyVO vo);
 
 };

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.reply.mapper.ReplyMapper;
 import com.prodoc.reply.service.ReplyService;
 import com.prodoc.reply.service.ReplyVO;
 
@@ -19,6 +20,9 @@ public class ReplyController {
 	
 	@Autowired
 	ReplyService service;
+	
+	@Autowired
+	ReplyMapper mapper;
 	
 	@GetMapping("/reply/block")
 	public List<ReplyVO> blockReplyList(@RequestParam String displayId){
@@ -48,7 +52,16 @@ public class ReplyController {
 	
 	@PostMapping("/reply/delete")
 	public String deleteReply(@RequestBody ReplyVO vo) {
-		int result = service.deleteComment(vo);
-		return "";
+		String result = "";
+		ReplyVO replyVO = mapper.selectOneReply(vo);
+		if(!replyVO.getCreUser().equals(vo.getCreUser())) {
+			result = "{\"result\":\"fail\"}";
+		} else {
+			service.deleteComment(vo);
+			result = "{\"result\":\"success\"}";
+		}
+		
+		
+		return result;
 	}
 }

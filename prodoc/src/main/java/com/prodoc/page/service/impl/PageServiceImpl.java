@@ -79,4 +79,9 @@ public class PageServiceImpl implements PageService {
 		pageMapper.ifWorkRemove(workId);
 	}
 
+	@Override
+	public int onOff(PageVO pageVO) {
+		return pageMapper.selectTurnOn(pageVO);
+	}
+
 }

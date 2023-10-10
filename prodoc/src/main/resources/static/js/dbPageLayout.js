@@ -1,6 +1,5 @@
 async function listLayoutEditor(dataList, displayId, layout){
     let dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
-    console.log(dbbody);
     dbbody.innerHTML = "";
     let pageList = [];  // 삭제되지 않은 페이지 목록  
     dataList.forEach(item => {
@@ -37,10 +36,12 @@ async function listLayoutEditor(dataList, displayId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        caseDiv.setAttribute("class", "display-flex");
+        // caseDiv.setAttribute("class", "display-flex");
+        caseDiv.classList.add("display-flex", "state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
+            stateTag.classList.add("db-state-box");
             pageList.forEach(info => {
                 info.attrList.forEach(attr => {
                     if(attr.attrId == "STATE" && attr.attrContent == state){
@@ -113,7 +114,7 @@ async function listLayoutEditor(dataList, displayId, layout){
             dbbody.insertAdjacentHTML("beforeend", addDbpage());   
             break;
     };
-    helloWorld();
+    dbMoveEvent(layout);
 }
 
 const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
@@ -154,7 +155,7 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags">📄</div>
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
@@ -167,7 +168,7 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
@@ -186,7 +187,7 @@ function dbGalBlock(block){
     })
 
     const galType = `
-    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block"  data-block-order="`+ block['block']['rowX'] +`">
+    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
         <div class="gal-thumbnail"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
@@ -204,6 +205,7 @@ function dbTblBlock(block){
     tr.setAttribute("data-block-id", block.block.displayId);
     tr.setAttribute("data-page-id", block.page.pageId);
     tr.setAttribute("data-block-order", block.block.rowX);
+    tr.setAttribute("data-page-order", block.page.numbering);
     tr.classList.add("dbtype-tbl", "table-tr", "db_block")
     let td = document.createElement("div");
     td.textContent = block.page.pageName;
@@ -295,4 +297,3 @@ function dbTblAttrBlock(attrs, uniqueList){
     })
     return divList;
 }
-
