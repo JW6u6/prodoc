@@ -35,7 +35,6 @@ function workList(email) {
             data.forEach(item => {
                 let side = document.querySelector('#side');
                 let text = `<div class= "Work" data-id="${item.workId}"><span class="workListShow">ㅇ</span><span class="workName" draggable="true">${item.workName}</span><span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
-
                             <img class="setting" src="/images/settings.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             <input type="hidden" class ="num" value="0"><div>`
                 side.insertAdjacentHTML("beforeend", text);
@@ -230,9 +229,6 @@ function dropPage(e) {
     }
   }
 
-function insertAfter(newNode, existingNode) {
-  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
-}
 //setting 분리하려고 nameArea 아래에 input:hidden으로 워크아이디 넣음
 function makeWid(e) {
   let workId = e.currentTarget.closest(".Work").dataset.id;
@@ -423,7 +419,7 @@ function newPage() {
     let caseId = document.querySelector('#caseId').value;
     let creUser = document.querySelector('#loginUser').value;
     let pageName = document.querySelector('#pgName').value;
-    let parentLevel = document.querySelector('#parentLevel').value;
+    //let parentLevel = document.querySelector('#parentLevel').value;
     let val = {
         parentId,
         pageName,

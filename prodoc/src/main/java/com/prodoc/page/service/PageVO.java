@@ -16,7 +16,7 @@ public class PageVO {
 	private int numbering;
 	private String lockCheck;
 	private String caseId;
-	private String pubCheck;
+	private String publicCheck;
 	private String upDate;
 	
 	
