@@ -71,9 +71,7 @@ public class WorkSpaceController {
 
 	// 워크스페이스 유저 초대
 	@PostMapping("/workJoin")
-	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO, HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("logUser");
-		((WorkJoinVO) joinVO).setCreUser(user.getEmail());
+	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
 		int result = workspaceService.inviteWorkspaceUser(joinVO);
 		return result;
 	}
@@ -83,7 +81,7 @@ public class WorkSpaceController {
 	public List<WorkJoinVO> inviteList(String workId) {
 		return workspaceService.inviteListWorkspace(workId);
 	}
-	
+
 	// 워크스페이스 수정
 	@PostMapping("/workEdit")
 	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
