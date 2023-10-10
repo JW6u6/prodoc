@@ -1,0 +1,36 @@
+/*히스토리, 유저정보, 검색 모달창 검은 배경*/
+#modHistory, 
+#UserModiMod, 
+#joinOutMod, 
+#modSearchWKDB {
+	position: fixed; /* Stay in place */
+	top: 0; left: 0;
+  	width: 100vw;
+	height: 100vh;
+  	background-color: rgba(0, 0, 0, 0.4);
+  	z-index: 50;
+}
+/*히스토리, 검색 모달창 안에 흰 div*/
+#modHistory>div,
+#modSearchWKDB>div{
+	overflow: auto;
+	margin-top: 200px;
+	margin-left: 20vw;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	width: 60vw;
+	z-index: 51;
+}
+/*히스토리, 검색 모달창 안에 흰 div*/
+#UserModiMod>div, 
+#joinOutMod>div{
+	overflow: auto;
+	margin-top: 200px;
+	margin-left: 30vw;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	width: 40vw;
+	z-index: 51;
+}

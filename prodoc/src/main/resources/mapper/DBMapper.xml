@@ -54,6 +54,7 @@
 		WHERE page_id = ( SELECT page_id
                           FROM tbl_dbblock
                           WHERE display_id = #{displayId})
+        ORDER BY numbering
 	</select>
   
 	<update id="updateCase" parameterType="PageVO">
@@ -86,5 +87,13 @@
 		        JOIN tbl_page p ON p.work_id = m.work_id
 		WHERE p.page_id = #{pageId}
 	</select>
-
+	
+	<update id="databaseUpdate" parameterType="PageAttrVO">
+		{call DB_HISTORY_PROCESS(
+			#{email}
+			, #{casePageId}
+			, #{pageId}
+			, #{workId}
+		)}
+	</update>
 </mapper>

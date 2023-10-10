@@ -14,11 +14,11 @@
 		)}
 	</insert>
 	
-	<!-- DB 속성 삭제 | attrContent에 email 정보 담아옴 -->
-	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
+	<!-- DB 속성 삭제 -->
+	<delete id="deletePageAttr" parameterType="PageAttrVO">
 		{call DELETE_DB_ATTR(
 					#{dbUseId}
-					, #{attrContent}
+					, #{email}
 		)}
 	</delete>
 	
@@ -76,10 +76,12 @@
 		)}
 	</insert>
 	
-	<delete id="deleteAttrContent" parameterType="String">
-		DELETE
-		FROM tbl_page_attr
-		WHERE page_use_id = #{pageUseId}
+	<delete id="deleteAttrContent" parameterType="PageAttrVO">
+		{call DELETE_ATTR_CONTENT(
+			#{pageUesId}
+			, #{email}
+			, #{workId}
+		)}
 	</delete>
 	
 	<!-- 태그리스트 조회용 -->
@@ -109,5 +111,12 @@
 				, #{casePageId}
 				, #{workId}
 		)}
+	</update>
+	
+	<!-- 속성 넘버링 변경 -->
+	<update id="attrNumberUpdate" parameterType="PageAttrVO">
+		UPDATE tbl_db_attr
+		SET numbering = #{numbering}
+		WHERE db_use_id = #{dbUseId}
 	</update>
 </mapper>

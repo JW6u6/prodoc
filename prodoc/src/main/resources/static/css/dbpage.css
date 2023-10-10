@@ -1,6 +1,10 @@
 /* DB 레이아웃 */
+.db-block-body{
+	overflow : auto;
+}
 .db-block {
 	position: relative;
+	padding: 10px;
 }
 
 div[data-attr-option] {
@@ -48,7 +52,7 @@ div[data-block-id] .table-tr{
 .table-tr{
 	border-bottom: 1px solid lightgray;
 	display: grid;
-	grid-template-columns: repeat(auto-fill,120px);
+	grid-template-columns: repeat(100,120px);
 }
 
 div[data-gal-img]{
