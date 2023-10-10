@@ -150,40 +150,24 @@ function insertDBpage(e){
         let caseBody = caseBlock.querySelector('.db-block-body');
         let targetNode = e.target.closest('.add-page-div');
         let block;
-        if(result != null && nowLayout != "DB_CAL"){
+
+        if(nowLayout != 'DB_TBL'){
             if(nowLayout == "DB_LIST"){
                 block = dblistBlock(result);
-            } else if(nowLayout == "DB_BRD"){
-                block = dbBrdBlock(result);
-            } else if(nowLayout == "DB_GAL"){
-                block = dbGalBlock(result);
-            } else if(nowLayout == "DB_TBL"){
-                block = dbTblBlock(result);
-            }
-            targetNode.insertAdjacentHTML("beforebegin", block);
-
-            if(nowLayout == "DB_LIST"){     // 리스트 형식일때 속성에 클래스 추가용
+                // 레이아웃용 클래스
                 let selector = `[data-page-id="${result.page.pageId}"] .attr-list [data-attrid]`;
                 caseBody.querySelectorAll(selector).forEach(tag => {
                     tag.classList.add("inlineTags");
                 })
             }
-        } else if(result != null && nowLayout == "DB_CAL"){
-            // 캘린더에서 추가
-            let thisDate = e.target.parentElement.getAttribute("data-cal-date");
-            fetch("addCalendar", {
-                method : 'post',
-                body : JSON.stringify({'pageId' : result.page.pageId, 'attrContent' : thisDate}),
-                headers : {"Content-Type": "application/json"}
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.result == "success"){
-                    console.log(result);
-                    let addTarget = e.target.closest('.cal-row');
-                    // cal data div 생성 > append
-                }
-            })
+            if(nowLayout == "DB_BRD") block = dbBrdBlock(result);
+            if(nowLayout == "DB_GAL") block = dbGalBlock(result);
+            targetNode.insertAdjacentHTML("beforebegin", block);
+        }
+
+        if(nowLayout == "DB_TBL"){
+            block = dbTblBlock(result); // tbl의 블럭은 Node로 반환된다.
+            targetNode.prepend(block);
         }
     })
     .catch(err => console.log(err));
@@ -196,9 +180,8 @@ function deleteDBpage(e){
     let caseId =  e.target.closest("[data-layout]").getAttribute('data-block-id');
     data['pageId'] = e.target.closest("[data-page-id]").getAttribute("data-page-id");
     data['displayId'] = e.target.closest("[data-block-id]").getAttribute('data-block-id');
-    data['creUser'] = 'user1@user1' //⭐⭐
-    // data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    data['workId'] = 'TESTWORK'     //⭐⭐워크id 가져오기
+    data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent; //⭐⭐
+    data['workId'] = document.getElementById("TitleWid").value	//⭐⭐워크id 가져오기
     console.log(data);
     fetch("deleteDBPage", {
         method : 'post',

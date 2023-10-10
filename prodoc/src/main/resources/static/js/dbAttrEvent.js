@@ -115,8 +115,7 @@ async function registAttr(e){
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
     attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
     attrInfo['caseBlockId'] = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
-    attrInfo['email'] = 'user1@user1';  // ⭐⭐ 합친 후에 유저 아이디 받아오기
-    // attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     let attrList = await getUseAttrList(attrInfo['caseBlockId']);
     attrList.forEach(item => {
         if(item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
@@ -140,12 +139,11 @@ async function registAttr(e){
     }
 }
 
-// DB 속성 삭제 ✅프로시저 수정하기
+// DB 속성 삭제
 function deleteAttr(e){
     let data = {
         'dbUseId' : e.target.closest('[data-dbuseid]').getAttribute("data-dbuseid"),
-        'attrContent' : 'user1@user1' // ⭐⭐
-        // 'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent    // ⭐⭐
     }
     let caseId = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
     fetch('deleteDbAttr', {
@@ -323,11 +321,9 @@ function updateAttrContent(data){
     let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
     console.log(eventDiv)
     data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
-    data['email'] = 'user1@user1';   // ⭐⭐
-    // data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    data['workId'] = 'TESTWORK' // ⭐⭐
+    data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = document.getElementById("TitleWid").value;
     data['casePageId'] = eventDiv.closest("[data-block-id]").getAttribute("data-block-id");
-
     fetch("updateAttrContent", {
         method : 'post',
         body : JSON.stringify(data),
@@ -584,7 +580,15 @@ function changeState(eTarget){
             data['attrContent'] = e.target.innerText;
             nowStateDiv.innerText = e.target.innerText;
             closeBtn.click();
-            updateAttrContent(data);
+            // updateAttrContent(data);
+            console.log(eTarget.closest("[data-layout]"))
+            // 보드 레이아웃에서 속성 변경했을 때 element 이동
+            if(eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
+                let moveState = data['attrContent'];
+                let moveDiv = eTarget.closest(".db_block");
+                let stateDiv = eTarget.closest(".state-container").querySelector(`[data-state="${moveState}"]`);
+                stateDiv.prepend(moveDiv);
+            }
         })
         modal.append(selector);
     })
@@ -783,9 +787,14 @@ async function insertAttrContent(data){
 }
 
 function deleteAttrContent(pui){
+    let data = {
+        'pageUseId' : pui,
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+        'workId' : document.getElementById("TitleWid").value
+    }
     fetch("deleteAttrContent",{
         method : 'post',
-        body : pui,
+        body : JSON.stringify(data),
         headers : { "Content-Type": "application/json" }
     })
     .then(response => response.json())
@@ -899,10 +908,9 @@ async function modifyAttrName(e){
                 'dbUseId' : dui,
                 'attrName' : attrName,
                 'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
-                // 'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
-                'email' : 'user1@user1', // ⭐⭐
+                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent, // ⭐⭐
                 'casePageId' : caseId,  // 블럭아이디
-                'workId' : 'TESTWORK'   // ⭐⭐
+                'workId' : document.getElementById("TitleWid").value   // ⭐⭐
             };
 
             fetch("modifyAttrName", {
@@ -918,4 +926,18 @@ async function modifyAttrName(e){
         }
 
     }
+}
+
+// DB에 속성 넘버링 업데이트
+function attrNumberUpdate(data){
+    fetch("attrNameUpdate", {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
 }

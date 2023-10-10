@@ -16,5 +16,7 @@ public interface DBService {
 	public DBBlockVO getDBblock(DBBlockVO vo);
 	public List<UserVO> getWorkMembers(String pageId);
 	
+	public void databaseUpdate(PageAttrVO vo);
+	
 	public PageVO getPageInfo(String PageId);
 }
