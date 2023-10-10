@@ -50,8 +50,14 @@ public class JoinController {
 		UserVO search = service.getUser(user);
 		
 		if(search != null)	return "{\"result\":true}"; //메일이 있음
+		return "{\"result\":false}"; //메일이 없음
+	}
+	
+	@ResponseBody
+	@PostMapping("/sendEmail")
+	public String sendEmail(@RequestBody UserVO user, Model model) {
 		String authNum = emailService.sendMail(user.getEmail());
 		model.addAttribute("authNum", authNum);
-		return "{\"result\":false , \"code\" : \""+ authNum +"\"}"; //메일이 없음
+		return "{\"code\" : \""+ authNum +"\"}";
 	}
 }

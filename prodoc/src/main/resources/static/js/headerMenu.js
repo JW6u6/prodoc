@@ -4,12 +4,14 @@ document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
 document.querySelector('#delPage').addEventListener('click', pageDelCheck);
 document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
+document.querySelector('#notiLockPg').addEventListener('click', pageLockNoti);
 
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
 document.querySelector('#menuImg').addEventListener('click', function (e) {
     pageMenuSetting();
     areUTurnOn();
+    areULock();
 });
 
 let headerMenu = document.querySelector('#ulMenu');
@@ -95,8 +97,10 @@ async function pageLock() {
         .then(result => {
             if (lockCheck == 'TRUE') {
                 alert('페이지 잠금이 설정되었습니다.');
+                areULock();
             } else if (lockCheck == 'FALSE') {
                 alert('페이지 잠금이 해제되었습니다.');
+                areULock();
             } else if (result == 'FALSE') {
                 alert('페이지 잠금 설정에 실패했습니다.');
             }
@@ -106,13 +110,37 @@ async function pageLock() {
 }
 
 //페이지 잠금해제 요청(일반 사용자)
-function pageLockNoti() {
-    let pageInfo = '';
+async function pageLockNoti() {
+    let infos = await pageInfoFromMenu();
+    let lockCheck;
 
-    if (pageInfo) {
-        //페이지 정보에서 잠금여부가 true면 잠금해제하고 아니면 잠금요청 보내는 걸... 작성해야됨
-        //웹소켓어케함요...
+    let url = '/LockNotify';
+    for (let info of infos) {
+        if (info.lockCheck == 'FALSE') {
+            lockCheck = 'FALSE';
+        } else if (info.lockCheck == 'TRUE') {
+            lockCheck = 'TRUE';
+        }
     }
+
+    fetch(url, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "pageId": pageBlockId
+            })
+        })
+        .then(response => response.text())
+        .then(result => {
+            if (lockCheck == 'FALSE') {
+                alert('페이지 잠금 요청을 보냈습니다.');
+            } else if (lockCheck == 'TRUE') {
+                alert('페이지 잠금 해제 요청을 보냈습니다.');
+            }
+        })
+        .catch(err => console.log(err));
 }
 
 //페이지 삭제 체크
@@ -231,9 +259,20 @@ function areUTurnOn() {
         .catch(err => console.log(err));
 }
 
-//링크복사(실험)
-//현재 execCommand는 사용되지 않는데 대체인 클립보드 api가 로컬호스트나 https 환경에서만 사용이 가능하다고 해서...
-//배포 환경을 여쭤보고 수정하던지 하는 게 나을듯
+async function areULock() {
+    let infos = await pageInfoFromMenu();
+    let LockToggle = document.querySelector('#lockPg');
+
+    for (let info of infos) {
+        if (info.lockCheck == 'FALSE') {
+            LockToggle.textContent = '페이지 잠금 설정';
+        } else if (info.lockCheck == 'TRUE') {
+            LockToggle.textContent = '페이지 잠금 해제';
+        }
+    }
+}
+
+//링크복사
 async function creLink() {
 
     let infos = await pageInfoFromMenu();

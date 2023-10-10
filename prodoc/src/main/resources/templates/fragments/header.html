@@ -14,7 +14,7 @@
 					<div id="ulMenu" class="hide">
 						<ul id="menu">
 							<li id="exportPg">내보내기</li>
-							<li id="lockPg">페이지 잠금</li>
+							<li id="lockPg"></li>
 							<li id="notiLockPg">페이지 잠금 요청</li>
 							<li id="copyLink">링크 복사</li>
 							<li id="copyPage">페이지 복사</li>
@@ -60,7 +60,6 @@
 </script>
 <th:block th:if="${session.logUser != null}">
 	<script th:inline="javascript" src="js/modal/userInfo.js"></script>
-	<script th:inline="javascript" src="js/modal/export.js"></script>
 	<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
 	<script th:inline="javascript" src="js/headerMenu.js"></script>
 </th:block>

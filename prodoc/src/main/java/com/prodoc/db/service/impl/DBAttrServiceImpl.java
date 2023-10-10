@@ -66,8 +66,8 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public int deleteAttrContent(String pageUseId) {
-		return mapper.deleteAttrContent(pageUseId);
+	public void deleteAttrContent(PageAttrVO vo) {
+		mapper.deleteAttrContent(vo);
 	}
 
 	@Override
@@ -83,6 +83,11 @@ public class DBAttrServiceImpl implements DBAttrService {
 	@Override
 	public void modifyDBPage(PageAttrVO vo) {
 		mapper.modifyDBPage(vo);
+	}
+
+	@Override
+	public int attrNumberUpdate(PageAttrVO vo) {
+		return mapper.attrNumberUpdate(vo);
 	}
 
 }

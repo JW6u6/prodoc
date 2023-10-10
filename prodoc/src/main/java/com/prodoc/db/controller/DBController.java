@@ -65,6 +65,8 @@ public class DBController {
 			infoMap.put("attrList", attrList);
 			childList.put(key, infoMap);	// 하위블럭ID, 블럭정보map
 		}
+		System.out.println("///////////////////////////////////////////////////////");
+		System.out.println(childList);
 		return childList;
 	}
 	
@@ -161,10 +163,8 @@ public class DBController {
 	}
 	
 	@PostMapping("deleteAttrContent")
-	public String deleteAttrContent(@RequestBody String pageUseId) {
-		int result = attrService.deleteAttrContent(pageUseId);
-		if(result > 0) return "{\"result\" : \"success\"}";
-		else return "{\"result\" : \"fail\"}";
+	public void deleteAttrContent(@RequestBody PageAttrVO pageAttrVO) {
+		attrService.deleteAttrContent(pageAttrVO);
 	}
 	
 	@PostMapping("/dbattr/fileUpload")	// 파일업로드
@@ -181,5 +181,12 @@ public class DBController {
 	@PostMapping("modifyAttrName")
 	public void modifyAttrName(@RequestBody PageAttrVO vo) {
 		attrService.modifyAttrName(vo);
+	}
+	
+	@PostMapping("attrNameUpdate")
+	public void attrNameUpdate(@RequestBody PageAttrVO vo) {
+		// 블럭히스토리(DB 히스토리 업데이트), attrNameUpdate()
+		attrService.attrNumberUpdate(vo);
+		dbService.databaseUpdate(vo);
 	}
 }

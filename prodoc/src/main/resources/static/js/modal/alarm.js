@@ -37,14 +37,28 @@ function showAlarmList(type){
 	})
 	.then(response => response.json())
 	.then(data => {
+		let alarms = insertDiv.querySelectorAll('.alarms');
+		alarms.forEach(work => {
+			work.remove();
+		})
 	    data.result.forEach(item=>{
 			console.log(item)
-	    	let text = `<div class="alarms"><img src = "images/${item.profile}"><span class="whoTagMe">${item.creUserName}</span></div>`
-	    	insertDiv.innerHTML = text;
+	    	let text = `<div class="alarms"><img src = "images/${item.profile}">
+			<span class="whoTagMe">${item.creUserName}님이 내 글에 댓글을 달았습니다</span>
+			<span>${item.replyId}</span><span>${item.pageId}</div>`
+	    	insertDiv.insertAdjacentHTML("beforeend",text);
 	    })
+		document.querySelectorAll('.alarms').forEach(items => {
+			items.addEventListener('click', function(e){
+				let pId = items.lastElementChild.innerHTML;
+				console.log("aa")
+				makeBlockPage(pId)
+			});
+		})
 	})
 	.catch(error => {
     console.error('오류 발생:', error);
+
 })
 	
 }

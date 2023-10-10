@@ -1,3 +1,5 @@
+//import { jsPDF } from "jspdf";
+
 document.querySelector('#exportPg').addEventListener('click', function (e) {
     let exportpg = document.querySelector('#exportModal');
     exportpg.classList.remove('hide');
@@ -13,3 +15,6 @@ document.querySelector('#fromExport').addEventListener('click', function (e) {
     doc.text(15, 40, '안녕하세요'); // 글씨입력(시작x, 시작y, 내용)
     doc.save('web.pdf'); //결과 출력
 });
+
+// malgun => 맑은고딕???폰트
+//console.log(malgun);

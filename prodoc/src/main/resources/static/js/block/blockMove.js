@@ -82,6 +82,7 @@ function dragover_handler(event) {
   //dragover의 기본 동작 막기 (drop을 위한 작업)
   event.preventDefault();
   event.stopPropagation();
+  
 
   //드래그중 마우스 커서 모양을 정하기
   event.dataTransfer.dropEffect = "move";
@@ -178,8 +179,10 @@ async function drop_handler(event) {
   const targetType = targetItem.dataset.blockType;
   const targetBlockOrder = Number(targetItem.dataset.blockOrder);
 
-  if (document.querySelector(".dragging").classList.contains("db_block"))
-    return;
+
+
+  if(document.querySelector(".dragging").classList.contains("db_block")) return;
+  if(event.target.nodeName==="IMG") return;
 
   //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
   if (dragItem.parentElement.classList.contains("block_column")) {

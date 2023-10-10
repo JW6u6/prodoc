@@ -13,8 +13,9 @@ public interface DBAttrService {
 	public List<PageAttrVO> selectAllTags(String dbUseId);
 	public void modifyAttrName(PageAttrVO vo);
 	public void modifyDBPage(PageAttrVO vo);
+	public int attrNumberUpdate(PageAttrVO vo);
 	
 	public int updateAttrContent(PageAttrVO vo);
 	public String insertAttrContent(PageAttrVO vo);
-	public int deleteAttrContent(String pageUseId);
+	public void deleteAttrContent(PageAttrVO vo);
 }
