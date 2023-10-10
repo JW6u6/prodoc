@@ -10,7 +10,7 @@
 	<title>test</title>
 
 	<!--/* css */-->
-	<link th:href="@{/css/common.css}" rel="stylesheet" />
+	<link th:href="@{css/common.css}" rel="stylesheet" />
 </th:block>
 <body>
 
@@ -25,11 +25,11 @@
     	<title>PRODOC</title>
 		
         <!--/* css */-->
-        <link th:href="@{/css/common.css}" rel="stylesheet" />
+        <link th:href="@{css/common.css}" rel="stylesheet" />
     </th:block>
     <body>
-        <th:block layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
-        <th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
+        <th:block layout:fragment="sidebar" th:include="@{fragments/sidebar}"></th:block>
+        <th:block layout:fragment="header" th:include="@{fragments/header}"></th:block>
 		
         <div layout:fragment="content" class="content">
             <form id="pageForm">
@@ -43,6 +43,6 @@
         </div>
     */-->
 
-	<script type="text/javascript" th:src="@{/js/page.js}"></script>
+	<script type="text/javascript" th:src="@{js/page.js}"></script>
 </body>
 </html>

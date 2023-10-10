@@ -10,3 +10,4 @@ let closeBtn = document.querySelectorAll('.closeBtn')
 			}
 		});
 	});
+	

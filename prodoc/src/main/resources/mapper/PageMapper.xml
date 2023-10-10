@@ -101,6 +101,9 @@
 		and email = #{email}
 	</select>
 
+	<update id="newName" parameterType="pageVO">
+		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
+	</update>
 </mapper>
   
   

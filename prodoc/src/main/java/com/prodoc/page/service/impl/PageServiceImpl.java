@@ -78,6 +78,13 @@ public class PageServiceImpl implements PageService {
 	public void deleteIfWorkspace(String workId) {
 		pageMapper.ifWorkRemove(workId);
 	}
+	
+	@Override
+	public String newName(PageVO pageVO) {
+		if(pageMapper.newName(pageVO) > 0)
+			 return "{\"result\" : true}";
+		else return "{\"result\" : false}";
+	}
 
 	@Override
 	public int onOff(PageVO pageVO) {

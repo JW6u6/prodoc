@@ -18,4 +18,6 @@ public interface PageService {
 
 	public int onOff(PageVO pageVO);
 	
+	//페이지 이름 변경
+	public String newName(PageVO pageVO);
 }
