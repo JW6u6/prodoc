@@ -12,10 +12,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		// 해당 URI를 브로커로 쓰겠다.
+		// topic으로 시작하는것은 전달만 해줌
 		config.enableSimpleBroker("/topic");
 		// Send(업데이트 알림요청)
-		// 클라이언트에서 보낸 메세지중 해당 경로(/app)로 시작하는 메세지를 메세지 브로커에서 처리
+		// 클라이언트에서 보낸 메세지중에서 app으로 시작하는것은 서버에서 처리후 전달받음.
 		config.setApplicationDestinationPrefixes("/app");
 	}
 

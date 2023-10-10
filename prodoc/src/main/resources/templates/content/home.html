@@ -20,7 +20,7 @@
 <title>PRODOC</title> <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
 <body>
-	
+	<script src="js/common.js"></script>
 	<th:block th:if="${session.logUser!= null}" layout:fragment="sidebar" th:include="@{/fragments/sidebar}"></th:block>
 	<th:block th:if="${session.logUser!= null}" layout:fragment="header" th:include="@{/fragments/header}"></th:block>
 

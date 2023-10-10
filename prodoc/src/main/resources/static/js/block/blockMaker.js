@@ -3,9 +3,14 @@
  * @param {Object} template - 생성된 템플릿 오브젝트.
  *
  */
-function displayBlock(template) {
-  //부모가 있으면 부모의 아이템으로 아니면 문서쪽으로.
-  container.insertAdjacentHTML("beforeend", template.template);
+function displayBlock(template, type) {
+  if (type === "DATA_PAGE") {
+    const dbModalPage = document.querySelector(".dataPage_blocks");
+    dbModalPage.insertAdjacentHTML("beforeend", template.template);
+  } else {
+    container.insertAdjacentHTML("beforeend", template.template);
+  }
+
   const newblock = document.querySelector(
     `[data-block-id="${template.displayId}"]`
   );
