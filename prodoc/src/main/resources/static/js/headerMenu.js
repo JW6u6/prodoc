@@ -11,6 +11,7 @@ document.querySelector('#lockPg').addEventListener('click', pageLock);
 document.querySelector('#menuImg').addEventListener('click', function (e) {
     pageMenuSetting();
     areUTurnOn();
+    areULock();
 });
 
 let headerMenu = document.querySelector('#ulMenu');
@@ -96,8 +97,10 @@ async function pageLock() {
         .then(result => {
             if (lockCheck == 'TRUE') {
                 alert('페이지 잠금이 설정되었습니다.');
+                areULock();
             } else if (lockCheck == 'FALSE') {
                 alert('페이지 잠금이 해제되었습니다.');
+                areULock();
             } else if (result == 'FALSE') {
                 alert('페이지 잠금 설정에 실패했습니다.');
             }
@@ -256,9 +259,20 @@ function areUTurnOn() {
         .catch(err => console.log(err));
 }
 
-//링크복사(실험)
-//현재 execCommand는 사용되지 않는데 대체인 클립보드 api가 로컬호스트나 https 환경에서만 사용이 가능하다고 해서...
-//배포 환경을 여쭤보고 수정하던지 하는 게 나을듯
+async function areULock() {
+    let infos = await pageInfoFromMenu();
+    let LockToggle = document.querySelector('#lockPg');
+
+    for (let info of infos) {
+        if (info.lockCheck == 'FALSE') {
+            LockToggle.textContent = '페이지 잠금 설정';
+        } else if (info.lockCheck == 'TRUE') {
+            LockToggle.textContent = '페이지 잠금 해제';
+        }
+    }
+}
+
+//링크복사
 async function creLink() {
 
     let infos = await pageInfoFromMenu();
