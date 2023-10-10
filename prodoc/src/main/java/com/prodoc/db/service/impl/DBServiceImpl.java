@@ -68,6 +68,11 @@ public class DBServiceImpl implements DBService {
 		return mapper.getWorkMembers(pageId);
 	}
 
+	@Override
+	public void databaseUpdate(PageAttrVO vo) {
+		mapper.databaseUpdate(vo);
+	}
+
 
 
 }

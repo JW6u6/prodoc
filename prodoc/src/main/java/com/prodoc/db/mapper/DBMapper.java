@@ -6,6 +6,7 @@ import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.service.DBBlockVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBdataVO;
+import com.prodoc.db.service.PageAttrVO;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
 
@@ -18,6 +19,8 @@ public interface DBMapper {
 	public int deleteDBPage(BlockVO vo);
 	public DBBlockVO getDBblock(DBBlockVO vo);
 	public List<UserVO> getWorkMembers(String pageId);
+	
+	public void databaseUpdate(PageAttrVO vo);	// 데이터베이스 : 히스토리, 페이지테이블 업데이트
 	
 	public PageVO getPageInfo(String pageId);	// 페이지VO 따로 필요해서 만들었음
 }

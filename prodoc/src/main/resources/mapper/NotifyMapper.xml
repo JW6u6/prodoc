@@ -3,22 +3,54 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.prodoc.notify.mapper.NotifyMapper">
-  
+  	
+  	<!--  알림 생성 -->
   	<insert id="insertTargetNotify" parameterType="NotifyVO">
   		{call insert_notify(
   							#{displayId}
   						,	#{noteType}
   						,	#{creUser}
   						,	#{pageId}
-  						,	#{replyId}
-  						)
-  		}
+  						,	#{replyId} )}
   	</insert>
+  	
   	<!-- 댓글, 멘션(, 페이지 잠금) 목록 -->
-  	<select id="selectNotify" resultType="NotifyResultVO">
-  		select * 
-		from view_notify
-		where note_type=#{noteType};
-  	</select>
-  	<!-- 초대 목록 -->
+	<select id="selectNotify" resultType="NotifyResultVO">
+	   select note_id, note_type, cre_user_id, cre_user_name, profile
+	   <if test="type == 'REPLY_TG' || type == 'all'"> ,display_id, reply_id, cre_date, reply_content </if>
+	   <if test="type == 'all'"> ,page_id, page_name </if>
+	   from VIEW_NOTIFY
+	   where re_user_id = #{logUser}
+	   <if test="type != 'all'"> and note_type = #{type} </if>
+	</select>
+	
+	<!-- 초대 목록 -->
+	<select id="selectNotifyInv" resultType="NotifyResultVO">
+	   select note_id, cre_user_id, cre_user_name, profile, cre_date, work_id, work_name
+	   from view_notify_invite
+	   where re_user_id = #{logUser}
+	</select>
+	
+	<!-- 알림 삭제 -->
+	<delete id="deleteNotify" parameterType="NotifyVO">
+		delete
+		from tbl_target_notify
+		where note_id = #{noteId}
+	</delete>
+	
+	
+	<!-- 알림 읽음 (빨간점 사라짐) -->
+	<update id="redReadCheck" parameterType="NotifyVO">
+		update tbl_member_notify 
+		set read_check = 'TRUE' 
+		where note_id = #{noteId}
+	</update>
+
+	<!-- 알림 읽음 (모달창 읽음) -->
+	<update id="readCheck" parameterType="NotifyVO">
+		update tbl_target_notify 
+		set read_check = 'TRUE' 
+		where note_id = #{noteId}
+	</update>
+	
   </mapper>
