@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prodoc.page.service.PageService;
 import com.prodoc.user.service.UserVO;
@@ -101,13 +102,14 @@ public class WorkSpaceController {
 	}
 
 	@GetMapping("/invite/{inviteId}")
-	public void mappingPath(@PathVariable("inviteId") String inviteId, Model model, HttpServletResponse response) {
+	public void mappingPath(@PathVariable("inviteId") String inviteId, RedirectAttributes rttr, HttpServletResponse response) {
 		WorkSpaceVO workVO = WorkSpaceMapper.InviteWorkInfo(inviteId);// 인바이트 아이디로 워크 아이디 찾기
+		System.out.println(workVO);
 		String mainP = workVO.getMainPageId();// 워크 아이디로 메인 페이지 찾기
 		// 메인 페이지 아이디 모달에 담아 전송
-		model.addAttribute("pageId", mainP);
+		rttr.addAttribute("pageId", mainP);
 		try {
-			response.sendRedirect("/test1");
+			response.sendRedirect("/shareWith?pageId="+ mainP);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
