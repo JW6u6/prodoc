@@ -43,9 +43,10 @@
 			const blockSessionUserId = "[[${session.logUser.email}]]";
 		</script>
 
-		<!-- 알람 모달 -->
-		<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
-		<script th:inline="javascript" src="js/modal/alarm.js"></script>
+	<!-- 알람 모달 -->
+	<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
+	<script th:inline="javascript" src="js/modal/alarm.js"></script>
+	
 
 	<!-- db 스크립트 -->
 	<script th:inline="javascript" src="js/db/dbEvent.js"></script>

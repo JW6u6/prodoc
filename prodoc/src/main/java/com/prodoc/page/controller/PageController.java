@@ -62,7 +62,12 @@ public class PageController {
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-
+	
+	@PostMapping("/pageUpdate")
+	public int pageUpdate(@RequestBody PageVO pageVO) {
+		return pageService.updatePage(pageVO);
+	}
+	
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();

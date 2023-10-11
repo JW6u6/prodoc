@@ -2,19 +2,19 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.prodoc.notify.mapper.NotifyMapper">
-
-	<!-- 알림 생성 -->
-	<insert id="insertTargetNotify" parameterType="NotifyVO">
-		{call insert_notify(
-		#{displayId}
-		, #{noteType}
-		, #{creUser}
-		, #{pageId}
-		, #{replyId} )}
-	</insert>
-
-	<!-- 댓글, 멘션(, 페이지 잠금) 목록 -->
+  <mapper namespace="com.prodoc.notify.mapper.NotifyMapper">
+  	
+  	<!--  알림 생성 -->
+  	<insert id="insertTargetNotify" parameterType="NotifyVO">
+  		{call insert_notify(
+  							#{displayId}
+  						,	#{noteType}
+  						,	#{creUser}
+  						,	#{workId}
+  						,	#{replyId} )}
+  	</insert>
+  	
+  	<!-- 댓글, 멘션(, 페이지 잠금) 목록 -->
 	<select id="selectNotify" resultType="NotifyResultVO">
 		select note_id, note_type, cre_user_id, cre_user_name, profile
 		<if test="type == 'REPLY_TG' || type == 'all'"> ,display_id, reply_id, cre_date, reply_content </if>
