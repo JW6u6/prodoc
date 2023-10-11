@@ -216,10 +216,18 @@ public class DBController {
 	}
 	
 	@GetMapping("getDatabaseBlock")
-	public String getDatabaseBlock(@RequestParam String pageId) {
+	public BlockVO getDatabaseBlock(@RequestParam String pageId) {
 		DBBlockVO dbblock = new DBBlockVO();
 		dbblock.setPageId(pageId);
 		dbblock = dbService.getDBblock(dbblock);
-		return dbblock.getDisplayId();
+		BlockVO block = new BlockVO();
+		block.setDisplayId(dbblock.getDisplayId());
+		
+		return blockService.selectBlock(block);
+	}
+	
+	@GetMapping("getDatabaseInfo")
+	public DBBlockVO getDatabaseInfo(@RequestParam String pageId) {
+		return dbService.getDatabaseInfo(pageId);
 	}
 }

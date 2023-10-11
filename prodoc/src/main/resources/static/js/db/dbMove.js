@@ -123,6 +123,58 @@ function dbMoveEvent(type){
     // item forEach문 종료
 }
 
+// 데이터베이스 하위페이지 속성에 드래그 이벤트 등록
+function datapageMove(){
+    const attrTags = document.querySelectorAll(".attr-name");
+    attrTags.forEach( tag => {
+        tag.addEventListener("drop", e => {
+            e.stopPropagation(); // container의 drop 이벤트를 막기위함
+            const dragDBblock = document.querySelector(".dragging").parentElement;
+            const targetDBblcok = e.currentTarget.parentElement;
+
+            // 크기 정의
+            const targetHeight = targetDBblcok.offsetHeight;
+
+            //가로
+            const targetHorizonCenter = targetHeight / 2;
+            const rect = targetDBblcok.getBoundingClientRect();
+            
+            //부모 위치
+            const offsetY = e.clientY - rect.top;
+
+            if(targetHorizonCenter > offsetY){
+                console.log("db하위페이지에서 위쪽드랍 발생");
+                targetDBblcok.parentElement.insertBefore(dragDBblock, targetDBblcok);
+            } else {
+                insertAfter(dragDBblock,targetDBblcok);
+                console.log("db하위페이지에서 아래쪽 드랍 발생")
+            }
+        })
+        tag.addEventListener("dragover",(e)=>{
+            //기본적으로 해야할 것
+            //이거 안하면 드랍안됨
+            e.stopPropagation();
+            e.preventDefault()
+        })
+        //드래그를 시작했을때
+        tag.addEventListener("dragstart",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.add("dragging")
+            console.log("db하위페이지에서 드래그 시작:",e.currentTarget)
+        })
+        //드래그를 종료했을때
+        tag.addEventListener("dragend",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.remove("dragging")
+            console.log("db하위페이지에서 드래그 종료",e.currentTarget);
+            
+            // ✅ 속성 넘버링 추가하기
+            const attrLineTag = e.currentTarget.parentElement;
+            pageAttrNumberingUpdate(attrLineTag);
+        })
+    })
+}
+
 
 // 이동 후 데이터 처리
 function dbNumberingUpdate(blockNode){
@@ -174,7 +226,7 @@ function dbNumberingUpdate(blockNode){
     }
 }
 
-// 이동 후 데이터 처리 - 속성
+// 이동 후 데이터 처리 - 테이블 속성
 function AttrNumberingUpdate(blockNode){
     let prevEle = blockNode.previousElementSibling;
     let nextEle = blockNode.nextElementSibling;
@@ -209,6 +261,47 @@ function AttrNumberingUpdate(blockNode){
         attrNumberUpdate(data);
         console.log(data);
     }
+}
+
+// 이동 후 데이터 처리 - 페이지 속성
+async function pageAttrNumberingUpdate(blockNode){
+    let targetBlock = blockNode.querySelector(".attr-name");
+    let prevEle = blockNode.previousElementSibling.querySelector(".attr-name");
+    let nextEle = blockNode.nextElementSibling.querySelector(".attr-name");
+
+    let newNum = dbAttrNumbering(prevEle, nextEle);
+    let nextNum = Number(nextEle.getAttribute("data-attr-order"));
+
+    //DB업데이트용 데이터들 ✅머지 후에 주석 풀기
+    // let pageId = document.querySelector("input[data-page-id]").getAttribute("data-page-id");
+    let pageId = 'pke2g-exvmq-mmwnk1';
+    
+    //데이터베이스의 페이지아이디, 블럭아이디 가져오기
+    let dbblock = await getDatabaseDBBlock(pageId);
+    let data = {
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+        'casePageId' : dbblock.displayId,  // DB의 디스플레이 아이디
+        'pageId' : dbblock.pageId,       // DB의 페이지 아이디
+        'workId' : document.getElementById("TitleWid").value,
+        'dbUseId' : targetBlock.getAttribute("data-duse-id")
+    }
+    //넘버링 겹쳤을 때 넘버링 재설정
+    if(newNum == nextNum){
+        let nameNodes = document.querySelectorAll(".attr-name");
+        nameNodes.forEach((namenode, idx)=> {
+            let num = 512 * (idx+1);
+            namenode.setAttribute("data-attr-order", num);
+            //DB업데이트(해당 페이지 넘버, db에 히스토리 업데이트, page 업데이트)
+            data['numbering'] = num;
+            // attrNumberUpdate(data);
+        });
+    } else {
+        targetBlock.setAttribute("data-attr-order", newNum);
+        //DB업데이트
+        data['numbering'] = newNum;
+        // attrNumberUpdate(data);
+    }
+    console.log(data);
 }
 
 // 디스플레이 넘버링 계산 > 계산값 리턴

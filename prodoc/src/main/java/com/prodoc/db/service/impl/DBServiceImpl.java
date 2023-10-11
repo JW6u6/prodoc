@@ -83,6 +83,11 @@ public class DBServiceImpl implements DBService {
 		return pageVO.getCaseId();
 	}
 
+	@Override
+	public DBBlockVO getDatabaseInfo(String pageId) {
+		return mapper.getDatabaseInfo(pageId);
+	}
+
 
 
 }

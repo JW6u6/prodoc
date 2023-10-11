@@ -55,8 +55,9 @@ function layoutClick(e){
 
 // DBcase block 생성
 function createDBblock(block){
+    console.log(block);
     const dbBlockTemp = `
-    <div class="db-block" data-block-id="` + block.displayId + `">
+    <div class="db-block database_case" data-block-id="` + block.displayId + `">
         <div id="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
             <div>` + block.content + `</div>
@@ -93,7 +94,9 @@ async function getChildList(disId){
         infoList.forEach((pagevo, idx) => {
             if(idx == 0){
                 let parentVO = pagevo.parent;
-                let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');
+                // let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');
+                let parentDiv = document.querySelectorAll('.database_case');
+                console.log(parentDiv);
                 // DB블럭에 DB의 페이지 정보를 속성에 추가
                 parentDiv.forEach(DBele => {
                     let tagId = DBele.getAttribute("data-block-id");
@@ -133,7 +136,7 @@ function insertDBpage(e){
 
     let nowLayout = caseBlock.getAttribute("data-layout");
     pageInfo['parentBlockId'] = caseBlock.getAttribute("data-block-id");    // db case page의 아이디
-    pageInfo['displayId'] = window.crypto.randomUUID();                     // 랜덤 아이디 생성
+    pageInfo['displayId'] = window.crypto.randomUUID();                     // ✅✅✅랜덤 아이디 생성
 
     if(nowLayout == 'DB_BRD'){
         let nowState = e.target.closest('[data-state]').getAttribute("data-state"); //생성위치의 상태값
