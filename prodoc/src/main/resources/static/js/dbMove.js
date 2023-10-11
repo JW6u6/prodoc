@@ -168,7 +168,7 @@ function AttrNumberingUpdate(blockNode){
         'workId' : document.getElementById("TitleWid").value,
         'dbUseId' : blockNode.getAttribute("data-duse-id")
     }
-    //넘버링 겹쳤을 때 넘버링 재설정
+    //넘버링 겹쳤을 때 넘버링 재설정 durl
     if(newNum == nextNum){
         let nameNodes = blockNode.closest(".table-thead").querySelectorAll(".attr-name");
         nameNodes.forEach((namenode, idx)=> {
