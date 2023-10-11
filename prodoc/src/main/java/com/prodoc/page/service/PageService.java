@@ -1,6 +1,5 @@
 package com.prodoc.page.service;
 
-import java.util.List;
 
 public interface PageService {
 
@@ -8,6 +7,8 @@ public interface PageService {
 
 	// 페이지 잠금
 	public boolean LockCheckPage(PageVO pageVO);
+	
+	public int updatePage(PageVO PageVO);
 
 	// 페이지 삭제여부(페이지메뉴)
 	public boolean deleteCheckPage(PageVO pageVO);
