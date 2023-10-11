@@ -4,7 +4,7 @@ document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
 document.querySelector('#delPage').addEventListener('click', pageDelCheck);
 document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
-document.querySelector('#notiLockPg').addEventListener('click', pageLockNoti);
+document.querySelector('#notiLockPg').addEventListener('click', alreadyLock);
 
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
@@ -19,7 +19,6 @@ headerMenu.addEventListener('click', async function (e) {
     headerMenu.classList.toggle('hide');
     headerMenu.classList.toggle('view');
 })
-
 
 //기본 페이지 메뉴 세팅.
 async function pageMenuSetting() {
@@ -107,6 +106,27 @@ async function pageLock() {
         })
         .catch(err => console.log(err));
 
+}
+
+function alreadyLock() {
+    let url = '/areULOCK?pageId=' + pageBlockId;
+
+    fetch(url, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            if (result > 0) {
+                alert('이미 해당 페이지의 잠금이 요청되었습니다.')
+            } else {
+                pageLockNoti();
+            }
+        })
+        .catch(err => console.log(err));
 }
 
 //페이지 잠금해제 요청(일반 사용자)
@@ -262,12 +282,15 @@ function areUTurnOn() {
 async function areULock() {
     let infos = await pageInfoFromMenu();
     let LockToggle = document.querySelector('#lockPg');
+    let LockNotiToggle = document.querySelector('#notiLockPg');
 
     for (let info of infos) {
         if (info.lockCheck == 'FALSE') {
             LockToggle.textContent = '페이지 잠금 설정';
+            LockNotiToggle.textContent = '페이지 잠금 요청';
         } else if (info.lockCheck == 'TRUE') {
             LockToggle.textContent = '페이지 잠금 해제';
+            LockNotiToggle.textContent = '페이지 잠금 해제 요청';
         }
     }
 }
