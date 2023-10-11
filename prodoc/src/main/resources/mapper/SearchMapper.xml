@@ -5,7 +5,7 @@
 <mapper namespace ="com.prodoc.search.mapper.SearchMapper">
 <select id="selectblockList" parameterType="SearchVO" resultType="ResultVO">
 	SELECT work_id, work_name, page_id, page_name, case_name, block_cre_user, u.nickname, display_id, content, display_cre_date, display_up_date
-	FROM (SELECT * FROM (SELECT * FROM view_wk_search) 
+	FROM (SELECT * FROM (SELECT * FROM view_wk_search )
 		  MINUS (SELECT * FROM view_wk_search WHERE page_cre_user != #{logUser} AND public_check = 'P_PRIV'))
           JOIN tbl_user u ON (u.email = block_cre_user)
     WHERE (work_id in (SELECT work_id FROM tbl_member WHERE email = #{logUser}))

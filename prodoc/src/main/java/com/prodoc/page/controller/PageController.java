@@ -119,5 +119,14 @@ public class PageController {
 		((PageVO) pageVO).setCreUser(user.getEmail());
 		pageService.LockAlam(pageVO);
 	}
+	
+	//페이지 새이름
+	@GetMapping("/pageNewName")
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+		PageVO page = new PageVO();
+		page.setPageId(pageId);
+		page.setPageName(pageName);
+		return pageService.newName(page);
+	}
 
 }

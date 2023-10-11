@@ -94,7 +94,7 @@ function settingHistoryResult(history){
 	resultList.innerHTML = "";
 	if(history.length == 0){
 		resultList.innerHTML = `<div class="historyItem" style="overflow:hidden; 
-		border:1px solid black;"><h2>삭제 목록이 없습니다.</h2></div>`;
+		border:1px solid black;"><h2>히스토리 내역이 없습니다.</h2></div>`;
 		return;
 	}//검색 결과가 없음
 	

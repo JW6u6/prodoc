@@ -48,7 +48,7 @@ public class LoginController {
 	        return new RedirectView("/home");
         }else if(find.getPlatform().equals("KAKAO")) {	//이미 카카오로 인증 했음
         	HttpSession session = request.getSession();
-			session.setAttribute("logUser", user);		//세션 등록
+			session.setAttribute("logUser", find);		//세션 등록
         	return new RedirectView("/home");
         }else {											//같은 이메일로 기본 가입함
         	request.setAttribute("kakao", "이미 가입된 이메일입니다.");

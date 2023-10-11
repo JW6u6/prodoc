@@ -23,5 +23,7 @@ public interface PageService {
 	
 	//페이지 잠금해제 요청(일반 사용자)
 	public void LockAlam(PageVO pageVO);
-	
+
+	//페이지 이름 변경
+	public String newName(PageVO pageVO);
 }

@@ -191,16 +191,17 @@ function dropPage(event){
     event.stopPropagation();
     event.preventDefault();
     const dragItem = document.querySelector(".dragging").parentElement;
-    console.log(dragItem);
     const targetItem = event.currentTarget;
     const pageMain = event.currentTarget.parentElement.parentElement;
     const targetHeight = event.target.offsetHeight;
-    console.log(targetHeight)
+    
+    console.log(dragItem);
+    console.log(targetItem.parentElement);
     const {
         offsetX, offsetY
     } = event;
     const center = targetHeight / 2;
-    console.log(center);
+    console.log(offsetY , center)
     if(offsetY > center){
         insertAfter(dragItem, targetItem.parentElement);
     } else {
@@ -335,9 +336,10 @@ function pageList(wId, target) {
         })
         .then(data => {
             data.forEach(item => {
-                let text = `<div class= "Page" data-id="${item.pageId}" data-level="2" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+                console.log(item);
+                let text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.pageName}" data-level="2" data-number="${item.numbering}" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
-                            <div class = "pageMain"></div>
+                            <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             </div>`
                 insertDiv.insertAdjacentHTML("beforeend", text);
             })
@@ -367,9 +369,49 @@ function pageList(wId, target) {
                     selectPage(pageId);
                 })
             })
+            
+            //페이지 이름 변경 모달 열기 :: 은주
+			document.querySelectorAll(".editPN").forEach(tag => {
+				let pid = tag.parentElement.dataset.id
+				let pname = tag.parentElement.dataset.name
+				tag.addEventListener('click', function(e){
+					PNmod.className ="view";
+					PNmod.dataset.id= pid;
+					let newPName = document.querySelector("#editPageMod input");
+					 newPName.value = pname;
+				});
+			});
         })
         .catch((err) => console.log('err: ', err));
 }
+
+//페이지 이름 변경 모달 내 클릭 이벤트 :: 은주
+let PNmod = document.querySelector("#editPageMod");
+document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
+	let value = this.previousElementSibling.value;
+	let id = this.closest("div").dataset.id;
+	let URL = `/pageNewName?pageId=${id}&pageName=${value}`;
+	fetch(URL, {
+		method: "GET",
+	    headers: {
+	      "Content-Type": "application/json",
+	    }
+	}).then(response => response.json())
+	.then(res => {
+		if(res.result){
+			document.querySelectorAll("#side .Page").forEach(pageitem => {
+				if(pageitem.dataset.id == id){
+					pageitem.children[1].innerText = value;
+					pageitem.dataset.name = value;
+				}
+			});
+		}else{
+			alert('알 수 없는 이유로 페이지 이름 변경에 실패하였습니다.');
+		}
+		PNmod.className ="hide";
+	}).catch(err => console.log(err));
+});
+
 // 페이지 선택시 PID 불러오기 + 리스트노출.
 function selectPage(pageId) {
   let url = "/pageInfo?pageId=" + pageId;
@@ -378,7 +420,7 @@ function selectPage(pageId) {
             return res.json();
         })
         .then((data) => {
-            data.forEach((item) => {
+            data.forEach(async(item) => {
                 //이미 있으면 제거
                 const title = document.querySelector(".pageHead");
 
@@ -406,16 +448,6 @@ function selectPage(pageId) {
 
       });
     });
-
-                let app = document.querySelector(".container");
-                let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/><input type="text" id="TitlePid" value="${item.pageId}"/> </div>`;
-                app.insertAdjacentHTML("beforebegin", pageTitle);
-                //페이지 뿌려주기
-                pageBlockId = pageId;
-                workBlockId = item.workId;
-                makeBlockPage(pageId);
-            });
-        });
 }
 // 새로운 페이지 생성.
 function newPage() {
