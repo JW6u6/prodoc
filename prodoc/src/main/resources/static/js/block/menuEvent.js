@@ -55,7 +55,7 @@ const blockHandler = {
       blockId: copyObj.type,
       rowX: copyObj.order,
       content: copyObj.text,
-      upUser: "pepsiman",
+      upUser: blockSessionUserId,
     });
 
     //실질적 DOM 생성
@@ -66,7 +66,7 @@ const blockHandler = {
     //복제된 블럭에 "블럭이벤트" 생성
     handlingBlockEvent(copyblock);
 
-    closeModal();
+    closeBlockModal();
   },
   // 블럭 삭제 함수 호출
   handleMenuDeleteEvent: (e) => {
@@ -76,7 +76,7 @@ const blockHandler = {
       `.prodoc_block[data-block-id="${blockId}"]`
     );
     deleteBlock(targetBlock);
-    closeModal();
+    closeBlockModal();
   },
   // 댓글 관련 함수 호출
   handleMenuCommentEvent: async (e) => {
@@ -96,26 +96,44 @@ const blockHandler = {
     // 댓글을 순회하면서 조건에 맞게 뿌리기
     replyList.forEach((reply) => {
       const date = reply.upDate ? reply.upDate : reply.creDate;
-      const temp = makeReplyBlock(reply.creUser, reply.content, date);
+      const temp = makeReplyBlock(
+        reply.creUser,
+        reply.content,
+        date,
+        reply.replyId
+      );
       replyWrapper.insertAdjacentHTML("beforebegin", temp);
     });
     const blockReply = document.querySelector(".reply_modal");
     // 댓글 등록버튼 이벤트
     replyRegistBtn.addEventListener("click", (e) => {
       const replyInput = e.target.previousElementSibling;
-      const replyTemp = makeReplyBlock("pepsiman", replyInput.value, "지금");
+      const replyTemp = makeReplyBlock(
+        blockSessionUserId,
+        replyInput.value,
+        "지금"
+      );
       replyWrapper.insertAdjacentHTML("beforebegin", replyTemp);
       registReply({
-        creUser: "pepsiman",
+        creUser: blockSessionUserId,
         content: replyInput.value,
         displayId: blockId,
-        pageId: pageId,
+        pageId: workBlockId,
         mentionList: null, // 어케할까
       });
       replyInput.value = "";
       blockReply.scrollTop = blockReply.scrollHeight;
     });
-    // closeModal();
+    const blockRemoveBtn = document.querySelectorAll(
+      ".reply_block--remove_btn"
+    );
+    blockRemoveBtn.forEach((removeBtn) => {
+      removeBtn.addEventListener("click", (e) => {
+        const replyId = e.currentTarget.parentElement.dataset.replyId;
+        deleteReply(replyId, blockSessionUserId);
+      });
+    });
+    // closeBlockModal();
   },
   // 블럭 변경 함수 호출
   handleBlockChangeEvent: (e) => {
@@ -197,6 +215,6 @@ function deleteToggle(toggleBlock) {
 
 // 메뉴와 함께 닫기위한 함수
 // 메뉴 하이드 처리때문에 추가
-const closeModal = () => {
+const closeBlockModal = () => {
   document.querySelector(".modalBackground").click();
 };

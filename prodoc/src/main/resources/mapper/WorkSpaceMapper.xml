@@ -2,94 +2,119 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.prodoc.workspace.mapper.WorkSpaceMapper">
- 	<!-- <워크 list 불러오기> -->
- 	<select id="workList" resultType="WorkSpaceVO">
+<mapper namespace="com.prodoc.workspace.mapper.WorkSpaceMapper">
+	<!-- <워크 list 불러오기> -->
+	<select id="workList" resultType="WorkSpaceVO">
 		SELECT work_id,work_name
-		FROM tbl_workspace
-		WHERE work_id IN (select work_id 
-                		  from tbl_member
-                		  where email = #{email}) AND delete_check != 'TRUE'
- 	</select>
- 	<!-- 워크 name 값 가져오기 -->
- 	<select id = "workId" resultType="String">
- 		SELECT work_name
- 		FROM tbl_workspace
- 		WHERE work_id = #{workId}
- 	</select>
- 	
- 	<!-- 워크스페이스 단건 조회 -->
- 	<select id="selectOneWorkspace" resultType="WorkSpaceVO">
- 		SELECT work_id
- 				, work_type
- 				, work_name
- 				, public_check
- 				, parent_id
- 				, main_page_id
- 		FROM TBL_WORKSPACE
- 		WHERE work_id = #{workId}
- 	</select>
- 	
- 	<!-- 워크스페이스 등록 -->
- 	<insert id="registerWorkspace" parameterType="WorkSpaceVO" statementType="CALLABLE">
- 		{call workspace_register(
-	 								#{parentId}
-	 								, #{workType}
-	 								, #{workName}
-	 								, #{publicCheck}
-	 								, #{email}
-	 								, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
-	 								, #{outWid, mode=OUT, jdbcType=VARCHAR, javaType=string}
- 								)}
- 	</insert>
- 	
- 	
- 	<!-- 팀 워크스페이스일시 초대기능 -->
-	<insert id="inviteWorkspace" parameterType="WorkJoinVO" statementType="CALLABLE">
-		{call workjoin_register(
-									#{workId}
-									, #{inviteEmail}
-									, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
-								)}
-	</insert>
-	
-	<!-- 팀워크스페이스 설정에 출력되는 초대 유저 목록 -->
-	<select id="selectInvite" resultType="WorkJoinVO" parameterType="String">
-		SELECT invite_email
-		FROM TBL_WORKJOIN
+		FROM
+		tbl_workspace
+		WHERE work_id IN (select work_id
+		from tbl_member
+		where
+		email = #{email}) AND delete_check != 'TRUE'
+	</select>
+	<!-- 워크 name 값 가져오기 -->
+	<select id="workId" resultType="String">
+		SELECT work_name
+		FROM
+		tbl_workspace
 		WHERE work_id = #{workId}
 	</select>
- 	
- 	
- 	<!-- 워크스페이스 수정 -->
- 	<update id="modifyWorkspace" parameterType="WorkSpaceVO">
- 		UPDATE TBL_WORKSPACE
- 			<set>
- 				<if test="workName != null and !workName.equals('')">
- 					work_name = #{workName},
- 				</if>
- 				<if test="publicCheck != null and !publicCheck.equals('')">
- 					public_check = #{publicCheck},
- 				</if>
- 			</set>
- 		WHERE work_id = #{workId}
- 	</update>
 
- 	
- 	<!-- 워크스페이스 삭제 -->
- 	<update id="removeCheckWorkspace" parameterType="String">
- 		UPDATE TBL_WORKSPACE
- 		SET DELETE_CHECK = 'TRUE'
- 		WHERE work_id = #{workId}
- 		OR parent_id = #{workId}
- 	</update>
- 	
- 	<!-- 워크스페이스 메인 페이지 지정 -->
- 	<update id="MainPgWorkspace" parameterType="WorkSpaceVO">
- 		UPDATE TBL_WORKSPACE
- 		SET MAIN_PAGE_ID = #{mainPageId}
- 		WHERE work_id = #{workId}
- 	</update>
- 	
- 	
- </mapper>
+	<!-- 워크스페이스 단건 조회 -->
+	<select id="selectOneWorkspace" resultType="WorkSpaceVO">
+		SELECT work_id
+		,
+		work_type
+		, work_name
+		, public_check
+		, parent_id
+		, main_page_id
+		FROM
+		TBL_WORKSPACE
+		WHERE work_id = #{workId}
+	</select>
+
+	<!-- 워크스페이스 등록 -->
+	<insert id="registerWorkspace" parameterType="WorkSpaceVO"
+		statementType="CALLABLE">
+		{call workspace_register(
+		#{parentId}
+		, #{workType}
+		,
+		#{workName}
+		, #{publicCheck}
+		, #{email}
+		, #{result, mode=OUT,
+		jdbcType=VARCHAR, javaType=string}
+		, #{outWid, mode=OUT,
+		jdbcType=VARCHAR, javaType=string}
+		)}
+	</insert>
+
+
+	<!-- 팀 워크스페이스일시 초대기능 -->
+	<insert id="inviteWorkspace" parameterType="WorkJoinVO"
+		statementType="CALLABLE">
+		{call workjoin_register(
+		#{workId}
+		, #{inviteEmail}
+		, #{creUser}
+		, #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+		, #{inviteId, mode=OUT, jdbcType=VARCHAR, javaType=string}
+		)}
+	</insert>
+
+	<!-- 팀워크스페이스 설정에 출력되는 초대 유저 목록 -->
+	<select id="selectInvite" resultType="WorkJoinVO"
+		parameterType="String">
+		SELECT invite_email
+		FROM TBL_WORKJOIN
+		WHERE work_id =
+		#{workId}
+	</select>
+
+
+	<!-- 워크스페이스 수정 -->
+	<update id="modifyWorkspace" parameterType="WorkSpaceVO">
+		UPDATE TBL_WORKSPACE
+		<set>
+			<if test="workName != null and !workName.equals('')">
+				work_name = #{workName},
+			</if>
+			<if test="publicCheck != null and !publicCheck.equals('')">
+				public_check = #{publicCheck},
+			</if>
+		</set>
+		WHERE work_id = #{workId}
+	</update>
+
+
+	<!-- 워크스페이스 삭제 -->
+	<update id="removeCheckWorkspace" parameterType="WorkSpaceVO">
+		UPDATE
+		TBL_WORKSPACE
+		SET DELETE_CHECK = 'TRUE'
+		WHERE work_id = #{workId}
+		OR
+		parent_id = #{workId}
+	</update>
+
+	<!-- 워크스페이스 메인 페이지 지정 -->
+	<update id="MainPgWorkspace" parameterType="WorkSpaceVO">
+		UPDATE TBL_WORKSPACE
+		SET MAIN_PAGE_ID = #{mainPageId}
+		WHERE work_id = #{workId}
+	</update>
+
+	<!-- 초대코드로 워크스페이스 그거가져오기 -->
+	<select id="InviteWorkInfo" parameterType="String" resultType="WorkSpaceVO">
+		SELECT * FROM
+		TBL_WORKSPACE
+		WHERE work_id = (SELECT work_id
+						FROM TBL_WORKJOIN
+						WHERE invite_id = #{inviteId})
+	</select>
+
+
+</mapper>

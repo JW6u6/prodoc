@@ -9,15 +9,16 @@
 						#{caseBlockId}
 						, #{attrId}
 						, #{attrName}
-						, #{attrContent}
+						, #{email}
 						, #{result, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
 	</insert>
 	
 	<!-- DB 속성 삭제 -->
-	<delete id="deletePageAttr" parameterType="String" statementType="CALLABLE">
+	<delete id="deletePageAttr" parameterType="PageAttrVO">
 		{call DELETE_DB_ATTR(
 					#{dbUseId}
+					, #{email}
 		)}
 	</delete>
 	
@@ -58,5 +59,64 @@
 		                                WHERE page_id = #{pageId}
 		                                            AND attr_id = 'CAL'
 		                                            AND attr_name = '날짜')
+	</update>
+	
+	<update id="updateAttrContent" parameterType="PageAttrVO">
+		UPDATE tbl_page_attr
+		SET attr_content = #{attrContent}
+		WHERE page_use_id = #{pageUseId}
+	</update>
+	
+	<insert id="insertAttrContent" statementType="CALLABLE" parameterType="PageAttrVO">
+		{call INSERT_ATTR_CONTENT(
+			#{pageId}
+			, #{attrContent}
+			, #{dbUseId}
+			, #{pageUseId, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		)}
+	</insert>
+	
+	<delete id="deleteAttrContent" parameterType="PageAttrVO">
+		{call DELETE_ATTR_CONTENT(
+			#{pageUesId}
+			, #{email}
+			, #{workId}
+		)}
+	</delete>
+	
+	<!-- 태그리스트 조회용 -->
+	<select id="selectAllTags" resultType="PageAttrVO" parameterType="String">
+		SELECT *
+		FROM view_pageattr
+		WHERE db_use_id = #{dbUseId}
+	</select>
+	
+	<!-- 속성 이름 수정(pageUseId로 워크아이디 대신 받음 -->
+	<update id="modifyAttrName" parameterType="PageAttrVO">
+		{ call MODIFY_ATTR_NAME(
+				#{dbUseId}
+				, #{attrName}
+				, #{pageId}
+				, #{email}
+				, #{casePageId}
+				, #{workId}
+		)}
+	</update>
+	
+	<!-- DB하위페이지 수정시 하위페이지의 속성, 히스토리 업데이트 -->
+	<update id="modifyDBPage" parameterType="PageAttrVO">
+		{call MODIFY_DB_PAGE(
+				#{pageId}
+				, #{email}
+				, #{casePageId}
+				, #{workId}
+		)}
+	</update>
+	
+	<!-- 속성 넘버링 변경 -->
+	<update id="attrNumberUpdate" parameterType="PageAttrVO">
+		UPDATE tbl_db_attr
+		SET numbering = #{numbering}
+		WHERE db_use_id = #{dbUseId}
 	</update>
 </mapper>

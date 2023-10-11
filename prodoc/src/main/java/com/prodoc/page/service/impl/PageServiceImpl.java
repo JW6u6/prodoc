@@ -2,7 +2,10 @@ package com.prodoc.page.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.prodoc.history.service.HistoryService;
+import com.prodoc.history.service.HistoryVO;
 import com.prodoc.page.mapper.PageMapper;
 import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
@@ -15,6 +18,9 @@ public class PageServiceImpl implements PageService {
 	@Setter(onMethod_ = @Autowired)
 	PageMapper pageMapper;
 
+	@Autowired
+	HistoryService historyService;
+
 	// 페이지 잠금/잠금해제(소유자,관리자 권한)
 	@Override
 	public boolean LockCheckPage(PageVO pageVO) {
@@ -23,8 +29,24 @@ public class PageServiceImpl implements PageService {
 
 	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@Override
-	public boolean deleteCheckPage(String pageId) {
-		return pageMapper.RemoveCheckPage(pageId) == 1;
+	@Transactional
+	public boolean deleteCheckPage(PageVO pageVO) {
+		if (pageMapper.RemoveCheckPage(pageVO.getPageId()) == 1) {
+			HistoryVO history = new HistoryVO();
+
+			history.setPageId(pageVO.getPageId());
+			history.setWorkId(pageVO.getWorkId());
+			history.setCreUser(pageVO.getCreUser());
+			history.setHistoryType("DELETE");
+			
+			historyService.insertHistory(history);
+			
+			pageMapper.RemoveChildPage(pageVO.getPageId());
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// 페이지 알림 끄기/켜기.
@@ -35,9 +57,17 @@ public class PageServiceImpl implements PageService {
 	}
 
 	@Override
+	@Transactional
 	public String insertPage(PageVO pageVO) {
 		pageMapper.insertPage(pageVO);
+		HistoryVO history = new HistoryVO();
+		history.setWorkId(pageVO.getWorkId());
+		history.setCreUser(pageVO.getCreUser());
+		history.setHistoryType("CREATE");
+
 		if (pageVO.getInsertResult().equals("success")) {
+			history.setPageId(pageVO.getPageId());
+			historyService.insertHistory(history);
 			return pageVO.getPageId();
 		} else {
 			return pageVO.getPageId();
@@ -47,6 +77,18 @@ public class PageServiceImpl implements PageService {
 	@Override
 	public void deleteIfWorkspace(String workId) {
 		pageMapper.ifWorkRemove(workId);
+	}
+	
+	@Override
+	public String newName(PageVO pageVO) {
+		if(pageMapper.newName(pageVO) > 0)
+			 return "{\"result\" : true}";
+		else return "{\"result\" : false}";
+	}
+
+	@Override
+	public int onOff(PageVO pageVO) {
+		return pageMapper.selectTurnOn(pageVO);
 	}
 
 }

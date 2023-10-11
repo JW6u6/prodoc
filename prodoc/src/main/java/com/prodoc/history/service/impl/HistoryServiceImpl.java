@@ -18,5 +18,27 @@ public class HistoryServiceImpl implements HistoryService {
 	public List<HistoryVO> getHistory(HisSearchVO search) {
 		return mapper.selectList(search);
 	}
+	
+	@Override
+	public void blockHistory(BlockVO block) {
+		mapper.blockHistory(block);
+	}
+	
+	@Override
+	public int insertHistory(HistoryVO history) {
+		return mapper.insertHistory(history);
+	}
+	
+	@Override
+	public RevokeVO revokePage(RevokeVO revoke) {
+		mapper.revokePage(revoke);
+		return revoke;
+	}
+	
+	@Override
+	public RevokeVO revokeWork(RevokeVO revoke) {	
+		mapper.revokeWork(revoke);
+		return revoke;
+	}
 
 }

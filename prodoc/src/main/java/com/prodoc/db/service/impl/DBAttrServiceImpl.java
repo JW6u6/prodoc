@@ -10,6 +10,7 @@ import com.prodoc.db.service.AddAttrVO;
 import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBAttrService;
 import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.file.service.FileVO;
 
 @Service
 public class DBAttrServiceImpl implements DBAttrService {
@@ -44,13 +45,49 @@ public class DBAttrServiceImpl implements DBAttrService {
 	}
 
 	@Override
-	public void deletePageAttr(String dbUseId) {
-		mapper.deletePageAttr(dbUseId);
+	public void deletePageAttr(PageAttrVO attrvo) {
+		mapper.deletePageAttr(attrvo);
 	}
 
 	@Override
 	public int addCalendar(PageAttrVO vo) {
 		return mapper.addCalendar(vo);
+	}
+
+	@Override
+	public int updateAttrContent(PageAttrVO vo) {
+		return mapper.updateAttrContent(vo);
+	}
+
+	@Override
+	public String insertAttrContent(PageAttrVO vo) {
+		mapper.insertAttrContent(vo);
+		return vo.getPageUseId();
+	}
+
+	@Override
+	public void deleteAttrContent(PageAttrVO vo) {
+		mapper.deleteAttrContent(vo);
+	}
+
+	@Override
+	public List<PageAttrVO> selectAllTags(String dbUseId) {
+		return mapper.selectAllTags(dbUseId);
+	}
+
+	@Override
+	public void modifyAttrName(PageAttrVO vo) {
+		mapper.modifyAttrName(vo);
+	}
+
+	@Override
+	public void modifyDBPage(PageAttrVO vo) {
+		mapper.modifyDBPage(vo);
+	}
+
+	@Override
+	public int attrNumberUpdate(PageAttrVO vo) {
+		return mapper.attrNumberUpdate(vo);
 	}
 
 }

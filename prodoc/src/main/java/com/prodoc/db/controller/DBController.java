@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.prodoc.block.service.BlockService;
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.db.service.AddAttrVO;
@@ -27,8 +27,9 @@ import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
 import com.prodoc.db.service.DBdataVO;
 import com.prodoc.db.service.PageAttrVO;
+import com.prodoc.db.service.dbattrFileService;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.page.mapper.PageMapper;
-import com.prodoc.page.service.PageService;
 import com.prodoc.page.service.PageVO;
 import com.prodoc.user.service.UserVO;
 
@@ -39,9 +40,11 @@ public class DBController {
 	@Autowired DBAttrService attrService;
 	@Autowired PageMapper pageMapper;
 	@Autowired BlockServiceImpl blockService;
+	@Autowired dbattrFileService fileService;
+	@Autowired HistoryService hisService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
-	public String InsertDBCase(DBCaseVO casePage) {
+	public String InsertDBCase(@RequestBody DBCaseVO casePage) {
 		dbService.insertDBCase(casePage);
 		return casePage.getResult(); 
 	}
@@ -62,6 +65,8 @@ public class DBController {
 			infoMap.put("attrList", attrList);
 			childList.put(key, infoMap);	// 하위블럭ID, 블럭정보map
 		}
+		System.out.println("///////////////////////////////////////////////////////");
+		System.out.println(childList);
 		return childList;
 	}
 	
@@ -74,7 +79,7 @@ public class DBController {
 			DBBlockVO dbblock = new DBBlockVO();
 			dbblock.setPageId(pageId);
 			result.put("result", dbService.getDBblock(dbblock));
-		} else result.put("result", "fail");
+		} else result.put("result", "fail"); 
 		return result;
 	}
 	
@@ -121,18 +126,15 @@ public class DBController {
 		return "{\"caseBlock\" : \""+result+"\"}";
 	}
 	
-	@GetMapping("deleteDbAttr")
-	public void deleteDbAttr(@RequestParam String dbUseId) {
-		attrService.deletePageAttr(dbUseId);
+	@PostMapping("deleteDbAttr")
+	public void deleteDbAttr(@RequestBody PageAttrVO attrvo) {
+		attrService.deletePageAttr(attrvo);
 	}
 	
-	@GetMapping("deleteDBPage")
-	public String deleteDBPage(@RequestParam String pageId) {
-		int result = dbService.deleteDBPage(pageId);
-		if(result > 0) {
-			return "{\"result\" : \"success\"}";
-		}
-		else return "{\"result\" : \"fail\"}";
+	@PostMapping("deleteDBPage")
+	public String deleteDBPage(@RequestBody BlockVO vo) {
+		dbService.deleteDBPage(vo);
+		return "{\"result\" : \"success\"}";
 	}
 	
 	@PostMapping("addCalendar")
@@ -140,5 +142,51 @@ public class DBController {
 		int result = attrService.addCalendar(vo);
 		if(result > 0) return "{\"result\" : \"success\"}";
 		else return "{\"result\" : \"fail\"}";
+	}
+	@PostMapping("updateAttrContent")
+	public String updateAttrContent(@RequestBody PageAttrVO vo) {
+		int result = attrService.updateAttrContent(vo);
+		attrService.modifyDBPage(vo);
+		if(result > 0) return "{\"result\" : \"success\"}";
+		else return "{\"result\" : \"fail\"}";
+	}
+	
+	@PostMapping("/dbAttr/getWorkMembers")
+	public List<UserVO> getWorkMembers(@RequestBody String pageId){
+		return dbService.getWorkMembers(pageId);
+	}
+	
+	@PostMapping("insertAttrContent")
+	public String insertAttrContent(@RequestBody PageAttrVO vo) {
+		String pageUseId = attrService.insertAttrContent(vo);
+		return "{\"result\" : \""+pageUseId+"\"}";
+	}
+	
+	@PostMapping("deleteAttrContent")
+	public void deleteAttrContent(@RequestBody PageAttrVO pageAttrVO) {
+		attrService.deleteAttrContent(pageAttrVO);
+	}
+	
+	@PostMapping("/dbattr/fileUpload")	// 파일업로드
+	public String attrFileupload(MultipartFile file) {
+		String uploadName = fileService.fileUploadName(file);
+		return uploadName;
+	}
+	
+	@PostMapping("/dbattr/selectAllTags")
+	public List<PageAttrVO> selectAllTags(@RequestBody String dbUseId){
+		return attrService.selectAllTags(dbUseId);
+	}
+	
+	@PostMapping("modifyAttrName")
+	public void modifyAttrName(@RequestBody PageAttrVO vo) {
+		attrService.modifyAttrName(vo);
+	}
+	
+	@PostMapping("attrNameUpdate")
+	public void attrNameUpdate(@RequestBody PageAttrVO vo) {
+		// 블럭히스토리(DB 히스토리 업데이트), attrNameUpdate()
+		attrService.attrNumberUpdate(vo);
+		dbService.databaseUpdate(vo);
 	}
 }

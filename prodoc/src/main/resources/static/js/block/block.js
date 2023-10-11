@@ -1,9 +1,12 @@
 // Spring에 등록시 빈값으로 만들기
 const SERVER_URL = "";
 
-const pageId = "p1"; // 페이지 아이디는 가지고 들어와야함
-
-showBlocks(pageId);
+let pageBlockId = "";
+let workBlockId = "";
+function makeBlockPage(pageId) {
+  document.querySelector(".container").innerHTML = "";
+  showBlocks(pageId);
+}
 
 //어떻게 해결방법이 없나?
 let isReady = true;
@@ -78,7 +81,7 @@ function sendData(isExistData) {
     for (let displayId in data) {
       const dataList = data[displayId];
       const lastObjOfList = dataList[dataList.length - 1];
-      updateDBBlock({ displayId, ...lastObjOfList });
+      updateDBBlock({ displayId, workId, ...lastObjOfList });
     }
   });
 }
@@ -127,18 +130,18 @@ function showBlocks(pageId) {
           parentBlocks.push(blockObj);
         }
       });
-      parentBlocks.forEach((parent) => {
-        const temp = updateTemplate(parent);
+      parentBlocks.forEach(async (parent) => {
+        const temp = await updateTemplate(parent);
         displayBlock(temp);
       });
       let count = 0;
       while (childBlocks.length > 0) {
         const parents = document.querySelectorAll(".prodoc_block");
-        parents.forEach((parentBlock) => {
+        parents.forEach(async (parentBlock) => {
           const parentId = parentBlock.dataset.blockId;
           for (let i = 0; i < childBlocks.length; i++) {
             if (childBlocks[i].parentId === parentId) {
-              const temp = updateTemplate(childBlocks[i]);
+              const temp = await updateTemplate(childBlocks[i]);
               displayChildBlock(temp, parentBlock);
               childBlocks.splice(i, 1);
               i--;
@@ -211,11 +214,13 @@ async function getOneBlock(displayId) {
  *  @param {string} blockObj.parentId 블럭의 부모입니다.
  *
  */
-function createDBBlock(blockObj) {
-  fetch(SERVER_URL + "/block/create", {
+async function createBlock2DB(blockObj) {
+  blockObj.workId = workBlockId;
+  await fetch(SERVER_URL + "/block/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      allow: "POST",
     },
     body: JSON.stringify(blockObj),
   }).catch((reject) => {
@@ -236,10 +241,14 @@ function createDBBlock(blockObj) {
  *  colY:Number,
  *  checked:String,
  *  color:string,
- *  backColor:string}} blockObj  - 업데이트할 블럭 정보 OBJECT
+ *  backColor:string
+ *  workId:string}} blockObj  - 업데이트할 블럭 정보 OBJECT
  * @returns {number} 0 or 1
  */
 function updateDBBlock(blockObj) {
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
+  console.log(blockObj);
   fetch(SERVER_URL + "/block/update", {
     method: "POST",
     headers: {
@@ -254,9 +263,11 @@ function updateDBBlock(blockObj) {
 
 /**
  *  블럭 삭제를 요청하는 함수
- * @param {{displayId:String}} blockObj - 삭제할 블럭이 가지고있는 displayId
+ * @param {{displayId:String,workId:string}} blockObj - 삭제할 블럭이 가지고있는 displayId
  */
 function deleteDBBlock(blockObj) {
+  blockObj.workId = workBlockId;
+  blockObj.pageId = pageBlockId;
   fetch(SERVER_URL + "/block/delete", {
     method: "POST",
     headers: {
@@ -270,7 +281,7 @@ function deleteDBBlock(blockObj) {
 
 /**
  *  북마크 업데이트를 요청하는 함수
- * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string}} bookMarkObj
+ * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string,workId:string}} bookMarkObj
  */
 async function updateDBBookMark(bookMarkObj) {
   await fetch(SERVER_URL + `/block/updateBookMark`, {
@@ -455,6 +466,21 @@ function registReply(replyObj) {
   });
 }
 
+function deleteReply(replyId, userId) {
+  console.log(replyId, userId);
+  fetch("/reply/delete", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ replyId, creUser: userId }),
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      console.log(result);
+    });
+}
+
 /**
  *  페이지 리스트를 불러오는 함수
  * @param {string} pageId
@@ -478,4 +504,30 @@ async function getPageReplyList(pageId) {
     });
 
   return replyData;
+}
+
+// public String parentID;	//DB의 부모 페이지 id
+// 		public String email;
+// 	public String pageNum;	//페이지넘버링
+// 		public String displayId;
+// 	public String blockNum;	//블럭넘버링
+//✔️public String result;	//생성성공시 페이지 아이디 반환
+
+/**
+ *
+ * @param {{parentId:string,email:string,pageNum:String,displayId:string,blockNum:Number}} dbObj
+ */
+async function createDB2DBblock(dbObj) {
+  console.log(dbObj);
+  await fetch(`/InsertDBCase`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dbObj),
+  })
+    .then((res) => res.text())
+    .then((result) => {
+      console.log(result);
+    });
 }

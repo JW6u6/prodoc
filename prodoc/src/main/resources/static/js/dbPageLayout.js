@@ -1,8 +1,7 @@
-async function listLayoutEditor(dataList, pageId, layout){
-    let dbbody = document.querySelector('[data-page-id="'+pageId+'"]').children[2];
+async function listLayoutEditor(dataList, displayId, layout){
+    let dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
     dbbody.innerHTML = "";
-    
-    let pageList = [];  // 삭제되지 않은 페이지 목록
+    let pageList = [];  // 삭제되지 않은 페이지 목록  
     dataList.forEach(item => {
         if (item['page']['deleteCheck'] == 'FALSE') pageList.push(item);
     });
@@ -10,10 +9,9 @@ async function listLayoutEditor(dataList, pageId, layout){
 
     switch(layout){
         case 'DB_LIST' :
-            dbbody.insertAdjacentHTML("afterbegin", addDbpage()); 
             pageList.forEach(block => {
                 let blockTag = dblistBlock(block);
-                dbbody.insertAdjacentHTML("afterbegin", blockTag);
+                dbbody.insertAdjacentHTML("beforeend", blockTag);
             });
 
             let attrList = document.querySelectorAll('.attr-list');     //속성 레이아웃용
@@ -22,6 +20,7 @@ async function listLayoutEditor(dataList, pageId, layout){
                     tag.classList.add("inlineTags");
                 })
             })
+            dbbody.insertAdjacentHTML("beforeend", addDbpage()); 
             break;
 
        case 'DB_BRD' : 
@@ -37,20 +36,21 @@ async function listLayoutEditor(dataList, pageId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        caseDiv.setAttribute("class", "display-flex");
+        // caseDiv.setAttribute("class", "display-flex");
+        caseDiv.classList.add("display-flex", "state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
-            stateTag.insertAdjacentHTML("afterbegin", addDbpage());
+            stateTag.classList.add("db-state-box");
             pageList.forEach(info => {
                 info.attrList.forEach(attr => {
                     if(attr.attrId == "STATE" && attr.attrContent == state){
                         let blockTag = dbBrdBlock(info);
-                        stateTag.insertAdjacentHTML("afterbegin", blockTag);
+                        stateTag.insertAdjacentHTML("beforeend", blockTag);
                     }
                 })
             })
-            
+            stateTag.insertAdjacentHTML("beforeend", addDbpage());            
             caseDiv.append(stateTag);
         })
             dbbody.append(caseDiv);
@@ -65,112 +65,70 @@ async function listLayoutEditor(dataList, pageId, layout){
             break;
 
         case 'DB_TBL' :
-            /*
-               pageList.length + 1 => tr(row)
-               MAX(pageList['attrList'].length) + 1 => td(col)
-            */
-               let row = pageList.length + 1;
-               let col = 1;
-               pageList.forEach(block => {
-                   if(col < block['attrList'].length + 1) col = block['attrList'].length + 1;
-               })
-               for(let i=0; i<row; i++){   // 페이지 수+1 만큼 행 생성
-                   let tr = document.createElement('div');
-                   if(i != 0){
-                       let block = pageList[i-1];
-                       tr.setAttribute("data-block-id", block['block']['blockId']);
-                       tr.setAttribute("data-page-id", block['page']['pageId']);                    
-                       tr.setAttribute("data-block-order", block['block']['rowX']);
-                       tr.setAttribute("class", "dbtype-tbl prodoc_block");
-                   }
-                   tr.setAttribute("class", "table-tr");
-                   for(let j=0; j<col; j++){   // 속성수 + 1만큼 열 생성
-                       let td = document.createElement('div');
-                       td.setAttribute("class", "table-td");
-                       if( i == 0 && j == 0){
-                           td.textContent = '이름';
-                           let className = tr.getAttribute("class");
-                           tr.setAttribute("class", className + " table-thead");
-                       } else if( i == 0 && j > 0){
-                           // db에 사용된 속성이름 넘버링순
-                           let attr = pageList[i]['attrList'][j-1];
-                           let displayOption = "view-visible";
-                           if(attr['displayCheck'] == "FALSE") displayOption = "hide";
-                           td.textContent = attr['attrName'];
-                           td.setAttribute("class", displayOption);
-                       } else if( i > 0 && j == 0 ){
-                           // 하위페이지 넘버링순
-                           let page = pageList[i-1]['page'];
-                           let pageTag = document.createElement("div");
-                           pageTag.textContent = page['pageName'];
-                           pageTag.setAttribute("class", "inlineTags");
-                           let delTag = document.createElement("div");
-                           delTag.setAttribute("class", "inlineTags del-db-page");
-                           delTag.innerHTML = "&#10005;";
-                           td.append(pageTag);
-                           td.append(delTag);
-                       } else {
-                           // 해당 페이지 속성 | i-1 = 페이지순서, j-1 = 속성순서
-                           // 가장 위의 tr과 동일한 dbUdeId를 사용하는 아이를 가지고 와야 한다.
-                           let attrDiv = document.createElement("div");
-                           let attr = pageList[i-1]['attrList'][j-1];
-                           let displayOption = "view-visible";
-                           let content = attr['attrContent'];
-                           if(attr['attrId'] == 'CUSER' || attr['attrId'] == 'UUSER') content = attr['nickname'] + '(' + content + ')';
-                           if(attr['displayCheck'] == "FALSE") displayOption = "hide";
-                           td.setAttribute("class", displayOption);
-                           attrDiv.textContent = content;
-                           attrDiv.setAttribute("data-duse-id", attr['dbUseId']);
-                           attrDiv.setAttribute("data-puse-id", attr['pageUseId']);
-                           attrDiv.setAttribute("data-attrid", attr['attrId']);
-                           attrDiv.setAttribute("data-attr-order", attr['numbering']);
-                           attrDiv.setAttribute("class", "attr " + displayOption);
-                           attrDiv.setAttribute("contenteditable", "true");
-                           td.append(attrDiv);
-                       }
-                       tr.append(td);
-                   }
-                dbbody.append(tr);
-               }
-               let crePage = document.createElement("div");
-               crePage.setAttribute("class", "caseTags table-tr add-dbpage add-page-div");
-               crePage.innerHTML = "&#10010; 새로 만들기";
-               dbbody.append(crePage);
-   
-               document.querySelectorAll(".table-thead").forEach( tr => {
-                   if( tr.querySelector(".add-page-attr") != null ) return; // 재생성 방지
-                   let addAttr = document.createElement("div");
-                   addAttr.setAttribute("class", "inlineTags add-page-attr");
-                   addAttr.innerHTML = "&#10010;";
-                   tr.append(addAttr);
-               })
-               break;
-            
-        case 'DB_CAL' : 
-            let caseId = dbbody.getAttribute("data-block-id");
-            let date = new Date();
-            createCalendar(dbbody, date);   // 캘린더 생성
-            pageList.forEach(block => {     // 생성된 캘린더에 데이터 추가하기
-                block.attrList.forEach(attr=>{
-                    if(attr.attrId == "CAL" && attr.attrName == "날짜" && attr.attrContent != null){
-                        let blockDiv = dbCalBlock(block);
-                        let selector = '[data-cal-date="' + attr.attrContent + '"]';
-                        let targetDiv = dbbody.querySelector(selector);
-                        // 해당 div에 block 추가하기
+            let uniqueAttr = [];
+            let getAttr = {};
+            if(pageList[0]){
+                for(let attr of pageList[0].attrList){
+                    let dui = attr.dbUseId;
+                    if(!getAttr[dui]){  // getAttr[dui]이 null 또는 undefined인지 체크
+                        uniqueAttr.push(attr);
+                        getAttr[dui] = true;
                     }
-                })
-            })
+                }
+            }
+            // thead 생성
+            let thead = document.createElement("div");
+            thead.classList.add("dbtype-tbl", "table-tr", "table-thead");
+            for(let i=-1; i<uniqueAttr.length; i++){
+                let td = document.createElement("div");
+                if(i==-1){
+                    td.textContent = "이름";
+                }else{
+                    td.textContent = uniqueAttr[i].attrName;
+                    td.draggable = true;
+                    td.setAttribute("data-duse-id", uniqueAttr[i].dbUseId);
+                    td.setAttribute("data-attr-order", uniqueAttr[i].numbering);
+                    td.setAttribute("data-attrid", uniqueAttr[i].attrId);
+                    let displayOption = "view-visible";
+                    if(uniqueAttr[i].displayCheck == "FALSE") displayOption = "hide";
+                    td.classList.add(displayOption, "attr-name");
+                }
+                thead.append(td);
+            }
+            let addAttr = document.createElement("div");    // 속성 추가버튼
+            addAttr.setAttribute("class", "inlineTags add-page-attr");
+            addAttr.innerHTML = "&#10010;";
+            thead.append(addAttr);
+            dbbody.append(thead);
+
+            // 데이터 append
+            for(let i=0; i<pageList.length; i++){
+                let block = pageList[i];
+                let tr = dbTblBlock(block);
+                let attrs = dbTblAttrBlock(pageList[i].attrList, uniqueAttr);
+                attrs.forEach(attr=>{
+                    tr.append(attr);
+                });
+                dbbody.append(tr);
+            }
+            dbbody.insertAdjacentHTML("beforeend", addDbpage());   
             break;
     };
-    
+    dbMoveEvent(layout);
 }
 
 const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
 
 function updateCase(pageId, layout){
+    let data = {"pageId" : pageId, "caseId" : layout};
+    // data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['creUser'] = 'user1@user1' // ⭐⭐
+    data['workId'] = 'TESTWORK'     // ⭐⭐ 추가하기
+
+
     fetch("updateCase",{
         method : "post",
-        body : JSON.stringify({"pageId" : pageId, "caseId" : layout}),
+        body : JSON.stringify(data),
         headers : {
             "Content-Type": "application/json"
         }
@@ -184,24 +142,6 @@ function updateCase(pageId, layout){
 }
 
 // [ 블럭 생성 레이아웃 ] --------------------------------------------------------------------------------------
-function getAttrList(attrs){    // 속성
-    let useAttr = '';
-    let displayOption = 'view-visible';
-
-    for(let info in attrs){
-        let content = attrs[info]['attrContent'];
-        if (content == null || content == "") continue;
-        if (attrs[info]['attrId'] == 'CUSER' || attrs[info]['attrId'] == 'UUSER') content = attrs[info]['nickname'] + '(' + content + ')';
-        if (attrs[info]['displayCheck'] == "FALSE") displayOption = 'hide';
-        useAttr += `
-        <div data-duse-id="`+attrs[info]['dbUseId']+`" data-puse-id="`+attrs[info]['pageUseId']+`" data-attrid="`+attrs[info]['attrId']+`" class="`+displayOption+`" data-attr-order="`+attrs[info]['numbering']+`">
-            <span class="attr">`+content+`</span>
-        </div>
-        `
-    }
-    return useAttr;
-}
-
 function addDbpage(){
     const addDBPageBtn = `
         <div class="caseTags add-page-div">
@@ -215,7 +155,7 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags">📄</div>
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
@@ -228,7 +168,7 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
@@ -239,10 +179,17 @@ function dbBrdBlock(block){
 
 function dbGalBlock(block){
     let useAttr = getAttrList(block['attrList']);
+    let backImg = ''
+    block.attrList.forEach(attr => {
+        if(attr.attrId == "IMG" && attr.attrContent != null){
+            backImg = attr.attrContent;
+        }
+    })
+
     const galType = `
-    <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
+    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail">이미지 추가</div>
+        <div class="gal-thumbnail"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
             <div>`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
@@ -253,166 +200,100 @@ function dbGalBlock(block){
 }
 
 function dbTblBlock(block){
-    let galType = `
-    <div data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-tbl table-tr prodoc_block"  data-block-order="`+ block['block']['rowX'] +`">
-        <div class="table-td">
-            <div class="inlineTags">${block.page.pageName}</div>
-            <div class="inlineTags del-db-page">✕</div>
-        </div>
-    `;
-    block.attrList.forEach(attr => {
-        galType += `
-        <div class=${attr.displayCheck == 'TRUE'? "view-visible inlineTags" : "hide"}>
-            <div class=${attr.displayCheck == 'TRUE'? "attr view-visible" : "attr hide"} data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" data-attr-order="${attr.numbering}">
-                ${attr.attrContent}
-            </div>
-        </div>
-        `;
-    })
-    galType += `</div>`;
-    return galType;
+    let tr = document.createElement("div");
+    tr.draggable = true;
+    tr.setAttribute("data-block-id", block.block.displayId);
+    tr.setAttribute("data-page-id", block.page.pageId);
+    tr.setAttribute("data-block-order", block.block.rowX);
+    tr.setAttribute("data-page-order", block.page.numbering);
+    tr.classList.add("dbtype-tbl", "table-tr", "db_block")
+    let td = document.createElement("div");
+    td.textContent = block.page.pageName;
+    tr.append(td);
+    return tr;
 }
 
-function dbCalBlock(block){
-    let useAttr = getAttrList(block['attrList']);
-    const galType = `
-    <div data-block-id="${block.block.displayId}" data-page-id="${block.page.pageId}" class="dbtype-cal prodoc_block"  data-block-order="${block.block.rowX}">
-        <div>${block.page.pageName}</div>
-        <div>${useAttr}</div>
-    </div>
-    `;
-    return galType;
-}
-
-function createCalendar(dbbody, date){
-    dbbody.innerHTML = "";
-    let caseId = dbbody.parentNode.getAttribute('data-block-id');
-    let dbCalendar = document.createElement('div'); // 캘린더 DOM
-    now = new Date(date);
-    let today = {
-        "year" : now.getFullYear(), //년
-        "date" : now.getDate(),     //일
-        "month" : now.getMonth(),   // +1 = 현재 다
-        "day" : now.getDay()        //요일(월=1)
-    };
-    let calHead = document.createElement('div');
-    let dateTitle = document.createElement('div');
-    dateTitle.textContent = `${today.year}년 ${today.month + 1}월`;
-    calHead.append(dateTitle);
-    dbCalendar.append(calHead);
-    dbbody.append(dbCalendar);
-
-    let calOp = document.createElement('div');
-    let prevBt = document.createElement('button');
-    prevBt.addEventListener("click", changeMonth);
-    prevBt.setAttribute("class", "prevMonth");
-    let nowBt = document.createElement('button');
-    nowBt.addEventListener("click", changeMonth);
-    nowBt.setAttribute("class", "nowMonth");
-    let nextBt = document.createElement('button');
-    nextBt.addEventListener("click", changeMonth);
-    nextBt.setAttribute("class", "nextMonth");
-    prevBt.textContent = '<';
-    nowBt.textContent = 'now';
-    nextBt.textContent = '>';
-    calOp.append(prevBt, nowBt, nextBt);
-    calHead.append(calOp);
-    
-    let prevLast = new Date(today.year, today.month, 0);    //전달 마지막 Date
-    let thisLast = new Date(today.year, today.month + 1, 0)  //이번달 마지막 Date
-    let preMonDate = prevLast.getDate();    //지난달 마지막 날짜(숫자)
-    let preMonDay = prevLast.getDay();      //지난달 마지막 요일
-    let nowMonDate = thisLast.getDate();    //이번달 마지막 날짜(숫자)
-    let nowMonDay = thisLast.getDay();      //이번달 마지막 요일
-    let preDates = [];
-    /* 
-        이번달의 마지막일의 크기(n+1)를 가진 배열을 생성
-        -> keys()로 0 ~ 크기-1 까지의 iterator 생성
-        -> slice로 0 제거하여 이번달 1~말일 정보를 가짐
-    */
-        let thisDates = [...Array(nowMonDate+1).keys()].slice(1);
-        let nextDates = [];
-
-        if(preMonDay != 6){
-            for(let i=0; i<preMonDay + 1; i++){
-                preDates.unshift(preMonDate - i);
+// 테이블 레이아웃 - 속성 생성
+function dbTblAttrBlock(attrs, uniqueList){
+    // uniqueList : 중복없는 속성 리스트
+    let divList = [];
+    uniqueList.forEach(item=>{
+        let td = document.createElement("div"); // attr-case
+        td.setAttribute("data-duse-id", item.dbUseId);
+        td.setAttribute("data-attrid", item.attrId);
+        td.setAttribute("data-attr-order", item.numbering);
+        td.classList.add("attr-case", (item.displayCheck=="TRUE"?"view-visible":"hide"));
+        if(item.attrId=="USER" || item.attrId=="TAG") td.classList.add("attrs");
+        attrs.forEach(attr => {
+            if(attr.dbUseId != item.dbUseId) return;    // 같은 속성끼리 묶기 위한 조건
+            let innerDiv;
+            let content = attr.attrContent;     // 내용 처리
+            if(attr.attrContent == null) content = '';
+            if(['UUSER', 'CUSER', 'USER'].includes(attr.attrId)){
+                content = content==''?'':`${attr.nickname}(${attr.attrContent})`;
+                innerDiv = document.createElement("div");
             }
-        }
-        for(let i=1; i<7-nowMonDay; i++){
-            nextDates.push(i);
-        }
-
-        let calDate = preDates.concat(thisDates, nextDates);
-        let totalWeek = Math.ceil(calDate.length/7);    // 이번달 주
-
-        for(i=0; i<totalWeek; i++){
-            let colDiv = document.createElement('div');
-            colDiv.setAttribute("class", "cal-row display-flex");
-            calDate.forEach((date, j) =>{
-                let min = i*7;
-                if( min <= j && j < min + 7 ){
-                    // 날짜 입력용 padStart(2, '0')
-                    let thisMonth = (today.month+1).toString().padStart(2, '0');
-                    let thisDate = date.toString().padStart(2, '0');
-
-                    let dateDiv = document.createElement('div');
-                    dateDiv.textContent = date;
-                    dateDiv.setAttribute("class", "cal-date");
-                    dateDiv.setAttribute("data-cal-date", `${today.year}/${thisMonth}/${thisDate}`);
-                    let addDate = document.createElement('button');
-                    addDate.textContent = '+';
-                    addDate.setAttribute("class", "add-dbpage");
-                    // addDate.setAttribute("style", "visibility : hidden");
-                    dateDiv.append(addDate);
-                    colDiv.append(dateDiv);
-                }
-            })
-            dbCalendar.append(colDiv);
-        }
-
-        // nowDateList.push(dateData); //날짜 변경 이벤트를 위해 리스트에 현재 값 저장
-        let dateData = {};
-        dateData[caseId] = now;
-        nowDateList.forEach((item, i) => {
-            for(let field in item){
-                if(field == caseId) nowDateList[i] = dateData;
-                else nowDateList.push(dateData);
+            // 속성별 레이아웃
+            if(['TAG', 'USER'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                innerDiv.classList.add("attr");
+                innerDiv.setAttribute("data-duse-id", attr.dbUseId);
+                innerDiv.setAttribute("data-puse-id", attr.pageUseId);
+                innerDiv.setAttribute("data-attrid", attr.attrId);
+                innerDiv.setAttribute("data-attr-order", attr.numbering);
             }
+            if(attr.attrId == 'CHECK'){
+                innerDiv = document.createElement("input");
+                innerDiv.type = "checkbox";
+                innerDiv.classList.add("dbattr-check");
+                if(attr.attrContent == 'TRUE') innerDiv.checked = true;
+            }
+            if(attr.attrId == 'URL'){
+                innerDiv = document.createElement("a");
+                if(content=='') innerDiv.classList.add("hide");
+                innerDiv.classList.add("attrAtag");
+                innerDiv.href = content;
+            }
+            if(attr.attrId == 'MEDIA'){
+                innerDiv = document.createElement("div");
+                let div = document.createElement("div");
+                div.textContent = content == '' ? '' : content.substring(13);
+                div.classList.add("attr", "inlineTags", "file-conten");
+                let btn = document.createElement("div");
+                btn.classList.add("inlineTags", "del-attr-file");
+                div.append(btn);
+                let input = document.createElement("input");
+                input.type="file";
+                input.style.display = "none";
+                input.classList.add("db-file-upload");
+                innerDiv.append(div, input);
+            }
+            if(attr.attrId == 'IMG'){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+                let img = document.createElement("img");
+                img.width = 50;
+                img.classList.add("attr", "inlineTags", "db-img");
+                img.src = content;
+                let input = document.createElement("input");
+                input.type = "file";
+                input.style.display = "none";
+                input.classList.add("db-img-upload");
+                input.accept = "image/*";
+                innerDiv.append(img, input);
+            }
+            if(['CAL', 'A_TEXT', 'NUM', 'STATE', 'CSUER', 'CDATE', 'UUSER', 'UDATE'].includes(attr.attrId)){
+                innerDiv = document.createElement("div");
+                td.setAttribute("data-puse-id", attr.pageUseId);
+            }
+            if(!['CHECK', 'IMG', 'MEDIA'].includes(attr.attrId)) innerDiv.textContent = content;
+            innerDiv.setAttribute("data-duse-id", attr.dbUseId);
+            innerDiv.setAttribute("data-puse-id", attr.pageUseId);
+            innerDiv.setAttribute("data-attrid", attr.attrId);
+            innerDiv.classList.add("attr");
+            td.append(innerDiv);
         })
-        if(nowDateList.length == 0) nowDateList.push(dateData);
-        console.log(nowDateList);
-}
-
-function prevMonth(e){
-    let prevDate = new Date();
-    let caseDiv = e.target.closest('[data-layout]');
-    let caseId = caseDiv.getAttribute('data-block-id');
-    console.log(caseId);
-    nowDateList.forEach(item => {
-        for(let field in item){
-            if(field == caseId) prevDate = new Date(item[field].getFullYear(), item[field].getMonth()-1, 1);
-        }
+        divList.push(td);
     })
-    console.log(prevDate);
-    let dbbody = caseDiv.querySelector('.db-block-body');
-    createCalendar(dbbody, prevDate);
-}
-
-function changeMonth(e){
-    let selectDate = new Date();
-    let caseDiv = e.target.closest('[data-layout]');
-    let caseId = caseDiv.getAttribute('data-block-id');
-    console.log(caseId);
-    nowDateList.forEach(item => {
-        for(let field in item){
-            if(field == caseId){
-                let targetClass = e.currentTarget.getAttribute("class");
-                if(targetClass == "prevMonth")selectDate = new Date(item[field].getFullYear(), item[field].getMonth()-1, 1);
-                else if(targetClass == "nowMonth")selectDate = new Date();
-                else if(targetClass == "nextMonth")selectDate = new Date(item[field].getFullYear(), item[field].getMonth()+1, 1);
-            }
-        }
-    })
-    let dbbody = caseDiv.querySelector('.db-block-body');
-    createCalendar(dbbody, selectDate);
+    return divList;
 }

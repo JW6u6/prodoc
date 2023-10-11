@@ -9,6 +9,7 @@
 		where work_id = #{workId}
 		and parent_id
 		is NULL
+		and delete_check != 'TRUE'
 		order by numbering
   	</select>
   	<select id = "findWork" resultType="String">
@@ -67,6 +68,13 @@
 		SET delete_check = 'TRUE'
 		WHERE page_id = #{pageId}
 	</update>
+	
+	<!-- 페이지 삭제시 자식 페이지들까지 모조리 삭제 -->
+	<update id="RemoveChildPage" parameterType="String" statementType ="CALLABLE">
+		{CALL DELETE_PAGE_PROCESS(
+									#{pageId}
+			)}
+	</update>
 
 	<!-- 워크스페이스 지우면 그 워크스페이스의 페이지까지 지워지도록 -->
 	<update id="ifWorkRemove" parameterType="String">
@@ -79,13 +87,23 @@
 	<insert id="onOffPage" parameterType="PageVO"
 		statementType="CALLABLE">
 		{call PAGENOTI_TOGGLE(
-		#{workId}
-		, #{pageId}
+		#{pageId}
 		, #{email}
 		, #{result, mode=OUT, jdbcType=INTEGER, javaType=int}
 		)}
 	</insert>
+	
+	<!-- 페이지 알림 꺼져있는지 켜져있는지 알려줌 -->
+	<select id="selectTurnOn" resultType="int">
+		select count(*)
+		from tbl_no_notifyed
+		where page_id = #{pageId}
+		and email = #{email}
+	</select>
 
+	<update id="newName" parameterType="pageVO">
+		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
+	</update>
 </mapper>
   
   

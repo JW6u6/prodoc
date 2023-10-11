@@ -1,14 +1,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- 
-■ 클릭 시 히스토리 열기
-■ 첫 목록 전체 세팅
-■ 선택값에 맞게 목록 재설정
+□ 클릭 시 히스토리 열기
+□ 첫 목록 전체 세팅
+□ 선택값에 맞게 목록 재설정
 □ 클릭 시 이동 or 복구 + 창 닫기
-□ 복구 프로시저
-□ 15일 지난 거 삭제 스케줄러?
  -->
 <div th:fragment="historyFrag">
-	<div id="modHistory" class="hide" style="width:1000px; overflow:auto">
+	<div id="modHistory" class="hide">
+	<div>
 		<h3>히스토리</h3>
 	    <div><button class="closeBtn">&#10005;</button></div>
 	    <br>
@@ -26,8 +25,9 @@
 	         <button type="button" id="hisResetBtn">기간 초기화</button>
 	         <button type="button" id="hisSearchBtn">검색</button>
 		<br>
-		<div class="historyList" style="width:70%; height:200px; overflow:auto">
+		<div class="historyList" style="width:70%; height:400px; overflow:auto">
 		</div>
+	</div>
 	</div>
 </div>
 </html>

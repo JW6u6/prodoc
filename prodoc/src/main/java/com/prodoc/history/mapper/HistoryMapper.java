@@ -7,5 +7,8 @@ import com.prodoc.history.service.HistoryVO;
 
 public interface HistoryMapper {
 	public List<HistoryVO> selectList(HisSearchVO search);	//히스토리 목록
-	public void insertHistory(HistoryVO historyVO);
+	public void blockHistory(BlockVO block);	//블럭(생성,수정,삭제 => 페이지 수정)
+	public int insertHistory(HistoryVO historyVO);	//페이지(생성/삭제), 워크(생성,수정,삭제)
+	public void revokePage(RevokeVO revoke);		//페이지 복구
+	public void revokeWork(RevokeVO revoke);		//워크 복구
 }

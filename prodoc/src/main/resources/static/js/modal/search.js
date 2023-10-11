@@ -99,26 +99,25 @@ function settingSearch(){
 
 //검색프로세스
 function searchThis(dataList){
+	const wkhead= [ {"workName" :'워크스페이스명'},	//워크스페이스
+					{"pageId" :'페이지아이디'},
+					{"pageName" :'페이지명'},
+					{"content" :'내용'},
+					{"blockCreUser" :'작성자'},
+					{"displayDate" :'최종수정일'}];
+	const dbhead= [ {"workName" :'워크스페이스명'},	//데이터베이스
+					{"pageId" :'페이지아이디'},
+					{"parentName" :'페이지명'},
+					{"pageName": '데이터베이스'},
+					{"caseName": '타입'}];
+
 	fetch("/SearchWKDB", {
 		method: 'post',
 		body : JSON.stringify(dataList),
 		headers: {'content-Type' : 'application/json'}
 	}).then(response => response.json())
 	.then(result =>{
-		console.log(result);
-		if(result.data.length == 0){ return; }	//검색 결과가 없으면 종료
-		
-		const wkhead= [ {"workName" :'워크스페이스명'},	//워크스페이스
-						{"pageId" :'페이지아이디'},
-						{"pageName" :'페이지명'},
-						{"content" :'내용'},
-						{"blockCreUser" :'작성자'},
-						{"displayDate" :'최종수정일'}];
-		const dbhead= [ {"workName" :'워크스페이스명'},	//데이터베이스
-						{"pageId" :'페이지아이디'},
-						{"parentName" :'페이지명'},
-						{"pageName": '데이터베이스'},
-						{"caseName": '타입'}];
+		//console.log(result);
 		if(wkdbType == "wk"){
 			settingSearchResult(wkhead, result.data);
 		}else{
@@ -149,6 +148,8 @@ function settingSearchResult(headers, data){
 	//바디 재설정--------------------------------------------------------------
 	let WKDBbody = document.querySelector('.SearchResult tbody');
 	WKDBbody.innerHTML = "";
+	if(data.length == 0){ return;}	//검색 결과가 없으면 종료
+	
 	for(let list of data){								//결과 리스트 한 행 중
 		//console.log(list);
 		let tr = document.createElement('tr');
@@ -193,10 +194,11 @@ function getPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
 console.log(e.currentTarget);
 	//console.log(e.currentTarget.dataset.pageid);
 	
-	showBlocks(e.currentTarget.dataset.pageid);
+	selectPage(e.currentTarget.dataset.pageid);
 	if(e.currentTarget.dataset.blockid != null){
 		let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
 		let focusBlock = document.querySelector(blockId);
 		window.scrollTo({top:focusBlock, behavior:'smooth'});
 	}
+	WKDBMod.className = "hide"
 }

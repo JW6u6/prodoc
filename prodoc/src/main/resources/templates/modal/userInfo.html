@@ -6,14 +6,15 @@
 	    <img class="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" 
 	    onerror="this.src='images/noneUser.jpg'" style="width:200px; border-radius:100px">
 		
-	    <p class="email">[[${session.logUser.email}]]</p>
-	    <p class="nickname">[[${session.logUser.nickname}]]</p>
+	    <p class="email">[[${session.logUser.email == null ? '': session.logUser.email }]]</p>
+	    <p th:if="${session.logUser != null}" class="nickname">[[${session.logUser.nickname}]]</p>
 	    <button type="button" id="modInfoBtn">정보수정</button>
 	    <button type="button" id="logoutBtn" onclick='location.href = "/logout"'>로그아웃</button>
 	</div>
 	
 	<!-- 유저정보 수정 모달 -->
 	<div id="UserModiMod" class="hide">
+	<div>
 	    <div><button class="closeBtn">&#10005;</button></div>	    
         <form id="userModForm" enctype="multipart/form-data">
 	        <input name="email" type="text" th:value="${session.logUser.email}" style="display:none;">
@@ -50,28 +51,15 @@
 	        </div>
         </form>
 	</div>
+	</div>
 	
 	<div id="joinOutMod" class="hide">
+	<div>
 		<div><button class="closeBtn">&#10005;</button></div>	    
         <p style="color:red">탈퇴를 원하시면 현재 비밀번호를 입력하세요.<br><strong>탈퇴된 정보는 복구가 불가능합니다.</strong></p>
 		<input type="password" id="joinout">
 		<button id="jOutBtn">확인</button>
 	</div>
-<style>
-#UserInfoMod{
-	background-color : skyblue;
-	width : 300px;
-	height: 400px;
-	float: right;
-	text-align: center;
-}
-#UserModiMod{
-	background-color : pink;
-	width : 700px;
-	height: 350px;
-	float: right;
-	text-align: center;
-}
-</style>
+	</div>
 </div>
 </html>

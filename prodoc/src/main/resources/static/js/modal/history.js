@@ -80,7 +80,11 @@ function formatDate(thisDate){
 }
 
 function formatTime(thisDate){
-	return `${thisDate.getHours()}:${thisDate.getMinutes()}:${thisDate.getSeconds()}`;
+	let hour = thisDate.getHours() >= 10? thisDate.getHours() : '0'+thisDate.getHours();
+	let minute = thisDate.getMinutes() >= 10? thisDate.getMinutes() : '0'+thisDate.getMinutes();
+	let second = thisDate.getSeconds() >= 10? thisDate.getSeconds() : '0'+thisDate.getSeconds();
+	
+	return `TIME: ${hour}:${minute}:${second}`;
 }
 
 //결과 세팅
@@ -90,7 +94,7 @@ function settingHistoryResult(history){
 	resultList.innerHTML = "";
 	if(history.length == 0){
 		resultList.innerHTML = `<div class="historyItem" style="overflow:hidden; 
-		border:1px solid black;"><h2>삭제 목록이 없습니다.</h2></div>`;
+		border:1px solid black;"><h2>히스토리 내역이 없습니다.</h2></div>`;
 		return;
 	}//검색 결과가 없음
 	
@@ -100,11 +104,13 @@ function settingHistoryResult(history){
 			let thisDate = new Date(history[i].upDate);
 			let beforeDate = new Date(history[i-1].upDate);
 			if(thisDate.getDate() != beforeDate.getDate()){
-				let dateLine = `<div>${formatDate(thisDate)}<div style="float:left"><hr></div></div>`;
+				let dateLine = `<div style="overflow: hidden"><h3 style="float:left">${formatDate(thisDate)}</h3>
+								<div><hr></div></div>`;
 				resultList.innerHTML += dateLine;
 			}
 		}else{		//첫 데이터임
-			let dateLine = `<div>${formatDate(new Date(history[i].upDate))}<div style="float:left"><hr></div></div>`;
+			let dateLine = `<div style="overflow: hidden"><h3 style="float:left">${formatDate(new Date(history[i].upDate))}</h3>
+								<div><hr></div></div>`;
 			resultList.innerHTML += dateLine;
 		}
 		
@@ -128,7 +134,8 @@ function settingHistoryResult(history){
 			}
 				historyDIV += `</div>`;
 		}else{							//워크에 관한 히스토리
-			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" style="overflow:hidden; border:1px solid black;">
+			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" 
+							style="overflow:hidden; border:1px solid black; margin:5px 0px">
 							<div style="width:20%; float:left">
 						        <p>${history[i].historyType}</p>
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
@@ -166,33 +173,37 @@ function settingHistoryResult(history){
 }
 
 
-function goPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
-	//console.log(e.currentTarget);
-	//console.log(e.currentTarget.dataset.pageid);
-	if(e.currentTarget.dataset.pageid == null)  return;	//pageId가 없으면 이벤트x
+function goPageBlock(e){	//TODO: 클릭 시 로우 이동 후
+	if(e.currentTarget.dataset.blockid == null)  return;	//blockid가 없으면 이벤트x
 	
-	showBlocks(e.currentTarget.dataset.pageid);
-	if(e.currentTarget.dataset.blockid != null){
-		let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
-		let focusBlock = document.querySelector(blockId);
-		window.scrollTo({top:focusBlock, behavior:'smooth'});
-	}
+	if(e.currentTarget.dataset.pageid == null)   return;
+	
+	
+	selectPage(e.currentTarget.dataset.pageid);
+	//showBlocks(e.currentTarget.dataset.pageid);
+	
+	let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
+	let focusBlock = document.querySelector(blockId);
+	window.scrollTo({top:focusBlock, behavior:'smooth'});	
 	historyModal.className = "hide";
+	
 }
 
 
 function revokeFcn(workId, pageId){ //TODO: 복구 프로세스 ajax
-	console.log(historyId);
-	let logUser = document.querySelector("#UserInfoMod p.email");
+	//console.log(workId +" --- "+pageId);
+	let obj = {};
+	obj.workId = workId;
+	obj.pageId = pageId;
 	fetch("/revokeTrash",{
 		method: 'post',
-		body: { "workId" : workId,
-				"pageId" : pageId,
-				"logUser" : logUser },
-		headers: {"Content_type" : "application/json"}
-	})
-	.then(response=>response.json())
+		body: JSON.stringify(obj),
+		headers: {'content-Type' : 'application/json'}
+	}).then(response => response.json())
 	.then(result=>{
-		console.log(result);
-	}).error(err=>console.log(err));
+		console.log(result.msg);
+		alert(result.msg);
+		workList(result.logUser);
+		//historyModal.className = "hide";
+	}).catch(err=>console.log(err));
 }

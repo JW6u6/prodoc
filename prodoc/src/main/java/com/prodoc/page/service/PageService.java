@@ -8,7 +8,7 @@ public interface PageService {
 	public boolean LockCheckPage(PageVO pageVO);
 
 	// 페이지 삭제여부(페이지메뉴)
-	public boolean deleteCheckPage(String pageId);
+	public boolean deleteCheckPage(PageVO pageVO);
 
 	// 워크스페이스삭제되면 페이지까지 일괄삭제
 	public void deleteIfWorkspace(String workId);
@@ -16,4 +16,8 @@ public interface PageService {
 	// 페이지 알림 끄기켜기
 	public int notifyPage(PageVO pageVO);
 
+	public int onOff(PageVO pageVO);
+	
+	//페이지 이름 변경
+	public String newName(PageVO pageVO);
 }

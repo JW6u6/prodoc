@@ -69,12 +69,13 @@ public class PageController {
 		UserVO user = (UserVO) session.getAttribute("logUser");
 		memberVO.setWorkId(pageVO.getWorkId());
 		List<MemberVO> list = memberserivce.listMember(memberVO);
-		//해당 워크스페이스의 유저 목록을 받아서 그 중 세션로그인값(나)와 일치하는 값이 있으면 해당 워크스페이스의 멤버들 == 구독자 정함. ( 명령의 종류에 따른 소켓지정 = 소켓커맨드 번호)
-		for(int i=0;i<list.size();i++) {
-			if(!list.get(i).getEmail().equals(user.getEmail())) {
+		// 해당 워크스페이스의 유저 목록을 받아서 그 중 세션로그인값(나)와 일치하는 값이 있으면 해당 워크스페이스의 멤버들 == 구독자 정함. (
+		// 명령의 종류에 따른 소켓지정 = 소켓커맨드 번호)
+		for (int i = 0; i < list.size(); i++) {
+			if (!list.get(i).getEmail().equals(user.getEmail())) {
 				System.out.println("======================//////////////");
-				this.template.convertAndSendToUser(
-					list.get(i).getEmail() , "/topic/updatePage", new SocketVO(SocketCommand.PAGE_CREATE,pageVO.getPageId()));
+				this.template.convertAndSendToUser(list.get(i).getEmail(), "/topic/updatePage",
+						new SocketVO(SocketCommand.PAGE_CREATE, pageVO.getPageId()));
 			}
 		}
 		return pageService.insertPage(pageVO);
@@ -89,14 +90,30 @@ public class PageController {
 
 	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/pageDelCheck")
-	public void pageDeleteCheck(String pageId) {
-		pageService.deleteCheckPage(pageId);
+	public boolean pageDeleteCheck(@RequestBody PageVO pageVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		pageVO.setCreUser(user.getEmail());
+		return pageService.deleteCheckPage(pageVO);
 	}
 
 	// 페이지 알림 끄기/켜기
 	@PostMapping("/pageNotify")
 	public int pageNotifyed(@RequestBody PageVO pageVO) {
 		return pageService.notifyPage(pageVO);
+	}
+	
+	@GetMapping("/pageNewName")
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+		PageVO page = new PageVO();
+		page.setPageId(pageId);
+		page.setPageName(pageName);
+		return pageService.newName(page);
+	}
+
+	// 페이지 끄기켜기알려주는거
+	@GetMapping("/pageNotify")
+	public int selectPageOnOff(PageVO pageVO) {
+		return pageService.onOff(pageVO);
 	}
 
 }

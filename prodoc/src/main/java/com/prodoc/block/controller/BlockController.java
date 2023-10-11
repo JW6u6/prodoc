@@ -75,18 +75,24 @@ public class BlockController {
 	
 	@PostMapping("block/create")
 	public String createBlock(@RequestBody BlockVO block) {
+		historyService.blockHistory(block); //제목에서 workId 받아와서 넣어주세요
+		
 		int result = service.createBlock(block);
 		return result + "";
 	}
 	@PostMapping("block/update")
 	public String updateBlock(@RequestBody BlockVO block) {
 		System.out.println(block);
+		historyService.blockHistory(block);
+		
 		int result = service.updateBlock(block);
 		System.out.println(result);
 		return result +"";
 	}
 	@PostMapping("block/delete")
 	public String deleteBlock(@RequestBody BlockVO block) {
+		historyService.blockHistory(block);
+		
 		int result = service.deleteBlock(block);
 		return result+"";
 	}
