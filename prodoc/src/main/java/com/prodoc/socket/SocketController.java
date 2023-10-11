@@ -24,10 +24,11 @@ public class SocketController {
 	  return socketVO;
   }
   //테스트
-  @MessageMapping("/test/{pageId}")
-  @SendTo("/topic/test")
+  @MessageMapping("/collaboration/test")
+  @SendTo("/topic/collaboration/test")
   public String tset(String string) throws InterruptedException {
 	  Thread.sleep(1000);
+	  System.out.println(string);
 	  return string;
   }
 }

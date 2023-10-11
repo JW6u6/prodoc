@@ -3,16 +3,42 @@
  * @param {Object} template - 생성된 템플릿 오브젝트.
  *
  */
-function displayBlock(template) {
-  //부모가 있으면 부모의 아이템으로 아니면 문서쪽으로.
-  container.insertAdjacentHTML("beforeend", template.template);
+function displayBlock(
+  template,
+  type,
+  element,
+  isSocket = false,
+  isInput = false
+) {
+  if (type === "DATA_PAGE") {
+    const dbModalPage = document.querySelector(".dataPage_blocks");
+    dbModalPage.insertAdjacentHTML("beforeend", template.template);
+  } else {
+    if (element) {
+      element.insertAdjacentHTML("afterend", template.template);
+    } else {
+      container.insertAdjacentHTML("beforeend", template.template);
+    }
+  }
+
   const newblock = document.querySelector(
     `[data-block-id="${template.displayId}"]`
   );
   handlingBlockEvent(newblock);
 
-  if (newblock.querySelector(".content")) {
+  if (newblock.querySelector(".content") && !isSocket) {
     newblock.querySelector(".content").focus();
+  }
+  if (!isSocket && isInput) {
+    const enteredBlockId = element ? element.dataset.blockId : null;
+    const socketEventObj = {
+      eventType: "CREATEBLOCK",
+      template,
+      type,
+      enteredBlockId,
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
   }
 }
 
@@ -33,10 +59,10 @@ const displayChildBlock = (template, parent) => {
   handlingBlockEvent(newblock);
 };
 
-function makeBlockTemplate() {
+function makeBlockTemplate(order) {
   // 블럭을 새로 생성하면
-  const displayId = self.crypto.randomUUID();
-  const rowX = blockCount * 1024;
+  const displayId = uuidv4();
+  const rowX = order ? order : blockCount * 1024;
   blockCount += 1;
   //블럭저장
   const blockObj = {

@@ -32,8 +32,8 @@ const mouseleave_handler = (e) => {
 
 // 특수한 블럭들의 이벤트
 const blockClickEvent = (block) => {
-  const isDBBlock = block.closest("[data-block-type='DATABASE']")
-  if(isDBBlock){
+  const isDBBlock = block.closest("[data-block-type='DATABASE']");
+  if (isDBBlock) {
     getChildList(block.dataset.blockId);
   }
   const isBookMark = block.querySelector(".block_bookmark");
@@ -441,6 +441,8 @@ async function blockChangeMenuEvent(e) {
   // 바꾸려는 블럭의 값
   let text = "";
   const content = targetBlock.querySelector(".content");
+
+  // 블럭 변경시 색을 유지해야함
   let colorArr = null;
   if (content) {
     text = content.innerHTML;
@@ -457,8 +459,11 @@ async function blockChangeMenuEvent(e) {
     text: blockType === "VIDEO" ? "" : text,
     order,
   };
+
+  //블럭 템플릿 만들기
   const block = await updateTemplate(blockChangeObj);
 
+  //바꾼 블럭을 붙이기
   targetBlock.insertAdjacentHTML("afterend", block.template);
   targetBlock.remove();
   targetBlock = document.querySelector(`[data-block-id="${blockId}"]`);
@@ -470,7 +475,7 @@ async function blockChangeMenuEvent(e) {
   });
 
   // 전환이 불가능한 블럭 처리
-  // 블럭업데이트 전에 처리해야할것
+  // 블럭업데이트 전에 처리해야할것 (DB에 처리)
   if (blockType === "VIDEO") {
     const blockUpdateObj = {
       displayId: blockId,
@@ -487,20 +492,21 @@ async function blockChangeMenuEvent(e) {
     await createFileBlock(blockId);
   }
 
-  if(blockType === "DATABASE"){
+  if (blockType === "DATABASE") {
     console.log(pageBlockId);
     const dbObject = {
-      parentId:pageBlockId,
-      email:blockSessionUserId,
-      pageNum:999,
-      displayId:blockId,
-    }
-    console.log(dbObject)
+      parentId: pageBlockId,
+      email: blockSessionUserId,
+      pageNum: 999,
+      displayId: blockId,
+    };
+    console.log(dbObject);
     // 데이터베이스 db에 생성
-    await createDB2DBblock(dbObject)
+    await createDB2DBblock(dbObject);
     // 데이터 배치
     await getChildList(blockId);
   }
+  //DB처리 끝
 
   handlingBlockEvent(targetBlock);
 
@@ -517,7 +523,10 @@ async function blockChangeMenuEvent(e) {
 // 키보드 이벤트
 async function keydown_handler(e) {
   e.stopPropagation();
-  if(e.target.classList.contains("attr")){ attrContentUpdate(e); return;};
+  if (e.target.classList.contains("attr")) {
+    attrContentUpdate(e);
+    return;
+  }
   const isContentBlock = e.target.classList.contains("content");
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
     const enteredBlock = e.currentTarget;
@@ -559,16 +568,15 @@ async function keydown_handler(e) {
         block.querySelector(".content").focus();
       }
     } else {
-      const temp = makeBlockTemplate();
+      const temp = makeBlockTemplate(order);
       //블럭 배치 및 이벤트 부여
-      displayBlock(temp); //문서쪽으로 만듦
+      displayBlock(temp, null, enteredBlock, false, true); //문서쪽으로 만듦
     }
   }
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함
     if (e.currentTarget.previousElementSibling) {
       e.currentTarget.previousElementSibling.querySelector(".content").focus();
-      // if(e.currentTarget.previousSibling)
     }
     const delBlockType = e.currentTarget.dataset.blockType;
     if (delBlockType === "TOGGLE") {
@@ -577,6 +585,12 @@ async function keydown_handler(e) {
     }
     e.currentTarget.remove();
     deleteDBBlock({ displayId: e.currentTarget.dataset.blockId });
+    const socketEventObj = {
+      eventType: "DELETEBLOCK",
+      displayId: e.currentTarget.dataset.blockId,
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
   }
 }
 

@@ -378,7 +378,7 @@ function selectPage(pageId) {
             return res.json();
         })
         .then((data) => {
-            data.forEach((item) => {
+            data.forEach(async (item) => {
                 //이미 있으면 제거
                 const title = document.querySelector(".pageHead");
 
@@ -406,16 +406,6 @@ function selectPage(pageId) {
 
       });
     });
-
-                let app = document.querySelector(".container");
-                let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/><input type="text" id="TitlePid" value="${item.pageId}"/> </div>`;
-                app.insertAdjacentHTML("beforebegin", pageTitle);
-                //페이지 뿌려주기
-                pageBlockId = pageId;
-                workBlockId = item.workId;
-                makeBlockPage(pageId);
-            });
-        });
 }
 // 새로운 페이지 생성.
 function newPage() {
