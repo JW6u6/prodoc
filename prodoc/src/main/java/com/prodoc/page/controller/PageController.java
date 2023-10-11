@@ -68,6 +68,15 @@ public class PageController {
 		return pageService.updatePage(pageVO);
 	}
 	
+	@PostMapping("/pagePlus")
+	public int pagePlus(@RequestBody PageVO pageVO) {
+		return pageService.updateNumPlus(pageVO);
+	}
+	
+	@PostMapping("/pageMinus")
+	public int pageMinus(@RequestBody PageVO pageVO) {
+		return pageService.updateNumMinus(pageVO);
+	}
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();

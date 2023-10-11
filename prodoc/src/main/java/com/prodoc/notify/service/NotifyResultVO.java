@@ -14,6 +14,7 @@ public class NotifyResultVO {
    private String creUserId;
    private String creUserName;
    private String profile;
+   private String platform;
    
    private String workId;
    private String workName;

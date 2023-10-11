@@ -191,22 +191,21 @@ function dropPage(event){
     event.stopPropagation();
     event.preventDefault();
     const dragItem = document.querySelector(".dragging").parentElement;
-    console.log(dragItem);
     const targetItem = event.currentTarget;
     const pageMain = event.currentTarget.parentElement.parentElement;
     const targetHeight = event.target.offsetHeight;
-    console.log(targetHeight)
+    
+    console.log(dragItem);
+    console.log(targetItem.parentElement);
     const {
         offsetX, offsetY
     } = event;
-    const center = targetHeight / 2;
-    console.log(center);
+                                                                                                                    const center = targetHeight / 2;
+    console.log(offsetY , center)
     if(offsetY > center){
         insertAfter(dragItem, targetItem.parentElement);
     } else {
         pageMain.insertBefore(dragItem, targetItem.parentElement);
-
-
     }
 }
 function dragEnd(event){
@@ -335,7 +334,8 @@ function pageList(wId, target) {
         })
         .then(data => {
             data.forEach(item => {
-                let text = `<div class= "Page" data-id="${item.pageId}" data-level="2" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+                console.log(item);
+                let text = `<div class= "Page" data-id="${item.pageId}" data-level="2" data-number="${item.numbering}" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <div class = "pageMain"></div>
                             </div>`
@@ -378,7 +378,7 @@ function selectPage(pageId) {
             return res.json();
         })
         .then((data) => {
-            data.forEach((item) => {
+            data.forEach(async(item) => {
                 //이미 있으면 제거
                 const title = document.querySelector(".pageHead");
 
@@ -386,7 +386,7 @@ function selectPage(pageId) {
                     title.remove();
                 }
         let app = document.querySelector(".container");
-        let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/> </div>`;
+        let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" data-pageId="${item.pageId}" value="${item.workId}"/> </div>`;
         app.insertAdjacentHTML("beforebegin", pageTitle);
         // 페이지 타입 체크
         let type = await pageTypeCheck(pageId);
@@ -406,16 +406,6 @@ function selectPage(pageId) {
 
       });
     });
-
-                let app = document.querySelector(".container");
-                let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/><input type="text" id="TitlePid" value="${item.pageId}"/> </div>`;
-                app.insertAdjacentHTML("beforebegin", pageTitle);
-                //페이지 뿌려주기
-                pageBlockId = pageId;
-                workBlockId = item.workId;
-                makeBlockPage(pageId);
-            });
-        });
 }
 // 새로운 페이지 생성.
 function newPage() {
@@ -1092,22 +1082,23 @@ function inviteWork(workId) {
     }
     console.log(inviteList);
     let url = '/workJoin';
-
+    
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(inviteList)
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inviteList)
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result + '건 성공');
+        tdList.forEach(item => {
+            item.remove();
         })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result + '건 성공');
-            tdList.forEach(item => {
-                item.remove();
-            })
-        })
-        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+
 }
 
 const arr = ["workId", "email", "auth"];

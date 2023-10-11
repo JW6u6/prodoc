@@ -1,12 +1,19 @@
 package com.prodoc.socket;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import com.prodoc.notify.service.NotifyResultVO;
+import com.prodoc.notify.service.NotifyService;
+
 @Controller
 public class SocketController {
 
+//	@Autowired
+//	NotifyService notifyService;
+	
 //Ajax랑 비슷함 /updateCmd라는 주소에 명령요청을 매핑.
 //  주소를 받음 > SendTo(updatePage를 구독한 사람목록)에게 명령요청 함. 
 //   > socketVO를 리턴함(명령 종류) 기능의구조를 정해둔다 생각
@@ -20,7 +27,8 @@ public class SocketController {
   @MessageMapping("/inviteCmd")
   @SendTo("/topic/inviteWork")
   public SocketVO invite(SocketVO socketVO) throws Exception {
-	  Thread.sleep(1000);
+//	  Thread.sleep(100);
+//	  NotifyResultVO vo = notifyService.getNotify(socketVO.getConnect());
 	  return socketVO;
   }
   //테스트

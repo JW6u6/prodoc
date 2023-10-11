@@ -16,6 +16,10 @@ public interface PageMapper {
 	public void insertPage(PageVO pageVO);
 	
 	public int updatePage(PageVO pageVO);
+	
+	public int updateNumPlus(PageVO pageVO);
+	
+	public int updateNumMinus(PageVO pageVO);
 
 	// 페이지 잠금 요청이 들어오면 잠금(관리자, 소유자)
 	public int LockPage(PageVO pageVO);

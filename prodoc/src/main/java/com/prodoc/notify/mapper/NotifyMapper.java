@@ -29,4 +29,6 @@ public interface NotifyMapper {
 
 	// 페이지 잠금/잠금해제 요청이 중복으로 들어가는걸 방지하기위해 목록을 불러오는거
 	public int notLockDuple(String pageId);
+	
+	public NotifyResultVO getNotify(String workId);
 }

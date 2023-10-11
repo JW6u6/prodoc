@@ -9,6 +9,10 @@ public interface PageService {
 	public boolean LockCheckPage(PageVO pageVO);
 	
 	public int updatePage(PageVO PageVO);
+	
+	public int updateNumPlus(PageVO PageVO);
+	
+	public int updateNumMinus(PageVO PageVO);
 
 	// 페이지 삭제여부(페이지메뉴)
 	public boolean deleteCheckPage(PageVO pageVO);
