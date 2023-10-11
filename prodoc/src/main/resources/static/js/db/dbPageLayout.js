@@ -208,6 +208,7 @@ function dbTblBlock(block){
     tr.setAttribute("data-page-order", block.page.numbering);
     tr.classList.add("dbtype-tbl", "table-tr", "db_block", "data_page");
     let td = document.createElement("div");
+    td.classList.add("data_page");
     td.textContent = block.page.pageName;
     tr.append(td);
     return tr;

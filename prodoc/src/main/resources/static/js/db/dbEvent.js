@@ -58,7 +58,7 @@ function createDBblock(block){
     console.log(block);
     const dbBlockTemp = `
     <div class="db-block database_case" data-block-id="` + block.displayId + `">
-        <div id="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
+        <div class="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
             <div>` + block.content + `</div>
             <div class="db-layout-list">
@@ -153,6 +153,7 @@ function insertDBpage(e){
     })
     .then(response => response.json())
     .then(result => {
+        //result = [PageVO, BlockVO, AttrList]
         let caseBody = caseBlock.querySelector('.db-block-body');
         let targetNode = e.target.closest('.add-page-div');
         let block;
@@ -172,7 +173,23 @@ function insertDBpage(e){
         }
 
         if(nowLayout == "DB_TBL"){
+            let attrList = result.attrList;
+            let uniqueAttr = [];
+            let getAttr = {};
+            for(let attr of attrList){
+                let dui = attr.dbUseId;
+                if(!getAttr[dui]){  // getAttr[dui]이 null 또는 undefined인지 체크
+                    uniqueAttr.push(attr);
+                    getAttr[dui] = true;
+                }
+            }
             block = dbTblBlock(result); // tbl의 블럭은 Node로 반환된다.
+            
+            // 속성 노드
+            let attrNodes = dbTblAttrBlock(attrList, uniqueAttr);
+            attrNodes.forEach(attrNode => {
+                block.append(attrNode);
+            })
             targetNode.prepend(block);
         }
     })

@@ -19,6 +19,7 @@ public interface DBAttrMapper {
 	public void modifyAttrName(PageAttrVO vo);	//속성이름수정
 	public void modifyDBPage(PageAttrVO vo);	//DB하위페이지 수정시 히스토리, 속성 업데이트
 	public int attrNumberUpdate(PageAttrVO vo);	//속성넘버링 변겅
+	public List<PageAttrVO> addAttridSelect(PageAttrVO vo);	//새 속성 생성시 하위페이지의 해당 속성 정보 불러옴
 	
 	public int updateAttrContent(PageAttrVO vo);
 	public void insertAttrContent(PageAttrVO vo);

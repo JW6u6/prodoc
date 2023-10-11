@@ -121,10 +121,13 @@ public class DBController {
 	}
 	
 	@PostMapping("insertDbAttr")
-	public String insertDbAttr(@RequestBody AddAttrVO vo) {
+	public List<PageAttrVO> insertDbAttr(@RequestBody AddAttrVO vo) {
 		attrService.insertAttr(vo);
-		String result = vo.getResult();
-		return "{\"caseBlock\" : \""+result+"\"}";
+		PageAttrVO attrVo = new PageAttrVO();
+		attrVo.setAttrId(vo.getAttrId());
+		attrVo.setAttrName(vo.getAttrName());
+		attrVo.setCasePageId(vo.getResult());
+		return attrService.addAttridSelect(attrVo);
 	}
 	
 	@PostMapping("deleteDbAttr")

@@ -37,15 +37,6 @@ async function pageTypeCheck(pageId){
     return pageType;
 }
 
-// 데이터베이스를 페이지로 열기(데이터베이스의 pageId)
-function getDatabase(dbPageId){
-    // 1. 데이터베이스의 디스플레이 아이디 조회
-    // 2. 조회된 디스플레이 아이디로 하위페이지리스트 조회
-    // 3. 현재 레이아웃 체크
-    // 4. view 형성
-    
-}
-
 // 속성이 보여야하는 페이지
 // 속성값만 붙여줌
 async function getDataInfo(pageId){    
@@ -82,7 +73,7 @@ async function getDataInfo(pageId){
             attrCase.setAttribute("data-attr-order", node.getAttribute("data-attr-order"));
             attrCase.setAttribute("data-attrid", node.getAttribute("data-attrid"));
             attrCase.setAttribute("draggable", true);
-            attrCase.classList.add("attr-name", "inlineTags");
+            attrCase.classList.add("attr-name", "inlineTags", "page-attr");
             attrCase.addEventListener("click", openpageAttrOption);
             let attrName = '';
 
@@ -130,14 +121,16 @@ function openDataPage(pageId){
         let pageVO = pageList[0];
         let container = document.querySelector(".container");
         let pageModal = `
-            <div class="db_dataPage">
+            <div class="db_dataPage" data-page-id="${pageId}">
                 <div>
-                    <button class="view_change">❒</button>
-                    <button class="dbPage_close">✕</button>
+                    <div>
+                        <button class="view_change">❒</button>
+                        <button class="dbPage_close">✕</button>
+                    </div>
+                    <div class="pageName">${pageVO.pageName}</div>
+                    <div class="db_attrList"></div>
+                    <div class="dataPage_blocks"></div>
                 </div>
-                <div class="pageName">${pageVO.pageName}</div>
-                <div class="db_attrList"></div>
-                <div class="dataPage_blocks"></div>
             </div>
         `
         // 모달 틀 insert
@@ -212,11 +205,13 @@ async function getDatabaseDBBlock(pageId){
 
 // 하위페이지 속성 편집 모달
 function openpageAttrOption(e){
+    if(document.querySelector(".pageAttr_option")!=null) document.querySelector(".pageAttr_option").remove();
     let modal = document.createElement("div");
     modal.classList.add("pageAttr_option")
     modal.style.position = 'absolute';
     modal.style.background = "white";
     let closeBtn = document.createElement("button");
+    closeBtn.style.display = 'block';
     e.target.style.removeProperty("position");
     closeBtn.textContent = '✕';
     closeBtn.addEventListener("click", e => {
@@ -227,9 +222,9 @@ function openpageAttrOption(e){
     input.classList.add("thisAttrName", "inlineTags")
     let submitBtn = document.createElement("button");
     submitBtn.classList.add("inlineTags");
-    submitBtn.vlaue = '수정';
+    submitBtn.textContent = '수정';
     submitBtn.addEventListener("click", pageAttrnameUpdate);
-    submitBtn.addEventListener("keydown", pageAttrnameUpdate);
+    input.addEventListener("keydown", pageAttrnameUpdate);
     let attrDel = document.createElement("div");
     attrDel.textContent = '속성 삭제';
     attrDel.addEventListener("click", e => {
@@ -238,10 +233,53 @@ function openpageAttrOption(e){
 
 
     modal.append(closeBtn, input, submitBtn, attrDel);
-    e.target.append(modal);
-    e.target.style.position = "relative";
+    e.target.closest(".attr-line").append(modal);
 }
 
-function pageAttrnameUpdate(e){
-    const input = e.target.closest(".pageAttr_option").querySelector(".thisAttrName");
+async function pageAttrnameUpdate(e){
+    const pageModal = document.querySelector(".db_dataPage");
+    let pageId;
+    if(pageModal != null) {
+        pageId = pageModal.getAttribute("data-page-id");
+    } else {
+        // ✅ 컨테이너 안에서 정보 select
+    }
+    const modal = e.target.closest(".pageAttr_option");
+    const nameNode = modal.parentNode.firstChild;
+    const attrId = nameNode.getAttribute("data-attrid");
+    const input = modal.querySelector(".thisAttrName");
+    const cannotMods = ['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'];
+    if(cannotMods.includes(attrId)) return;
+
+    if(e.type=="click" || e.keyCode===13){
+        e.preventDefault();
+        // DB의 디스플레이 아이디 조회 후 파라미터로 넣기
+        const dbblockVo = await getDatabaseDBBlock(pageId); // caseId 조회용
+        const caseId = dbblockVo.displayId;
+        const attrList = await getUseAttrList(caseId);    // 중복확인용 리스트
+        let check = true;
+        attrList.forEach(attr=>{
+            if(attr.attrId == attrId && attr.attrName == input.value) check = false;
+        })
+        if(!check){
+            alert("해당 속성이 이미 존재합니다.");
+            return;
+        }
+
+        // 1. DB 수정
+        let data = {
+            'dbUseId' : nameNode.getAttribute("data-duse-id"),
+            'attrName' : input.value,
+            'pageId' : dbblockVo.pageId,
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'casePageId' : caseId,  // 블럭아이디
+            'workId' : document.getElementById("TitleWid").value
+        };
+        console.log(data);
+        modifyAttrNameAjax(data);
+        
+        // 2. DB의 하위 페이지 속성부분 수정
+        // 3. DB블럭에 존재하는 속성 이름부분 수정
+        // 4. 속성수정 모달 닫기
+    }
 }

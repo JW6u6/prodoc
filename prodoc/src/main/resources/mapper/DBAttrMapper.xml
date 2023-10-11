@@ -119,4 +119,17 @@
 		SET numbering = #{numbering}
 		WHERE db_use_id = #{dbUseId}
 	</update>
+	
+	<!-- 데이터베이스에 속성을 추가했을 때 화면에 append하기위한 select -->
+	<select id="addAttridSelect" parameterType="PageAttrVO" resultType="PageAttrVO">
+		SELECT *
+		FROM view_pageattr
+		WHERE db_use_id IN (
+		                        SELECT db_use_id
+		                        FROM view_pageattr
+		                        WHERE attr_id = #{attrId}
+		                            AND attr_name = #{attrName}
+		                            AND case_page_id = #{casePageId}
+		                    )
+	</select>
 </mapper>
