@@ -14,13 +14,13 @@
 		src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 	<script src="/js/app.js"></script>
 	<!--/* css */-->
-	<link th:href="@{/css/common.css}" rel="stylesheet" />
-	<link th:href="@{/css/block.css}" rel="stylesheet" />
+	<link th:href="@{css/common.css}" rel="stylesheet" />
+	<link th:href="@{css/block.css}" rel="stylesheet" />
 	<title>PRODOC</title>
 </th:block>
 
 <body>
-	<th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
+	<th:block layout:fragment="header" th:include="@{fragments/header}"></th:block>
 	<input id="mainPID" type="text" style="visibility: hidden;"th:value="${param.pageId}">
 	<!-- 링크로 공유된 페이지 보여주는 곳 -->
 	<div class="container"></div>
