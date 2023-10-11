@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -13,9 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prodoc.page.service.PageService;
+import com.prodoc.user.service.UserVO;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
@@ -80,7 +82,7 @@ public class WorkSpaceController {
 	public List<WorkJoinVO> inviteList(String workId) {
 		return workspaceService.inviteListWorkspace(workId);
 	}
-	
+
 	// 워크스페이스 수정
 	@PostMapping("/workEdit")
 	public void workspaceEdit(@RequestBody WorkSpaceVO workVO) {
@@ -95,18 +97,19 @@ public class WorkSpaceController {
 
 	// 워크스페이스 메인 페이지 지정
 	@PostMapping("/workMainPg")
-	public void workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
-		workspaceService.assignMainPage(workVO);
+	public boolean workspaceMainPage(@RequestBody WorkSpaceVO workVO) {
+		return workspaceService.assignMainPage(workVO);
 	}
 
 	@GetMapping("/invite/{inviteId}")
-	public void mappingPath(@PathVariable("inviteId") String inviteId, Model model, HttpServletResponse response) {
+	public void mappingPath(@PathVariable("inviteId") String inviteId, RedirectAttributes rttr, HttpServletResponse response) {
 		WorkSpaceVO workVO = WorkSpaceMapper.InviteWorkInfo(inviteId);// 인바이트 아이디로 워크 아이디 찾기
+		System.out.println(workVO);
 		String mainP = workVO.getMainPageId();// 워크 아이디로 메인 페이지 찾기
 		// 메인 페이지 아이디 모달에 담아 전송
-		model.addAttribute("pageId", mainP);
+		rttr.addAttribute("pageId", mainP);
 		try {
-			response.sendRedirect("/test1");
+			response.sendRedirect("/shareWith?pageId="+ mainP);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

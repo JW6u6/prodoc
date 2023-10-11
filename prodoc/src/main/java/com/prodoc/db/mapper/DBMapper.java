@@ -21,6 +21,11 @@ public interface DBMapper {
 	public List<UserVO> getWorkMembers(String pageId);
 	
 	public void databaseUpdate(PageAttrVO vo);	// 데이터베이스 : 히스토리, 페이지테이블 업데이트
+	public void dbpageNumbering(PageAttrVO vo);	// 데이터베이스 하위 페이지의 넘버링, 데이터베이스 업데이트
 	
 	public PageVO getPageInfo(String pageId);	// 페이지VO 따로 필요해서 만들었음
+	
+	// 페이지 호출시 페이지 타입을 조회
+	public void pageTypeCheck(PageVO pageVO);
+	public DBBlockVO getDatabaseInfo(String pageId);	//하위 페이지 아이디로 데이터베이스의 DBBlock 조회
 }

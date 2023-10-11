@@ -14,6 +14,8 @@ public interface PageMapper {
 	public List<PageVO> selectPageInfo(String pageId);
 
 	public void insertPage(PageVO pageVO);
+	
+	public int updatePage(PageVO pageVO);
 
 	// 페이지 잠금 요청이 들어오면 잠금(관리자, 소유자)
 	public int LockPage(PageVO pageVO);
@@ -29,4 +31,7 @@ public interface PageMapper {
 
 	// 페이지 알림 끄기/켜기(값이 없으면(알림이 켜진 상태면) 입력하고 있으면(알림이 꺼진 상태면) 삭제)
 	public void onOffPage(PageVO pageVO);
+	
+	//페이지메뉴 알림 끄기켜기 표시
+	public int selectTurnOn(PageVO pageVO);
 }

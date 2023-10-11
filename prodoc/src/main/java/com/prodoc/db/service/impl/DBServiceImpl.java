@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.db.mapper.DBMapper;
-import com.prodoc.db.service.AttrVO;
 import com.prodoc.db.service.DBBlockVO;
 import com.prodoc.db.service.DBCaseVO;
 import com.prodoc.db.service.DBService;
@@ -71,6 +70,22 @@ public class DBServiceImpl implements DBService {
 	@Override
 	public void databaseUpdate(PageAttrVO vo) {
 		mapper.databaseUpdate(vo);
+	}
+
+	@Override
+	public void dbpageNumbering(PageAttrVO vo) {
+		mapper.dbpageNumbering(vo);
+	}
+
+	@Override
+	public String pageTypeCheck(PageVO pageVO) {
+		mapper.pageTypeCheck(pageVO);
+		return pageVO.getCaseId();
+	}
+
+	@Override
+	public DBBlockVO getDatabaseInfo(String pageId) {
+		return mapper.getDatabaseInfo(pageId);
 	}
 
 

@@ -3,6 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.db.mapper.DBMapper">
+	<!-- 페이지 타입 조회 -->
+	<select id="pageTypeCheck" parameterType="PageVO" statementType="CALLABLE">
+		{call CHECK_PAGE_TYPE(
+			#{pageId}
+			, #{caseId, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		)}
+	</select>
+
 	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">
 		{call INSERT_DB(
@@ -96,4 +104,20 @@
 			, #{workId}
 		)}
 	</update>
+	
+	<update id="dbpageNumbering" parameterType="PageAttrVO">
+		{call DB_PAGE_NUMBERING_UPDATE(
+			#{pageId}
+			, #{workId}
+			, #{email}
+			, #{casePageId}
+			, #{numbering}
+		)}
+	</update>
+	
+	<select id="getDatabaseInfo" parameterType="String" resultType="DBBlockVO">
+		SELECT * 
+		FROM tbl_dbblock 
+		WHERE page_id = ( SELECT parent_id FROM tbl_page WHERE page_id = #{pageId} )
+	</select>
 </mapper>

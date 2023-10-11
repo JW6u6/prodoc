@@ -81,10 +81,10 @@ async function updateTemplate({
     text,
     color ? color : "",
     backColor ? backColor : ""
-    );
-    if(type==="DATABASE"){
-       block = createDBblock({displayId,content:"새 데이터베이스"})
-    }
+  );
+  if (type === "DATABASE") {
+    block = createDBblock({ displayId, content: "새 데이터베이스" });
+  }
   if (!displayId) {
     displayId = self.crypto.randomUUID();
     console.log(type);
@@ -441,13 +441,14 @@ function makeReplyModal(displayId, target) {
  * @param {string} date - 댓글을 단 시간 or 업데이트된 시간
  * @returns {string} 댓글블럭템플릿
  */
-function makeReplyBlock(user, text, date) {
+function makeReplyBlock(user, text, date, id) {
   const replyTemp = `
     <div class="block_reply">
-      <div class="reply_block--header">
+      <div class="reply_block--header" data-reply-id="${id}">
         <div>img</div>
         <div>${user}</div>
         <div>${date}</div>
+        <div class="reply_block--remove_btn">X</div>
       </div>
       <div class="reply_block--content">${text}</div>
     </div>
