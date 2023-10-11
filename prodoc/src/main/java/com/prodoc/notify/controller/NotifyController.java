@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,16 +26,22 @@ public class NotifyController {
 
 	@Setter(onMethod_ = @Autowired)
 	NotifyService notiService;
-	
+
 	@ResponseBody
 	@PostMapping("/alarmList")
-	public Map<String, Object> alarmListProc(@RequestBody NotifyVO type, HttpServletRequest request){
-		System.out.println(type +"============================");
+	public Map<String, Object> alarmListProc(@RequestBody NotifyVO type, HttpServletRequest request) {
+		System.out.println(type + "============================");
 		Map<String, Object> map = new HashMap<>();
 		HttpSession session = request.getSession();
-		String logUser = ((UserVO)session.getAttribute("logUser")).getEmail();
+		String logUser = ((UserVO) session.getAttribute("logUser")).getEmail();
 		List<NotifyResultVO> list = notiService.selectNotify(logUser, type.getNoteType());
 		map.put("result", list);
 		return map;
+	}
+
+	@GetMapping("/areULOCK")
+	@ResponseBody
+	public int hasLockAlam(String pageId) {
+		return notiService.donTDupleLock(pageId);
 	}
 }

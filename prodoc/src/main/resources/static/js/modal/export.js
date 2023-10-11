@@ -1,8 +1,9 @@
-//import { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf";
 
 document.querySelector('#exportPg').addEventListener('click', function (e) {
     let exportpg = document.querySelector('#exportModal');
     exportpg.classList.remove('hide');
+    console.log(pageBlockId);
 })
 
 function exportModal() {

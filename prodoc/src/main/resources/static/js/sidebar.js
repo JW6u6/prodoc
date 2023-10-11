@@ -372,7 +372,7 @@ function pageList(wId, target) {
 }
 // 페이지 선택시 PID 불러오기 + 리스트노출.
 function selectPage(pageId) {
-    let url = "/pageInfo?pageId=" + pageId;
+  let url = "/pageInfo?pageId=" + pageId;
     fetch(url)
         .then((res) => {
             return res.json();
@@ -385,6 +385,27 @@ function selectPage(pageId) {
                 if (title) {
                     title.remove();
                 }
+        let app = document.querySelector(".container");
+        let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/> </div>`;
+        app.insertAdjacentHTML("beforebegin", pageTitle);
+        // 페이지 타입 체크
+        let type = await pageTypeCheck(pageId);
+        if(type=="DATABASE"){
+            // 데이터베이스일 때
+            openDatabase(pageId);
+        }else if(type=="DATA_PAGE"){
+            // DB의 하위페이지일 때
+        }else {
+            // 일반 페이지일 때
+            //페이지 뿌려주기
+            pageBlockId = pageId;
+            workBlockId = item.workId;
+            makeBlockPage(pageId);
+        }
+
+
+      });
+    });
 
                 let app = document.querySelector(".container");
                 let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/><input type="text" id="TitlePid" value="${item.pageId}"/> </div>`;
