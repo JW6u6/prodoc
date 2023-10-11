@@ -47,12 +47,22 @@ container.addEventListener("mouseup", (e) => {
     const isSeparator = prevBlock.querySelector(".separator");
     if (isSeparator) return;
     if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
-      const temp = makeBlockTemplate();
-      displayBlock(temp); // 문서쪽으로 만듦
+      const template = makeBlockTemplate();
+      const displayObj = {
+        template,
+        type: null,
+        element: null,
+      };
+      displayBlock(displayObj); // 문서쪽으로 만듦
     }
   } else {
-    const temp = makeBlockTemplate();
-    displayBlock(temp); // 문서쪽으로 만듦
+    const template = makeBlockTemplate();
+    const displayObj = {
+      template,
+      type: null,
+      element: null,
+    };
+    displayBlock(displayObj); // 문서쪽으로 만듦
   }
 });
 
@@ -318,19 +328,7 @@ async function drop_handler(event) {
   dragItem.dataset.blockOrder = newOrder;
 
   // 만약 숫자가 이상하면 새로부여
-  if (!Number.isInteger(newOrder)) {
-    resetOrder();
-    const socketEventObj = {
-      eventType: "RESETORDER",
-    };
-    socketEventObj(socketEventObj);
-  } else if (dragItem.dataset.blockOrder === targetItem.dataset.blockOrder) {
-    resetOrder();
-    const socketEventObj = {
-      eventType: "RESETORDER",
-    };
-    socketEventObj(socketEventObj);
-  }
+  checkAndResetOrder(newOrder);
 
   // 드래그한게 OLIST면 OList의
   if (
@@ -355,7 +353,17 @@ async function drop_handler(event) {
   updateDBBlock(updateObj);
 }
 
+/**
+ * 새로 부여된 order이 비정상적일때 모든 블럭의 순서를 재할당하는 함수.
+ * @param {Number} newOrder - 새로 부여된 order
+ */
+function checkAndResetOrder(newOrder) {
+  if (!Number.isInteger(newOrder)) resetOrder();
+}
+
+// 숫자 재정렬
 function resetOrder(isSocket = false) {
+  // 첫번째만 검색
   const allBlock = document.querySelectorAll(".container > .prodoc_block");
   allBlock.forEach((block, index) => {
     blockOrder = (index + 1) * 1024;
@@ -368,6 +376,12 @@ function resetOrder(isSocket = false) {
       updateDBBlock(updateObj);
     }
   });
+  if (!isSocket) {
+    const socketEventObj = {
+      eventType: "RESETORDER",
+    };
+    socketEventObj(socketEventObj);
+  }
 }
 
 //insertAfter - 요소 뒤에 삽입.

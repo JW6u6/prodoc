@@ -96,10 +96,14 @@ function sendData(isExistData) {
 }
 
 function sendSocketEvent(socketEventObj) {
-  stompClient.publish({
-    destination: `/topic/collaboration/test`,
-    body: JSON.stringify(socketEventObj),
-  });
+  if (stompClient.connected) {
+    stompClient.publish({
+      destination: `/topic/collaboration/test`,
+      body: JSON.stringify(socketEventObj),
+    });
+  } else {
+    console.log("stomp is not connected");
+  }
 }
 
 /**
@@ -171,14 +175,13 @@ function showBlocks(pageId, type = "PAGE") {
 }
 
 async function asyncDisplay(block, type) {
-  const temp = await updateTemplate(block);
-  displayBlock(temp, type);
+  const template = await updateTemplate(block);
+  displayBlock({ template, type, element: null });
 }
 
-async function asyncChildDisplay(block, parent, type) {
-  console.log(block);
+async function asyncChildDisplay(block, parent) {
   const temp = await updateTemplate(block);
-  displayChildBlock(temp, parent, type);
+  displayChildBlock(temp, parent);
 }
 
 /**

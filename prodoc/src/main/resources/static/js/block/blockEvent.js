@@ -530,20 +530,39 @@ async function keydown_handler(e) {
   const isContentBlock = e.target.classList.contains("content");
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
     const enteredBlock = e.currentTarget;
-    const order = Number(enteredBlock.dataset.blockOrder);
+    const nextBlock = enteredBlock.nextElementSibling;
+    const enteredBlockOrder = Number(enteredBlock.dataset.blockOrder);
+    let order;
+    // 다음에 블럭이 있다면 중앙값을 만들어줌 아니면 마지막블럭임.
+    if (nextBlock) {
+      const nextOrder = Number(nextBlock.dataset.blockOrder);
+      order = (enteredBlockOrder + nextOrder) / 2;
+    } else {
+      order = enteredBlockOrder + 1024;
+    }
+
     e.preventDefault();
     //블럭만들기
     //만약 e.target이 TODO블럭이면 TODO블럭으로 변경!
 
     if (e.currentTarget.dataset.blockType === "TODO") {
+      // 만약 비어있지않다면 TODO블럭을 만들어서 붙이기.
       if (e.target.innerHTML !== "") {
-        const temp = await updateTemplate({
+        const template = await updateTemplate({
           displayId: null,
           type: "TODO",
-          order: order + 1,
+          order,
         });
-        displayBlock(temp);
+        const displayObj = {
+          template,
+          type: null,
+          element: null,
+        };
+        const newBlock = displayBlock(displayObj);
+        focusBlock(newBlock);
       } else {
+        // 비어있다면 해당 블럭을 TEXT로 만들기
+        // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
         let block = e.currentTarget;
         const blockId = block.dataset.blockId;
         const blockChangeObj = {
@@ -568,15 +587,25 @@ async function keydown_handler(e) {
         block.querySelector(".content").focus();
       }
     } else {
-      const temp = makeBlockTemplate(order);
+      const template = makeBlockTemplate(order);
+      const displayObj = {
+        template,
+        type: null,
+        element: null,
+      };
       //블럭 배치 및 이벤트 부여
-      displayBlock(temp, null, enteredBlock, false, true); //문서쪽으로 만듦
+      const newBlock = displayBlock(displayObj); //문서쪽으로 만듦
+      focusBlock(newBlock);
     }
+    // 만약 배치가 끝났는데 order이 비정상적인(ex)float) 형식이면 순서 재할당
+    checkAndResetOrder(order);
   }
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함
     if (e.currentTarget.previousElementSibling) {
-      e.currentTarget.previousElementSibling.querySelector(".content").focus();
+      const prevElement = e.currentTarget.previousElementSibling;
+      console.log(prevElement);
+      focusBlock(prevElement);
     }
     const delBlockType = e.currentTarget.dataset.blockType;
     if (delBlockType === "TOGGLE") {

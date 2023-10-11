@@ -1,7 +1,8 @@
 //메인이 될 IP 주소 설정
 const stompClient = new StompJs.Client({
-  brokerURL: "ws://192.168.0.43:8099/websocket",
+  brokerURL: "ws://localhost:8099/websocket",
 });
+console.log(stompClient);
 connect();
 
 //해당 updatePage를 구독중인 사람
@@ -34,24 +35,29 @@ stompClient.onConnect = (frame) => {
       const changedBlock = document
         .querySelector(`[data-block-id="${displayId}"]`)
         .querySelector(".content");
-      changedBlock.innerText = socketDataObj.content;
+      if (changedBlock) {
+        changedBlock.innerText = socketDataObj.content;
+      }
     } else if (eventType === "DRAG") {
       console.log(socketDataObj);
       const { dragState } = socketDataObj;
       const targetType = targetItem.dataset.blockType;
-      dragEvent(targetItem, dragItem, dragState, targetType);
+      dragEvent({ targetItem, dragItem, dragState, targetType });
     } else if (eventType === "RESETORDER") {
       resetOrder(true);
     } else if (eventType === "CREATEBLOCK") {
       const enteredBlock = document.querySelector(
         `[data-block-id="${socketDataObj.enteredBlockId}"]`
       );
-      displayBlock(
-        socketDataObj.template,
-        socketDataObj.type,
+
+      const { template, type } = socketDataObj;
+
+      const displayObj = {
+        template,
+        type,
         enteredBlock,
-        true
-      );
+      };
+      displayBlock(displayObj);
     } else if (eventType === "DELETEBLOCK") {
       const displayId = socketDataObj.displayId;
       document.querySelector(`[data-block-id="${displayId}"]`).remove();
@@ -100,7 +106,7 @@ async function sideDragEvent(targetItem, dragItem) {
   content.appendChild(dragItem);
 }
 
-function dragEvent(targetItem, dragItem, dragState, targetType) {
+function dragEvent({ targetItem, dragItem, dragState, targetType }) {
   console.log("event.");
   console.log(dragState);
   let newOrder = null;
