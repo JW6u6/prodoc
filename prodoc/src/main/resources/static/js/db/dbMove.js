@@ -27,27 +27,33 @@ function dbMoveEvent(type){
             const dragDuseId = dragDBblock.dataset.duseId;
             const targetDuseId = targetDBblcok.dataset.duseId;
 
-            // 속성값 이동을 위한 쿼리셀렉터
-            const dragAttrContents = document.querySelectorAll(`[data-duse-id="${dragDuseId}"]:not(.attr-name):not(.attr)`);
-            const targetAttrContents = document.querySelectorAll(`[data-duse-id="${targetDuseId}"]:not(.attr-name):not(.attr)`);
-
-            //속성이름이동 (동시에 속성값도)
-            if(targetVerticalCenter > offsetX){
-                targetDBblcok.parentElement.insertBefore(dragDBblock, targetDBblcok);
-                console.log("왼쪽 드랍 발생");
-                // 드래그content를 하나하나 처리
-                dragAttrContents.forEach((dragAttrContent,index) =>{
-                    dragAttrContent.parentElement.insertBefore(dragAttrContent,targetAttrContents[index]);
-                })
-            } else {
-                insertAfter(dragDBblock,targetDBblcok);
-                console.log("오른쪽 드랍 발생")
-                // 드래그content를 하나하나 처리
-                dragAttrContents.forEach((dragAttrContent,index) =>{
-                    insertAfter(dragAttrContent,targetAttrContents[index])
-                })
+            if(dbAttrName.classList.contains("page-attr")){
+                // 상위페이지가 데이터베이스일때 속성 이동에 관련된 코드
+                console.log("잘나오세오?");
+            }else{
+                // 데이터베이스 블럭 레이아웃 : 표일때 속성 이동에 관련된 코드
+                // 속성값 이동을 위한 쿼리셀렉터
+                const dragAttrContents = document.querySelectorAll(`[data-duse-id="${dragDuseId}"]:not(.attr-name):not(.attr)`);
+                const targetAttrContents = document.querySelectorAll(`[data-duse-id="${targetDuseId}"]:not(.attr-name):not(.attr)`);
+    
+                //속성이름이동 (동시에 속성값도)
+                if(targetVerticalCenter > offsetX){
+                    targetDBblcok.parentElement.insertBefore(dragDBblock, targetDBblcok);
+                    console.log("왼쪽 드랍 발생");
+                    // 드래그content를 하나하나 처리
+                    dragAttrContents.forEach((dragAttrContent,index) =>{
+                        dragAttrContent.parentElement.insertBefore(dragAttrContent,targetAttrContents[index]);
+                    })
+                } else {
+                    insertAfter(dragDBblock,targetDBblcok);
+                    console.log("오른쪽 드랍 발생")
+                    // 드래그content를 하나하나 처리
+                    dragAttrContents.forEach((dragAttrContent,index) =>{
+                        insertAfter(dragAttrContent,targetAttrContents[index])
+                    })
+                }
+                AttrNumberingUpdate(dragDBblock);
             }
-            AttrNumberingUpdate(dragDBblock);
         })
     })
 

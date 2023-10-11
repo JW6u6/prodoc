@@ -15,14 +15,13 @@
         2-1. 데이터베이스 일 때
             - 페이지아이디로 displayId 불러와서 DB블럭 형성하는 함수 ㄱㄱ
         2-2. 데이터 페이지 일 때
-            - 기존 페이지 레이아웃에
+            - 기존 페이지 레이아웃에 아래 태그 추가
                 <div class="db_attrList">
                     여기에 속성들 보이기
                 </div>
                 <div class="dataPage_blocks">
                     여기에 블럭들 보이기
                 </div>
-              ▲ 이것좀 추가해주세요~
 */
 async function pageTypeCheck(pageId){
     let pageType = '';
@@ -73,22 +72,36 @@ function getDataInfo(pageId){
         });
 
         let attrDiv = document.createElement("div");
-        uniqueAttr.forEach( uniqueAttr => {
-            // 유니크한 속성끼리 묶어줍니다.
-            let attrCase = document.createElement("div");
-            attrCase.setAttribute("data-duse-id", uniqueAttr.dbUseId);
-            attrCase.setAttribute("data-attr-order", uniqueAttr.numbering);
-            attrCase.setAttribute("data-attrid", uniqueAttr.attrId);
-            let viewClass = uniqueAttr.displayCheck == 'TRUE' ? 'view-visible' : 'hide';
-            attrCase.classList.add(viewClass, "attr-name");
-            // ✅속성 이동 이벤트 어떻게 할것인가
+        let attrTags = dbTblAttrBlock(attrList, uniqueAttr);    // 노드 배열
 
-        })
+        attrTags.forEach( node => {
+            let topDiv = document.createElement("div");
+            if(node.classList.contains("hide")) topDiv.classList.add("hide");
+            topDiv.classList.add("attr-line");
+            
+            let attrCase = document.createElement("div");
+            attrCase.setAttribute("data-duse-id", node.getAttribute("data-duse-id"));
+            attrCase.setAttribute("data-attr-order", node.getAttribute("data-attr-order"));
+            attrCase.setAttribute("data-attrid", node.getAttribute("data-attrid"));
+            attrCase.classList.add("attr-name", "page-attr", "inlineTags");
+            let attrName = '';
+            uniqueAttr.forEach( attr => {
+                if( node.getAttribute("data-duse-id") == attr.dbUseId ) attrName = attr.attrName;
+            })
+            attrCase.textContent = attrName;
+            node.classList.add("inlineTags");
+
+            topDiv.append(attrCase, node);
+            attrDiv.append(topDiv);
+            console.log(topDiv)
+        })  // 노드 forEach문 종료
 
 
         // 3. 타이틀 뒤에 속성 div insertbefor
-        let titleEle = document.querySelector(".container");   // ✅title 태그가 생기면 title태그로 바꾸기
+        let titleEle = document.querySelector(".db_attrList");
         titleEle.after(attrDiv);
+        console.log(titleEle)
+        console.log(attrDiv)
     })
     
 }
@@ -118,22 +131,18 @@ function openDapaPage(pageId){
                     <button class="dbPage_close">✕</button>
                 </div>
                 <div class="pageName">${pageVO.pageName}</div>
-                <div class="db_attrList">
-                    여기에 속성들 보이기
-                </div>
-                <div class="dataPage_blocks">
-                    여기에 블럭들 보이기
-                </div>
+                <div class="db_attrList"></div>
+                <div class="dataPage_blocks"></div>
             </div>
         `
         // 모달 틀 insert
         container.insertAdjacentHTML("afterend", pageModal);
-
-
+        
         // insert된 div 내부에 속성 append
         let attrDiv = document.querySelector(".db_attrList");
         let attrList = '';
         attrDiv.append(attrList);
+        getDataInfo(pageId);
     })
     .catch(err => console.log(err));
 }
