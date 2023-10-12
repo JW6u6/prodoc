@@ -1,0 +1,87 @@
+@import "variable/var.css";
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.login_page {
+  margin: 0 auto;
+  width: 1000px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+}
+
+.logo_img--lg {
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+}
+
+.login_wrapper {
+  width: 400px;
+  height: 450px;
+  box-sizing: border-box;
+}
+.img_wrapper {
+  width: 500px;
+  height: 500px;
+}
+
+.input_text {
+  width: 80%;
+  height: 50px;
+  margin-bottom: 10px;
+  border-radius: 25px;
+  border: 3px solid;
+  border-color: var(--input-border-color);
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.login_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid;
+  border-color: var(--wrapper-border-color);
+}
+
+.login_wrapper img {
+  width: 100%;
+  border-radius: 100px;
+}
+
+.login_form_wrapper {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.login_form_wrapper form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login_form_wrapper p {
+  text-align: center;
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.button_wrapper button {
+  width: 47%;
+}

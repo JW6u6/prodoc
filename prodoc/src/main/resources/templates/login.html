@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>PRODOC</title>
 	<link href="/css/toggleClass.css" rel="stylesheet" />
+	<link href="/css/login.css" rel="stylesheet" />
 </head>
 <!-- 해야 할 목록
 ■ 회원가입 이메일
@@ -17,24 +18,35 @@
  -->
 <body>
 	<!-- 로그인 영역 -->
-    <div>
-        <div>
-	        <div>
+	<div class="wrapper">
+	
+
+    <div class="login_page">
+        <div class="login_wrapper">
+        
+	        <div class="login_form_wrapper">
+	        
 	        	<form method="post"	action="/login" >
-	            <input type="text" id="email" name="email" value=""><br>
-	            <input type="password" id="password" name="password" value=""><br>
-	            <button type="submit" id="loginBtn">로그인</button>
-	            <button type="button" id="joinBtn">회원가입</button><br>
-	            <a th:href="@{|${kakaoUrl}|}"><img src="images/Kakao.png" style="width:200px"></a>
+	            <input class="input_text" type="text" id="email" name="email" value="">
+	            <input class="input_text" type="password" id="password" name="password" value="">
+	            <div class="button_wrapper">
+	            <button class="input_text" type="submit" id="loginBtn">로그인</button>
+	            <button class="input_text" type="button" id="joinBtn">회원가입</button>
+	            </div>
 	            </form>
 		        <p id="failMsg" th:text="${errorMsg}" style="color:red;"></p>
 		        <p id="kakaoMsg" th:text="${kakao}" style="color:red;"></p>
+		        
 	        </div>
+            
             <p id="find" style="color:gray;">이메일/비밀번호 찾기</p>
+	        <a th:href="@{|${kakaoUrl}|}"><img src="images/Kakao.png" ></a>
+            
         </div>
-        <div><!-- prodoc 로고 이미지 --><img src=""></div>
+        
+        <div class="img_wrapper"><!-- prodoc 로고 이미지 --><img class="logo_img--lg" src="images/logo.png"></div>
     </div>
-	        	
+	</div>
 	<!--아이디비번찾기 모달창-->
  	<div id="findUserInfo" style="border:1px solid black" class="hide">
  		<div><button class="closeBtn">&#10005;</button></div>

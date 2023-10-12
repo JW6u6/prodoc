@@ -203,7 +203,7 @@ const deleteBlock = (block) => {
     eventType: "DELETEBLOCK",
     displayId,
   };
-  socketEventObj(socketEventObj);
+  sendSocketEvent(socketEventObj);
 };
 
 /**
