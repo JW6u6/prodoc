@@ -84,7 +84,6 @@ function addPageAttr(e){
     .then(attrList => {
         attrList.forEach(attr => {
             if(attr.attrId == 'STATE' || attr.attrId == 'CDATE' || attr.attrId == 'CUSER' || attr.attrId == 'UDATE' || attr.attrId == 'UUSER') return;
-            // ✔아이콘 추가하기
             addTag += `
             <div class="page-attr-list" data-attr-id="`+attr.attrId+`">`+attr.attrType+`</div>
             `
@@ -108,7 +107,7 @@ function selectAttr(e){
     e.target.parentElement.querySelector('[name="useAttrName"]').value = attrName;
 }
 
-// 사용자가 속성 추가 ✅테이블 : 추가된 속성 컬럼 append
+// 사용자가 속성 추가
 async function registAttr(e){
     let check = 'true';    //중복체크를위한 변수
     let attrInfo = {};
@@ -125,6 +124,7 @@ async function registAttr(e){
         }
     })
 
+    // 선택한 속성을 추가할 수 있을 때
     if(check == 'true'){
         fetch("insertDbAttr", {
             method : 'post',
@@ -132,9 +132,49 @@ async function registAttr(e){
             headers : { "Content-Type": "application/json" }
         })
         .then(response => response.json())
-        .then(result => {
-            console.log(result.caseBlock);
-            createUesList(result.caseBlock);
+        .then(attrs => {
+            let layout = e.target.closest("[data-layout]").getAttribute("data-layout");
+            let container = document.querySelector(".container");
+            let pageList = container.querySelectorAll(".db_block");
+            //페이지 아이디 같은지 체크 후에실행
+            pageList.forEach((pageNode, idx) => {
+                let nodePageId = pageNode.getAttribute("data-page-id");
+                attrs.forEach(attr=>{
+                    if(nodePageId == attr.pageId){
+                        console.log(layout);
+                        if(layout == "DB_BRD" || layout == "GAL"){
+                            //pageNode의 마지막 자식 안에 append
+                            let tagStr = getAttrList([attr]);
+                            pageNode.lastElementChild.insertAdjacentHTML("beforeend", tagStr);
+                        }
+                        else if(layout == "DB_LIST"){
+                            //pageNode.querySelector(".attr-list")에 append
+                            let tagStr = getAttrList([attr]);
+                            pageNode.querySelector(".attr-list").insertAdjacentHTML("beforeend", tagStr);
+                        }
+                        else if(layout = "DB_TBL"){
+                            if(idx == 0){
+                            // 테이블일경우 thead에 속성이름 추가
+                                let attrTitle = `
+                                    <div draggable="true" data-duse-id="${attr.dbUseId}" data-attr-order="${attr.numbering}" data-attrid="${attr.attrId}" class="view-visible attr-name">
+                                        ${attr.attrName}
+                                    </div>
+                                `;
+                                pageNode.previousElementSibling.lastElementChild.previousElementSibling.insertAdjacentHTML("afterend", attrTitle);
+                            }
+                            //pageNode에 append
+                            let list = dbTblAttrBlock([attr], [attr]);
+                            pageNode.append(list[0]);
+                        }   // append 끝
+                    }
+                })
+            })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
+            // 모달 닫기
+            document.querySelectorAll(".db_modal--attr").forEach(modal=>{
+                modal.innerHTML = '';
+                modal.classList.remove("view");
+                modal.classList.add("hide");
+            })
         })
     }
 }
@@ -143,17 +183,23 @@ async function registAttr(e){
 function deleteAttr(e){
     let data = {
         'dbUseId' : e.target.closest('[data-dbuseid]').getAttribute("data-dbuseid"),
-        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent    // ⭐⭐
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent
     }
+    console.log(data)
     let caseId = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
-    fetch('deleteDbAttr', {
-        method : 'post',
+    fetch("deleteDbAttr", {
+        method : 'POST',
         body : JSON.stringify(data),
         headers : { "Content-Type": "application/json" }
     })
     .then(response => {
         let attrDiv = e.target.closest('[data-dbuseid]');
         attrDiv.remove();
+        let delList = document.querySelectorAll(`[data-duse-id="${data.dbUseId}"]`);
+        console.log(data.dbUseId);
+        delList.forEach(ele=>{
+            ele.remove();
+        })
     })
     .catch(err => console.log(err));
 }
@@ -884,9 +930,10 @@ function deleteThisAttr(e){
 
 // 속성 이름 변경
 async function modifyAttrName(e){
+    if(e.target.classList.contains("page-attr")) return;
     let dui = e.target.getAttribute("data-duse-id");
     let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
-    let attrId = e.target.getAttribute("data-attrid");;
+    let attrId = e.target.getAttribute("data-attrid");
     if(e.type == 'click'){
         if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
         e.target.setAttribute("contenteditable", true);
@@ -909,24 +956,38 @@ async function modifyAttrName(e){
                 'dbUseId' : dui,
                 'attrName' : attrName,
                 'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
-                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent, // ⭐⭐
+                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
                 'casePageId' : caseId,  // 블럭아이디
-                'workId' : document.getElementById("TitleWid").value   // ⭐⭐
+                'workId' : document.getElementById("TitleWid").value
             };
 
-            fetch("modifyAttrName", {
-                method : 'post',
-                body : JSON.stringify(data),
-                headers : { "Content-Type": "application/json" }
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log(result);
-            })
-            .catch(err => console.log(err));
+            modifyAttrNameAjax(data);
         }
 
     }
+}
+
+function modifyAttrNameAjax(data){
+/*
+    let data = {
+        'dbUseId' : dui,
+        'attrName' : attrName,
+        'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+        'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+        'casePageId' : caseId,  // 블럭아이디
+        'workId' : document.getElementById("TitleWid").value
+    };
+*/
+    fetch("modifyAttrName", {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
 }
 
 // DB에 속성 넘버링 업데이트

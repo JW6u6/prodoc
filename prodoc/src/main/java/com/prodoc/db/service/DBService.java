@@ -23,4 +23,5 @@ public interface DBService {
 	
 	// 페이지 호출시 페이지 타입을 조회
 	public String pageTypeCheck(PageVO pageVO);
+	public DBBlockVO getDatabaseInfo(String pageId);
 }

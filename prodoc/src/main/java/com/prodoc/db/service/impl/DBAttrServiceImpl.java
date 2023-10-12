@@ -90,4 +90,9 @@ public class DBAttrServiceImpl implements DBAttrService {
 		return mapper.attrNumberUpdate(vo);
 	}
 
+	@Override
+	public List<PageAttrVO> addAttridSelect(PageAttrVO vo) {
+		return mapper.addAttridSelect(vo);
+	}
+
 }

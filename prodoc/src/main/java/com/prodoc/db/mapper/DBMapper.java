@@ -27,4 +27,5 @@ public interface DBMapper {
 	
 	// 페이지 호출시 페이지 타입을 조회
 	public void pageTypeCheck(PageVO pageVO);
+	public DBBlockVO getDatabaseInfo(String pageId);	//하위 페이지 아이디로 데이터베이스의 DBBlock 조회
 }

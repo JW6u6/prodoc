@@ -200,7 +200,7 @@ function dropPage(event){
     const {
         offsetX, offsetY
     } = event;
-                                                                                                                    const center = targetHeight / 2;
+    const center = targetHeight / 2;
     console.log(offsetY , center)
     if(offsetY > center){
         insertAfter(dragItem, targetItem.parentElement);
@@ -390,17 +390,20 @@ function selectPage(pageId) {
         app.insertAdjacentHTML("beforebegin", pageTitle);
         // 페이지 타입 체크
         let type = await pageTypeCheck(pageId);
+        console.log("페이지 타입 체크", type);
         if(type=="DATABASE"){
             // 데이터베이스일 때
             openDatabase(pageId);
         }else if(type=="DATA_PAGE"){
             // DB의 하위페이지일 때
+            createDataPage(pageId);
+            makeBlockPage(pageId, type);
         }else {
             // 일반 페이지일 때
             //페이지 뿌려주기
             pageBlockId = pageId;
             workBlockId = item.workId;
-            makeBlockPage(pageId);
+            makeBlockPage(pageId, type);
         }
 
 

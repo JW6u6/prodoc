@@ -14,6 +14,7 @@ public interface DBAttrService {
 	public void modifyAttrName(PageAttrVO vo);
 	public void modifyDBPage(PageAttrVO vo);
 	public int attrNumberUpdate(PageAttrVO vo);
+	public List<PageAttrVO> addAttridSelect(PageAttrVO vo);
 	
 	public int updateAttrContent(PageAttrVO vo);
 	public String insertAttrContent(PageAttrVO vo);
