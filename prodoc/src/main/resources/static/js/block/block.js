@@ -1,11 +1,13 @@
-// Spring에 등록시 빈값으로 만들기
-const SERVER_URL = "";
+//DATABASE, DATA_PAGE, PAGE
 
-let pageBlockId = "";
-let workBlockId = "";
-function makeBlockPage(pageId) {
-  document.querySelector(".container").innerHTML = "";
-  showBlocks(pageId);
+function makeBlockPage(pageId, type = "PAGE") {
+  if (type === "DATA_PAGE") {
+    document.querySelector(".container").innerHTML = "";
+    showBlocks(pageId, type);
+  } else if (type === "PAGE") {
+    document.querySelector(".container").innerHTML = "";
+    showBlocks(pageId);
+  }
 }
 
 //어떻게 해결방법이 없나?
@@ -82,25 +84,56 @@ function sendData(isExistData) {
       const dataList = data[displayId];
       const lastObjOfList = dataList[dataList.length - 1];
       updateDBBlock({ displayId, workId, ...lastObjOfList });
+      const socketEventObj = {
+        eventType,
+        displayId,
+        workId,
+        ...lastObjOfList,
+      };
+      sendSocketEvent(socketEventObj);
     }
   });
+}
+
+function sendSocketEvent(socketEventObj) {
+  if (stompClient.connected) {
+    stompClient.publish({
+      destination: `/topic/collaboration/test`,
+      body: JSON.stringify(socketEventObj),
+    });
+  } else {
+    console.log("stomp is not connected");
+  }
 }
 
 /**
  *  페이지 요청함수
  * @param {string} pageId - 페이지아이디
  */
-function showBlocks(pageId) {
+function showBlocks(pageId, type = "PAGE") {
   const container = document.querySelector(".container");
   container.innerHTML = "";
-  fetch(SERVER_URL + "/block/get?pageId=" + pageId, {
+  fetch("/block/get?pageId=" + pageId, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   })
     .then((res) => res.json())
-    .then((data) => {
+    .then(async (data) => {
+      // 트리탐색 재귀
+      async function displayChildBlock(blocks, childBlocks) {
+        for (const block of blocks) {
+          const displayId = block.dataset.blockId;
+          for (let i = 0; i < childBlocks.length; i++) {
+            if (displayId === childBlocks[i].parentId) {
+              await asyncChildDisplay(childBlocks[i], block);
+              childBlocks.splice(i, 1);
+              i--;
+            }
+          }
+        }
+      }
       blockCount = data.length + 1;
       let parentBlocks = [];
       let childBlocks = [];
@@ -130,33 +163,25 @@ function showBlocks(pageId) {
           parentBlocks.push(blockObj);
         }
       });
-      parentBlocks.forEach(async (parent) => {
-        const temp = await updateTemplate(parent);
-        displayBlock(temp);
-      });
-      let count = 0;
-      while (childBlocks.length > 0) {
-        const parents = document.querySelectorAll(".prodoc_block");
-        parents.forEach(async (parentBlock) => {
-          const parentId = parentBlock.dataset.blockId;
-          for (let i = 0; i < childBlocks.length; i++) {
-            if (childBlocks[i].parentId === parentId) {
-              const temp = await updateTemplate(childBlocks[i]);
-              displayChildBlock(temp, parentBlock);
-              childBlocks.splice(i, 1);
-              i--;
-            }
-          }
-          if (childBlocks.length == 0) return false;
-        });
-        if (count > 1000) break;
+      for (const block of parentBlocks) {
+        await asyncDisplay(block);
       }
-
-      hljs.highlightAll();
+      const displayedBlock = document.querySelectorAll(".prodoc_block");
+      displayChildBlock(displayedBlock, childBlocks);
     })
     .catch((reject) => {
       console.log(reject);
     });
+}
+
+async function asyncDisplay(block, type) {
+  const template = await updateTemplate(block);
+  displayBlock({ template, type, element: null });
+}
+
+async function asyncChildDisplay(block, parent) {
+  const temp = await updateTemplate(block);
+  displayChildBlock(temp, parent);
 }
 
 /**
@@ -184,7 +209,7 @@ function showBlocks(pageId) {
  */
 async function getOneBlock(displayId) {
   let block = {};
-  await fetch(SERVER_URL + `/block/getOne?displayId=${displayId}`, {
+  await fetch(`/block/getOne?displayId=${displayId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -216,7 +241,7 @@ async function getOneBlock(displayId) {
  */
 async function createBlock2DB(blockObj) {
   blockObj.workId = workBlockId;
-  await fetch(SERVER_URL + "/block/create", {
+  await fetch("/block/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -249,7 +274,7 @@ function updateDBBlock(blockObj) {
   blockObj.workId = workBlockId;
   blockObj.pageId = pageBlockId;
   console.log(blockObj);
-  fetch(SERVER_URL + "/block/update", {
+  fetch("/block/update", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -268,7 +293,7 @@ function updateDBBlock(blockObj) {
 function deleteDBBlock(blockObj) {
   blockObj.workId = workBlockId;
   blockObj.pageId = pageBlockId;
-  fetch(SERVER_URL + "/block/delete", {
+  fetch("/block/delete", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -284,7 +309,7 @@ function deleteDBBlock(blockObj) {
  * @param {{displayId:string,title:string,description:string,imgAdrs:string,url:string,workId:string}} bookMarkObj
  */
 async function updateDBBookMark(bookMarkObj) {
-  await fetch(SERVER_URL + `/block/updateBookMark`, {
+  await fetch(`/block/updateBookMark`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -301,7 +326,7 @@ async function updateDBBookMark(bookMarkObj) {
  * @param {String} id - 북마크로 만들 블록의 아이디
  */
 async function createBookMark(id) {
-  await fetch(SERVER_URL + `/block/createBookMark`, {
+  await fetch(`/block/createBookMark`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -323,7 +348,7 @@ async function getBookMarkInfo(url) {
   if (url.length === 0) {
     return;
   }
-  await fetch(SERVER_URL + `/block/getMeta?url=${url}`)
+  await fetch(`/block/getMeta?url=${url}`)
     .then((res) => res.json())
     .then((data) => {
       object = data;
@@ -343,7 +368,7 @@ async function getBookMarkInfo(url) {
  */
 async function getBookMark(displayId) {
   let bookMarkObj = {};
-  await fetch(SERVER_URL + `/block/getBookMark?displayId=${displayId}`)
+  await fetch(`/block/getBookMark?displayId=${displayId}`)
     .then((res) => res.json())
     .then((data) => (bookMarkObj = data))
     .catch((reject) => {
@@ -360,7 +385,7 @@ async function getBookMark(displayId) {
  */
 async function getBlockFile(displayId) {
   let fileObj = {};
-  await fetch(SERVER_URL + `/block/getFile?displayId=${displayId}`)
+  await fetch(`/block/getFile?displayId=${displayId}`)
     .then((res) => {
       return res.json();
     })
@@ -379,7 +404,7 @@ async function getBlockFile(displayId) {
  * @param {string} displayId - 해당 블럭의 아이디
  */
 async function createFileBlock(displayId) {
-  await fetch(SERVER_URL + "/block/createFileBlock", {
+  await fetch("/block/createFileBlock", {
     method: "POST",
     body: JSON.stringify({ displayId }),
     headers: {
@@ -395,7 +420,7 @@ async function createFileBlock(displayId) {
  */
 async function uploadFile(formData) {
   let fileName = null;
-  await fetch(SERVER_URL + "/block/uploadFile", {
+  await fetch("/block/uploadFile", {
     method: "POST",
     body: formData,
   })
@@ -413,7 +438,7 @@ async function uploadFile(formData) {
  * @param {{displayId,path,upName,newName}} fileObj - 파일DB의 구성요소
  */
 async function updateFile(fileObj) {
-  await fetch(SERVER_URL + "/block/upFileBlock", {
+  await fetch("/block/upFileBlock", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -439,7 +464,7 @@ async function updateFile(fileObj) {
  */
 async function getBlockreplyList(blockId) {
   let replyData = [];
-  await fetch(SERVER_URL + `/reply/block?displayId=${blockId}`)
+  await fetch(`/reply/block?displayId=${blockId}`)
     .then((res) => res.json())
     .then((data) => (replyData = [...data]));
 
@@ -457,7 +482,7 @@ async function getBlockreplyList(blockId) {
 function registReply(replyObj) {
   const replyId = self.crypto.randomUUID();
   replyObj.replyId = replyId;
-  fetch(SERVER_URL + "/reply/regist", {
+  fetch("/reply/regist", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -496,7 +521,7 @@ function deleteReply(replyId, userId) {
 async function getPageReplyList(pageId) {
   let replyData = [];
 
-  await fetch(SERVER_URL + `/reply/page?pageId=${pageId}`)
+  await fetch(`/reply/page?pageId=${pageId}`)
     .then((res) => res.json())
     .then((data) => {
       console.log(data);

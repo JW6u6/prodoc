@@ -1,19 +1,79 @@
 /**
- * 블럭만들기 함수입니다.
- * @param {Object} template - 생성된 템플릿 오브젝트.
- *
+ * 블럭을 dom에 등록하는 함수
+ * @param {Object} displayObj - display에 필요한 Object.
+ * @param {Object} displayObj.template   - template 객체.
+ * @param {string} displayObj.type       - DATA_PAGE or PAGE
+ * @param {Element} displayObj.element   - 위치를 참조할 element
+ * @returns {Element}
  */
-function displayBlock(template) {
-  //부모가 있으면 부모의 아이템으로 아니면 문서쪽으로.
-  container.insertAdjacentHTML("beforeend", template.template);
+function displayBlock({ template, type, element }) {
+  if (type === "DATA_PAGE") {
+    const dbModalPage = document.querySelector(".dataPage_blocks");
+    dbModalPage.insertAdjacentHTML("beforeend", template.template);
+  } else {
+    if (element) {
+      element.insertAdjacentHTML("afterend", template.template);
+    } else {
+      container.insertAdjacentHTML("beforeend", template.template);
+    }
+  }
+
   const newblock = document.querySelector(
     `[data-block-id="${template.displayId}"]`
   );
   handlingBlockEvent(newblock);
 
-  if (newblock.querySelector(".content")) {
-    newblock.querySelector(".content").focus();
+  return newblock;
+}
+
+// 블럭 포커스
+function focusBlock(block) {
+  const blockContent = block.querySelector(".content");
+  if (blockContent) {
+    placeCaretAtEnd(blockContent);
   }
+}
+
+//주워온 커서 맨끝 이동시키기
+function placeCaretAtEnd(element) {
+  element.focus();
+  if (
+    typeof window.getSelection != "undefined" &&
+    typeof document.createRange != "undefined"
+  ) {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (typeof document.body.createTextRange != "undefined") {
+    const textRange = document.body.createTextRange();
+    textRange.moveToElementText(element);
+    textRange.collapse(false);
+    textRange.select();
+  }
+}
+
+/**
+ * 소켓을 사용해 dom에 등록하는 함수
+ * @param {Object} displayObj - display에 필요한 Object.
+ * @param {Object} displayObj.template   - template 객체.
+ * @param {string} displayObj.type       - DATA_PAGE or PAGE
+ * @param {Element} displayObj.element   - 위치를 참조할 element
+ * @param {isSocket} displayObj.isSocket - 소켓에서 호출하는지의 여부
+ */
+function socketDisplayBlock({ template, type, element }) {
+  displayBlock({ template, type, element });
+  const enteredBlockId = element ? element.dataset.blockId : null;
+  const socketEventObj = {
+    eventType: "CREATEBLOCK",
+    template,
+    type,
+    enteredBlockId,
+    upUser: blockSessionUserId,
+  };
+  sendSocketEvent(socketEventObj);
 }
 
 /**
@@ -33,10 +93,11 @@ const displayChildBlock = (template, parent) => {
   handlingBlockEvent(newblock);
 };
 
-function makeBlockTemplate() {
+// 기본적인 블럭을 만드는 함수.
+function makeBlockTemplate(order) {
   // 블럭을 새로 생성하면
-  const displayId = self.crypto.randomUUID();
-  const rowX = blockCount * 1024;
+  const displayId = uuidv4();
+  const rowX = order ? order : blockCount * 1024;
   blockCount += 1;
   //블럭저장
   const blockObj = {
@@ -76,25 +137,29 @@ async function updateTemplate({
   color,
   backColor,
 }) {
-  let block = templateMaker(
-    type,
-    text,
-    color ? color : "",
-    backColor ? backColor : ""
-  );
+  let block = null;
   if (type === "DATABASE") {
     block = createDBblock({ displayId, content: "새 데이터베이스" });
+  } else {
+    block = templateMaker(
+      type,
+      text,
+      color ? color : "",
+      backColor ? backColor : ""
+    );
   }
+
   if (!displayId) {
-    displayId = self.crypto.randomUUID();
-    console.log(type);
+    displayId = uuidv4();
     const blockSaveObj = {
       displayId,
       blockId: type,
       rowX: order,
       pageId: pageBlockId,
     };
-    await createBlock2DB(blockSaveObj);
+    if (type === "DATABASE") {
+      await createBlock2DB(blockSaveObj);
+    }
   }
   let controlPanel = `
   <div class="control control_hide" data-block-id="${displayId}" draggable="true">
