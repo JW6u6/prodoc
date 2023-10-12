@@ -206,8 +206,8 @@ function dropPage(event){
     // if(targetItem.dataset.level == 3){
     //     return;
     // } else if(targetItem.dataset.level == 2 && )
-        
-    if(offsetY < center +( targetHeight / 4 ) && offsetY > center - ( targetHeight /4)){ 
+    let targetArea = targetHeight/4 ;   
+    if(offsetY < center + targetArea && offsetY > center - targetArea){ 
         console.log("으아아아앙아아아앆!!")
         let workId = targetItem.closest('.Work').dataset.id;
         let pageId = dragItem.dataset.id;
@@ -232,7 +232,7 @@ function dropPage(event){
         })
         .catch(err => console.log(err))
     } else 
-    if(offsetY > center +( targetHeight / 4 )){
+    if(offsetY > center + targetArea){
         insertAfter(dragItem, targetItem.parentElement);
         console.log('뒤')
         let pageId = dragItem.dataset.id;
@@ -435,6 +435,12 @@ function pageList(wId, target) {
             })
             document.querySelectorAll('#side .pageListShow').forEach(Pages => {
                 Pages.addEventListener('click', function (e) {
+                    let clickSession = sessionStorage.getItem("clickedList")
+                    if(clickSession == null){
+                        clickSession = [];
+                    }else{
+                        clickSession = JSON.parse(clickSession);
+                    }
                     let target = e.target;
                     if (target.classList.contains("clicked")) {
                         target.classList.remove("clicked");
@@ -443,6 +449,8 @@ function pageList(wId, target) {
                     } else {
                         target.classList.add("clicked");
                         let pageClick = e.currentTarget.parentElement.dataset.id;
+                        clickSession.push(pageClick)
+                        sessionStorage.setItem("clickedPageList",JSON.stringify(clickSession))
                         pageInPage(pageClick, target);
                     }
                 })
