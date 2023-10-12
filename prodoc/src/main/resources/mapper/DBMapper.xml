@@ -114,4 +114,10 @@
 			, #{numbering}
 		)}
 	</update>
+	
+	<select id="getDatabaseInfo" parameterType="String" resultType="DBBlockVO">
+		SELECT * 
+		FROM tbl_dbblock 
+		WHERE page_id = ( SELECT parent_id FROM tbl_page WHERE page_id = #{pageId} )
+	</select>
 </mapper>
