@@ -76,6 +76,7 @@ const blockHandler = {
       `.prodoc_block[data-block-id="${blockId}"]`
     );
     deleteBlock(targetBlock);
+
     closeBlockModal();
   },
   // 댓글 관련 함수 호출
@@ -118,7 +119,7 @@ const blockHandler = {
         creUser: blockSessionUserId,
         content: replyInput.value,
         displayId: blockId,
-        pageId: workBlockId,
+        pageId: pageBlockId,
         mentionList: null, // 어케할까
       });
       replyInput.value = "";
@@ -192,11 +193,17 @@ const menuHandler = {
 
 const deleteBlock = (block) => {
   //토글일시 전체삭제
+  const displayId = block.dataset.blockId;
   if (block.dataset.blockType === "TOGGLE") {
     deleteToggle(block);
   }
   block.remove();
-  deleteDBBlock({ displayId: block.dataset.blockId });
+  deleteDBBlock({ displayId });
+  const socketEventObj = {
+    eventType: "DELETEBLOCK",
+    displayId,
+  };
+  socketEventObj(socketEventObj);
 };
 
 /**

@@ -47,12 +47,22 @@ container.addEventListener("mouseup", (e) => {
     const isSeparator = prevBlock.querySelector(".separator");
     if (isSeparator) return;
     if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
-      const temp = makeBlockTemplate();
-      displayBlock(temp); // 문서쪽으로 만듦
+      const template = makeBlockTemplate();
+      const displayObj = {
+        template,
+        type: null,
+        element: null,
+      };
+      displayBlock(displayObj); // 문서쪽으로 만듦
     }
   } else {
-    const temp = makeBlockTemplate();
-    displayBlock(temp); // 문서쪽으로 만듦
+    const template = makeBlockTemplate();
+    const displayObj = {
+      template,
+      type: null,
+      element: null,
+    };
+    displayBlock(displayObj); // 문서쪽으로 만듦
   }
 });
 
@@ -82,7 +92,6 @@ function dragover_handler(event) {
   //dragover의 기본 동작 막기 (drop을 위한 작업)
   event.preventDefault();
   event.stopPropagation();
-  
 
   //드래그중 마우스 커서 모양을 정하기
   event.dataTransfer.dropEffect = "move";
@@ -163,7 +172,7 @@ function toggleEvent(targetItem, dragItem) {
 }
 
 // 새로만든 drophandler. 바뀐게 있나?
-function drop_handler(event) {
+async function drop_handler(event) {
   event.stopPropagation();
   let parentId = null;
   let newOrder = null;
@@ -178,22 +187,30 @@ function drop_handler(event) {
   const targetContent = event.target;
   const targetType = targetItem.dataset.blockType;
   const targetBlockOrder = Number(targetItem.dataset.blockOrder);
+  const targetBlockId = targetItem.dataset.blockId;
+  const dragBlockId = dragItem.dataset.blockId;
 
-  if(document.querySelector(".dragging").classList.contains("db_block")) return;
-  if(event.target.nodeName==="IMG") return;
+  const socketEventObj = {
+    eventType: "DRAG",
+    targetBlockId,
+    dragBlockId,
+    dragState,
+    upUser: blockSessionUserId,
+  };
+  socketEventObj(socketEventObj);
+
+  if (document.querySelector(".dragging").classList.contains("db_block"))
+    return;
+  if (event.target.nodeName === "IMG") return;
 
   //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
   if (dragItem.parentElement.classList.contains("block_column")) {
     isColumn = dragItem.parentElement;
   }
-
-  console.log(targetContent);
-
-  console.log(event);
-
+  console.log(targetItem);
+  console.log(targetItem.previousElementSibling);
   // 드래그상태에 따른 작업
   if (targetContent.classList.contains("toggle_block")) {
-    console.log("???");
     parentId = toggleEvent(targetItem, dragItem);
   } else if (dragState === DRAG_STATE.TOP) {
     if (targetItem.previousElementSibling) {
@@ -207,7 +224,10 @@ function drop_handler(event) {
       newOrder = targetBlockOrder / 2;
     }
     targetItem.parentElement.insertBefore(dragItem, targetItem);
-  } else if (dragState === DRAG_STATE.BOTTOM) {
+  } else if (
+    dragState === DRAG_STATE.BOTTOM ||
+    dragState === DRAG_STATE.LSIDE
+  ) {
     if (targetType === "TOGGLE") {
       console.log(targetType);
       // toggleEvent(targetItem, dragItem);
@@ -246,7 +266,7 @@ function drop_handler(event) {
     // 사이드 이동시 새로운 컬럼이라는 블럭을 생성.
     const order = targetItem.dataset.blockOrder;
     // 새로운 템플릿 컬럼
-    const temp = updateTemplate({
+    const temp = await updateTemplate({
       displayId: null,
       type: "COLUMN",
       order,
@@ -303,18 +323,12 @@ function drop_handler(event) {
       rowX: 1024,
     });
     return;
-  } else if (dragState === DRAG_STATE.LSIDE) {
-    insertAfter(dragItem, targetItem);
   }
 
   dragItem.dataset.blockOrder = newOrder;
 
   // 만약 숫자가 이상하면 새로부여
-  if (!Number.isInteger(newOrder)) {
-    resetOrder();
-  } else if (dragItem.dataset.blockOrder === targetItem.dataset.blockOrder) {
-    resetOrder();
-  }
+  checkAndResetOrder(newOrder);
 
   // 드래그한게 OLIST면 OList의
   if (
@@ -339,7 +353,17 @@ function drop_handler(event) {
   updateDBBlock(updateObj);
 }
 
-function resetOrder() {
+/**
+ * 새로 부여된 order이 비정상적일때 모든 블럭의 순서를 재할당하는 함수.
+ * @param {Number} newOrder - 새로 부여된 order
+ */
+function checkAndResetOrder(newOrder) {
+  if (!Number.isInteger(newOrder)) resetOrder();
+}
+
+// 숫자 재정렬
+function resetOrder(isSocket = false) {
+  // 첫번째만 검색
   const allBlock = document.querySelectorAll(".container > .prodoc_block");
   allBlock.forEach((block, index) => {
     blockOrder = (index + 1) * 1024;
@@ -348,8 +372,16 @@ function resetOrder() {
       displayId: block.dataset.blockId,
       rowX: blockOrder,
     };
-    updateDBBlock(updateObj);
+    if (!isSocket) {
+      updateDBBlock(updateObj);
+    }
   });
+  if (!isSocket) {
+    const socketEventObj = {
+      eventType: "RESETORDER",
+    };
+    socketEventObj(socketEventObj);
+  }
 }
 
 //insertAfter - 요소 뒤에 삽입.
