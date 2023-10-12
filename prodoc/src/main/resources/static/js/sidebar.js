@@ -327,21 +327,20 @@ document.querySelector('#sidebar').children[2].addEventListener('click', functio
     subCheck = false;
 });
 
-
+//
 // 인사이트 내 사이드바에 페이지 목록 불러옴
 function pageList(wId, target) {
-    let insertDiv = target.parentElement.querySelector(".pageMain");
-    let url = "/pageList?workId=" + wId;
-    fetch(url)
-        .then((res) => {
-            return res.json();
-        })
-        .then(data => {
-            data.forEach(item => {
-                console.log(item);
-                let text = `<div class= "Page" data-id="${item.pageId}" data-level="2" data-number="${item.numbering}" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+  let insertDiv = target.parentElement.querySelector(".pageMain");
+  let url = "/pageList?workId=" + wId;
+  fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then(data => {
+            data.forEach(item=> {
+                let text = `<div class= "Page" data-id="${item.pageId}" data-name="${item.pageName}" data-level="2" data-number="${item.numbering}"><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
-                            <div class = "pageMain"></div>
+                            <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             </div>`
                 insertDiv.insertAdjacentHTML("beforeend", text);
             })
@@ -371,9 +370,50 @@ function pageList(wId, target) {
                     selectPage(pageId);
                 })
             })
+            
+            //페이지 이름 변경 모달 열기 :: 은주
+			document.querySelectorAll(".editPN").forEach(tag => {
+				let pid = tag.parentElement.dataset.id
+				let pname = tag.parentElement.dataset.name
+				tag.addEventListener('click', function(e){
+					PNmod.className ="view";
+					PNmod.dataset.id= pid;
+					let newPName = document.querySelector("#editPageMod input");
+					 newPName.value = pname;
+				});
+			});
+            
         })
         .catch((err) => console.log('err: ', err));
 }
+
+//페이지 이름 변경 모달 내 클릭 이벤트 :: 은주
+let PNmod = document.querySelector("#editPageMod");
+document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
+	let value = this.previousElementSibling.value;
+	let id = this.closest("div").dataset.id;
+	let URL = `/pageNewName?pageId=${id}&pageName=${value}`;
+	fetch(URL, {
+		method: "GET",
+	    headers: {
+	      "Content-Type": "application/json",
+	    }
+	}).then(response => response.json())
+	.then(res => {
+		if(res.result){
+			document.querySelectorAll("#side .Page").forEach(pageitem => {
+				if(pageitem.dataset.id == id){
+					pageitem.children[1].innerText = value;
+					pageitem.dataset.name = value;
+				}
+			});
+		}else{
+			alert('알 수 없는 이유로 페이지 이름 변경에 실패하였습니다.');
+		}
+		PNmod.className ="hide";
+	}).catch(err => console.log(err));
+});
+
 // 페이지 선택시 PID 불러오기 + 리스트노출.
 function selectPage(pageId) {
   let url = "/pageInfo?pageId=" + pageId;

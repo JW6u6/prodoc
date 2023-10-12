@@ -38,4 +38,7 @@ public interface PageMapper {
 	
 	//페이지메뉴 알림 끄기켜기 표시
 	public int selectTurnOn(PageVO pageVO);
+	
+	//페이지 이름 변경
+	public int newName(PageVO pageVO);
 }
