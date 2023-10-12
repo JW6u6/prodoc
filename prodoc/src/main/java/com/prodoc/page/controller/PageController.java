@@ -62,7 +62,12 @@ public class PageController {
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-
+	
+	@PostMapping("/pageUpdate")
+	public int pageUpdate(@RequestBody PageVO pageVO) {
+		return pageService.updatePage(pageVO);
+	}
+	
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();
@@ -114,6 +119,22 @@ public class PageController {
 	@GetMapping("/pageNotify")
 	public int selectPageOnOff(PageVO pageVO) {
 		return pageService.onOff(pageVO);
+	}
+
+	@PostMapping("/LockNotify")
+	public void pageLockNoti(@RequestBody PageVO pageVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		((PageVO) pageVO).setCreUser(user.getEmail());
+		pageService.LockAlam(pageVO);
+	}
+	
+	//페이지 새이름
+	@GetMapping("/pageNewName")
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+		PageVO page = new PageVO();
+		page.setPageId(pageId);
+		page.setPageName(pageName);
+		return pageService.newName(page);
 	}
 
 }

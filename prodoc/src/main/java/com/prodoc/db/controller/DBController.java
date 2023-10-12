@@ -1,6 +1,7 @@
 package com.prodoc.db.controller;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +51,12 @@ public class DBController {
 	}
 
 	@GetMapping("getChildList")	// DBCase displayId로 자식요소 조회
-	public Map<String, Object> getChildList(@RequestParam String parentId){
+	public List<Map<String, Object>> getChildList(@RequestParam String parentId){
+		List<Map<String, Object>> resultList = new ArrayList<>();	// 하위 정보를 순서대로 담기위한 리스트
 		Map<String, Object> childList = new HashMap<String, Object>();	// 반환할 하위 정보를 담은 맵
 		PageVO parentVO = dbService.getDBPageInfo(parentId);				// case page의 VO 담기
 		childList.put("parent", parentVO);
+		resultList.add(childList);
 		List<BlockVO> blockList = dbService.getDBPageList(parentId);		// DB하위 리스트(블럭)
 		for(int i=0; i<blockList.size(); i++) {							// 하위블럭의 블럭아이디로 attr, 해당pageVO 조회
 			Map<String, Object> infoMap = new HashMap<String, Object>();		// 한 블럭당 가질 정보 맵
@@ -63,11 +66,9 @@ public class DBController {
 			infoMap.put("block", blockList.get(i));
 			infoMap.put("page", pageVO);
 			infoMap.put("attrList", attrList);
-			childList.put(key, infoMap);	// 하위블럭ID, 블럭정보map
+			resultList.add(infoMap);	// 하위블럭ID, 블럭정보map
 		}
-		System.out.println("///////////////////////////////////////////////////////");
-		System.out.println(childList);
-		return childList;
+		return resultList;
 	}
 	
 	@PostMapping("updateCase")			// DBCase의 레이아웃(caseId) 변경
@@ -188,5 +189,37 @@ public class DBController {
 		// 블럭히스토리(DB 히스토리 업데이트), attrNameUpdate()
 		attrService.attrNumberUpdate(vo);
 		dbService.databaseUpdate(vo);
+	}
+	
+	@PostMapping("dbpageNumbering")
+	public void dbpageNumbering(@RequestBody PageAttrVO vo) {
+		dbService.dbpageNumbering(vo);
+	}
+	
+	// 페이지 호출시 페이지 타입을 체크
+	@GetMapping("page/pageTypeCheck")
+	public String pageTypeCheck(@RequestParam String pageId) {
+		PageVO vo = new PageVO();
+		vo.setPageId(pageId);
+		dbService.pageTypeCheck(vo);
+		
+		return vo.getCaseId();
+	}
+	
+	@GetMapping("getDataPageAttr")
+	public List<PageAttrVO> getDataPageAttr(@RequestParam String pageId){
+		DBBlockVO dbblock = new DBBlockVO();
+		dbblock.setPageId(pageId);
+		dbblock = dbService.getDBblock(dbblock);
+		List<PageAttrVO> attrList = attrService.getPageAttr(dbblock.getDisplayId());
+		return attrList;
+	}
+	
+	@GetMapping("getDatabaseBlock")
+	public String getDatabaseBlock(@RequestParam String pageId) {
+		DBBlockVO dbblock = new DBBlockVO();
+		dbblock.setPageId(pageId);
+		dbblock = dbService.getDBblock(dbblock);
+		return dbblock.getDisplayId();
 	}
 }

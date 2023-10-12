@@ -324,6 +324,7 @@ function updateAttrContent(data){
     data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     data['workId'] = document.getElementById("TitleWid").value;
     data['casePageId'] = eventDiv.closest("[data-block-id]").getAttribute("data-block-id");
+    console.log(data);
     fetch("updateAttrContent", {
         method : 'post',
         body : JSON.stringify(data),
@@ -580,7 +581,7 @@ function changeState(eTarget){
             data['attrContent'] = e.target.innerText;
             nowStateDiv.innerText = e.target.innerText;
             closeBtn.click();
-            // updateAttrContent(data);
+            updateAttrContent(data);
             console.log(eTarget.closest("[data-layout]"))
             // 보드 레이아웃에서 속성 변경했을 때 element 이동
             if(eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
@@ -931,6 +932,20 @@ async function modifyAttrName(e){
 // DB에 속성 넘버링 업데이트
 function attrNumberUpdate(data){
     fetch("attrNameUpdate", {
+        method : 'post',
+        body : JSON.stringify(data),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
+}
+
+// 페이지 블럭 drop 이벤트 실행했을 때 넘버링 업데이트
+function dbpageNumbering(data){
+    fetch("dbpageNumbering", {
         method : 'post',
         body : JSON.stringify(data),
         headers : { "Content-Type": "application/json" }

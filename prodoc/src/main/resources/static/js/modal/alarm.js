@@ -25,6 +25,7 @@ armMenu.forEach((tag, idx, list) => {
 	});
 });
 
+
 //목록 가져오는 함수
 function showAlarmList(type){
 	let obj = {};
@@ -37,14 +38,30 @@ function showAlarmList(type){
 	})
 	.then(response => response.json())
 	.then(data => {
+		console.log(data);
+		if(type=='all'){
+		let alarms = insertDiv.querySelectorAll('.alarms');
+		alarms.forEach(work => {
+			work.remove();
+		})
 	    data.result.forEach(item=>{
 			console.log(item)
-	    	let text = `<div class="alarms"><img src = "images/${item.profile}"><span class="whoTagMe">${item.creUserName}</span></div>`
-	    	insertDiv.innerHTML = text;
+	    	let text = `<div class="alarms" data-id="${item.pageId}"><img src = "images/${item.profile}">
+			<span class="whoTagMe">${item.creUserId}님이 내 글에 댓글을 달았습니다</span>
+			<span>${item.replyId}</span></div>`
+	    	insertDiv.insertAdjacentHTML("beforeend",text);
 	    })
+		document.querySelectorAll('.alarms').forEach(items => {
+			items.addEventListener('click', function(e){
+				selectPage(e.currentTarget.dataset.pageid);
+				
+			});
+		})
+	}
 	})
 	.catch(error => {
     console.error('오류 발생:', error);
+
 })
 	
 }

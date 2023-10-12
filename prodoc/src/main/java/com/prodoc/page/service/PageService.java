@@ -1,11 +1,14 @@
 package com.prodoc.page.service;
 
+
 public interface PageService {
 
 	public String insertPage(PageVO pageVO);
 
 	// 페이지 잠금
 	public boolean LockCheckPage(PageVO pageVO);
+	
+	public int updatePage(PageVO PageVO);
 
 	// 페이지 삭제여부(페이지메뉴)
 	public boolean deleteCheckPage(PageVO pageVO);
@@ -18,6 +21,9 @@ public interface PageService {
 
 	public int onOff(PageVO pageVO);
 	
+	//페이지 잠금해제 요청(일반 사용자)
+	public void LockAlam(PageVO pageVO);
+
 	//페이지 이름 변경
 	public String newName(PageVO pageVO);
 }

@@ -56,6 +56,11 @@ public class NotifyServiceImpl implements NotifyService {
 		return  count;
 	}
 
+	@Override
+	public int donTDupleLock(String pageId) {
+		return notiMapper.notLockDuple(pageId);
+	}
+
 //	@Override
 //	public int noNotify(NotifyVO vo) {
 //		return 0;

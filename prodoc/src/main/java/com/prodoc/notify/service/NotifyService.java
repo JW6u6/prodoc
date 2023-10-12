@@ -21,4 +21,6 @@ public interface NotifyService {
 	//빨간 점 알림 안받기 - 시인언니
 	//public int noNotify(NotifyVO vo);
 
+	//페이지 잠금/잠금해제 요청이 중복으로 들어가는걸 방지하기위해 조회결과수 불러옴
+	public int donTDupleLock(String pageId);
 };

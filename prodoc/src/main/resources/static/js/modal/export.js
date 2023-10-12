@@ -1,8 +1,9 @@
-import { jsPDF } from "./jspdf.js";
+import { jsPDF } from "jspdf";
 
 document.querySelector('#exportPg').addEventListener('click', function (e) {
     let exportpg = document.querySelector('#exportModal');
     exportpg.classList.remove('hide');
+    console.log(pageBlockId);
 })
 
 function exportModal() {
@@ -17,3 +18,4 @@ document.querySelector('#fromExport').addEventListener('click', function (e) {
 });
 
 // malgun => 맑은고딕???폰트
+//console.log(malgun);

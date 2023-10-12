@@ -24,6 +24,13 @@
   		order by numbering
   	</select>
   	
+  	<update id="updatePage">
+  		update tbl_page
+		set work_id = #{workId},
+			numbering = (select max(numbering)+512 from tbl_page)
+		where page_id = #{pageId}
+  	</update>
+  	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">
  		{call insert_page(
  						#{pageId, mode=OUT, jdbcType=VARCHAR, javaType=string}
@@ -101,6 +108,8 @@
 		and email = #{email}
 	</select>
 
+
+	<!-- 페이지 새이름 -->
 	<update id="newName" parameterType="pageVO">
 		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
 	</update>

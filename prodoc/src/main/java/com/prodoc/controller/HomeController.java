@@ -14,8 +14,8 @@ public class HomeController {
 		return "content/home";
 	}
 	
-	@RequestMapping(value = "/test1", method=RequestMethod.GET)
+	@RequestMapping(value = "/shareWith", method=RequestMethod.GET)
 	public String gotest(HttpServletRequest request) {
-		return "content/test1";
+		return "content/shareWith";
 	}
 }

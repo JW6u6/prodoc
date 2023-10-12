@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/default_layout}">
+<th:block layout:fragment="head">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+	<script src="/js/app.js"></script>
+	<!--/* css */-->
+	<link th:href="@{css/common.css}" rel="stylesheet" />
+	<link th:href="@{css/block.css}" rel="stylesheet" />
+	<title>PRODOC</title>
+</th:block>
+
+<body>
+	<th:block layout:fragment="header" th:include="@{fragments/header}"></th:block>
+	<input id="mainPID" type="text" style="visibility: hidden;"th:value="${param.pageId}">
+	<!-- 링크로 공유된 페이지 보여주는 곳 -->
+	<div class="container"></div>
+
+	</th:block>
+	<script>
+	
+		let pid = document.querySelector('#mainPID').value;
+		const container = document.querySelector(".container");
+
+		async function updateTemplate({
+			  displayId,
+			  type,
+			  text = "",
+			  order,
+			  color,
+			  backColor,
+			}) {
+			  let block = templateMaker(
+			    type,
+			    text,
+			    color ? color : "",
+			    backColor ? backColor : ""
+			  );
+			  if (type === "DATABASE") {
+			    block = createDBblock({ displayId, content: "새 데이터베이스" });
+			  }
+			  if (!displayId) {
+			    displayId = self.crypto.randomUUID();
+			    console.log(type);
+			    const blockSaveObj = {
+			      displayId,
+			      blockId: type,
+			      rowX: order,
+			      pageId: pageBlockId,
+			    };
+			    await createBlock2DB(blockSaveObj);
+			  }
+			  let controlPanel = `
+			  <div class="control control_hide" data-block-id="${displayId}" draggable="true">
+			  <button class="attrBtn">A</button>
+			  <button>H</button>
+			  </div>`;
+			  if (type === "COLUMN") {
+			    controlPanel = "";
+			  }
+			  const template = `
+			        <div class="prodoc_block" data-block-type="${type}" data-block-id="${displayId}" data-block-order="${order}">
+			            ${controlPanel}
+			            ${block}
+			        </div>
+			        `;
+			  return { template, displayId };
+			}
+		
+		function templateMaker(
+				  type = "TEXT",
+				  text = "",
+				  color = "black",
+				  backColor = "white"
+				) {
+				  // 기본적인 텍스트 블록(생성시 기본값)
+				  const textblock = ` 
+				  <div class="block_wrapper">
+				    <div class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</div>
+				  </div>`;
+
+				  // h1
+				  const h1 = `
+				  <div class="block_wrapper">
+				    <h2 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h2>
+				  <div>
+				  `;
+
+				  // h2
+				  const h2 = `
+				  <div class="block_wrapper">
+				    <h3 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h3>
+				  </div>
+				  `;
+
+				  // h3
+				  const h3 = `
+				  <div class="block_wrapper">
+				    <h4 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h4>
+				  </div>`;
+
+				  // hr
+				  const hr = `
+				  <div class="block_wrapper" style="display:flex;justify-content:center;align-items:center;padding:4px;">
+				    <div class="separator" style="border-bottom:1px solid black;height:1px; width:100%;"></div>
+				    </div>
+				  `;
+
+				  // 페이지 블록
+				  const block_page = `
+				  <div class="block_wrapper"><a class="content" href="#">${text}</a></div>
+				  `;
+
+				  //TODO 블록
+				  const block_todo = `
+				  <div style="width:100%" class="block_wrapper">
+				    <div style="display:flex;" class="block_todo">
+				      <input type="checkbox" disabled>
+				      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+				    </div>
+				  </div>`;
+
+				  // 파일 블록
+				  const block_file = `
+				    <div class="block_wrapper">
+				    <div class="content block_file">파일을 업로드하려면 클릭하세요.</div>
+				    </div>
+				  `;
+
+				  // 순서없는 리스트
+				  const block_uList = `
+				  <div style="width:100%" class="block_wrapper">
+				    <div style="display:flex;" class="u_list">
+				      <div>●</div>
+				      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+				    </div>
+				  </div> 
+				  `;
+
+				  //순서 있는 리스트
+				  const block_oList = `
+				    <div style="width:100%" class="block_wrapper">
+				      <div style="display:flex;" class="o_list">
+				        <div></div>
+				        <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+				      </div>
+				    </div>
+				  `;
+
+				  // 토글블럭
+				  const block_toggle = `
+				    <div class="block_wrapper">
+				      <div class="toggle_block content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+				      <div class="child_item"></div>
+				    </div>
+				    <div><button class="block_toggle_btn">></button></div>
+				  `;
+
+				  // 페이지 링크 블럭
+				  const block_pLink = `
+				  <div class="block_wrapper">
+				    <div class="content">
+				      pageLink
+				    </div>
+				  </div>
+				  `;
+
+				  // 이미지 블럭
+				  const block_img = `
+				  <div class="block_wrapper">
+				    <div class="content block_image">
+				      이미지를 추가하려면 클릭해주세요.
+				    </div>
+				  </div>`;
+
+				  // 주소를 입력하면 iframe을 동적으로 불러오기.
+				  /*
+				    1. 비디오 블럭인걸 알려주기
+				    2. 클릭하면 url 모달창 열기
+				    3. url 모달창에서 url을 입력
+				    4. url을 기반으로 iframe 생성
+				    5. 짜잔. 이 블럭은 교체불가능.
+				  */
+				  const block_video = `
+				  <div class="block_wrapper">
+				    <div class="content block_video">
+				      <div>비디오를 추가하려면 클릭하세요</div>
+				    </div>
+				  </div>`;
+
+				  // 북마크 블럭
+				  const block_bookMark = `
+				  <div class="block_wrapper">
+				    <div class="content block_bookmark">
+				      북마크를 추가하려면 클릭하세요
+				    </div>
+				  </div>`;
+
+				  // 디비블럭
+				  const block_db = `
+				  <div class="block_wrapper">
+				    <div class="content">
+				      db
+				    </div>
+				  </div>`;
+
+				  // 동기화 블럭
+				  const block_sync = `
+				  <div class="block_wrapper">
+				  <div class="content" contenteditable="true">
+				    db
+				  </div>
+				</div>`;
+
+				  // 2개의 열이 있는 블럭 (사이드 드래그)
+				  const block_column = `
+				    <div class="block_wrapper">
+				      <div class="content block_column child_item">
+				      </div>
+				    </div>
+				  `;
+
+				  let block = null;
+
+				  const blockType = {
+				    TEXT: textblock,
+				    H1: h1,
+				    H2: h2,
+				    H3: h3,
+				    LINE: hr,
+				    PAGE: block_page,
+				    TODO: block_todo,
+				    FILE: block_file,
+				    ULIST: block_uList,
+				    OLIST: block_oList,
+				    TOGGLE: block_toggle,
+				    PLINK: block_pLink,
+				    IMAGE: block_img,
+				    VIDEO: block_video,
+				    BOOKMARK: block_bookMark,
+				    DATABASE: block_db,
+				    SYNC: block_sync,
+				    COLUMN: block_column,
+				  };
+
+				  // 템플릿 블럭
+				  block = blockType[type];
+				  return block;
+				}
+		
+		function displayBlock(template) {
+			  //부모가 있으면 부모의 아이템으로 아니면 문서쪽으로.
+			  container.insertAdjacentHTML("beforeend", template.template);
+			  const newblock = document.querySelector(
+			    `[data-block-id="${template.displayId}"]`
+			  );
+
+			  if (newblock.querySelector(".content")) {
+			    newblock.querySelector(".content").focus();
+			  }
+			}
+		
+		function showBlocks(pageId) {
+			container.innerHTML = '';
+			fetch("/block/get?pageId=" + pageId, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				})
+				.then((res) => res.json())
+				.then((data) => {
+					blockCount = data.length + 1;
+					let parentBlocks = [];
+					let childBlocks = [];
+
+					data.forEach((item) => {
+						const {
+							displayId,
+							blockId,
+							content,
+							rowX,
+							parentId,
+							color,
+							backColor,
+						} = item;
+						const blockObj = {
+							displayId,
+							type: blockId,
+							text: content ? content : "",
+							order: rowX,
+							parentId,
+							color,
+							backColor,
+						};
+						if (blockObj.parentId) {
+							childBlocks.push(blockObj);
+						} else {
+							parentBlocks.push(blockObj);
+						}
+					});
+					parentBlocks.forEach(async (parent) => {
+						const temp = await updateTemplate(parent);
+						displayBlock(temp);
+					});
+					let count = 0;
+					while (childBlocks.length > 0) {
+						const parents = document.querySelectorAll(".prodoc_block");
+						parents.forEach(async (parentBlock) => {
+							const parentId = parentBlock.dataset.blockId;
+							for (let i = 0; i < childBlocks.length; i++) {
+								if (childBlocks[i].parentId === parentId) {
+									const temp = await updateTemplate(childBlocks[i]);
+									displayChildBlock(temp, parentBlock);
+									childBlocks.splice(i, 1);
+									i--;
+								}
+							}
+							if (childBlocks.length == 0) return false;
+						});
+						if (count > 1000) break;
+					}
+
+					// hljs.highlightAll();
+				})
+				.catch((reject) => {
+					console.log(reject);
+				});
+		}
+
+		showBlocks(pid);
+	</script>
+</body>
+
+</html>
