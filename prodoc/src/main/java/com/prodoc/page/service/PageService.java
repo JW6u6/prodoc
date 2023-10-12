@@ -10,6 +10,8 @@ public interface PageService {
 	
 	public int updatePage(PageVO PageVO);
 	
+	public int updateInPage(PageVO PageVO);
+	
 	public int updateNumPlus(PageVO PageVO);
 	
 	public int updateNumMinus(PageVO PageVO);

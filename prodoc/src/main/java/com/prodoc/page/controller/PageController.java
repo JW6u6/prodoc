@@ -62,12 +62,17 @@ public class PageController {
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-
+	
 	@PostMapping("/pageUpdate")
 	public int pageUpdate(@RequestBody PageVO pageVO) {
 		return pageService.updatePage(pageVO);
 	}
-
+	
+	@PostMapping("/inPageUpdate")
+	public int inPageUpdate(@RequestBody PageVO pageVO) {
+		return pageService.updateInPage(pageVO);
+	}
+	
 	@PostMapping("/pagePlus")
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
