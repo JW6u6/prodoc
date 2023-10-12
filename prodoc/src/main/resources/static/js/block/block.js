@@ -3,6 +3,7 @@ const subscribeTopics = [];
 
 //페이지를 불러오는 함수
 function makeBlockPage(pageId, type = "PAGE", element) {
+  //만약 구독을 하고있다면 구독해제
   if (subscribeTopics.length > 0) {
     const subs = subscribeTopics.pop();
     subs.unsubscribe();
@@ -14,6 +15,7 @@ function makeBlockPage(pageId, type = "PAGE", element) {
     document.querySelector(".container").innerHTML = "";
     showBlocks(pageId, type, element);
   }
+  // 페이지에 들어오면 페이지이름으로 구독시작.
   const blockSubscribe = stompClient.subscribe(
     `/topic/collaboration/${pageBlockId}`,
     (data) => {
@@ -62,6 +64,8 @@ function makeBlockPage(pageId, type = "PAGE", element) {
         // 캐릭캐릭체인지
         const blockType = socketDataObj.blockType;
         changeEvent(displayId, blockType);
+      } else if (eventType === "FOCUSIN") {
+      } else if (eventType === "FOCUSOUT") {
       }
     }
   );

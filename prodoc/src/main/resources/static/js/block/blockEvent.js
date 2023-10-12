@@ -19,12 +19,25 @@ function handlingBlockEvent(element) {
   element.addEventListener("mouseenter", mouseenter_handler);
   element.addEventListener("mouseleave", mouseleave_handler);
   element.addEventListener("focusin", (e) => {
+    //다른상대는 disabled.
+    //그리고 유저의 아이콘 보여주기.
     console.log(e);
     console.log("포커스인");
+    const socketEventObj = {
+      eventType: "FOCUSIN",
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
   });
   element.addEventListener("focusout", (e) => {
+    //다른상대는 disabled 해제
     console.log(e);
     console.log("포커스아웃");
+    const socketEventObj = {
+      eventType: "FOCUSOUT",
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
   });
 }
 const mouseenter_handler = (e) => {
