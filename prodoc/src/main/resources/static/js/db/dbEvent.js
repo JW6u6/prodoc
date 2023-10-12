@@ -11,7 +11,7 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
     else if (e.target.matches(".del-attr")) deleteAttr(e);
     else if (e.target.matches(".del-db-page")) deleteDBpage(e);
     else if (e.target.matches(".data_page")) getDatapageId(e);  // 데이터베이스에서 하위 페이지 클릭
-
+    else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
 
     // 속성 이벤트
     else if (e.target.matches(".attr-case")) updateContent(e);
@@ -26,17 +26,42 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
     // 페이지 모달 이벤트
 
 })
-document.querySelector(".container").addEventListener("keydown", e => { // 키보드 이벤트
-    console.log(e);
-    if (e.target.matches(".attr")) attrContentUpdate(e);
-    else if (e.target.matches(".attr-name")) modifyAttrName(e);
-})
-document.querySelector(".container").addEventListener("change", e => { // 체인지 이벤트
-    if (e.target.matches(".db-img-upload")) addAttrImage(e);
-    else if (e.target.matches(".db-file-upload")) addAttrFile(e);
 
-})
+// db블럭 클릭 제외 모든 이벤트
+function databaseAllEvent(){
+    const dbblock = document.querySelectorAll(".database_case");
 
+    dbblock.forEach(block => {
+        // 키다운 이벤트
+        block.addEventListener("keydown", e => {
+            if (e.target.matches(".attr")) attrContentUpdate(e);
+            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
+        });
+
+        // 체인지 이벤트
+        block.addEventListener("change", e => {
+            if (e.target.matches(".db-img-upload")) addAttrImage(e);
+            else if (e.target.matches(".db-file-upload")) addAttrFile(e);
+        })
+    });
+
+    const dataPage = document.querySelectorAll(".db_dataPage");
+    dataPage.forEach(page => {
+                // 키다운 이벤트
+        page.addEventListener("keydown", e => {
+            if (e.target.matches(".attr")) attrContentUpdate(e);
+            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
+        });
+
+        // 체인지 이벤트
+        page.addEventListener("change", e => {
+            if (e.target.matches(".db-img-upload")) addAttrImage(e);
+            else if (e.target.matches(".db-file-upload")) addAttrFile(e);
+        })
+    })
+}
 
 function closeAttrModal(e){
     let modal = e.target.parentElement;
@@ -217,5 +242,64 @@ function deleteDBpage(e){
     .then(result => {
         if(result.result == 'success') delPageDiv.remove();
     })
+    .catch(err => console.log(err));
+}
+
+function editDBPageName(e){
+    const titleDiv = e.target;
+    const pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
+    let inputText;
+    
+    if(e.type=="click"){
+        titleDiv.setAttribute("contenteditable", true);
+        titleDiv.focus();
+    }
+    if(e.type=="keydown"){
+        if(e.keyCode === 13){
+            titleDiv.removeAttribute("contenteditable");
+            inputText = titleDiv.textContent;
+            console.log(inputText);
+
+            // 변경 내용 화면에 반영
+            titleDiv.textContent = inputText;
+            const side = document.querySelector("#side");
+            const pageDiv = side.querySelector(`[data-id="${pageId}"]`);
+            pageDiv.querySelector(".pageName").textContent = `  ${inputText}`;
+            // pageDiv.setAttribute("data-name", inputText);    // ✅ 머지 후에 데이터셋 추가
+
+            // DB에 업데이트
+            fetch(`/pageNewName?pageId=${pageId}&pageName=${inputText}`, {
+                method : 'get',
+                headers : {'Content-Type' : 'application/json'}
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                let displayId = e.target.closest(".database_case").getAttribute("data-block-id");
+                let data = {
+                    'workId' : document.getElementById("TitleWid").value,
+                    'pageId' : pageId,
+                    'upUser' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+                    'displayId' : displayId
+                }
+                console.log(data);
+                dbhistoryUpdate(data);
+            })
+        }
+    }
+}
+
+
+// 페이지 히스토리 업데이트
+function dbhistoryUpdate(data){
+    //data = { workId, pageId, upUser(or creUser), displayId }
+
+    fetch("/db/pageHistoryUpdate",{
+        method : 'POST',
+        body : JSON.stringify(data),
+        headers : {'Content-Type' : 'application/json'}
+    })
+    .then(response => response.text())
+    .then(result => console.log(result))
     .catch(err => console.log(err));
 }

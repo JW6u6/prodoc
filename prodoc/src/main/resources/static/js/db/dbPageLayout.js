@@ -114,6 +114,7 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
     };
     dbMoveEvent(layout);
+    databaseAllEvent();
 }
 
 const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
@@ -257,7 +258,8 @@ function dbTblAttrBlock(attrs, uniqueList){
                 innerDiv = document.createElement("div");
                 let div = document.createElement("div");
                 div.textContent = content == '' ? '' : content.substring(13);
-                div.classList.add("attr", "inlineTags", "file-conten");
+                div.classList.add("attr", "inlineTags", "file-content");
+                div.setAttribute("data-fileName", content);
                 let btn = document.createElement("div");
                 btn.classList.add("inlineTags", "del-attr-file");
                 div.append(btn);

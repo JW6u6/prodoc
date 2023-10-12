@@ -1,4 +1,8 @@
 /* DB 레이아웃 */
+.db_block{
+	padding: 10px;
+}
+
 .db-block-body{
 	overflow : auto;
 }
@@ -196,6 +200,11 @@ div[data-attr-modal]{
 .attr-case {
 	padding: 3px;
 	border: 1px solid antiquewhite;
+/*	overflow: hidden; */
+}
+
+.attr-case *{
+	display: inline-block;
 }
 
 .this-value {

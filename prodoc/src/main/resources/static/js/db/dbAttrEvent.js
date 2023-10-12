@@ -206,7 +206,7 @@ function deleteAttr(e){
 
 // attr-case 클릭 이벤트
 function updateContent(e){
-    // e.target.setAttribute("contenteditable", "true");
+    console.log("ATTR CASE 클릭 이벤트");
     let attrId = e.target.getAttribute("data-attrid");
     if(attrId == 'A_TEXT' || attrId == 'NUM'){
         let type = 'text';
@@ -250,12 +250,12 @@ function getAttrList(attrs){    // 속성
 
     attrs.forEach((attr, idx) => {
         let checkOp = '';
-
         let displayOption = 'view-visible';
         let content = attr.attrContent;
         if(attr.attrId == 'CUSER' || attr.attrId == 'UUSER' || attr.attrId == 'USER') content = attr.nickname + '(' + content + ')';
         if(attr.displayCheck == "FALSE") displayOption = 'hide';
         if(attr.attrContent == null) content = '';
+        if(content == '') return;
         // 다중값 속성일때
         if(attr.attrId == 'USER' || attr.attrId == 'TAG'){
             if((idx != 0 && attr.dbUseId != attrs[idx-1].dbUseId) && (idx != attrs.length-1 && attr.dbUseId != attrs[idx+1].dbUseId)){
@@ -318,12 +318,11 @@ function getAttrList(attrs){    // 속성
         if(attr.attrId == 'MEDIA'){    // 파일
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr-case" data-attr-order="${attr.numbering}">
-                <div class="attr inlineTags file-content">
+                <div class="attr inlineTags file-content" data-fileName="${content}">
                     ${content==''? content : content.substring(13)}
                     <button class="inlineTags del-attr-file">✕</button>
                 </div>
                 <input type="file" style="display:none;" class="db-file-upload">
-                
             </div>
             `
         }
@@ -379,6 +378,45 @@ function updateAttrContent(data){
     .then(response => response.json())
     .then(result => {
         console.log(result.result);
+        if(result.result=="success"){
+            console.log("속성값 전체 반영하기위한 for문");
+            const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
+            changeTags.forEach(tag=>{
+                let attrId = tag.getAttribute("data-attrid");
+                let content = data.attrContent;
+                //파일 속성일때
+                if(attrId == "MEDIA"){
+                    let contentDiv = tag.querySelector("data-fileName");
+                    contentDiv.setAttribute("data-fileName", content);
+                    contentDiv.innerText = content.substring(13);
+
+                    return;
+                }
+                //멤버관련 속성일때 ✅✅테스트 필요
+                if(["USER", "CUSER", "UUSER"].includes(attrId)){
+                    //✅
+                }
+                if(attrId == "CHECK"){
+                    let input = document.createElement("input");
+                    input.type = "checkbox";
+                    input.classList.add("dbattr-check");
+                    tag.append(input);
+                }
+                if(attrId == "URL"){
+                    let aTag = document.createElement("a");
+                    aTag.classList.add("attr", "inlineTags");
+                    aTag.textContent = content;
+                    tag.append(aTag);
+                }
+
+                // 그 외
+                else{
+                    let attrTag = document.createElement("div");
+                    attrTag.classList.add("attr", "inlineTags");
+                    attrTag.innerText = content;
+                }
+            });
+        }
     })
     .catch(err=>console.log(err));
 }
@@ -529,7 +567,6 @@ async function addPageTags(e){
             data['attrContent'] = addTag;
             updateAttrContent(data);
             attrDiv.innerText = addTag;
-            // ✅✅✅생성된 태그를 모달에도추가(삭제용)
         } else {
         // insert
             console.log("얘는 추가");
@@ -582,6 +619,7 @@ async function addAttrFile(e){
     let fileDiv = e.target.previousElementSibling;
     fileDiv.innerText = newName.substring(13);
     fileDiv.setAttribute("data-file-name", newName);
+    console.log(newName);
     let data = {
         'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
         'attrContent' : newName
@@ -593,10 +631,14 @@ async function addAttrFile(e){
     e.target.parentElement.querySelector(".attr").append(delBtn);
 }
 
-// 파일 클릭 이벤트(조회)
+// 파일 다운로드 어케함
 function selectFileAttr(e){
-    let displayId = e.target.closest("[data-block-id]").getAttribute("data-block-id");
-    
+    const fileName = e.target.getAttribute("data-filename");
+    console.log(fileName);
+
+    fetch(`db/filedownload?file=${fileName}`)
+    .then(response => console.log(response))
+    .catch(err => console.log(err));
 }
 
 
@@ -844,7 +886,7 @@ function deleteAttrContent(pui){
         body : JSON.stringify(data),
         headers : { "Content-Type": "application/json" }
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(result => {
         console.log(result);
     })
@@ -934,12 +976,10 @@ async function modifyAttrName(e){
     let dui = e.target.getAttribute("data-duse-id");
     let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
     let attrId = e.target.getAttribute("data-attrid");
-    console.log(e.type);
     if(e.type == 'click'){
         if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
         e.target.setAttribute("contenteditable", true);
     }else if(e.type == 'keydown'){
-        console.log("a여기여기여ㅓ가ㅣ어니라ㅓㄴ라ㅣ")
         if(e.keyCode === 13){
             e.preventDefault();
             e.target.setAttribute("contenteditable", false);
