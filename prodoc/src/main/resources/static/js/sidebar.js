@@ -206,8 +206,6 @@ function dropPage(event){
         insertAfter(dragItem, targetItem.parentElement);
     } else {
         pageMain.insertBefore(dragItem, targetItem.parentElement);
-
-
     }
 }
 function dragEnd(event){
@@ -388,7 +386,7 @@ function selectPage(pageId) {
                     title.remove();
                 }
         let app = document.querySelector(".container");
-        let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" value="${item.workId}"/> </div>`;
+        let pageTitle = `<div class="pageHead"><span id="TitleName">"${item.pageName}"</span><input type="text" id="TitleWid" data-pageId="${item.pageId}" value="${item.workId}"/> </div>`;
         app.insertAdjacentHTML("beforebegin", pageTitle);
         // 페이지 타입 체크
         let type = await pageTypeCheck(pageId);
@@ -1087,22 +1085,23 @@ function inviteWork(workId) {
     }
     console.log(inviteList);
     let url = '/workJoin';
-
+    
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(inviteList)
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inviteList)
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result + '건 성공');
+        tdList.forEach(item => {
+            item.remove();
         })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result + '건 성공');
-            tdList.forEach(item => {
-                item.remove();
-            })
-        })
-        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+
 }
 
 const arr = ["workId", "email", "auth"];
