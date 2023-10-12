@@ -115,14 +115,6 @@ public class PageController {
 	public int pageNotifyed(@RequestBody PageVO pageVO) {
 		return pageService.notifyPage(pageVO);
 	}
-	
-	@GetMapping("/pageNewName")
-	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
-		PageVO page = new PageVO();
-		page.setPageId(pageId);
-		page.setPageName(pageName);
-		return pageService.newName(page);
-	}
 
 	// 페이지 끄기켜기알려주는거
 	@GetMapping("/pageNotify")

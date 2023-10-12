@@ -1,6 +1,5 @@
 package com.prodoc.block.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +23,8 @@ import com.prodoc.block.service.blockfileService;
 import com.prodoc.block.service.impl.BlockServiceImpl;
 import com.prodoc.file.service.FileVO;
 import com.prodoc.history.mapper.HistoryMapper;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.history.service.HistoryVO;
-import com.prodoc.user.service.ProfileService;
 
 /*
  * 개발자 : 이명석
@@ -47,6 +46,9 @@ public class BlockController {
 	
 	@Autowired
 	HistoryMapper historyMapper;
+	
+	@Autowired
+	HistoryService historyService;
 	
 	//현재 워크, 현재 페이지, 로그인 유저, 해당 블럭 아이디
 	@PostMapping("block/history")
