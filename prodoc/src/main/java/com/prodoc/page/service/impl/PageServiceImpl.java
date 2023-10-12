@@ -123,5 +123,12 @@ public class PageServiceImpl implements PageService {
 			note.setCreUser(pageVO.getCreUser());
 			notifyMapper.insertTargetNotify(note);
 	}
+	
+	@Override
+	public String newName(PageVO pageVO) {
+		if(pageMapper.newName(pageVO) > 0)
+			 return "{\"result\" : true}";
+		else return "{\"result\" : false}";
+	}
 
 }

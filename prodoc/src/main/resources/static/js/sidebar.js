@@ -330,15 +330,16 @@ document.querySelector('#sidebar').children[2].addEventListener('click', functio
 //
 // 인사이트 내 사이드바에 페이지 목록 불러옴
 function pageList(wId, target) {
-  let insertDiv = target.parentElement.querySelector(".pageMain");
-  let url = "/pageList?workId=" + wId;
-  fetch(url)
-    .then((res) => {
-      return res.json();
-    })
-    .then(data => {
-            data.forEach(item=> {
-                let text = `<div class= "Page" data-id="${item.pageId}" data-name="${item.pageName}" data-level="2" data-number="${item.numbering}"><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
+    let insertDiv = target.parentElement.querySelector(".pageMain");
+    let url = "/pageList?workId=" + wId;
+    fetch(url)
+        .then((res) => {
+            return res.json();
+        })
+        .then(data => {
+            data.forEach(item => {
+                console.log(item);
+                let text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.pageName}" data-level="2" data-number="${item.numbering}" ><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">  ${item.pageName}</span><span onclick="newPageModal(event)" class="add">
                             <img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                             <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain"></div>
                             </div>`
@@ -382,7 +383,6 @@ function pageList(wId, target) {
 					 newPName.value = pname;
 				});
 			});
-            
         })
         .catch((err) => console.log('err: ', err));
 }

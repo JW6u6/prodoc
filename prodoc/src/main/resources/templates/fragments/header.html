@@ -63,8 +63,12 @@
 		<!-- 유저정보 모달 -->
 		<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
 	</th:block>
+	<th:block th:if="${session.logUser != null}">
+		<script th:inline="javascript" src="js/modal/userInfo.js"></script>
+		<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
+		<script th:inline="javascript" src="js/headerMenu.js"></script>
+	</th:block>
 </th:block>
-
 <script>
 	let menuBtn = document.querySelectorAll('.menuBtn') 	//헤더에 위치한 이미지
 		.forEach(tag => tag.addEventListener('click', function(e){
@@ -77,11 +81,7 @@
 			}
 			menu.classList.toggle('hide');
 			menu.classList.toggle('view');
-		}));
+		})
+	);
 </script>
-<th:block th:if="${session.logUser != null}">
-	<script th:inline="javascript" src="js/modal/userInfo.js"></script>
-	<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
-	<script th:inline="javascript" src="js/headerMenu.js"></script>
-</th:block>
 </html>
