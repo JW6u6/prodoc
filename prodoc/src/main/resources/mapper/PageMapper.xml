@@ -127,6 +127,15 @@
 	<update id="newName" parameterType="pageVO">
 		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
 	</update>
+	
+	<!-- 페이지 복사 -->
+	<insert id="copyPage" parameterType="PageVO" statementType="CALLABLE">
+		{call PAGE_COPY(
+  						#{pageId}
+  						, #{creUser}
+  						, #{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string} 
+		)}
+	</insert>
 </mapper>
   
   

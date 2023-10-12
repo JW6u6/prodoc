@@ -62,21 +62,22 @@ public class PageController {
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-	
+
 	@PostMapping("/pageUpdate")
 	public int pageUpdate(@RequestBody PageVO pageVO) {
 		return pageService.updatePage(pageVO);
 	}
-	
+
 	@PostMapping("/pagePlus")
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
 	}
-	
+
 	@PostMapping("/pageMinus")
 	public int pageMinus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumMinus(pageVO);
 	}
+
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();
@@ -128,14 +129,22 @@ public class PageController {
 		((PageVO) pageVO).setCreUser(user.getEmail());
 		pageService.LockAlam(pageVO);
 	}
-	
-	//페이지 새이름
+
+	// 페이지 새이름
 	@GetMapping("/pageNewName")
 	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
 		PageVO page = new PageVO();
 		page.setPageId(pageId);
 		page.setPageName(pageName);
 		return pageService.newName(page);
+	}
+
+	// 페이지 복사
+	@PostMapping("/pageCopyPaste")
+	public String pageCopy(@RequestBody PageVO pageVO, HttpSession session) {
+//		UserVO user = (UserVO) session.getAttribute("logUser");
+//		pageVO.setCreUser(user.getEmail());
+		return pageService.pastePage(pageVO);
 	}
 
 }

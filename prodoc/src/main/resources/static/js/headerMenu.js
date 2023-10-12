@@ -25,8 +25,6 @@ async function pageMenuSetting() {
 
     let memberAuth = await memberCheck(workBlockId);
 
-    console.log(memberAuth);
-
     if (memberAuth == 'OWNER' || memberAuth == 'MANAGER') {
 
         document.querySelector('#mainPage').classList.remove('hide');
@@ -190,7 +188,7 @@ async function pageDelCheck() {
                 if (result == 'true') {
                     let email = document.querySelector("#side input.logUser").value;
                     alert('페이지가 삭제되었습니다.')
-                    workList(email);
+                    pageList(workBlockId);
                 } else if (result == 'false') {
                     alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
                 }
@@ -303,17 +301,14 @@ async function areULock() {
 //링크복사
 async function creLink() {
 
-    let infos = await pageInfoFromMenu();
+    let info = await selectOneWork(workBlockId);
     let pubCheck = false;
 
-    for (let info of infos) {
-        console.log(info);
-        if (info.publicCheck == 'P_PRIV') {
+        if (info.publicCheck == 'W_PRIV') {
             pubCheck = false;
-        } else if (info.publicCheck == 'P_PUB' || info.publicCheck == 'P_MEM') {
+        } else if (info.publicCheck == 'W_PUB' || info.publicCheck == 'W_MEM') {
             pubCheck = true;
         }
-    }
 
     if (pubCheck == false) {
         alert('이 페이지는 공유할 수 없습니다.');
