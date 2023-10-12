@@ -934,10 +934,12 @@ async function modifyAttrName(e){
     let dui = e.target.getAttribute("data-duse-id");
     let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
     let attrId = e.target.getAttribute("data-attrid");
+    console.log(e.type);
     if(e.type == 'click'){
         if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
         e.target.setAttribute("contenteditable", true);
     }else if(e.type == 'keydown'){
+        console.log("a여기여기여ㅓ가ㅣ어니라ㅓㄴ라ㅣ")
         if(e.keyCode === 13){
             e.preventDefault();
             e.target.setAttribute("contenteditable", false);

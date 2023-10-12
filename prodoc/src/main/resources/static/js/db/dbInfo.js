@@ -243,7 +243,8 @@ async function pageAttrnameUpdate(e){
     if(pageModal != null) {
         pageId = pageModal.getAttribute("data-page-id");
     } else {
-        // ✅ 컨테이너 안에서 정보 select
+        let inputTag = document.querySelector(".pageHead input[data-pageid]");
+        pageId = inputTag.getAttribute("data-pageid");
     }
     const modal = e.target.closest(".pageAttr_option");
     const nameNode = modal.parentNode.firstChild;
@@ -279,8 +280,12 @@ async function pageAttrnameUpdate(e){
         console.log(data);
         modifyAttrNameAjax(data);
         
+        // const modifyTags = document.querySelectorAll("")
         // 2. DB의 하위 페이지 속성부분 수정
+        
         // 3. DB블럭에 존재하는 속성 이름부분 수정
+
         // 4. 속성수정 모달 닫기
+        modal.remove();
     }
 }

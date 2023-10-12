@@ -27,6 +27,7 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
 
 })
 document.querySelector(".container").addEventListener("keydown", e => { // 키보드 이벤트
+    console.log(e);
     if (e.target.matches(".attr")) attrContentUpdate(e);
     else if (e.target.matches(".attr-name")) modifyAttrName(e);
 })
@@ -204,8 +205,8 @@ function deleteDBpage(e){
     let caseId =  e.target.closest("[data-layout]").getAttribute('data-block-id');
     data['pageId'] = e.target.closest("[data-page-id]").getAttribute("data-page-id");
     data['displayId'] = e.target.closest("[data-block-id]").getAttribute('data-block-id');
-    data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent; //⭐⭐
-    data['workId'] = document.getElementById("TitleWid").value	//⭐⭐워크id 가져오기
+    data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = document.getElementById("TitleWid").value
     console.log(data);
     fetch("deleteDBPage", {
         method : 'post',

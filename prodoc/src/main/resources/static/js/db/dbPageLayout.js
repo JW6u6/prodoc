@@ -120,10 +120,8 @@ const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정�
 
 function updateCase(pageId, layout){
     let data = {"pageId" : pageId, "caseId" : layout};
-    // data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    data['creUser'] = 'user1@user1' // ⭐⭐
-    data['workId'] = 'TESTWORK'     // ⭐⭐ 추가하기
-
+    data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = document.getElementById("TitleWid").value;
 
     fetch("updateCase",{
         method : "post",
