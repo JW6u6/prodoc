@@ -165,33 +165,38 @@ async function pageLockNoti() {
 
 //페이지 삭제 체크
 //페이지 url로 읽어와서 페이지 아이디 넘기는거 해야함.
-function pageDelCheck() {
+async function pageDelCheck() {
+    let infoResult = await selectOneWork(workBlockId);
+    if (infoResult.mainPageId == pageBlockId) {
+        alert('이 페이지는 삭제할 수 없습니다.')
+    } else if (infoResult.mainPageId != pageBlockId) {
 
-    let val = {
-        "pageId": pageBlockId,
-        "workId": workBlockId
+        let val = {
+            "pageId": pageBlockId,
+            "workId": workBlockId
+        }
+
+        let url = '/pageDelCheck';
+
+        fetch(url, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result == 'true') {
+                    let email = document.querySelector("#side input.logUser").value;
+                    alert('페이지가 삭제되었습니다.')
+                    workList(email);
+                } else if (result == 'false') {
+                    alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
+                }
+            })
+            .catch(err => console.log(err));
     }
-
-    let url = '/pageDelCheck';
-
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            if (result == 'true') {
-                let email = document.querySelector("#side input.logUser").value;
-                alert('페이지가 삭제되었습니다.')
-                workList(email);
-            } else if (result == 'false') {
-                alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
-            }
-        })
-        .catch(err => console.log(err));
 }
 
 //현재 페이지를 메인 페이지로 등록(소유자, 관리자?)

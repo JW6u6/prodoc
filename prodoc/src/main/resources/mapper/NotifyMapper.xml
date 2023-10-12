@@ -10,7 +10,7 @@
   							#{displayId}
   						,	#{noteType}
   						,	#{creUser}
-  						,	#{workId}
+  						,	#{pageId}
   						,	#{replyId} )}
   	</insert>
   	
@@ -35,8 +35,7 @@
 	<!-- 알림 삭제 -->
 	<delete id="deleteNotify" parameterType="NotifyVO">
 		delete
-		from
-		tbl_target_notify
+		from  tbl_target_notify
 		where note_id = #{noteId}
 	</delete>
 
@@ -63,4 +62,10 @@
 		and page_id = #{pageId}
 	</select>
 
+	<select id="getNotify" resultType="NotifyResultVO">
+		select note_id, cre_user_id, cre_user_name, profile, cre_date, work_id,
+		work_name
+		from view_notify_invite
+		where work_id = #{workId}
+	</select>
 </mapper>

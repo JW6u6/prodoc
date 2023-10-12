@@ -50,6 +50,9 @@ public class NotifyServiceImpl implements NotifyService {
 	public int deleteNotify(List<NotifyVO> list) {
 		int count = 0;
 		for(NotifyVO vo : list) {
+			System.out.println(vo.toString()+ "---------------------");
+			//NotifyVO note = new NotifyVO();
+			//note.setNoteId(vo);;
 			notiMapper.deleteNotify(vo);
 			count++;
 		}
@@ -66,5 +69,8 @@ public class NotifyServiceImpl implements NotifyService {
 //		return 0;
 //	}
 
-	
+	@Override
+	public NotifyResultVO getNotify(String workId) {
+		return notiMapper.getNotify(workId);
+	}
 }

@@ -70,6 +70,16 @@ public class PageServiceImpl implements PageService {
 	}
 	
 	@Override
+	public int updateNumPlus(PageVO pageVO) {
+		return pageMapper.updatePage(pageVO);
+	}
+	
+	@Override
+	public int updateNumMinus(PageVO pageVO) {
+		return pageMapper.updatePage(pageVO);
+	}
+	
+	@Override
 	@Transactional
 	public String insertPage(PageVO pageVO) {
 		pageMapper.insertPage(pageVO);
@@ -91,6 +101,13 @@ public class PageServiceImpl implements PageService {
 	public void deleteIfWorkspace(String workId) {
 		pageMapper.ifWorkRemove(workId);
 	}
+	
+	@Override
+	public String newName(PageVO pageVO) {
+		if(pageMapper.newName(pageVO) > 0)
+			 return "{\"result\" : true}";
+		else return "{\"result\" : false}";
+	}
 
 	@Override
 	public int onOff(PageVO pageVO) {
@@ -105,6 +122,13 @@ public class PageServiceImpl implements PageService {
 			note.setNoteType("LOCK_NT");
 			note.setCreUser(pageVO.getCreUser());
 			notifyMapper.insertTargetNotify(note);
+	}
+	
+	@Override
+	public String newName(PageVO pageVO) {
+		if(pageMapper.newName(pageVO) > 0)
+			 return "{\"result\" : true}";
+		else return "{\"result\" : false}";
 	}
 
 }

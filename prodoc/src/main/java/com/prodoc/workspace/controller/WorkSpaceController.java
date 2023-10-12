@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.prodoc.notify.service.NotifyResultVO;
+import com.prodoc.notify.service.NotifyService;
 import com.prodoc.page.service.PageService;
+import com.prodoc.socket.SocketCommand;
+import com.prodoc.socket.SocketVO;
+import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
 import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
@@ -35,6 +39,9 @@ import lombok.Setter;
 @RestController
 public class WorkSpaceController {
 
+	@Autowired
+	NotifyService notifyService;
+	
 	@Setter(onMethod_ = @Autowired)
 	WorkSpaceMapper WorkSpaceMapper;
 
@@ -43,7 +50,17 @@ public class WorkSpaceController {
 
 	@Setter(onMethod_ = @Autowired)
 	PageService pageService;
+	
+	@Autowired	
+	UserService userService;	
+	
+	private SimpMessagingTemplate template;
 
+	@Autowired
+	public WorkSpaceController(SimpMessagingTemplate template) {
+		this.template = template;
+	}
+	
 	// 사이드바에 워크스페이스 목록 출력
 	@GetMapping("/workList")
 	public List<WorkSpaceVO> workList(String email) {
@@ -73,7 +90,20 @@ public class WorkSpaceController {
 	// 워크스페이스 유저 초대
 	@PostMapping("/workJoin")
 	public int workspaceJoin(@RequestBody List<WorkJoinVO> joinVO) {
-		int result = workspaceService.inviteWorkspaceUser(joinVO);
+		int result = workspaceService.inviteWorkspaceUser(joinVO);	//초데 테이블에 등록		
+		for (int i = 0; i < joinVO.size(); i++) {
+			UserVO find = new UserVO();
+			find.setEmail(joinVO.get(i).getInviteEmail());
+			UserVO user = userService.getUser(find);
+			System.out.println(user + "================================");
+			if(user != null) {	
+				this.template.convertAndSendToUser(
+						user.getEmail(), "/topic/inviteWork",
+						new SocketVO(SocketCommand.WORK_INVITE, ""));			
+			}
+		}
+		//알람 리스트 리로드
+		
 		return result;
 	}
 

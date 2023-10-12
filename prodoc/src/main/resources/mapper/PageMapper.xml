@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prodoc.page.mapper.PageMapper">
 	<select id="pageList" resultType="PageVO">
-		select page_id,page_name
+		select page_id,page_name,numbering
 		from tbl_page
 		where work_id = #{workId}
 		and parent_id
@@ -28,6 +28,20 @@
   		update tbl_page
 		set work_id = #{workId},
 			numbering = (select max(numbering)+512 from tbl_page)
+		where page_id = #{pageId}
+  	</update>
+  	
+  	<update id="updateNumPlus">
+  		update tbl_page
+		set work_id = #{workId},
+			numbering = #{numbering} + 1
+		where page_id = #{pageId}
+  	</update>
+  	
+  	<update id="updateNumMinus">
+  		update tbl_page
+		set work_id = #{workId},
+			numbering = #{numbering} - 1
 		where page_id = #{pageId}
   	</update>
   	
@@ -108,6 +122,11 @@
 		and email = #{email}
 	</select>
 
+
+	<!-- 페이지 새이름 -->
+	<update id="newName" parameterType="pageVO">
+		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
+	</update>
 </mapper>
   
   

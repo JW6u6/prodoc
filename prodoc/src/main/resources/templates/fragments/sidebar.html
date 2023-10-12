@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sidebarFragment">
-	<link th:href="@{/css/sidebar.css}" rel="stylesheet" />
+	<link th:href="@{css/sidebar.css}" rel="stylesheet" />
 
 	<!-- Sidebar -->
 	<div id="side">
-		<input type="text" class="logUser" style="display: none;"
-			th:value="${session.logUser.email}"> <input type="text"
-			id="homePg" style="display: none;"
-			th:value="${session.logUser.defaultPage}">
+	<input type="text" class="logUser" style="display:none; "th:value="${session.logUser.email}">
 		<div>
 			<div id="alarm">알림</div>
 			<div id="fileList">파일</div>
 			<div id="sidebar">
 				<span>새 워크스페이스 생성</span> <span onclick="newWork()" class="addWS">
-					<img class="plus" th:src="@{/images/plus.svg}" width="15px"
+					<img class="plus" th:src="@{images/plus.svg}" width="15px"
 					height="15px">
 				</span>
 				<div id="workspaces"></div>
 			</div>
 			<div id="searchWKDB">검색</div>
+			<!-- <div id="trashBasket">휴지통</div> -->
 			<div id="history">히스토리</div>
 		</div>
 
@@ -81,8 +79,7 @@
 
 				<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
 				<div class="selectBox" id="typeArea">
-					<select id="wsType" name="workType" class="select"
-						onchange="typeChange">
+					<select id="wsType" name="workType" class="select">
 						<option disabled selected="selected">워크스페이스 타입</option>
 						<option value="TEAM">팀 워크스페이스</option>
 						<option value="PERSONAL">개인 워크스페이스</option>
@@ -149,6 +146,17 @@
 
 	<div id="subWorkMenu">하위 워크스페이스 생성</div>
 
-	<script type="text/javascript" th:src="@{/js/sidebar.js}"></script>
+	<!-- 페이지 새이름 -->
+	<div id="editPageMod" class="hide">
+		<div>
+			<h3>페이지명 수정</h3>
+			<div><button id="close-modal" class="closeBtn" onclick="closeSideModal()">&#10005;</button></div>
+		</div>
+		<br>
+		<input type="text" value="">
+		<button id="newPageNameBtn" type="button">확인</button>
+	</div>
+
+	<script type="text/javascript" th:src="@{js/sidebar.js}"></script>
 </th:block>
 </html>

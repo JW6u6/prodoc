@@ -38,7 +38,16 @@ public class NotifyController {
 		map.put("result", list);
 		return map;
 	}
-
+	
+	@ResponseBody
+	@PostMapping("/alarmDelete")
+	public String alarmDelete(@RequestBody List<NotifyVO> list) {
+		if( notiService.deleteNotify(list) > 0)
+			return "{\"result\": true}";
+		
+		return "{\"result\": false}";
+	}
+	
 	@GetMapping("/areULOCK")
 	@ResponseBody
 	public int hasLockAlam(String pageId) {

@@ -15,21 +15,23 @@
 	<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 	<script src="/js/app.js"></script>
 	<!--/* css */-->
-	<link th:href="@{/css/common.css}" rel="stylesheet" />
-	<link th:href="@{/css/block.css}" rel="stylesheet" />
-	<link th:href="@{/css/dbpage.css}" rel="stylesheet" />
-	<link th:href="@{/css/toggleClass.css}" rel="stylesheet" />
-	<link th:href="@{/css/history.css}" rel="stylesheet" />
+	<link th:href="@{css/common.css}" rel="stylesheet" />
+	<link th:href="@{css/block.css}" rel="stylesheet" />
+	<link th:href="@{css/dbpage.css}" rel="stylesheet" />
+	<link th:href="@{css/toggleClass.css}" rel="stylesheet" />
+	<link th:href="@{css/history.css}" rel="stylesheet" />
 	<title>PRODOC</title>
 	<!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
 <body>
-	
-	<th:block th:if="${session.logUser!= null}" layout:fragment="sidebar"
-		th:include="@{/fragments/sidebar}"></th:block>
-	<th:block th:if="${session.logUser!= null}" layout:fragment="header"
-		th:include="@{/fragments/header}"></th:block>
 
+	<script src="js/common.js"></script>
+	<th:block th:if="${session.logUser!= null}" layout:fragment="sidebar"
+		th:include="@{fragments/sidebar}"></th:block>
+	<th:block th:if="${session.logUser!= null}" layout:fragment="header"
+		th:include="@{fragments/header}"></th:block>
+	<input type="text" id="homePg" style="visablity:hidden;" th:value="${session.logUser.defaultPage}">
+	
 	<th:block th:if="${session.logUser== null}">
 		<div id="nonMember" th:insert="content/nonUser :: nonMemberFrag"></div>
 	</th:block>
@@ -50,27 +52,40 @@
 	
 	
 
-	<!-- db 스크립트 -->
-	<script th:inline="javascript" src="js/db/dbEvent.js"></script>
-	<script th:inline="javascript" src="js/db/dbAttrEvent.js"></script>
-	<script th:inline="javascript" src="js/db/dbPageLayout.js"></script>
-	<script th:inline="javascript" src="js/db/dbMove.js"></script>
-	<script th:inline="javascript" src="js/db/dbInfo.js"></script>
-	<!-- 워크/디비 검색 모달 -->
-	<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
-	<script th:inline="javascript" src="js/modal/search.js"></script>
-	
-	<!-- 히스토리 모달 -->
-	<div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
-	<script th:inline="javascript" src="js/modal/history.js"></script>
-	
-	<div id="FileSearchModal" th:insert="modal/fileModal.html :: FileSearchModal"></div>	<!-- 파일 검색 모달 -->
-	<script th:inline="javascript" src="js/block/blockMaker.js"></script>
-	<script th:inline="javascript" src="js/block/blockEvent.js"></script>
-	<script th:inline="javascript" src="js/block/block.js"></script>
-	<script th:inline="javascript" src="js/block/menuEvent.js"></script>
-	<script th:inline="javascript" src="js/block/blockMove.js"></script>
-</th:block>
-<script src="js/modal/close.js"></script>
+
+		<!-- db 스크립트 -->
+		<script th:inline="javascript" src="js/db/dbEvent.js"></script>
+		<script th:inline="javascript" src="js/db/dbAttrEvent.js"></script>
+		<script th:inline="javascript" src="js/db/dbPageLayout.js"></script>
+		<script th:inline="javascript" src="js/db/dbMove.js"></script>
+		<script th:inline="javascript" src="js/db/dbInfo.js"></script>
+		<!-- 워크/디비 검색 모달 -->
+		<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
+		<script th:inline="javascript" src="js/modal/search.js"></script>
+
+		<!-- 히스토리 모달 -->
+		<div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
+		<script th:inline="javascript" src="js/modal/history.js"></script>
+
+
+		<div id="FileSearchModal"
+			th:insert="modal/fileModal.html :: FileSearchModal"></div>
+		<!-- 파일 검색 모달 -->
+		<script th:inline="javascript" src="js/block/blockMaker.js"></script>
+		<script th:inline="javascript" src="js/block/blockEvent.js"></script>
+		<script th:inline="javascript" src="js/block/block.js"></script>
+		<script th:inline="javascript" src="js/block/menuEvent.js"></script>
+		<script th:inline="javascript" src="js/block/blockMove.js"></script>
+	</th:block>
+	<script src="js/modal/close.js"></script>
+	<script>
+		//로그인 시 개인페이지의 메인페이지 로드
+		function setLoginMainPage() {
+			let myMainPage = document.querySelector("#homePg").value;
+			console.log(myMainPage);
+			selectPage(myMainPage);
+		}
+		setLoginMainPage();
+	</script>
 </body>
 </html>

@@ -8,15 +8,33 @@ connect();
 //해당 updatePage를 구독중인 사람
 
 stompClient.onConnect = (frame) => {
-  console.log("Connected: " + frame);
-  // 페이지 업데이트
-  stompClient.subscribe("/user/topic/updatePage", (data) => {
-    let socketVO = JSON.parse(data.body);
-    if (socketVO.cmd == 1) {
-      console.log("생성완료");
-    }
+    console.log('Connected: ' + frame);
+    // 페이지 업데이트
+    stompClient.subscribe('/user/topic/updatePage', (data) => {
+        let socketVO = JSON.parse(data.body);
+        console.log(data)
+        console.log(socketVO)
+        if(socketVO.cmd == 1){
+            console.log("생성완료");
+        }
+    });
+    
+     //초대
+  	stompClient.subscribe("/user/topic/inviteWork", (data) => {
+	    let socketVO = JSON.parse(data.body);
+		if(socketVO.cmd == 2){
+		    console.log(data);
+		    console.log(data.body);
+		    console.log(socketVO);  //socketVO.connect = 초대받은 workId
+		    if(document.querySelector('#alarmModal').className == "hide"){	//알림 모달이 닫혀있을 때 사이드(알림) 노란줄
+	        	document.querySelector('#alarm').style.backgroundColor = "yellow";
+		    }else{	//알림이 열려 있을 때 목록 다시 불러오기
+		    	showAlarmList('all');	
+	    	}
+	    }    
   });
-
+    
+    
   // 테스트
   stompClient.subscribe("/topic/collaboration/test", (data) => {
     const socketDataObj = JSON.parse(data.body);
