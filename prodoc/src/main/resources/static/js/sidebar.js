@@ -202,11 +202,99 @@ function dropPage(event){
     } = event;
     const center = targetHeight / 2;
     console.log(offsetY , center)
-    if(offsetY > center){
+
+    // if(targetItem.dataset.level == 3){
+    //     return;
+    // } else if(targetItem.dataset.level == 2 && )
+        
+    if(offsetY < center +( targetHeight / 4 ) && offsetY > center - ( targetHeight /4)){ 
+        console.log("으아아아앙아아아앆!!")
+        let workId = targetItem.closest('.Work').dataset.id;
+        let pageId = dragItem.dataset.id;
+        let parentId = targetItem.parentElement.dataset.id;
+        console.log(targetItem)
+        let val = {
+                "workId" : workId
+              , "parentId" : parentId
+              , "pageId" : pageId
+                };
+        let url = "/inPageUpdate"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => console.log(err))
+    } else 
+    if(offsetY > center +( targetHeight / 4 )){
         insertAfter(dragItem, targetItem.parentElement);
-    } else {
+        console.log('뒤')
+        let pageId = dragItem.dataset.id;
+        let numbering = targetItem.parentElement.dataset.number;
+        let workId = targetItem.closest('.Work').dataset.id;
+        let parentId = targetItem.parentElement.parentElement.parentElement.dataset.id;
+        if(parentId == workId){
+            parentId = "";
+        }
+        console.log(workId,numbering,pageId,parentId)
+        let url = "/pagePlus"
+        let val = {
+                 "workId" :  workId
+                ,"numbering" : numbering
+                ,"pageId" : pageId
+                ,"parentId" : parentId
+                };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => console.log(err))
+  
+    }else {
         pageMain.insertBefore(dragItem, targetItem.parentElement);
+        console.log('앞')
+        let pageId = dragItem.dataset.id;
+        let numbering = targetItem.parentElement.dataset.number;
+        let workId = targetItem.closest('.Work').dataset.id;
+        let parentId = targetItem.parentElement.parentElement.parentElement.dataset.id;
+        if(parentId == workId){
+            parentId = "";
+        }
+        console.log(workId,numbering,pageId,parentId)
+        let url = "/pagePlus"
+        let val = {
+                 "workId" :  workId
+                ,"numbering" : numbering
+                ,"pageId" : pageId
+                ,"parentId" : parentId
+                };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => console.log(err))
     }
+    
 }
 function dragEnd(event){
     event.target.classList.remove("dragSide");
@@ -547,6 +635,7 @@ function pageInPage(pId, target) {
             insertDiv.querySelectorAll('.pageName').forEach(items => {
                 items.addEventListener("dragstart", dragStart)
                 items.addEventListener("dragover", dragOver);
+                items.addEventListener("dragend", dragEnd);
                 items.addEventListener("drop", dropPage);
             })
             insertDiv.querySelectorAll(".pageListShow").forEach((Pages) => {

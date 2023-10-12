@@ -17,6 +17,8 @@ public interface PageMapper {
 	
 	public int updatePage(PageVO pageVO);
 	
+	public int updateInPage(PageVO pageVO);
+	
 	public int updateNumPlus(PageVO pageVO);
 	
 	public int updateNumMinus(PageVO pageVO);

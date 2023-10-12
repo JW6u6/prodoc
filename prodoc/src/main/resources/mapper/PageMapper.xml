@@ -25,24 +25,41 @@
   	</select>
   	
   	<update id="updatePage">
+  		{call UPDATE_PAGE(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
+  	</update>
+  	
+  	<update id="updateInPage">
   		update tbl_page
 		set work_id = #{workId},
-			numbering = (select max(numbering)+512 from tbl_page)
+			numbering = (select max(numbering)+512 from tbl_page),
+			parent_id = #{parentId}
 		where page_id = #{pageId}
   	</update>
   	
-  	<update id="updateNumPlus">
-  		update tbl_page
-		set work_id = #{workId},
-			numbering = #{numbering} + 1
-		where page_id = #{pageId}
+  	<update id="updateNumPlus" parameterType="PageVO">
+  		{call update_numbering_plus(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
   	</update>
   	
-  	<update id="updateNumMinus">
-  		update tbl_page
-		set work_id = #{workId},
-			numbering = #{numbering} - 1
-		where page_id = #{pageId}
+  	<update id="updateNumMinus" parameterType="PageVO">
+  		{call update_numbering_plus(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
   	</update>
   	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">

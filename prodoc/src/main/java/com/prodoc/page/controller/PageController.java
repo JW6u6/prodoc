@@ -68,6 +68,11 @@ public class PageController {
 		return pageService.updatePage(pageVO);
 	}
 	
+	@PostMapping("/inPageUpdate")
+	public int inPageUpdate(@RequestBody PageVO pageVO) {
+		return pageService.updateInPage(pageVO);
+	}
+	
 	@PostMapping("/pagePlus")
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
