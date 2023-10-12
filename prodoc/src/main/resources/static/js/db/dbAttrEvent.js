@@ -230,7 +230,7 @@ function updateContent(e){
         selectCalAttr(e.target);
     }else if(attrId == 'USER'){
         let tag = e.target
-        let pageId = e.target.closest('[data-layout]').getAttribute('data-page-id');
+        let pageId = e.target.closest('[data-page-id]').getAttribute('data-page-id');
         getMembers(pageId, tag);    // 유저 목록 모달 open
     }else if(attrId == 'MEDIA'){
         e.target.querySelector("input").click();
