@@ -70,13 +70,18 @@ public class PageServiceImpl implements PageService {
 	}
 	
 	@Override
+	public int updateInPage(PageVO pageVO) {
+		return pageMapper.updateInPage(pageVO);
+	}
+	
+	@Override
 	public int updateNumPlus(PageVO pageVO) {
-		return pageMapper.updatePage(pageVO);
+		return pageMapper.updateNumPlus(pageVO);
 	}
 	
 	@Override
 	public int updateNumMinus(PageVO pageVO) {
-		return pageMapper.updatePage(pageVO);
+		return pageMapper.updateNumMinus(pageVO);
 	}
 	
 	@Override
