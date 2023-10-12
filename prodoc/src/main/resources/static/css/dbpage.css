@@ -153,6 +153,7 @@ div[data-tagimg]{
 	font-size: small;
 	background-color: linen;
 	margin: 3px;
+	overflow: hidden;
 }
 
 .attr:hover {

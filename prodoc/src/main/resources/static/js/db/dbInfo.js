@@ -88,14 +88,14 @@ async function getDataInfo(pageId){
             node.classList.add("inlineTags");
 
             topDiv.append(attrCase, node);
+            
             attrDiv.append(topDiv);
         })  // 노드 forEach문 종료
-
 
         // 3. 속성 append
         let titleEle = document.querySelector(".db_attrList");
         console.log(titleEle);
-        titleEle.after(attrDiv);
+        titleEle.append(attrDiv);
 
         datapageMove(); // 속성 드래그 이벤트 등록
         // 속성 등록, 삭제, 수정 이벤트 등록
@@ -205,6 +205,13 @@ async function getDatabaseDBBlock(pageId){
 
 // 하위페이지 속성 편집 모달
 function openpageAttrOption(e){
+    // CUSER, CDATE, UUSER , UDATE, STATE 수정 불가
+    const checkId = e.target.getAttribute("data-attrid");
+    const cannotMod = ['CUSER', 'CDATE', 'UUSER', 'UDATE', 'STATE'];
+    if(cannotMod.includes(checkId)){
+        alert("해당 속성은 수정할 수 없습니다.");
+        return;
+    }
     if(document.querySelector(".pageAttr_option")!=null) document.querySelector(".pageAttr_option").remove();
     let modal = document.createElement("div");
     modal.classList.add("pageAttr_option")
@@ -225,14 +232,8 @@ function openpageAttrOption(e){
     submitBtn.textContent = '수정';
     submitBtn.addEventListener("click", pageAttrnameUpdate);
     input.addEventListener("keydown", pageAttrnameUpdate);
-    let attrDel = document.createElement("div");
-    attrDel.textContent = '속성 삭제';
-    attrDel.addEventListener("click", e => {
-        // 속성 삭제 이벤트
-    });
 
-
-    modal.append(closeBtn, input, submitBtn, attrDel);
+    modal.append(closeBtn, input, submitBtn);
     e.target.closest(".attr-line").append(modal);
 }
 

@@ -60,7 +60,7 @@ function createDBblock(block){
     <div class="db-block database_case" data-block-id="` + block.displayId + `">
         <div class="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
-            <div>` + block.content + `</div>
+            <div class="db-page-name"></div>
             <div class="db-layout-list">
                 <ul>
                     <li class="change-layout" data-dblayout="DB_LIST">리스트</li>
@@ -103,6 +103,7 @@ async function getChildList(disId){
                     if(tagId == disId){
                         DBele.setAttribute("data-page-id", parentVO["pageId"]);
                         DBele.setAttribute("data-layout", parentVO["caseId"]);
+                        DBele.querySelector(".db-page-name").textContent = parentVO["pageName"];
                     }
                 });
             } else {

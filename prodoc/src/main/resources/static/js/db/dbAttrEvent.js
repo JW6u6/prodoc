@@ -31,7 +31,7 @@ async function createUesList(caseBlockId){
                 <div class="inlineTags" data-attr-id="`+attr.attrId+`" data-attr-view="`+attr.displayCheck+`" 
                 data-attr-order="`+attr.numbering+`" white-space:nowrap>`+attr.attrName+`</div>
         `;
-        if(attr.attrId != 'CUSER' && attr.attrId != 'CDATE' && attr.attrId != 'UUSER' && attr.attrId != 'UDATE' && attr.attrId != 'CAL' && attr.attrId != 'STATE'){
+        if(attr.attrId != 'CUSER' && attr.attrId != 'CDATE' && attr.attrId != 'UUSER' && attr.attrId != 'UDATE' && attr.attrId != 'STATE'){
             attrDiv += `<div class="inlineTags del-attr">&#10005;</div>`;
         }
 
@@ -72,7 +72,7 @@ function pageAttrOption(e){
     createUesList(caseBkId);
 }
 
-// 속성 추가 모달
+// DB 블럭 속성 추가 모달
 function addPageAttr(e){
     let div = e.target.closest('[data-layout]').querySelector('[data-attr-option]');
     div.setAttribute("class", "view-visible");
@@ -109,7 +109,7 @@ function selectAttr(e){
 
 // 사용자가 속성 추가
 async function registAttr(e){
-    let check = 'true';    //중복체크를위한 변수
+    let check = 'true';    // 중복체크를위한 변수
     let attrInfo = {};
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
     attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
