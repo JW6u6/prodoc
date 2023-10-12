@@ -77,7 +77,7 @@ public class PageController {
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
 	}
-
+	
 	@PostMapping("/pageMinus")
 	public int pageMinus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumMinus(pageVO);
@@ -134,8 +134,8 @@ public class PageController {
 		((PageVO) pageVO).setCreUser(user.getEmail());
 		pageService.LockAlam(pageVO);
 	}
-
-	// 페이지 새이름
+	
+	//페이지 새이름
 	@GetMapping("/pageNewName")
 	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
 		PageVO page = new PageVO();
@@ -147,8 +147,8 @@ public class PageController {
 	// 페이지 복사
 	@PostMapping("/pageCopyPaste")
 	public String pageCopy(@RequestBody PageVO pageVO, HttpSession session) {
-//		UserVO user = (UserVO) session.getAttribute("logUser");
-//		pageVO.setCreUser(user.getEmail());
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		pageVO.setCreUser(user.getEmail());
 		return pageService.pastePage(pageVO);
 	}
 
