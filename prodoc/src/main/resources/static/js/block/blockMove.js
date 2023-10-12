@@ -197,7 +197,7 @@ async function drop_handler(event) {
     dragState,
     upUser: blockSessionUserId,
   };
-  socketEventObj(socketEventObj);
+  sendSocketEvent(socketEventObj);
 
   if (document.querySelector(".dragging").classList.contains("db_block"))
     return;
@@ -380,7 +380,7 @@ function resetOrder(isSocket = false) {
     const socketEventObj = {
       eventType: "RESETORDER",
     };
-    socketEventObj(socketEventObj);
+    sendSocketEvent(socketEventObj);
   }
 }
 
