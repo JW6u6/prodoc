@@ -27,31 +27,6 @@
 					onerror="this.src='images/noneUser.jpg'"
 					style="width: 30px; height: 30px; border-radius: 15px;">
 			</th:block>
-
-		<th:block th:if="${session.logUser != null}">
-			<nav>
-				<img id="menuImg" class="menuBtn" th:src="@{images/menu.svg}">
-				<div id="ulMenu" class="hide">
-				<ul id="menu" >
-					<li id="exportPg">내보내기</li>
-					<li id="lockPg">
-						<!-- th:if="${session.logUser.auth} == 'OWNER' or 'MANAGER'">-->
-						페이지 잠금
-					</li>
-					<li id="notiLockPg">
-						<!-- th:unless="${session.logUser.auth} == 'OWNER' or 'MANAGER'" -->
-						페이지 잠금 요청
-					</li>
-					<li id="copyLink">링크 복사</li>
-					<li id="copyPage">페이지 복사</li>
-					<li id="mainPage">이 페이지를 메인 페이지로 지정</li>
-					<li id="delPage">페이지 삭제</li>
-					<li id="notifyPage">페이지 알림 켜기</li>
-				</ul>
-				</div>
-			</nav>
-		    <img id="userImg" class="menuBtn profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|" onerror="this.src='images/noneUser.jpg'"  style="width:30px; height:30px; border-radius: 15px;">
-		</th:block>
 		
 			<button th:if="${session.logUser == null}" id="logBtn" onClick="location='/'">로그인</button>
 

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.block.service.BlockVO;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.member.service.MemberService;
 import com.prodoc.member.service.MemberVO;
 import com.prodoc.page.mapper.PageMapper;
@@ -32,6 +34,9 @@ public class PageController {
 
 	@Autowired
 	MemberService memberserivce;
+	
+	@Autowired
+	HistoryService historyService;
 
 	private SimpMessagingTemplate template;
 
@@ -131,10 +136,17 @@ public class PageController {
 	
 	//페이지 새이름
 	@GetMapping("/pageNewName")
-	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName, HttpSession session) {
 		PageVO page = new PageVO();
 		page.setPageId(pageId);
 		page.setPageName(pageName);
+		
+		BlockVO history = new BlockVO();
+		history.setWorkId(pageMapper.findWork(pageId));
+		history.setPageId(pageId);
+		history.setCreUser(((UserVO)session.getAttribute("logUser")).getEmail());
+		historyService.blockHistory(history);
+		
 		return pageService.newName(page);
 	}
 

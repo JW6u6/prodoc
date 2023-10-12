@@ -1,7 +1,5 @@
 package com.prodoc.page.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +81,7 @@ public class PageServiceImpl implements PageService {
 	@Transactional
 	public String insertPage(PageVO pageVO) {
 		pageMapper.insertPage(pageVO);
+		
 		HistoryVO history = new HistoryVO();
 		history.setWorkId(pageVO.getWorkId());
 		history.setCreUser(pageVO.getCreUser());
@@ -120,8 +119,9 @@ public class PageServiceImpl implements PageService {
 	
 	@Override
 	public String newName(PageVO pageVO) {
-		if(pageMapper.newName(pageVO) > 0)
-			 return "{\"result\" : true}";
+		if(pageMapper.newName(pageVO) > 0) {
+			return "{\"result\" : true}"; 
+		}
 		else return "{\"result\" : false}";
 	}
 
