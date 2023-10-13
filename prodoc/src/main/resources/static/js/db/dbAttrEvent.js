@@ -343,7 +343,7 @@ function getAttrList(attrs){    // 속성
         if(attr.attrId == 'IMG'){ // 이미지
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr-case" data-attr-order="${attr.numbering}">
-                <img class="attr inlineTags db-img" style="width:50px;" src="${content == '' ? "" : content}" />
+                <img class="attr inlineTags db-img" style="width:50px;" src="${content == '' ? "" : '/dbFiles/'+content}" />
                 <input type="file" style="display:none;" class="db-img-upload" accept="image/*">
             </div>
             `
@@ -381,41 +381,60 @@ function updateAttrContent(data){
         if(result.result=="success"){
             console.log("속성값 전체 반영하기위한 for문");
             const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
-            changeTags.forEach(tag=>{
+            changeTags.forEach( async(tag) =>{
+
                 let attrId = tag.getAttribute("data-attrid");
                 let content = data.attrContent;
-                //파일 속성일때
-                if(attrId == "MEDIA"){
-                    let contentDiv = tag.querySelector("data-fileName");
-                    contentDiv.setAttribute("data-fileName", content);
-                    contentDiv.innerText = content.substring(13);
-
-                    return;
-                }
-                //멤버관련 속성일때 ✅✅테스트 필요
-                if(["USER", "CUSER", "UUSER"].includes(attrId)){
-                    //✅
+                if(["A_TEXT", "NUM", "CAL", "STATE"].includes(attrId)){
+                    tag.innerText = content;
                 }
                 if(attrId == "CHECK"){
-                    let input = document.createElement("input");
-                    input.type = "checkbox";
-                    input.classList.add("dbattr-check");
-                    tag.append(input);
+                    let checkOp = content=="TRUE"?true:false;
+                    tag.checked = checkOp;
                 }
                 if(attrId == "URL"){
-                    let aTag = document.createElement("a");
-                    aTag.classList.add("attr", "inlineTags");
-                    aTag.textContent = content;
-                    tag.append(aTag);
+                    console.log(tag);
+                    tag.href = content;
+                    tag.innerText = content;
                 }
+                if(attrId == "MEDIA"){
+                    let textDiv= tag.querySelector("div");
+                    textDiv.setAttribute("data-fileName", `/dbFiles/${content}`);
+                    textDiv.innerText = content.substring(13);
+                }
+                if(attrId == "IMG"){
+                    let imgTag = tag.querySelector("img");
+                    imgTag.src = `/dbFiles/${content}`;
+                }
+                if(attrId == "TAG"){
+                    // 값이 존재하지 않거나 하나만 있을 때 변경 적용
+                    tag.innerText = (content==''||content==null ? '' : content);
+                }
+                if(["USER", "CUSER", "UUSER"].includes(attrId)){
+                    // 값이 존재하지 않거나 하나만 있을 때 변경 적용
 
-                // 그 외
-                else{
-                    let attrTag = document.createElement("div");
-                    attrTag.classList.add("attr", "inlineTags");
-                    attrTag.innerText = content;
+                    // 이메일, 닉네임 조회용
+                    const memberList = await getMembersAjax(data.pageId);
+
+                    memberList.forEach(mem => {
+                        if(content=="" || content==null){
+                            tag.innerText = '';
+                        }
+                        if(mem.email == content){
+                            content = `${mem.nickname}(${mem.email})`;
+                            if(attrId = "USER"){
+                                // 빈값에서 새롭게 등록했을 때만 실행됨
+                                tag.innerText = content;
+                            }
+                            else {
+                                tag.querySelector("div").innerText = content;
+                            }
+                        }
+                    });
+                    
+                    
                 }
-            });
+            }); // 속성 아이디에 따른 변경 종료
         }
     })
     .catch(err=>console.log(err));
@@ -486,6 +505,8 @@ function addTagList(target){
     input.classList.add("tag-value");
     input.addEventListener("keydown", addPageTags);
     modal.append(closeBtn);
+
+    // 사용중인 태그 삭제할 수 있도록 요소 생성.
     parentDiv.querySelectorAll(".attr").forEach(ele =>{
         if(ele.innerText == '') return;
         let nowTag = document.createElement("div");
@@ -501,7 +522,7 @@ function addTagList(target){
     modal.append(input);
 
 
-
+    // 현재 사용중인 모든 태그 리스트
     fetch("/dbattr/selectAllTags",{
         method : 'post',
         body : dui,
@@ -531,7 +552,7 @@ function addTagList(target){
 
 // 태그 추가 이벤트
 async function addPageTags(e){
-    let caseDiv = e.target.closest(".attr-case");
+    const caseDiv = e.target.closest(".attr-case");
     let thisTags = [];      // 현재 사용중인 태그인지 조회
     let addTag = '';        // 사용자가 입력한 태그
     caseDiv.querySelectorAll(".attr").forEach(ele => {
@@ -545,9 +566,9 @@ async function addPageTags(e){
         // 앤터 이벤트
         if(e.keyCode === 13){
             e.preventDefault();
-            e.target.blur();
+            e.target.blur();    // 원래 엔터 이벤트 막기
             addTag = e.target.value;
-            // 기존에 같은 이름의 태그가 있는지 체크 > 없으면 추가 있으면 아무일 X
+
             if(thisTags.indexOf(addTag) != -1){
                 alert("이미 사용중인 태그입니다");
                 e.target.value = "";
@@ -559,6 +580,7 @@ async function addPageTags(e){
     }
 
     if(thisTags.indexOf(addTag) == -1){
+        console.log("태그 추가");
         let data = {};
         if(thisTags[0] == ""){
         // update
@@ -566,27 +588,45 @@ async function addPageTags(e){
             data['pageUseId'] = attrDiv.getAttribute("data-puse-id");
             data['attrContent'] = addTag;
             updateAttrContent(data);
-            attrDiv.innerText = addTag;
         } else {
         // insert
-            console.log("얘는 추가");
             data['dbUseId'] = caseDiv.getAttribute("data-duse-id");
             data['pageId'] = caseDiv.closest("[data-page-id]").getAttribute("data-page-id");
             data['attrContent'] = addTag;
+
             let newPui = await insertAttrContent(data);
-            let newTag = document.createElement("div");
-            let num = caseDiv.getAttribute("data-attr-order");
-            newTag.setAttribute("data-duse-id", data['dbUseId']);
-            newTag.setAttribute("data-puse-id", newPui);
-            newTag.setAttribute("data-attrid", "TAG");
-            newTag.classList.add("view-visible", "attr");
-            newTag.setAttribute("data-attr-order", num);
-            newTag.innerText = addTag;
-            caseDiv.append(newTag);
+            
+            // 모든 화면에 동일하게 추가하기 위해 append 위치를 잡기위한 id
+            const prevEleId = caseDiv.lastElementChild.previousElementSibling.getAttribute("data-puse-id");
+            let modalDataTag;
+            const beforeTags = document.querySelectorAll(`[data-puse-id="${prevEleId}"]`);
+            beforeTags.forEach(beforeTag=>{
+                let newTag = document.createElement("div");
+                let num = caseDiv.getAttribute("data-attr-order");
+                newTag.setAttribute("data-duse-id", data['dbUseId']);
+                newTag.setAttribute("data-puse-id", newPui);
+                newTag.setAttribute("data-attrid", "TAG");
+                newTag.classList.add("view-visible", "attr");
+                newTag.setAttribute("data-attr-order", num);
+                newTag.innerText = addTag;
+                modalDataTag = newTag
+                beforeTag.after(newTag);        // 형제요소 뒤에 추가된 태그 삽입
+            })  // 전체 화면 append를 위한 forEach문 종료
+
+            modalDataTag.classList.remove("view-visible", "attr");
+            modalDataTag.classList.add("inlineTags", "this-value");
+            modalDataTag.removeAttribute("data-duse-id");
+            modalDataTag.removeAttribute("data-attr-order");
+            modalDataTag.removeAttribute("data-attrid");
+            let delBtn = document.createElement("button");
+            delBtn.innerText='✕';
+            delBtn.classList.add("delete-attr");
+            modalDataTag.append(delBtn);
+            let modal = document.querySelector("[data-attr-modal]");
+            modal.querySelector("input").previousElementSibling.after(modalDataTag);
+
         }
-
     }
-
 }
 
 // 이미지 추가
@@ -631,14 +671,12 @@ async function addAttrFile(e){
     e.target.parentElement.querySelector(".attr").append(delBtn);
 }
 
-// 파일 다운로드 어케함
+// 파일 다운로드
 function selectFileAttr(e){
-    const fileName = e.target.getAttribute("data-filename");
-    console.log(fileName);
-
-    fetch(`db/filedownload?file=${fileName}`)
-    .then(response => console.log(response))
-    .catch(err => console.log(err));
+    console.log("--------------------------")
+    const filename = encodeURIComponent(e.target.getAttribute("data-filename"));
+    let URL = `/addrfile/download?id=${filename}`;
+    location.href = URL;
 }
 
 
@@ -769,94 +807,121 @@ function urlPatternCheck(text){
     } else  return "http://www." + url;
 }
 
-// 해당 워크스페이스의 모든 멤버 조회
-function getMembers(pageId, tag){
-    if(document.querySelector("[data-attr-modal]") != null) document.querySelector("[data-attr-modal]").remove();
-    let childList = tag.children    // 마지막 자식은 제외해야 함
-    fetch("/dbAttr/getWorkMembers", {
+
+// 해당 워크스페이스의 모든 멤버 조회 ajax
+async function getMembersAjax(pageId){
+    let memberList = [];
+    await fetch("/dbAttr/getWorkMembers", {
         method : 'post',
         body : pageId,
         headers : { "Content-Type": "application/json" }
     })
     .then(response => response.json())
-    .then(result => {
-        let modal = document.createElement('div');
-        modal.setAttribute("data-attr-modal", "");
-        modal.classList.add('db-modal');
-        tag.append(modal);
-        tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
-        modal.style.top = -100%
-        modal.setAttribute("class", "view");
-        let option = '<div class="close-attr-modal">✕</div>';
-        for(let i=0; i<childList.length-1; i++){
-            let content = childList[i].innerText;
-            let pui = childList[i].getAttribute("data-puse-id");
-            option += `
-            <div class="inlineTags this-value" data-puse-id="${pui}">
-                ${content}
-                <button class="delete-attr">✕</button>
-            </div>
-            `;
-        }
-        option += `<hr>`;
-        result.forEach(user => {
-            option += `
-            <div data-user-email="${user.email}" class="get-value">${user.nickname}(${user.email})</div>
-            `
-        });
-        modal.innerHTML = option;
-
-        // 멤버 추가 이벤트
-        document.querySelectorAll('.get-value').forEach(tag => {
-            tag.addEventListener("click", async(e) => {
-                let content = e.target.innerText;
-                let email = e.target.getAttribute("data-user-email");
-                let dUseId = e.target.closest("[data-duse-id]").getAttribute("data-duse-id");
-                let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
-                let check = 'true';
-                tag.parentElement.querySelectorAll(".this-value").forEach(item => {
-                    if( item.innerText.indexOf(e.target.innerText) != -1 ){
-                        alert("이미 등록된 멤버입니다");
-                        check = 'false';
-                    }
-                })
-                if(check == 'true'){
-                    data = {};
-                    data['pageId'] = pageId;
-                    data['attrContent'] = email;
-                    data['dbUseId'] = dUseId;
-
-                    let caseDiv = e.target.closest('.attr-case');
-                    let tagList = e.target.closest('.attr-case').querySelectorAll('.attr');
-                    let getDiv = e.target.closest('.attr-case').querySelector('.attr');
-                    if(tagList.length == 1 && getDiv.innerText == ''){
-                        data['pageUseId'] = getDiv.getAttribute('data-puse-id');
-                        updateAttrContent(data);
-                        getDiv.innerText = content;
-                        let valDiv = e.target.parentElement.querySelector('.this-value');
-                        valDiv.innerText = content;
-                    } else {
-                        let pui = await insertAttrContent(data);
-                        let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
-                        let insertDiv = `
-                        <div data-duse-id="${dUseId}" data-puse-id="${pui}" data-attrid="USER" class="view-visible attr" data-attr-order="${number}">
-                            ${content}
-                        <div>
-                        `
-                        let valListDiv = `
-                        <div class="inlineTags this-value" data-puse-id="${pui}">
-                            ${content}
-                            <button class="delete-attr">✕</button>
-                        </div>
-                        `
-                        caseDiv.insertAdjacentHTML("beforeend", insertDiv);
-                        e.target.parentElement.querySelector('hr').insertAdjacentHTML("beforebegin", valListDiv);
-                    }
-                }
-            })
-        })
+    .then(members => {
+        memberList = members;
     })
     .catch(err => console.log(err))
+    return memberList;
+}
+
+// 멤버 등록 이벤트
+async function getMembers(pageId, tag){
+    if(document.querySelector("[data-attr-modal]") != null) document.querySelector("[data-attr-modal]").remove();
+    const childList = tag.children    // 마지막 자식은 제외해야 함
+    const userList = await getMembersAjax(pageId);  // 워크스페이스의 모든 멤버들을 불러옴
+
+    // 등록 모달 생성
+    const modal = document.createElement('div');
+    modal.setAttribute("data-attr-modal", "");
+    modal.classList.add('db-modal');
+    tag.append(modal);
+    tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
+    modal.style.top = -100%
+    modal.setAttribute("class", "view");
+    let option = '<div class="close-attr-modal">✕</div>';
+    for(let i=0; i<childList.length-1; i++){
+        let content = childList[i].innerText;
+        let pui = childList[i].getAttribute("data-puse-id");
+        option += `
+        <div class="inlineTags this-value" data-puse-id="${pui}">
+            ${content}
+            <button class="delete-attr">✕</button>
+        </div>
+        `;
+    };
+
+    option += `<hr>`;
+    userList.forEach(user => {
+        option += `
+        <div data-user-email="${user.email}" class="get-value">${user.nickname}(${user.email})</div>
+        `
+    });
+    modal.innerHTML = option;
+
+    // 멤버 추가를 위한 이벤트 리스너
+    document.querySelectorAll('.get-value').forEach(tag => {
+        tag.addEventListener("click", async(e) => {
+            let content = e.target.innerText;
+            let email = e.target.getAttribute("data-user-email");
+            let dUseId = e.target.closest("[data-duse-id]").getAttribute("data-duse-id");
+            let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
+            let check = 'true';
+            tag.parentElement.querySelectorAll(".this-value").forEach(item => {
+                if( item.innerText.indexOf(e.target.innerText) != -1 ){
+                    alert("이미 등록된 멤버입니다");
+                    check = 'false';
+                }
+            })
+            if(check == 'true'){
+                data = {};
+                data['pageId'] = pageId;
+                data['attrContent'] = email;
+                data['dbUseId'] = dUseId;
+
+                const caseDiv = e.target.closest('.attr-case');
+                let tagList = e.target.closest('.attr-case').querySelectorAll('.attr');
+                let getDiv = e.target.closest('.attr-case').querySelector('.attr');
+                if(tagList.length == 1 && getDiv.innerText == ''){
+                    data['pageUseId'] = getDiv.getAttribute('data-puse-id');
+                    updateAttrContent(data);
+                }
+                else {
+                    let pui = await insertAttrContent(data);
+                    let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
+
+                    const prevId = caseDiv.lastElementChild.previousElementSibling.getAttribute("data-puse-id");
+                    const prevEles = document.querySelectorAll(`[data-puse-id="${prevId}"]`);
+                    let modalData;
+                    prevEles.forEach(prevEle => {
+                        let newDiv = document.createElement("div");
+                        newDiv.getAttribute("data-duse-id", dUseId);
+                        newDiv.getAttribute("data-puse-id", pui);
+                        newDiv.getAttribute("data-attr-order", number);
+                        newDiv.getAttribute("data-attrid", "USER");
+                        newDiv.classList.add("view-visible", "attr");
+                        newDiv.innerText = content
+                        modalData = newDiv;
+                        prevEle.before(newDiv);  // 선택요소 뒤에 추가
+                    })  // 새로운 유저 화면에 추가 forEach문 종료
+
+                    // 모달에 새롭게 등록된 데이터 추가
+                    modalData.classList.remove("view-visible", "attr");
+                    modalData.classList.add("inlineTags", "this-value")
+                    modalData.removeAttribute("data-duse-id");
+                    modalData.removeAttribute("data-puse-id");
+                    modalData.removeAttribute("data-attr-order");
+                    let delBtn = document.createElement("button");
+                    delBtn.innerText = '✕';
+                    delBtn.classList.add("delete-attr");
+                    modalData.append(delBtn);
+                    let modal = e.target.closest("[data-attr-modal]");
+                    console.log(modal);
+                    modal.querySelector("hr").after(modalData);
+                }
+
+            }
+        })
+    })
 }
 
 async function insertAttrContent(data){
@@ -889,6 +954,11 @@ function deleteAttrContent(pui){
     .then(response => response.text())
     .then(result => {
         console.log(result);
+        let delTags = document.querySelectorAll(`[data-puse-id="${pui}"]`);
+        delTags.forEach(tag => {
+            //화면에 존재하는 모든 태그 삭제
+            tag.remove();
+        })
     })
     .catch(err => console.log(err));
 }
@@ -910,7 +980,6 @@ async function pageAttrCheck(data){
     return ckeck;
 }
 
-
 // 파일업로드
 async function dbattrFileUpload(formData){
     let newName = '';
@@ -927,6 +996,7 @@ async function dbattrFileUpload(formData){
     return newName;
 }
 
+// 다중값 속성 삭제
 function deleteThisAttr(e){
     let attrId = e.target.closest("[data-attrid]").getAttribute("data-attrid");
     if(attrId == "USER"){
@@ -943,10 +1013,8 @@ function deleteThisAttr(e){
             data['pageUseId'] = pui;
             data['attrContent'] = null;
             updateAttrContent(data);
-            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).textContent = '';
         }
         e.target.parentElement.remove();
-
     }
 
     if(attrId == "TAG"){

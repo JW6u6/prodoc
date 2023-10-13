@@ -248,7 +248,7 @@ public class DBController {
 	
 	@GetMapping("db/filedownload")
 	public void dbfiledownload(@RequestParam String file, HttpServletResponse response) throws IOException  {
-		File downFile = new File("C:\\prodoc\\image\\dbattr", file);
+		File downFile = new File("/dbattr/", file);
 		response.setContentType("application/download");
         response.setContentLength((int)downFile.length());
         // response 객체를 통해서 서버로부터 파일 다운로드

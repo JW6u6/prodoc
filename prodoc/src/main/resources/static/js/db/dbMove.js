@@ -47,8 +47,8 @@ function dbMoveEvent(type){
                 dragAttrContents.forEach((dragAttrContent,index) =>{
                     insertAfter(dragAttrContent,targetAttrContents[index])
                 })
-                AttrNumberingUpdate(dragDBblock);
             }
+            AttrNumberingUpdate(dragDBblock);
 
         })
 

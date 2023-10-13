@@ -84,7 +84,7 @@ function createDBblock(block){
     console.log(block);
     const dbBlockTemp = `
     <div class="db-block database_case" data-block-id="` + block.displayId + `">
-        <div class="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
+        <div class="db_modal--attr hide" data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
             <div class="db-page-name"></div>
             <div class="db-layout-list">
