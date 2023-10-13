@@ -21,6 +21,7 @@
   		select page_id,page_name
   		from tbl_page
   		where parent_id = #{pageId}
+  		and delete_check != 'TRUE'
   		order by numbering
   	</select>
   	
@@ -80,18 +81,6 @@
   		FROM tbl_page
   		WHERE page_id = #{pageId}
   	</select>
-  	<!-- 등록 -->
-  	<!-- <insert id="insertPage" parameterType="PageVO" statementType ="CALLABLE">
-  		{call INSERT_PAGE(
-  							#{pid, mode=OUT, jdbcType=VARCHER, javaType=string}
-  						,	#{parentId}
-  						,	#{pageName}
-  						,	#{creUser}
-  						,	#{workId}
-  						,	#{caseId}
-  						,	#{result, mode=OUT, jdbcType=VARCHER, javaType=string}
-  		)}
- 	</insert> -->
  	
  	<!-- 페이지 잠금(관리자, 소유자) -->
  	<update id="LockPage" parameterType="PageVO">

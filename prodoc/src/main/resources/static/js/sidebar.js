@@ -201,8 +201,46 @@ function dropPage(event){
         offsetX, offsetY
     } = event;
     const center = targetHeight / 2;
-    console.log(offsetY, center)
-    if (offsetY > center) {
+    console.log(offsetY , center)
+
+    let targetArea = targetHeight/4 ;   
+    if(offsetY < center + targetArea && offsetY > center - targetArea){ 
+        console.log("으아아아앙아아아앆!!")
+        let workId = targetItem.closest('.Work').dataset.id;
+        let pageId = dragItem.dataset.id;
+        let parentId = targetItem.closest('.Page').dataset.id;
+        let dragLevel = dragItem.closest('.Page').dataset.level;
+        let targetLevel = targetItem.closest('.Page').dataset.level;
+        let exceptMove;
+        console.log(dragLevel,targetLevel);
+        if(dragLevel<targetLevel){
+            exceptMove = targetItem.closest('.Page[data-level="'+targetLevel+'"]').dataset.id;
+            console.log(exceptMove);
+        }
+        if(parentId == pageId || parentId == exceptMove || targetLevel == 4){
+            console.log("안돼!!!!!!!")
+            return;
+        }
+        let val = {
+                "workId" : workId
+              , "parentId" : parentId
+              , "pageId" : pageId
+                };
+        let url = "/inPageUpdate"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => console.log(err))
+    } else 
+    if(offsetY > center + targetArea){
         insertAfter(dragItem, targetItem.parentElement);
         console.log('뒤')
         let pageId = dragItem.dataset.id;
@@ -405,6 +443,12 @@ function pageList(wId, target) {
             })
             document.querySelectorAll('#side .pageListShow').forEach(Pages => {
                 Pages.addEventListener('click', function (e) {
+                    let clickSession = sessionStorage.getItem("clickedList")
+                    if(clickSession == null){
+                        clickSession = [];
+                    }else{
+                        clickSession = JSON.parse(clickSession);
+                    }
                     let target = e.target;
                     if (target.classList.contains("clicked")) {
                         target.classList.remove("clicked");
@@ -413,6 +457,8 @@ function pageList(wId, target) {
                     } else {
                         target.classList.add("clicked");
                         let pageClick = e.currentTarget.parentElement.dataset.id;
+                        clickSession.push(pageClick)
+                        sessionStorage.setItem("clickedPageList",JSON.stringify(clickSession))
                         pageInPage(pageClick, target);
                     }
                 })
@@ -588,6 +634,8 @@ function pageInPage(pId, target) {
     let insertDiv = target.parentElement.querySelector('.pageMain');
     let url = '/pageInPage?pageId=' + pId;
     let parentLevel = insertDiv.parentElement.dataset.level;
+    let childLevel = Number(parentLevel)+Number(1);
+    console.log(parentLevel)
     fetch(url)
         .then(res => {
             return res.json();
@@ -595,10 +643,10 @@ function pageInPage(pId, target) {
         .then(data => {
             data.forEach(item => {
                     let addBtn = "";
-                    if (parentLevel < 4) {
+                    if (childLevel < 4) {
                         addBtn = `<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>`;
                     }
-                    let text = `<div class= "Page" data-id="${item.pageId}"><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">
+                    let text = `<div class= "Page" data-id="${item.pageId}" data-level="${childLevel}"><span class="pageListShow">ㅇ</span><span class="pageName" draggable="true">
                     ${item.pageName}</span><span class="workIdVal">${item.workId}</span>${addBtn}<div class="pageMain"></div> </div>`
                     insertDiv.insertAdjacentHTML("beforeend", text)
             })
