@@ -5,6 +5,7 @@ document.querySelector('#delPage').addEventListener('click', pageDelCheck);
 document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
 document.querySelector('#notiLockPg').addEventListener('click', alreadyLock);
+document.querySelector('#copyPage').addEventListener('click', copyPagstePage);
 
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
@@ -15,6 +16,7 @@ document.querySelector('#menuImg').addEventListener('click', function (e) {
 });
 
 let headerMenu = document.querySelector('#ulMenu');
+
 headerMenu.addEventListener('click', async function (e) {
     headerMenu.classList.toggle('hide');
     headerMenu.classList.toggle('view');
@@ -188,7 +190,7 @@ async function pageDelCheck() {
                 if (result == 'true') {
                     let email = document.querySelector("#side input.logUser").value;
                     alert('페이지가 삭제되었습니다.')
-                    pageList(workBlockId);
+                    // pageList(workBlockId);
                 } else if (result == 'false') {
                     alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
                 }
@@ -304,11 +306,11 @@ async function creLink() {
     let info = await selectOneWork(workBlockId);
     let pubCheck = false;
 
-        if (info.publicCheck == 'W_PRIV') {
-            pubCheck = false;
-        } else if (info.publicCheck == 'W_PUB' || info.publicCheck == 'W_MEM') {
-            pubCheck = true;
-        }
+    if (info.publicCheck == 'W_PRIV') {
+        pubCheck = false;
+    } else if (info.publicCheck == 'W_PUB' || info.publicCheck == 'W_MEM') {
+        pubCheck = true;
+    }
 
     if (pubCheck == false) {
         alert('이 페이지는 공유할 수 없습니다.');
@@ -338,3 +340,30 @@ async function creLink() {
 }
 
 //페이지 복사
+function copyPagstePage() {
+    let url = '/pageCopyPaste';
+    let email = document.querySelector("#side input.logUser").value;
+
+    let val = {
+        "pageId": pageBlockId,
+        email
+    }
+
+    fetch(url, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
+        .then(response => response.text())
+        .then(result => {
+            console.log(result);
+            if (result == 'SUCCESS') {
+                alert('페이지가 복사되었습니다.');
+            } else if (result == 'FAIL') {
+                alert('복사할 수 없는 블록이 포함되어있습니다.');
+            }
+        })
+        .catch(err => console.log(err));
+}
