@@ -130,4 +130,10 @@ public class PageServiceImpl implements PageService {
 		else return "{\"result\" : false}";
 	}
 
+	@Override
+	public String pastePage(PageVO pageVO) {
+		pageMapper.copyPage(pageVO);
+		return pageVO.getInsertResult();
+	}
+
 }

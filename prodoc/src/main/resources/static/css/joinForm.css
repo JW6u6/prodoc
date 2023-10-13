@@ -1,0 +1,83 @@
+@import "variable/var.css";
+@import "common.css";
+
+.joinForm_wrapper {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+#joinForm {
+  width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.joinForm-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 85px;
+}
+.joinForm-right {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.joinForm-right,
+.joinForm-left {
+  height: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.joinForm-right input {
+  width: 250px;
+  margin-right: 10px;
+}
+
+.joinForm_btn_wrapper {
+  width: 100%;
+  display: flex;
+}
+
+.joinForm-right input {
+  margin: 0px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.joinForm-left button {
+  width: 250px;
+}
+
+.joinForm-right button {
+  margin: 0px;
+  margin-top: 10px;
+}
+
+p {
+  margin: 0px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.joinForm_btn_wrapper p {
+  margin-left: 10px;
+  display: flex;
+  align-items: end;
+}
+
+#joinBtn {
+  margin-top: 20px;
+}
+
+.input_text-md:first {
+  margin: 0;
+}
+
+input[type="email"],
+#emailCheck {
+  margin-top: 0px;
+}

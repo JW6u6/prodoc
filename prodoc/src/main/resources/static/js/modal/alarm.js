@@ -96,8 +96,8 @@ function showAlarmList(type){
 			
 			document.querySelectorAll('.alarms').forEach(items => {
 				items.addEventListener('click', function(e){
-					selectPage(e.currentTarget.dataset.id);
-					alarmMod.className = 'hide';
+					// selectPage(e.currentTarget.dataset.pageid);
+					
 				});
 			})
 		}else if(type =='REPLY_TG'){
@@ -124,8 +124,8 @@ function showAlarmList(type){
 			
 			document.querySelectorAll('.alarms').forEach(items => {
 				items.addEventListener('click', function(e){
-					selectPage(e.currentTarget.dataset.pageid);
-					alarmMod.className = 'hide';
+					// selectPage(e.currentTarget.dataset.pageid);
+					
 				});
 			})
 		}else if(type =='invite'){
@@ -142,6 +142,12 @@ function showAlarmList(type){
 							<input type="button" class="joinOkBtn" value="수락"> <input type="button" class="joinNoBtn" value="거절">
 							</div>`
 				insertDiv.insertAdjacentHTML("beforeend",text);
+			})
+			document.querySelectorAll('.alarms').forEach(items => {
+				items.addEventListener('click', function(e){
+					// selectPage(e.currentTarget.dataset.pageid);
+					
+				});
 			})
 		}
 	})
