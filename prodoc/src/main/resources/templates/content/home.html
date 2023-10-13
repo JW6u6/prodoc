@@ -31,7 +31,8 @@
 		th:include="@{fragments/sidebar}"></th:block>
 	<th:block th:if="${session.logUser!= null}" layout:fragment="header"
 		th:include="@{fragments/header}"></th:block>
-	<input type="text" id="homePg" style="visablity:hidden;" th:value="${session.logUser.defaultPage}">
+	<input type="text" id="homePg" th:if="${session.logUser!= null}"
+		style="visablity:hidden;" th:value="${session.logUser.defaultPage}">
 	
 	<th:block th:if="${session.logUser== null}">
 		<div id="nonMember" th:insert="content/nonUser :: nonMemberFrag"></div>
@@ -45,29 +46,18 @@
 		<script>
 			const blockSessionUserId = "[[${session.logUser.email}]]";
 		</script>
-	<script th:inline="javascript" src="js/common.js"></script>
-
-	<!-- 알람 모달 -->
-	<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
-	<script th:inline="javascript" src="js/modal/alarm.js"></script>
+		<script th:inline="javascript" src="js/common.js"></script>
 	
+		<!-- 알람 모달 -->
+		<div id="alarmModFag" th:insert="modal/alarm.html :: alarmFrag"></div>
+		<script th:inline="javascript" src="js/modal/alarm.js"></script>
 	
-
-
 		<!-- db 스크립트 -->
 		<script th:inline="javascript" src="js/db/dbEvent.js"></script>
 		<script th:inline="javascript" src="js/db/dbAttrEvent.js"></script>
 		<script th:inline="javascript" src="js/db/dbPageLayout.js"></script>
 		<script th:inline="javascript" src="js/db/dbMove.js"></script>
 		<script th:inline="javascript" src="js/db/dbInfo.js"></script>
-		<!-- 워크/디비 검색 모달 -->
-		<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
-		<script th:inline="javascript" src="js/modal/search.js"></script>
-
-		<!-- 히스토리 모달 -->
-		<div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
-		<script th:inline="javascript" src="js/modal/history.js"></script>
-
 
 		<div id="FileSearchModal"
 			th:insert="modal/fileModal.html :: FileSearchModal"></div>
@@ -77,7 +67,16 @@
 		<script th:inline="javascript" src="js/block/block.js"></script>
 		<script th:inline="javascript" src="js/block/menuEvent.js"></script>
 		<script th:inline="javascript" src="js/block/blockMove.js"></script>
-	</th:block>
+		
+		<!-- 워크/디비 검색 모달 -->
+		<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>
+		<script th:inline="javascript" src="js/modal/search.js"></script>
+
+		<!-- 히스토리 모달 -->
+		<div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
+		<script th:inline="javascript" src="js/modal/history.js"></script>
+
+	<script src="js/modal/pageName.js"></script>
 	<script src="js/modal/close.js"></script>
 	<script>
 		//로그인 시 개인페이지의 메인페이지 로드
@@ -88,5 +87,6 @@
 		}
 		setLoginMainPage();
 	</script>
+	</th:block>
 </body>
 </html>

@@ -26,29 +26,20 @@
 				<div class="pageDiv">
 					<input type="text" value="" id="pgName" />
 				</div>
-				<div class="btnDiv">
-					<button id="temBtn" class="Type" onclick="template()">템플릿</button>
-					<button id="dbBtn" class="Type" onclick="database()">DB</button>
-				</div>
 				<div id="pageContent"></div>
-				<div id="temPage">
-					<div id="tem1" class="tem" onclick="selectTemp(event)">템플릿1</div>
-					<div id="tem2" class="tem" onclick="selectTemp(event)">템플릿2</div>
-					<div id="tem3" class="tem" onclick="selectTemp(event)">템플릿3</div>
-					<div id="tem4" class="tem" onclick="selectTemp(event)">템플릿4</div>
-				</div>
 				<div id="dbPage">
-					<div id="db1" class="db" onclick="selectDb(event)">db1</div>
-					<div id="db2" class="db" onclick="selectDb(event)">db2</div>
-					<div id="db3" class="db" onclick="selectDb(event)">db3</div>
-					<div id="db4" class="db" onclick="selectDb(event)">db4</div>
+					<div data-casetype="NONE" class="tem" onclick="selectTemp(event)">빈 페이지</div>
+					<div data-casetype="DB_LIST" class="db" onclick="selectDb(event)">리스트</div>
+					<div data-casetype="DB_BRD" class="db" onclick="selectDb(event)">칸반보드</div>
+					<div data-casetype="DB_GAL" class="db" onclick="selectDb(event)">갤러리</div>
+					<div data-casetype="DB_TBL" class="db" onclick="selectDb(event)">표</div>
 				</div>
 
-				<input type="text" value="" id="parentId" />
+				<input type="text" value="" id="parentId" style="visibility:hidden">
 				<!-- 부모 pageId값 -->
-				<input type="text" value="" id="workId" />
+				<input type="text" value="" id="workId" style="visibility:hidden">
 				<!--workId값 -->
-				<input type="text" value="" id="caseId" />
+				<input type="text" value="" id="caseId" style="visibility:hidden">
 				<!--caseId값 -->
 
 				<button type="button" id="insert-page" class="close">생성</button>

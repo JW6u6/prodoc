@@ -192,13 +192,11 @@ function settingSearchResult(headers, data){
 
 function getPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
 console.log(e.currentTarget);
-	//console.log(e.currentTarget.dataset.pageid);
+	let blockId = e.currentTarget.dataset.blockid;
 	
 	selectPage(e.currentTarget.dataset.pageid);
 	if(e.currentTarget.dataset.blockid != null){
-		let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
-		let focusBlock = document.querySelector(blockId);
-		window.scrollTo({top:focusBlock, behavior:'smooth'});
+		setTimeout(() => cusorMove(blockId), 500);
 	}
 	WKDBMod.className = "hide"
 }

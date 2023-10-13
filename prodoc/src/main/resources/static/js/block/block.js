@@ -74,6 +74,16 @@ function makeBlockPage(pageId, type = "PAGE", element) {
   subscribeTopics.push(blockSubscribe);
 }
 
+function cusorMove(blockid){
+	let cursor = `div[data-block-id="${blockid}"]`;
+	let focusBlock = document.querySelector(cursor);
+	if(focusBlock != null){
+		console.log(focusBlock);
+		let topLocation = focusBlock.offsetTop;
+		console.log(topLocation);
+		window.scrollTo({top:topLocation, behavior:'smooth'});
+	}
+}
 //어떻게 해결방법이 없나?
 let isReady = true;
 let isExistData = [];

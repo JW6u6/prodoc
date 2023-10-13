@@ -54,7 +54,10 @@ body {
 .cd1 {
   margin-left: 120px;
 }
-
+#TitleName{ /*페이지명*/
+	margin: 0 0 0 50px; padding: 0;
+	
+}
 .app {
   background-color: var(--page-bg-color);
   width: calc(100vw - 300px);
