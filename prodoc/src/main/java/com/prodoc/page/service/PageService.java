@@ -31,4 +31,7 @@ public interface PageService {
 	public void LockAlam(PageVO pageVO);
 	//페이지 이름 변경
 	public String newName(PageVO pageVO);
+	
+	//페이지 복사
+	public String pastePage(PageVO pageVO);
 }

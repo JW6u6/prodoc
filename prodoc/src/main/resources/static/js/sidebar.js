@@ -201,38 +201,8 @@ function dropPage(event){
         offsetX, offsetY
     } = event;
     const center = targetHeight / 2;
-    console.log(offsetY , center)
-
-    // if(targetItem.dataset.level == 3){
-    //     return;
-    // } else if(targetItem.dataset.level == 2 && )
-        
-    if(offsetY < center +( targetHeight / 4 ) && offsetY > center - ( targetHeight /4)){ 
-        console.log("으아아아앙아아아앆!!")
-        let workId = targetItem.closest('.Work').dataset.id;
-        let pageId = dragItem.dataset.id;
-        let parentId = targetItem.parentElement.dataset.id;
-        console.log(targetItem)
-        let val = {
-                "workId" : workId
-              , "parentId" : parentId
-              , "pageId" : pageId
-                };
-        let url = "/inPageUpdate"
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(val)
-        })
-        .then(res => res.json())
-        .then(result => {
-            console.log(result)
-        })
-        .catch(err => console.log(err))
-    } else 
-    if(offsetY > center +( targetHeight / 4 )){
+    console.log(offsetY, center)
+    if (offsetY > center) {
         insertAfter(dragItem, targetItem.parentElement);
         console.log('뒤')
         let pageId = dragItem.dataset.id;
@@ -459,18 +429,18 @@ function pageList(wId, target) {
                     selectPage(pageId);
                 })
             })
-            
+
             //페이지 이름 변경 모달 열기 :: 은주
-			document.querySelectorAll(".editPN").forEach(tag => {
-				let pid = tag.parentElement.dataset.id
-				let pname = tag.parentElement.dataset.name
-				tag.addEventListener('click', function(e){
-					PNmod.className ="view";
-					PNmod.dataset.id= pid;
-					let newPName = document.querySelector("#editPageMod input");
-					 newPName.value = pname;
-				});
-			});
+            document.querySelectorAll(".editPN").forEach(tag => {
+                let pid = tag.parentElement.dataset.id
+                let pname = tag.parentElement.dataset.name
+                tag.addEventListener('click', function (e) {
+                    PNmod.className = "view";
+                    PNmod.dataset.id = pid;
+                    let newPName = document.querySelector("#editPageMod input");
+                    newPName.value = pname;
+                });
+            });
         })
         .catch((err) => console.log('err: ', err));
 }
@@ -504,7 +474,7 @@ document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
 
 // 페이지 선택시 PID 불러오기 + 리스트노출.
 function selectPage(pageId) {
-  let url = "/pageInfo?pageId=" + pageId;
+    let url = "/pageInfo?pageId=" + pageId;
     fetch(url)
         .then((res) => {
             return res.json();
@@ -771,7 +741,11 @@ function contextWorkSpace(e) {
     subMenu.style.left = e.pageX + "px";
 }
 
-document.addEventListener('click', closeSubMenu);
+document.addEventListener('click', function (e) {
+    let autoComplete = document.querySelector('#autoContain');
+    autoComplete.innerHTML = '';
+    closeSubMenu();
+});
 
 function closeSubMenu() {
     let subMenu = document.querySelector('#subWorkMenu');
@@ -1176,14 +1150,18 @@ async function autoCheckList() {
 
     function displayInputValue() {
         let matchedArray = findMatches(mail.value, memL);
-        let memberSelectList = document.createElement('select');
-        let memberOptionList = document.createElement('option');
+        let autoComplete = document.querySelector('#autoContain');
+        autoComplete.innerHTML = '';
 
-        memberOptionList.textContent = matchedArray;
-        memberSelectList.appendChild(memberOptionList);
-        mail.appendChild(memberSelectList);
+        matchedArray.forEach(item => {
+            let memberOptionList = document.createElement('div');
+            memberOptionList.textContent = item;
+            autoComplete.appendChild(memberOptionList);
+        });
     }
+
 }
+
 
 async function addList() {
     let workId = document.querySelector('#wid');
@@ -1294,22 +1272,22 @@ function inviteWork(workId) {
     }
     console.log(inviteList);
     let url = '/workJoin';
-    
+
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(inviteList)
-    })
-    .then(response => response.text())
-    .then(result => {
-        console.log(result + '건 성공');
-        tdList.forEach(item => {
-            item.remove();
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inviteList)
         })
-    })
-    .catch(err => console.log(err));
+        .then(response => response.text())
+        .then(result => {
+            console.log(result + '건 성공');
+            tdList.forEach(item => {
+                item.remove();
+            })
+        })
+        .catch(err => console.log(err));
 
 }
 
