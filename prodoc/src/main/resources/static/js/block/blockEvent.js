@@ -8,7 +8,9 @@ function handlingBlockEvent(element) {
   element.addEventListener("dragover", dragover_handler);
   element.addEventListener("drop", drop_handler);
   element.addEventListener("keydown", keydown_handler);
-  element.addEventListener("input", input_handler);
+  if (element.dataset.blockType !== "DATABASE") {
+    element.addEventListener("input", input_handler);
+  }
   blockClickEvent(element);
   hljs.highlightAll();
   // 컬럼은 메뉴가 안뜸
@@ -627,7 +629,7 @@ async function keydown_handler(e) {
 function input_handler(event) {
   const displayId = event.target.closest(".prodoc_block").dataset.blockId;
   if (event.target.nodeName == "INPUT") return;
-
+  if (event.target.classList.contains("attr-name")) return;
   const updateObj = {
     eventType: "input",
     upUser: blockSessionUserId,

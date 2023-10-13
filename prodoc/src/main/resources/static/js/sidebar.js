@@ -400,7 +400,7 @@ async function newWork() {
                     div.remove();
                 })
             } else {
-                newWorkSpace;
+                newWorkSpace();
             }
         }
     });
@@ -709,6 +709,7 @@ function closeSideModal() {
     document.querySelector('#wsType').removeEventListener('change', noChange);
     document.querySelector('#wsType').removeEventListener('change', setTypeChange);
     document.querySelector('#wsType').removeEventListener('click', setTypeChange);
+
     let input = document.querySelectorAll('#workModal input');
     input.forEach(item => {
         if (item.id != 'loginUser') {
@@ -723,14 +724,10 @@ function closeSideModal() {
             item.options[0].selected = true;
         })
     }
-    let resetTable = document.querySelectorAll("#workModal table");
-    for (let tbl of resetTable) {
-        if(tbl.hasChildNodes){
-            tbl.childNodes.forEach(item => {
-                item.remove()
-            });
-        }
-    }
+    let invTable = document.querySelectorAll('#invList > tr');
+    invTable.forEach(item => {
+        item.remove();
+    })
     subCheck = false;
     let checkWDivs = document.querySelectorAll('.checkWDiv');
     if (checkWDivs) {
@@ -1277,12 +1274,14 @@ async function addList() {
             if (subCheck == true) {
                 Jlist = document.querySelectorAll('#beforeJoin tr');
                 Jlist.forEach(list => list.remove());
-                if (thisM == false || thisI == true && invite.includes(mail.value) == true) {
-                    console.log(invite.includes(mail.value));
+                if (thisM == false) {
                     alert('하위 워크스페이스에는 상위 워크스페이스의 멤버만 초대할 수 있습니다.')
                     mail.value = '';
                     mail.focus();
-
+                } else if (thisI == true || invite.includes(mail.value) == true) {
+                    alert('이미 초대중인 사용자입니다.')
+                    mail.value = '';
+                    mail.focus();
                 } else if (thisM == true || thisI == false && invite.includes(mail.value) == false) {
                     let trTag = document.createElement('tr');
                     let tdTag = document.createElement('td');
@@ -1344,7 +1343,6 @@ function inviteWork(workId) {
             inviteEmail
         })
     }
-    console.log(inviteList);
     let url = '/workJoin';
 
     fetch(url, {
@@ -1357,9 +1355,6 @@ function inviteWork(workId) {
         .then(response => response.text())
         .then(result => {
             console.log(result + '건 성공');
-            tdList.forEach(item => {
-                item.remove();
-            })
         })
         .catch(err => console.log(err));
 
