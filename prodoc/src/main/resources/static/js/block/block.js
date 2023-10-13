@@ -1,13 +1,77 @@
 //DATABASE, DATA_PAGE, PAGE
+const subscribeTopics = [];
 
-function makeBlockPage(pageId, type = "PAGE") {
+//페이지를 불러오는 함수
+function makeBlockPage(pageId, type = "PAGE", element) {
+  //만약 구독을 하고있다면 구독해제
+  if (subscribeTopics.length > 0) {
+    const subs = subscribeTopics.pop();
+    subs.unsubscribe();
+  }
   if (type === "DATA_PAGE") {
     document.querySelector(".container").innerHTML = "";
-    showBlocks(pageId, type);
+    showBlocks(pageId, type, element);
   } else if (type === "PAGE") {
     document.querySelector(".container").innerHTML = "";
-    showBlocks(pageId);
+    showBlocks(pageId, type, element);
   }
+  // 페이지에 들어오면 페이지이름으로 구독시작.
+  const blockSubscribe = stompClient.subscribe(
+    `/topic/collaboration/${pageBlockId}`,
+    (data) => {
+      const socketDataObj = JSON.parse(data.body);
+      console.log(socketDataObj);
+      const { eventType, displayId } = socketDataObj;
+      if (socketDataObj.upUser === blockSessionUserId) return;
+
+      const targetItem = document.querySelector(
+        `[data-block-id="${socketDataObj.targetBlockId}"]`
+      );
+      const dragItem = document.querySelector(
+        `[data-block-id="${socketDataObj.dragBlockId}"]`
+      );
+
+      if (eventType === "input") {
+        const changedBlock = document
+          .querySelector(`[data-block-id="${displayId}"]`)
+          .querySelector(".content");
+        if (changedBlock) {
+          changedBlock.innerText = socketDataObj.content;
+        }
+      } else if (eventType === "DRAG") {
+        console.log(socketDataObj);
+        const { dragState } = socketDataObj;
+        const targetType = targetItem.dataset.blockType;
+        dragEvent({ targetItem, dragItem, dragState, targetType });
+      } else if (eventType === "RESETORDER") {
+        resetOrder(true);
+      } else if (eventType === "CREATEBLOCK") {
+        const { template, type, enteredBlockId } = socketDataObj;
+
+        const enteredBlock = document.querySelector(
+          `[data-block-id="${enteredBlockId}"]`
+        );
+        const displayObj = {
+          template,
+          type,
+          element: enteredBlock,
+        };
+        console.log(displayObj);
+        displayBlock(displayObj);
+      } else if (eventType === "DELETEBLOCK") {
+        document.querySelector(`[data-block-id="${displayId}"]`).remove();
+      } else if (eventType === "CHANGETYPE") {
+        // 캐릭캐릭체인지
+        const blockType = socketDataObj.blockType;
+        changeEvent(displayId, blockType);
+      } else if (eventType === "FOCUSIN") {
+      } else if (eventType === "FOCUSOUT") {
+      }
+    }
+  );
+
+  console.log(blockSubscribe);
+  subscribeTopics.push(blockSubscribe);
 }
 
 //어떻게 해결방법이 없나?
@@ -99,9 +163,10 @@ function sendData(isExistData) {
 function sendSocketEvent(socketEventObj) {
   if (stompClient.connected) {
     stompClient.publish({
-      destination: `/topic/collaboration/test`,
+      destination: `/topic/collaboration/${pageBlockId}`,
       body: JSON.stringify(socketEventObj),
     });
+    console.log("send");
   } else {
     console.log("stomp is not connected");
   }
@@ -111,9 +176,16 @@ function sendSocketEvent(socketEventObj) {
  *  페이지 요청함수
  * @param {string} pageId - 페이지아이디
  */
-function showBlocks(pageId, type = "PAGE") {
-  const container = document.querySelector(".container");
-  container.innerHTML = "";
+function showBlocks(pageId, type = "PAGE", element) {
+  let container = null;
+  if (element) {
+    container = element;
+    container.innerHTML = "";
+  } else if (!element) {
+    container = document.querySelector(".container");
+    container.innerHTML = "";
+  }
+
   fetch("/block/get?pageId=" + pageId, {
     method: "GET",
     headers: {
@@ -165,7 +237,7 @@ function showBlocks(pageId, type = "PAGE") {
         }
       });
       for (const block of parentBlocks) {
-        await asyncDisplay(block);
+        await asyncDisplay(block, type, element);
       }
       const displayedBlock = document.querySelectorAll(".prodoc_block");
       displayChildBlock(displayedBlock, childBlocks);
@@ -175,9 +247,9 @@ function showBlocks(pageId, type = "PAGE") {
     });
 }
 
-async function asyncDisplay(block, type) {
+async function asyncDisplay(block, type, element) {
   const template = await updateTemplate(block);
-  displayBlock({ template, type, element: null });
+  displayBlock({ template, type, element });
 }
 
 async function asyncChildDisplay(block, parent) {
