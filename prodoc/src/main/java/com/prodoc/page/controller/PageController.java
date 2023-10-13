@@ -147,8 +147,6 @@ public class PageController {
 	// 페이지 복사
 	@PostMapping("/pageCopyPaste")
 	public String pageCopy(@RequestBody PageVO pageVO, HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("logUser");
-		pageVO.setCreUser(user.getEmail());
 		return pageService.pastePage(pageVO);
 	}
 
