@@ -68,13 +68,18 @@ public class PageServiceImpl implements PageService {
 	}
 	
 	@Override
+	public int updateInPage(PageVO pageVO) {
+		return pageMapper.updateInPage(pageVO);
+	}
+	
+	@Override
 	public int updateNumPlus(PageVO pageVO) {
-		return pageMapper.updatePage(pageVO);
+		return pageMapper.updateNumPlus(pageVO);
 	}
 	
 	@Override
 	public int updateNumMinus(PageVO pageVO) {
-		return pageMapper.updatePage(pageVO);
+		return pageMapper.updateNumMinus(pageVO);
 	}
 	
 	@Override
@@ -123,6 +128,12 @@ public class PageServiceImpl implements PageService {
 			return "{\"result\" : true}"; 
 		}
 		else return "{\"result\" : false}";
+	}
+
+	@Override
+	public String pastePage(PageVO pageVO) {
+		pageMapper.copyPage(pageVO);
+		return pageVO.getInsertResult();
 	}
 
 }

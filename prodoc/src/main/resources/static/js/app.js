@@ -6,84 +6,38 @@ console.log(stompClient);
 connect();
 
 //해당 updatePage를 구독중인 사람
-
 stompClient.onConnect = (frame) => {
-    console.log('Connected: ' + frame);
-    // 페이지 업데이트
-    stompClient.subscribe('/user/topic/updatePage', (data) => {
-        let socketVO = JSON.parse(data.body);
-        console.log(data)
-        console.log(socketVO)
-        if(socketVO.cmd == 1){
-            console.log("생성완료");
-        }
-    });
-    
-     //초대
-  	stompClient.subscribe("/user/topic/inviteWork", (data) => {
-	    let socketVO = JSON.parse(data.body);
-		if(socketVO.cmd == 2){
-		    console.log(data);
-		    console.log(data.body);
-		    console.log(socketVO);  //socketVO.connect = 초대받은 workId
-		    if(document.querySelector('#alarmModal').className == "hide"){	//알림 모달이 닫혀있을 때 사이드(알림) 노란줄
-	        	document.querySelector('#alarm').style.backgroundColor = "yellow";
-		    }else{	//알림이 열려 있을 때 목록 다시 불러오기
-		    	showAlarmList('all');	
-	    	}
-	    }    
-  });
-    
-    
-  // 테스트
-  stompClient.subscribe("/topic/collaboration/test", (data) => {
-    const socketDataObj = JSON.parse(data.body);
-    console.log(socketDataObj);
-    const { eventType, displayId } = socketDataObj;
-    if (socketDataObj.upUser === blockSessionUserId) return;
-
-    const targetItem = document.querySelector(
-      `[data-block-id="${socketDataObj.targetBlockId}"]`
-    );
-    const dragItem = document.querySelector(
-      `[data-block-id="${socketDataObj.dragBlockId}"]`
-    );
-
-    if (eventType === "input") {
-      const changedBlock = document
-        .querySelector(`[data-block-id="${displayId}"]`)
-        .querySelector(".content");
-      if (changedBlock) {
-        changedBlock.innerText = socketDataObj.content;
-      }
-    } else if (eventType === "DRAG") {
-      console.log(socketDataObj);
-      const { dragState } = socketDataObj;
-      const targetType = targetItem.dataset.blockType;
-      dragEvent({ targetItem, dragItem, dragState, targetType });
-    } else if (eventType === "RESETORDER") {
-      resetOrder(true);
-    } else if (eventType === "CREATEBLOCK") {
-      const enteredBlock = document.querySelector(
-        `[data-block-id="${socketDataObj.enteredBlockId}"]`
-      );
-
-      const { template, type } = socketDataObj;
-
-      const displayObj = {
-        template,
-        type,
-        enteredBlock,
-      };
-      displayBlock(displayObj);
-    } else if (eventType === "DELETEBLOCK") {
-      const displayId = socketDataObj.displayId;
-      document.querySelector(`[data-block-id="${displayId}"]`).remove();
-    } else if (eventType === "CHANGETYPE") {
-      // 캐릭캐릭체인지
+  console.log("Connected: " + frame);
+  // 페이지 업데이트
+  stompClient.subscribe("/user/topic/updatePage", (data) => {
+    let socketVO = JSON.parse(data.body);
+    console.log(data);
+    console.log(socketVO);
+    if (socketVO.cmd == 1) {
+      console.log("생성완료");
     }
   });
+
+  //초대
+  stompClient.subscribe("/user/topic/inviteWork", (data) => {
+    let socketVO = JSON.parse(data.body);
+    if (socketVO.cmd == 2) {
+      console.log(data);
+      console.log(data.body);
+      console.log(socketVO); //socketVO.connect = 초대받은 workId
+      if (document.querySelector("#alarmModal").className == "hide") {
+        //알림 모달이 닫혀있을 때 사이드(알림) 노란줄
+        document.querySelector("#alarm").style.backgroundColor = "yellow";
+      } else {
+        //알림이 열려 있을 때 목록 다시 불러오기
+        showAlarmList("all");
+      }
+    }
+  });
+
+  // 테스트
 };
+//sendSocketEvent -> publish function
 
 stompClient.onWebSocketError = (error) => {
   console.error("Error with websocket", error);
@@ -174,9 +128,7 @@ function dragEvent({ targetItem, dragItem, dragState, targetType }) {
 }
 
 async function changeEvent(blockId, blockType) {
-  // const blockId = e.target.closest("div").dataset.blockId;
-  let = document.querySelector(`[data-block-id="${blockId}"]`);
-  // const blockType = e.target.dataset.blockType;
+  let targetBlock = document.querySelector(`[data-block-id="${blockId}"]`);
   // 바꾸려는 블럭의 값
   let text = "";
   const content = targetBlock.querySelector(".content");
