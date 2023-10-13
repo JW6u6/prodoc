@@ -18,6 +18,9 @@ function dbMoveEvent(type){
             const dragDBblock = document.querySelector(".dragging");
             const targetDBblcok = e.currentTarget;
 
+            if(!(dragDBblock.classList.contains("attr-name"))) return;
+            
+
             // 마우스 위치관련 변수 정의
             const targetWidth = targetDBblcok.offsetWidth;
             const targetVerticalCenter = targetWidth / 2;
@@ -47,9 +50,28 @@ function dbMoveEvent(type){
                 dragAttrContents.forEach((dragAttrContent,index) =>{
                     insertAfter(dragAttrContent,targetAttrContents[index])
                 })
-                AttrNumberingUpdate(dragDBblock);
             }
+            AttrNumberingUpdate(dragDBblock);
 
+        })
+        dbAttrName.addEventListener("dragover",(e)=>{
+            //기본적으로 해야할 것
+            //이거 안하면 드랍안됨
+            e.stopPropagation();
+            e.preventDefault()
+        })
+        //드래그를 시작했을때
+        dbAttrName.addEventListener("dragstart",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.add("dragging")
+            console.log("드래그 시작:",e.currentTarget)
+        })
+        //드래그를 종료했을때
+        dbAttrName.addEventListener("dragend",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.remove("dragging")
+            console.log("드래그 종료",e.currentTarget);
+            dbNumberingUpdate(e.currentTarget);
         })
 
     })
@@ -62,6 +84,9 @@ function dbMoveEvent(type){
             const dragDBblock = document.querySelector(".dragging");
             const targetDBblcok = e.currentTarget;
 
+            if(!(dragDBblock.classList.contains("db_block"))) return;
+            
+            
             // 크기 정의
             const targetWidth = targetDBblcok.offsetWidth;
             const targetHeight = targetDBblcok.offsetHeight;
@@ -129,6 +154,9 @@ function datapageMove(){
             const dragDBblock = document.querySelector(".dragging").parentElement;
             const targetDBblcok = e.currentTarget.parentElement;
 
+            if(!(dragDBblock.classList.contains("attr-name"))) return;
+
+            
             // 크기 정의
             const targetHeight = targetDBblcok.offsetHeight;
 
@@ -195,7 +223,7 @@ function dbNumberingUpdate(blockNode){
             let blocks = blockNode.closest('.db-block-body').querySelectorAll('.db_block');
             console.log(blocks);
             blocks.forEach((block, idx)=>{
-                console.log(block);
+                // console.log(block);
                 let num = 512 * (idx+1);
                 block.setAttribute("data-block-order", num); 
                 block.setAttribute("data-page-order", num);
@@ -249,7 +277,7 @@ function AttrNumberingUpdate(blockNode){
             //DB업데이트(해당 페이지 넘버, db에 히스토리 업데이트, page 업데이트)
             data['numbering'] = num;
             attrNumberUpdate(data);
-        console.log(data);
+        // console.log(data);
         });
     } else {
         blockNode.setAttribute("data-attr-order", newNum);
@@ -268,10 +296,6 @@ async function pageAttrNumberingUpdate(blockNode){
 
     let newNum = dbAttrNumbering(prevEle, nextEle);
     let nextNum = Number(nextEle.getAttribute("data-attr-order"));
-
-    //DB업데이트용 데이터들 ✅머지 후에 태그 제대로 찾는지 확인 하고 주석 풀기
-    // let pageId = document.querySelector("input[data-page-id]").getAttribute("data-page-id");
-    let pageId = 'pke2g-exvmq-mmwnk1';
     
     //데이터베이스의 페이지아이디, 블럭아이디 가져오기
     let dbblock = await getDatabaseDBBlock(pageId);

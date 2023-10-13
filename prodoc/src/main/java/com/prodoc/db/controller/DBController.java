@@ -1,17 +1,24 @@
 package com.prodoc.db.controller;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +49,7 @@ public class DBController {
 	@Autowired PageMapper pageMapper;
 	@Autowired BlockServiceImpl blockService;
 	@Autowired dbattrFileService fileService;
-	@Autowired HistoryService hisService;
+	@Autowired HistoryService historyService;
 	
 	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
 	public String InsertDBCase(@RequestBody DBCaseVO casePage) {
@@ -232,5 +239,24 @@ public class DBController {
 	@GetMapping("getDatabaseInfo")
 	public DBBlockVO getDatabaseInfo(@RequestParam String pageId) {
 		return dbService.getDatabaseInfo(pageId);
+	}
+	
+	@PostMapping("db/pageHistoryUpdate")
+	public void pageHistory(@RequestBody BlockVO vo) {
+		historyService.blockHistory(vo);
+	}
+	
+	@GetMapping("db/filedownload")
+	public void dbfiledownload(@RequestParam String file, HttpServletResponse response) throws IOException  {
+		File downFile = new File("/dbattr/", file);
+		response.setContentType("application/download");
+        response.setContentLength((int)downFile.length());
+        // response 객체를 통해서 서버로부터 파일 다운로드
+        OutputStream os = response.getOutputStream();
+        // 파일 입력 객체 생성
+        FileInputStream fis = new FileInputStream(downFile);
+        FileCopyUtils.copy(fis, os);
+        fis.close();
+        os.close();
 	}
 }

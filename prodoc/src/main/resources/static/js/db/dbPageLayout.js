@@ -114,16 +114,15 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
     };
     dbMoveEvent(layout);
+    databaseAllEvent();
 }
 
 const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
 
 function updateCase(pageId, layout){
     let data = {"pageId" : pageId, "caseId" : layout};
-    // data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    data['creUser'] = 'user1@user1' // ⭐⭐
-    data['workId'] = 'TESTWORK'     // ⭐⭐ 추가하기
-
+    data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
+    data['workId'] = document.getElementById("TitleWid").value;
 
     fetch("updateCase",{
         method : "post",
@@ -189,7 +188,7 @@ function dbGalBlock(block){
     const galType = `
     <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
+        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
             <div class="data_page">`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
@@ -259,7 +258,8 @@ function dbTblAttrBlock(attrs, uniqueList){
                 innerDiv = document.createElement("div");
                 let div = document.createElement("div");
                 div.textContent = content == '' ? '' : content.substring(13);
-                div.classList.add("attr", "inlineTags", "file-conten");
+                div.classList.add("attr", "inlineTags", "file-content");
+                div.setAttribute("data-fileName", content);
                 let btn = document.createElement("div");
                 btn.classList.add("inlineTags", "del-attr-file");
                 div.append(btn);
@@ -275,7 +275,7 @@ function dbTblAttrBlock(attrs, uniqueList){
                 let img = document.createElement("img");
                 img.width = 50;
                 img.classList.add("attr", "inlineTags", "db-img");
-                img.src = content;
+                img.src = '/dbFiles/'+content;
                 let input = document.createElement("input");
                 input.type = "file";
                 input.style.display = "none";

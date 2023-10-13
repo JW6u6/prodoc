@@ -78,7 +78,7 @@
 	
 	<delete id="deleteAttrContent" parameterType="PageAttrVO">
 		{call DELETE_ATTR_CONTENT(
-			#{pageUesId}
+			#{pageUseId}
 			, #{email}
 			, #{workId}
 		)}

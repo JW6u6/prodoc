@@ -1,15 +1,5 @@
 // 페이지 클릭시 페이지 타입을 체크
 /*
-        // 📌페이지 불러오는 함수에 추가
-        let pageType = await pageTypeCheck(pageId);
-        if (pageType == 'DATABASE'){
-            데이터베이스일때
-        } else if (pageType == 'DATA_PAGE'){
-            속성 추가해주기 + 원래대로
-        } else {
-            원래대로
-        }
-
         페이지 클릭했을 때
         1. 페이지 타입 구분한다
         2-1. 데이터베이스 일 때
@@ -88,31 +78,33 @@ async function getDataInfo(pageId){
             node.classList.add("inlineTags");
 
             topDiv.append(attrCase, node);
+            
             attrDiv.append(topDiv);
         })  // 노드 forEach문 종료
 
-
         // 3. 속성 append
         let titleEle = document.querySelector(".db_attrList");
+
+
         console.log(titleEle);
-        titleEle.after(attrDiv);
+        titleEle.append(attrDiv);
 
         datapageMove(); // 속성 드래그 이벤트 등록
-        // 속성 등록, 삭제, 수정 이벤트 등록
+        databaseAllEvent(); // db의 키, 체인지 이벤트
     })
     
 }
 
 // 데이터베이스에서 하위 페이지 클릭
-function getDatapageId(e){
+async function getDatapageId(e){
     let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
     console.log(pageId);
-    openDataPage(pageId);
+    await openDataPage(pageId);
 }
 
 // 데이터베이스에서 페이지를 클릭했을때 페이지 모달
-function openDataPage(pageId){
-    fetch(`/pageInfo?pageId=${pageId}`,{
+async function openDataPage(pageId){
+    await fetch(`/pageInfo?pageId=${pageId}`,{
         method : 'get',
         headers : {'Content-Type' : 'application/json'}
     })
@@ -137,11 +129,8 @@ function openDataPage(pageId){
         container.insertAdjacentHTML("beforeend", pageModal);
         
         // insert된 div 내부에 속성 append
-        let attrDiv = document.querySelector(".db_attrList");
-        let attrList = '';
-        attrDiv.append(attrList);
         getDataInfo(pageId);
-
+        showBlocks(pageId, "DATA_PAGE");
         // 모달 이벤트
         document.querySelector(".view_change").addEventListener("click", e => {          
             selectPage(pageId);
@@ -155,18 +144,23 @@ function openDataPage(pageId){
 
 // 데이터베이스 하위 페이지
 async function createDataPage(pageId){
+    const database = await getDatabaseDBBlock(pageId);
+
     let container = document.querySelector(".container");
-    
     let attrs = document.createElement("div");
     attrs.classList.add("db_attrList");
+    attrs.setAttribute("data-page-id", pageId);
+    attrs.setAttribute("data-block-id", database.displayId);
+    // 🔼 데이터베이스의 블럭아이디
+
     let blocks = document.createElement("div");
     blocks.classList.add("dataPage_blocks");
-    // container.append(attrs, blocks);
     // ✅ 블럭이 들어가는 위치 확인, 작성한 태그들 컨테이너 안에 넣기
-    container.before(attrs);
-
+    container.append(attrs, blocks);
+    console.log(container);
     // 사용중인 속성 append
     await getDataInfo(pageId);
+    return blocks;
 }
 
 // 데이터베이스 페이지를 오픈했을 때
@@ -183,7 +177,7 @@ function openDatabase(pageId){
         // 데이터베이스 탬플릿 형성
         let database = createDBblock(block);
         targetDom.insertAdjacentHTML("afterbegin", database);
-
+        targetDom.querySelector(".db-page-name").style.display = "none";
         // 하위페이지 불러오기
         getChildList(block.displayId);
     })
@@ -205,6 +199,13 @@ async function getDatabaseDBBlock(pageId){
 
 // 하위페이지 속성 편집 모달
 function openpageAttrOption(e){
+    // CUSER, CDATE, UUSER , UDATE, STATE 수정 불가
+    const checkId = e.target.getAttribute("data-attrid");
+    const cannotMod = ['CUSER', 'CDATE', 'UUSER', 'UDATE', 'STATE'];
+    if(cannotMod.includes(checkId)){
+        alert("해당 속성은 수정할 수 없습니다.");
+        return;
+    }
     if(document.querySelector(".pageAttr_option")!=null) document.querySelector(".pageAttr_option").remove();
     let modal = document.createElement("div");
     modal.classList.add("pageAttr_option")
@@ -225,14 +226,8 @@ function openpageAttrOption(e){
     submitBtn.textContent = '수정';
     submitBtn.addEventListener("click", pageAttrnameUpdate);
     input.addEventListener("keydown", pageAttrnameUpdate);
-    let attrDel = document.createElement("div");
-    attrDel.textContent = '속성 삭제';
-    attrDel.addEventListener("click", e => {
-        // 속성 삭제 이벤트
-    });
 
-
-    modal.append(closeBtn, input, submitBtn, attrDel);
+    modal.append(closeBtn, input, submitBtn);
     e.target.closest(".attr-line").append(modal);
 }
 
@@ -242,7 +237,8 @@ async function pageAttrnameUpdate(e){
     if(pageModal != null) {
         pageId = pageModal.getAttribute("data-page-id");
     } else {
-        // ✅ 컨테이너 안에서 정보 select
+        let inputTag = document.querySelector(".pageHead input[data-pageid]");
+        pageId = inputTag.getAttribute("data-pageid");
     }
     const modal = e.target.closest(".pageAttr_option");
     const nameNode = modal.parentNode.firstChild;
@@ -266,7 +262,7 @@ async function pageAttrnameUpdate(e){
             return;
         }
 
-        // 1. DB 수정
+        // DB 수정
         let data = {
             'dbUseId' : nameNode.getAttribute("data-duse-id"),
             'attrName' : input.value,
@@ -278,8 +274,14 @@ async function pageAttrnameUpdate(e){
         console.log(data);
         modifyAttrNameAjax(data);
         
-        // 2. DB의 하위 페이지 속성부분 수정
-        // 3. DB블럭에 존재하는 속성 이름부분 수정
-        // 4. 속성수정 모달 닫기
+        // 수정 사항을 화면에 반영
+        const modifyTags = document.querySelectorAll(`.attr-name[data-duse-id="${data.dbUseId}"]`);
+        console.log(modifyTags);
+        modifyTags.forEach(tag => {
+            tag.textContent = data.attrName;
+        })
+
+        // 속성수정 모달 닫기
+        modal.remove();
     }
 }

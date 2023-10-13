@@ -2,69 +2,76 @@ const blocks = document.querySelectorAll(".prodoc_block");
 const container = document.querySelector(".container");
 let blockCount = 1;
 
-container.addEventListener("dragover", (e) => {
-  e.preventDefault();
-});
 
-container.addEventListener("drop", (e) => {
-  let newOrder = null;
-  let isColumn = null;
-  const pointer = document.querySelector(".block_pointer");
-  const target = pointer.closest(".prodoc_block");
-  const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
-  //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
-  if (dragItem.parentElement.classList.contains("block_column")) {
-    isColumn = dragItem.parentElement;
-  }
-  insertAfter(dragItem, target);
-  newOrder = Number(target.dataset.blockOrder) + 1024;
-  dragItem.dataset.blockOrder = newOrder;
-  const updateObj = {
-    upUser: blockSessionUserId,
-    displayId: dragItem.dataset.blockId,
-    rowX: dragItem.dataset.blockOrder,
-  };
-  if (isColumn && isColumn.children.length <= 0) {
-    const block = isColumn.closest(".prodoc_block");
-    deleteBlock(block);
-  }
-  updateDBBlock(updateObj);
-  if (pointer) {
-    pointer.remove();
-  }
-});
-
-//컨테이너 클릭 이벤트
-container.addEventListener("mouseup", (e) => {
-  let newElement = null;
-  if (e.target !== e.currentTarget) return;
-  e.stopPropagation();
-  const paddingBottom = 150;
-  const targetHeight = e.target.clientHeight;
-  const clickHeight = e.offsetY;
-  const prevBlock = e.target.lastElementChild;
-  if (targetHeight - paddingBottom < clickHeight && prevBlock !== null) {
-    const isSeparator = prevBlock.querySelector(".separator");
-    if (isSeparator) return;
-    if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
+function containerEvent(box){
+  box.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+  console.log(box)
+  box.addEventListener("drop", (e) => {
+    let newOrder = null;
+    let isColumn = null;
+    const pointer = document.querySelector(".block_pointer");
+    const target = pointer.closest(".prodoc_block");
+    const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
+    //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
+    if (dragItem.parentElement.classList.contains("block_column")) {
+      isColumn = dragItem.parentElement;
+    }
+    insertAfter(dragItem, target);
+    newOrder = Number(target.dataset.blockOrder) + 1024;
+    dragItem.dataset.blockOrder = newOrder;
+    const updateObj = {
+      upUser: blockSessionUserId,
+      displayId: dragItem.dataset.blockId,
+      rowX: dragItem.dataset.blockOrder,
+    };
+    if (isColumn && isColumn.children.length <= 0) {
+      const block = isColumn.closest(".prodoc_block");
+      deleteBlock(block);
+    }
+    updateDBBlock(updateObj);
+    if (pointer) {
+      pointer.remove();
+    }
+  });
+  
+  //컨테이너 클릭 이벤트
+  box.addEventListener("mouseup", (e) => {
+    let newElement = null;
+    if (e.target !== e.currentTarget) return;
+    e.stopPropagation();
+    const paddingBottom = 150;
+    const targetHeight = e.target.clientHeight;
+    const clickHeight = e.offsetY;
+    const prevBlock = e.target.lastElementChild;
+    
+    console.log(prevBlock);
+  
+    if (targetHeight - paddingBottom < clickHeight && prevBlock !== null) {
+      const isSeparator = prevBlock.querySelector(".separator");
+      if (isSeparator) return;
+      if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
+        const template = makeBlockTemplate();
+        const displayObj = {
+          template,
+          type: null,
+          element: box,
+        };
+        displayBlock(displayObj); // 문서쪽으로 만듦
+      }
+    } else {
       const template = makeBlockTemplate();
       const displayObj = {
         template,
         type: null,
-        element: null,
+        element: box,
       };
       displayBlock(displayObj); // 문서쪽으로 만듦
     }
-  } else {
-    const template = makeBlockTemplate();
-    const displayObj = {
-      template,
-      type: null,
-      element: null,
-    };
-    displayBlock(displayObj); // 문서쪽으로 만듦
-  }
-});
+  });
+}
+
 
 // 드래그를 끝냈을때
 function dragend_handler(event) {
@@ -74,6 +81,7 @@ function dragend_handler(event) {
 function dragStart(event) {
   event.target.classList.add("dragging"); // 드래그중인 요소를 알기위해 클래스 지정
   event.dataTransfer.dropEffect = "copy"; //드래그중 마우스 커서 모양을 정하기
+  console.log(event)
 }
 
 // 사이드면 state를 side, 위면 top 아래면 bottom.

@@ -8,6 +8,7 @@ function handlingBlockEvent(element) {
   element.addEventListener("dragover", dragover_handler);
   element.addEventListener("drop", drop_handler);
   element.addEventListener("keydown", keydown_handler);
+
   if (element.dataset.blockType !== "DATABASE") {
     element.addEventListener("input", input_handler);
   }
@@ -631,9 +632,12 @@ async function keydown_handler(e) {
     } else {
       // 블럭을 새로 만들기
       const template = makeBlockTemplate(order);
+      const isDBpage = e.currentTarget.closest(".dataPage_blocks");
+      
+
       const displayObj = {
         template,
-        type: null,
+        type: isDBpage?"DATA_PAGE":null,
         element: enteredBlock,
       };
       //블럭 배치 및 이벤트 부여
@@ -644,7 +648,7 @@ async function keydown_handler(e) {
       const socketEventObj = {
         eventType: "CREATEBLOCK",
         template,
-        type: null,
+        type: isDBpage?"DATA_PAGE":null,
         enteredBlockId: enteredBlock.dataset.blockId,
         upUser: blockSessionUserId,
       };

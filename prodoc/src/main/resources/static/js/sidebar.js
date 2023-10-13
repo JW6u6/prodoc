@@ -587,10 +587,6 @@ function selectPage(pageId) {
         if(type=="DATABASE"){
             // 데이터베이스일 때
             openDatabase(pageId);
-        }else if(type=="DATA_PAGE"){
-            // DB의 하위페이지일 때
-            createDataPage(pageId);
-            makeBlockPage(pageId, type);
         }else {
             // 일반 페이지일 때
             //페이지 뿌려주기

@@ -8,8 +8,13 @@
  */
 function displayBlock({ template, type, element }) {
   if (type === "DATA_PAGE") {
-    const dbModalPage = document.querySelector(".dataPage_blocks");
-    dbModalPage.insertAdjacentHTML("beforeend", template.template);
+    // const dbModalPage = document.querySelector(".dataPage_blocks");
+    if(element){
+      element.insertAdjacentHTML("afterend", template.template);
+    } else{
+      const dbPageContainer = document.querySelector(".dataPage_blocks")
+      dbPageContainer.insertAdjacentHTML("beforeend", template.template);
+    }
   } else {
     if (element) {
       element.insertAdjacentHTML("afterend", template.template);

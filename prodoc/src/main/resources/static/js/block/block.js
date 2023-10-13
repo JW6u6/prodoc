@@ -1,17 +1,25 @@
 //DATABASE, DATA_PAGE, PAGE
 const subscribeTopics = [];
 
+
 //페이지를 불러오는 함수
-function makeBlockPage(pageId, type = "PAGE", element) {
+async function makeBlockPage(pageId, type = "PAGE", element) {
   //만약 구독을 하고있다면 구독해제
   if (subscribeTopics.length > 0) {
     const subs = subscribeTopics.pop();
     subs.unsubscribe();
   }
+  console.log(type === "DATA_PAGE")
   if (type === "DATA_PAGE") {
     document.querySelector(".container").innerHTML = "";
-    showBlocks(pageId, type, element);
+    const parentContainer = await createDataPage(pageId);
+    // const element = document.querySelector("dataPage_blocks");
+    console.log(parentContainer)
+    containerEvent(parentContainer);
+    showBlocks(pageId, type, parentContainer);
+    
   } else if (type === "PAGE") {
+    containerEvent(container);
     document.querySelector(".container").innerHTML = "";
     showBlocks(pageId, type, element);
   }
@@ -186,12 +194,13 @@ function sendSocketEvent(socketEventObj) {
  *  페이지 요청함수
  * @param {string} pageId - 페이지아이디
  */
-function showBlocks(pageId, type = "PAGE", element) {
+
+function showBlocks(pageId, type = "PAGE") {
   let container = null;
-  if (element) {
-    container = element;
+  if (type ==="DATA_PAGE") {
+    container = document.querySelector(".dataPage_blocks");
     container.innerHTML = "";
-  } else if (!element) {
+  } else if (type === "PAGE") {
     container = document.querySelector(".container");
     container.innerHTML = "";
   }
@@ -247,7 +256,7 @@ function showBlocks(pageId, type = "PAGE", element) {
         }
       });
       for (const block of parentBlocks) {
-        await asyncDisplay(block, type, element);
+        await asyncDisplay(block, type);
       }
       const displayedBlock = document.querySelectorAll(".prodoc_block");
       displayChildBlock(displayedBlock, childBlocks);
