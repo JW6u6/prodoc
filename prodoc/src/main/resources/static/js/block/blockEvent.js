@@ -11,6 +11,7 @@ function handlingBlockEvent(element) {
   if (element.dataset.blockType !== "DATABASE") {
     element.addEventListener("input", input_handler);
   }
+
   blockClickEvent(element);
   hljs.highlightAll();
   // 컬럼은 메뉴가 안뜸

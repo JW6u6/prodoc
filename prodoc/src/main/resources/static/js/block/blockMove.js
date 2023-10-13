@@ -74,6 +74,7 @@ function dragend_handler(event) {
 function dragStart(event) {
   event.target.classList.add("dragging"); // 드래그중인 요소를 알기위해 클래스 지정
   event.dataTransfer.dropEffect = "copy"; //드래그중 마우스 커서 모양을 정하기
+  console.log(event)
 }
 
 // 사이드면 state를 side, 위면 top 아래면 bottom.

@@ -1,6 +1,6 @@
 //DATABASE, DATA_PAGE, PAGE
 
-function makeBlockPage(pageId, type = "PAGE") {
+function makeBlockPage(pageId, type) {
   if (type === "DATA_PAGE") {
     document.querySelector(".container").innerHTML = "";
     showBlocks(pageId, type);
@@ -114,6 +114,7 @@ function sendSocketEvent(socketEventObj) {
 function showBlocks(pageId, type = "PAGE") {
   const container = document.querySelector(".container");
   container.innerHTML = "";
+  if(type == "DATA_PAGE") createDataPage(pageId);
   fetch("/block/get?pageId=" + pageId, {
     method: "GET",
     headers: {

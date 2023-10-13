@@ -51,6 +51,25 @@ function dbMoveEvent(type){
             AttrNumberingUpdate(dragDBblock);
 
         })
+        dbAttrName.addEventListener("dragover",(e)=>{
+            //기본적으로 해야할 것
+            //이거 안하면 드랍안됨
+            e.stopPropagation();
+            e.preventDefault()
+        })
+        //드래그를 시작했을때
+        dbAttrName.addEventListener("dragstart",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.add("dragging")
+            console.log("드래그 시작:",e.currentTarget)
+        })
+        //드래그를 종료했을때
+        dbAttrName.addEventListener("dragend",(e)=>{
+            e.stopPropagation();
+            e.currentTarget.classList.remove("dragging")
+            console.log("드래그 종료",e.currentTarget);
+            dbNumberingUpdate(e.currentTarget);
+        })
 
     })
 

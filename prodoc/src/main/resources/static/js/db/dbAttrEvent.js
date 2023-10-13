@@ -409,6 +409,8 @@ function updateAttrContent(data){
                 if(attrId == "TAG"){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
                     tag.innerText = (content==''||content==null ? '' : content);
+                    let dataTag = tag;
+                    addAttrcontentToModal(dataTag);
                 }
                 if(["USER", "CUSER", "UUSER"].includes(attrId)){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
@@ -425,6 +427,8 @@ function updateAttrContent(data){
                             if(attrId = "USER"){
                                 // 빈값에서 새롭게 등록했을 때만 실행됨
                                 tag.innerText = content;
+                                let dataTag = tag;
+                                addAttrcontentToModal(dataTag);
                             }
                             else {
                                 tag.querySelector("div").innerText = content;
@@ -612,21 +616,27 @@ async function addPageTags(e){
                 modalDataTag = newTag
                 beforeTag.after(newTag);        // 형제요소 뒤에 추가된 태그 삽입
             })  // 전체 화면 append를 위한 forEach문 종료
-
-            modalDataTag.classList.remove("view-visible", "attr");
-            modalDataTag.classList.add("inlineTags", "this-value");
-            modalDataTag.removeAttribute("data-duse-id");
-            modalDataTag.removeAttribute("data-attr-order");
-            modalDataTag.removeAttribute("data-attrid");
-            let delBtn = document.createElement("button");
-            delBtn.innerText='✕';
-            delBtn.classList.add("delete-attr");
-            modalDataTag.append(delBtn);
-            let modal = document.querySelector("[data-attr-modal]");
-            modal.querySelector("input").previousElementSibling.after(modalDataTag);
-
+            addAttrcontentToModal(modalDataTag);
         }
     }
+}
+
+// 다중값 속성에서 속성 등록했을 때 속성값 추가하는 모달에 데이터 append용
+function addAttrcontentToModal(tag){
+    // tag == 복사한 태그
+    tag.classList.remove("view-visible", "attr");
+    tag.classList.add("inlineTags", "this-value");
+    tag.removeAttribute("data-duse-id");
+    tag.removeAttribute("data-attrid");
+    tag.removeAttribute("data-attr-order");
+    const delBtn = document.createElement("button");
+    delBtn.innerText='✕';
+    delBtn.classList.add("delete-attr");
+    tag.append(delBtn);
+    
+    const modal = document.querySelector("[data-attr-modal]");
+    const lastData = modal.querySelectorAll("[data-puse-id]");
+    lastData[lastData.length-1].after(tag);
 }
 
 // 이미지 추가
@@ -858,7 +868,7 @@ async function getMembers(pageId, tag){
     });
     modal.innerHTML = option;
 
-    // 멤버 추가를 위한 이벤트 리스너
+    // 멤버 추가를 위한 이벤트 리스너 
     document.querySelectorAll('.get-value').forEach(tag => {
         tag.addEventListener("click", async(e) => {
             let content = e.target.innerText;
@@ -903,20 +913,7 @@ async function getMembers(pageId, tag){
                         modalData = newDiv;
                         prevEle.before(newDiv);  // 선택요소 뒤에 추가
                     })  // 새로운 유저 화면에 추가 forEach문 종료
-
-                    // 모달에 새롭게 등록된 데이터 추가
-                    modalData.classList.remove("view-visible", "attr");
-                    modalData.classList.add("inlineTags", "this-value")
-                    modalData.removeAttribute("data-duse-id");
-                    modalData.removeAttribute("data-puse-id");
-                    modalData.removeAttribute("data-attr-order");
-                    let delBtn = document.createElement("button");
-                    delBtn.innerText = '✕';
-                    delBtn.classList.add("delete-attr");
-                    modalData.append(delBtn);
-                    let modal = e.target.closest("[data-attr-modal]");
-                    console.log(modal);
-                    modal.querySelector("hr").after(modalData);
+                    addAttrcontentToModal(modalData);   // 속성값 편집 모달에 데이터 append
                 }
 
             }
