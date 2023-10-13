@@ -1,8 +1,10 @@
 @import "variable/var.css";
+@import "common.css";
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
+  background: pink;
 }
 
 .wrapper {
@@ -22,7 +24,6 @@ body {
 
 .logo_img--lg {
   width: 500px;
-  height: 500px;
   border-radius: 50%;
 }
 
@@ -34,17 +35,9 @@ body {
 .img_wrapper {
   width: 500px;
   height: 500px;
-}
-
-.input_text {
-  width: 80%;
-  height: 50px;
-  margin-bottom: 10px;
-  border-radius: 25px;
-  border: 3px solid;
-  border-color: var(--input-border-color);
-  padding: 0 20px;
-  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login_wrapper {

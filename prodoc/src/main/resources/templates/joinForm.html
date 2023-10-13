@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRODOC</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRODOC</title>
+<link th:href="@{css/joinForm.css}" rel="stylesheet" />
 </head>
 <!-- 해야 할 목록
 ■ 이메일 중복확인
@@ -16,42 +17,61 @@
 □ css
  -->
 <body>
-    <div>
-	    <form id="joinForm" action="/join" method="post" enctype="multipart/form-data">
-	    <div>
-	        <img src="images/noneUser.jpg" id="profile" style="width:300px">
-	        <input type="file" accept="image/*" name="file" style="visibility:hidden;">
-	    	<input type="text"  name="platform" value="EMAIL" style="visibility:hidden;">
-	    </div>
-	    <div><!-- 이메일 -->
-	        <input type="email" name="email" placeholder="*EMAIL" required>
-	        <button type="button" id="emailCheck">메일인증</button>
-	        <p style="display:none;"><small>메일전송중...</small></p>
-	    </div>
-	    <div>
-	        <input type="text" name="authEmail" placeholder="*EMAIL 인증번호" readonly required>
-	        <button type="button" id="authEmailCheck">인증확인</button>
-	    </div>
-		<div><!-- 비밀번호 -->
-	        <input type="password" name="password" placeholder="*PASSWORD" maxlength="16" required><br>
-	        <input type="password" id="password" placeholder="*PASSWORD 확인" maxlength="16" required><br>
-	        <p style="color:red; display:none;">비밀번호가 일치하지 않습니다.</p>
-	        <input type="text" name="nickname" placeholder="*이름" required>
-		</div>
-	    <div><!-- 연락처 -->
-	    	<input type="text" name="phone" placeholder="*-없이 연락처 입력" maxlength="11" required>
-	        <button type="button" id="phoneCheck">번호인증</button>
-	   	</div>
-			
-		<div>
-	        <input type="text" name="authPhone" placeholder="*연락처 인증번호" required>
-			<button type="button" id="authPhoneCheck">인증확인</button>
-		</div>
-		<div>
-	        <input type="text" name="birth" maxlength="6" placeholder="*생년월일 ex&#41;990101">
-	        <button type="submit" id="joinBtn">회원가입</button>
-		</div>
-	    </form>
+	<div class="joinForm_wrapper">
+		<form id="joinForm" action="/join" method="post"
+			enctype="multipart/form-data">
+			<div class="joinForm-left">
+				<img src="images/noneUser.png" id="profile" style="height: 250px;object-fit:none">
+				<input type="file" accept="image/*" name="file"
+					style="display: none;"> <input type="text" name="platform"
+					value="EMAIL" style="display: none;">
+				<button class="input_text-xl" type="submit" id="joinBtn">회원가입</button>
+			</div>
+			<div>
+			<div class="joinForm-right">
+				<div class="joinForm_btn_wrapper">
+					<!-- 이메일 -->
+					<input class="input_text-md" type="email" name="email"
+						placeholder="*EMAIL" required>
+					<button class="input_text-md input_btn" type="button"
+						id="emailCheck">메일인증</button>
+					<p style="display: none;">
+						<small>메일전송중...</small>
+					</p>
+				</div>
+				<div class="joinForm_btn_wrapper">
+					<input class="input_text-md" type="text" name="authEmail"
+						placeholder="*EMAIL 인증번호" readonly required>
+					<button class="input_text-md input_btn" type="button"
+						id="authEmailCheck">인증확인</button>
+				</div>
+
+				<!-- 비밀번호 -->
+				<input class="input_text-md" type="password" name="password"
+					placeholder="*PASSWORD" maxlength="16" required> 
+				<input class="input_text-md" type="password" id="password"
+					placeholder="*PASSWORD 확인" maxlength="16" required>
+				<p style="color: red; display: none;">비밀번호가 일치하지 않습니다.</p>
+				<input class="input_text-md" type="text" name="nickname"
+					placeholder="*이름" required>
+
+				<div class="joinForm_btn_wrapper">
+					<!-- 연락처 -->
+					<input class="input_text-md" type="text" name="phone"
+						placeholder="*-없이 연락처 입력" maxlength="11" required>
+					<button class="input_text-md input_btn" type="button" id="phoneCheck">번호인증</button>
+				</div>
+
+				<div class="joinForm_btn_wrapper">
+					<input class="input_text-md" type="text" name="authPhone"
+						placeholder="*연락처 인증번호" required>
+					<button class="input_text-md input_btn" type="button" id="authPhoneCheck">인증확인</button>
+				</div>
+					<input class="input_text-md" type="text" name="birth" maxlength="6"
+						placeholder="생년월일 ex&#41;990101">
+			</div>
+			</div>
+		</form>
 	</div>
 </body>
 
@@ -120,7 +140,7 @@ mailBtn.addEventListener('click', function(e){
 		else {
 			emailCheck = false;
 			let pTag = document.querySelectorAll('p')[0];	//메일 전송 중 p태그
-			pTag.style.display = 'inline-block';
+			pTag.style.display = 'flex';
 		} 	//중복 X
 		
 		if(!emailCheck)
@@ -149,7 +169,7 @@ let mailAuthBtn = document.getElementById("authEmailCheck");
 mailAuthBtn.addEventListener('click', function (e){
 	let authNum = document.querySelector('input[name="authEmail"]');
 	//console.log(serverNum);
-	if(authNum.value == serverNum){ 
+	if(authNum.value == serverNum && serverNum != ""){ 
 		emailAuth = true;
 		alert("인증 성공");
 	}else{
@@ -203,7 +223,7 @@ phoneBtn.addEventListener('click', function(e){ //인증번호 전송
 let phoneAuthBtn = document.getElementById("authPhoneCheck");
 phoneAuthBtn.addEventListener('click', function(e){
 	let phone = phoneAuthBtn.previousElementSibling;
-	if(phone.value == serverNum2){
+	if(phone.value == serverNum2 && serverNum2 != ""){
 		phoneAuth = true;
 		alert('인증 성공');		
 	}else{

@@ -129,7 +129,7 @@ const imageEvent = async (element) => {
   const existFile = await getBlockFile(blockId); //블럭정보
   if (existFile.newName) {
     const imageBlockTemplate = createImageTemplate(
-      `./img/${existFile.newName}`
+      `/block/files/${existFile.newName}`
     );
     element.insertAdjacentHTML("afterend", imageBlockTemplate);
     element.remove();
@@ -387,7 +387,7 @@ function addHttps(url) {
 }
 
 // A버튼 이벤트
-function handleAttrBtn(e) {
+async function handleAttrBtn(e) {
   const id = e.currentTarget.parentNode.dataset.blockId;
   const blockType = e.target.closest(".prodoc_block").dataset.blockType;
   const menuArr = [];
@@ -407,7 +407,7 @@ function handleAttrBtn(e) {
   //만약 체인지 가능한 메뉴라면 이거.
   e.target.insertAdjacentHTML(
     "afterend",
-    makeDropDownMenu(id, { left: -100 }, menuArr)
+    await makeDropDownMenu(id, { left: -100 }, menuArr)
   );
 
   const menu = document.querySelector("[data-menu-type='control']");

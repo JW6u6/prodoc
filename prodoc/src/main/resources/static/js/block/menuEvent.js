@@ -48,7 +48,7 @@ const blockHandler = {
       copyObj.text = content;
     }
 
-    const copyTemp = updateTemplate(copyObj);
+    const copyTemp = await updateTemplate(copyObj);
     // 블럭에 맞게 해준뒤 copyblock 업데이트 요청
     updateDBBlock({
       displayId: copyObj.displayId,
@@ -137,9 +137,9 @@ const blockHandler = {
     // closeBlockModal();
   },
   // 블럭 변경 함수 호출
-  handleBlockChangeEvent: (e) => {
+  handleBlockChangeEvent: async (e) => {
     const blockId = e.target.closest(`.block_dropdown_menu`).dataset.blockId;
-    const menu = makeDropDownMenu(
+    const menu = await makeDropDownMenu(
       blockId,
       { right: -200, width: 100, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.changeMenu]
@@ -151,9 +151,9 @@ const blockHandler = {
     });
   },
   // 색 변경 함수 호출
-  handleColorChangeEvent: (e) => {
+  handleColorChangeEvent: async (e) => {
     const blockId = e.target.closest(".block_dropdown_menu").dataset.blockId;
-    const menu = makeDropDownMenu(
+    const menu = await makeDropDownMenu(
       blockId,
       { right: -200, width: 100, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.color]
