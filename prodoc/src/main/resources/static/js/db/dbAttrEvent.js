@@ -109,74 +109,80 @@ function selectAttr(e){
 
 // 사용자가 속성 추가
 async function registAttr(e){
-    let check = 'true';    // 중복체크를위한 변수
+    let check = true;    // 중복체크를위한 변수
     let attrInfo = {};
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
     attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
     attrInfo['caseBlockId'] = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
     attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    let attrList = await getUseAttrList(attrInfo['caseBlockId']);
+    let attrList = await getUseAttrList(attrInfo['caseBlockId']);   // 현재 데이터베이스에서 사용중인 속성 리스트
     attrList.forEach(item => {
-        if(item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
+        if(attrInfo['attrId'] != "IMG" && item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
             alert("해당 속성이 이미 존재합니다.");
-            check = 'false';
+            check = false;
             return;
         }
+        if(attrInfo['attrId'] == "IMG" && item.attrId == "IMG") {
+            alert("대표 이미지는 하나만 추가할수 있습니다.");
+            check = false;
+            return;
+        }
+    });
+    
+    if(check === false) return;
+    
+    // 선택한 속성을 추가할 수 있을 때
+    fetch("insertDbAttr", {
+        method : 'post',
+        body : JSON.stringify(attrInfo),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(attrs => {
+        let layout = e.target.closest("[data-layout]").getAttribute("data-layout");
+        let container = document.querySelector(".container");
+        let pageList = container.querySelectorAll(".db_block");
+        //페이지 아이디 같은지 체크 후에실행
+        pageList.forEach((pageNode, idx) => {
+            let nodePageId = pageNode.getAttribute("data-page-id");
+            attrs.forEach(attr=>{
+                if(nodePageId == attr.pageId){
+                    console.log(layout);
+                    if(layout == "DB_BRD" || layout == "GAL"){
+                        //pageNode의 마지막 자식 안에 append
+                        let tagStr = getAttrList([attr]);
+                        pageNode.lastElementChild.insertAdjacentHTML("beforeend", tagStr);
+                    }
+                    else if(layout == "DB_LIST"){
+                        //pageNode.querySelector(".attr-list")에 append
+                        let tagStr = getAttrList([attr]);
+                        pageNode.querySelector(".attr-list").insertAdjacentHTML("beforeend", tagStr);
+                    }
+                    else if(layout = "DB_TBL"){
+                        if(idx == 0){
+                        // 테이블일경우 thead에 속성이름 추가
+                            let attrTitle = `
+                                <div draggable="true" data-duse-id="${attr.dbUseId}" data-attr-order="${attr.numbering}" data-attrid="${attr.attrId}" class="view-visible attr-name">
+                                    ${attr.attrName}
+                                </div>
+                            `;
+                            pageNode.previousElementSibling.lastElementChild.previousElementSibling.insertAdjacentHTML("afterend", attrTitle);
+                        }
+                        //pageNode에 append
+                        let list = dbTblAttrBlock([attr], [attr]);
+                        pageNode.append(list[0]);
+                    }   // append 끝
+                }
+            })
+        })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
+        // 모달 닫기
+        document.querySelectorAll(".db_modal--attr").forEach(modal=>{
+            modal.innerHTML = '';
+            modal.classList.remove("view");
+            modal.classList.add("hide");
+        })
     })
 
-    // 선택한 속성을 추가할 수 있을 때
-    if(check == 'true'){
-        fetch("insertDbAttr", {
-            method : 'post',
-            body : JSON.stringify(attrInfo),
-            headers : { "Content-Type": "application/json" }
-        })
-        .then(response => response.json())
-        .then(attrs => {
-            let layout = e.target.closest("[data-layout]").getAttribute("data-layout");
-            let container = document.querySelector(".container");
-            let pageList = container.querySelectorAll(".db_block");
-            //페이지 아이디 같은지 체크 후에실행
-            pageList.forEach((pageNode, idx) => {
-                let nodePageId = pageNode.getAttribute("data-page-id");
-                attrs.forEach(attr=>{
-                    if(nodePageId == attr.pageId){
-                        console.log(layout);
-                        if(layout == "DB_BRD" || layout == "GAL"){
-                            //pageNode의 마지막 자식 안에 append
-                            let tagStr = getAttrList([attr]);
-                            pageNode.lastElementChild.insertAdjacentHTML("beforeend", tagStr);
-                        }
-                        else if(layout == "DB_LIST"){
-                            //pageNode.querySelector(".attr-list")에 append
-                            let tagStr = getAttrList([attr]);
-                            pageNode.querySelector(".attr-list").insertAdjacentHTML("beforeend", tagStr);
-                        }
-                        else if(layout = "DB_TBL"){
-                            if(idx == 0){
-                            // 테이블일경우 thead에 속성이름 추가
-                                let attrTitle = `
-                                    <div draggable="true" data-duse-id="${attr.dbUseId}" data-attr-order="${attr.numbering}" data-attrid="${attr.attrId}" class="view-visible attr-name">
-                                        ${attr.attrName}
-                                    </div>
-                                `;
-                                pageNode.previousElementSibling.lastElementChild.previousElementSibling.insertAdjacentHTML("afterend", attrTitle);
-                            }
-                            //pageNode에 append
-                            let list = dbTblAttrBlock([attr], [attr]);
-                            pageNode.append(list[0]);
-                        }   // append 끝
-                    }
-                })
-            })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
-            // 모달 닫기
-            document.querySelectorAll(".db_modal--attr").forEach(modal=>{
-                modal.innerHTML = '';
-                modal.classList.remove("view");
-                modal.classList.add("hide");
-            })
-        })
-    }
 }
 
 // DB 속성 삭제
@@ -735,24 +741,39 @@ function changeState(eTarget){
 // 날짜 속성 수정
 function selectCalAttr(eTarget){
     if(document.querySelector("[data-attr-modal]") !=null ) document.querySelector("[data-attr-modal]").remove();
+
     eTarget.style.position = "relative";
+
     let modal = document.createElement("div");
     modal.style.position = "absolute"
     modal.setAttribute("data-attr-modal", "");
     modal.classList.add("view");
+
     let closeBtn = document.createElement("div");
     closeBtn.classList.add("close-attr-modal");
     closeBtn.innerText = "✕";
+
     let date = document.createElement("input");
     date.readOnly = true;
     date.classList.add("date-value");
+    date.value = eTarget.firstElementChild.innerText;
+    date.style.display = "inline-block";
+
+    let deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "삭제";
+    deleteBtn.style.display = "inline-block";
+
     let startDate = document.createElement("input");
     startDate.setAttribute("type", "date");
     startDate.classList.add("startDate");
     startDate.addEventListener("change", inputAttrDate);
+
     let addBtn = document.createElement("button");
     addBtn.innerText="종료일 추가";
-    modal.append(closeBtn, date, startDate, addBtn);
+
+    modal.append(closeBtn, date, deleteBtn, startDate, addBtn);
+
+    // 종료일 추가 버튼이벤트
     addBtn.addEventListener("click", e => {
         if (e.target.previousElementSibling.classList.contains("endDate") == false){
             let endDate = document.createElement("input");
@@ -770,6 +791,19 @@ function selectCalAttr(eTarget){
             startDate.dispatchEvent(changeEvt);
         }
     });
+
+    // 날짜 삭제 이벤트
+    deleteBtn.addEventListener("click", e => {
+        const modal = e.target.parentElement;
+        modal.querySelector("input").value = "";
+        
+        const data = {
+            'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
+            'attrContent' : ''
+        }
+        updateAttrContent(data);
+    });
+
     eTarget.append(modal);
 }
 
@@ -1106,7 +1140,8 @@ function attrNumberUpdate(data){
     })
     .then(response => response.text())
     .then(result => {
-        console.log(result);
+        // console.log(result);
+        // console.log(data);
     })
     .catch(err => console.log(err));
 }
@@ -1120,7 +1155,7 @@ function dbpageNumbering(data){
     })
     .then(response => response.text())
     .then(result => {
-        console.log(result);
+        // console.log(result);
     })
     .catch(err => console.log(err));
 }

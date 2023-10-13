@@ -175,16 +175,15 @@ function settingHistoryResult(history){
 
 function goPageBlock(e){	//TODO: 클릭 시 로우 이동 후
 	if(e.currentTarget.dataset.blockid == null)  return;	//blockid가 없으면 이벤트x
-	
 	if(e.currentTarget.dataset.pageid == null)   return;
 	
-	
 	selectPage(e.currentTarget.dataset.pageid);
-	//showBlocks(e.currentTarget.dataset.pageid);
 	
-	let blockId = `div[data-block-id="${e.currentTarget.dataset.blockid}]"`;
-	let focusBlock = document.querySelector(blockId);
-	window.scrollTo({top:focusBlock, behavior:'smooth'});	
+	let blockId = e.currentTarget.dataset.blockid;
+	if(e.currentTarget.dataset.blockid != null){
+		setTimeout(() => cusorMove(blockId), 500);
+	}
+	
 	historyModal.className = "hide";
 	
 }

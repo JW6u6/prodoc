@@ -55,8 +55,8 @@ pre {
   display: none;
 }
 
-.content:hover{
-	background-color:#eee;
+.content:hover {
+  background-color: #eee;
 }
 
 .control {
@@ -135,7 +135,6 @@ a {
 
 .block_img {
   width: 300px;
-  aspect-ratio: 16/9;
 }
 
 .block_pointer {
@@ -175,9 +174,6 @@ a {
   position: absolute;
   width: 300px;
   max-height: 150px;
-}
-
-.reply_modal input {
 }
 
 .modal_reply_controller {

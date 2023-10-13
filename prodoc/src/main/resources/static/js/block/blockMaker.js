@@ -8,8 +8,13 @@
  */
 function displayBlock({ template, type, element }) {
   if (type === "DATA_PAGE") {
-    const dbModalPage = document.querySelector(".dataPage_blocks");
-    dbModalPage.insertAdjacentHTML("beforeend", template.template);
+    // const dbModalPage = document.querySelector(".dataPage_blocks");
+    if(element){
+      element.insertAdjacentHTML("afterend", template.template);
+    } else{
+      const dbPageContainer = document.querySelector(".dataPage_blocks")
+      dbPageContainer.insertAdjacentHTML("beforeend", template.template);
+    }
   } else {
     if (element) {
       element.insertAdjacentHTML("afterend", template.template);
@@ -373,19 +378,51 @@ function templateMaker(
  * @param {Array} menuTemp - 메뉴의 추가 템플릿.
  * @returns
  */
-function makeDropDownMenu(id, option = {}, menuTemp) {
+async function makeDropDownMenu(id, option = {}, menuTemp) {
   const { top = 0, left = 0, width = 100, modalClass = "" } = option;
   let extendsMenu = "";
   menuTemp.forEach((temp) => {
     extendsMenu += temp;
   });
+
+  const blockInfo = await getOneBlock(id);
+  const { creUser, upUser, creDate, upDate } = blockInfo;
+
+  const blockInfoObj = {
+    creUser,
+    upUser,
+    upDate,
+    creDate,
+  };
+
+  const blockInfoTemplate = makeBlockInfoTemplate(blockInfoObj);
   const template = `
   <div role="dialog" data-block-id="${id}" data-block-type="modal" class="block_modal block_dropdown_menu ${modalClass}" style="position:absolute;top:${top}px;left:${left}px;width:${width}px">
     <ul class="block_dropdown_menu_list" data-menu-type="control">
     ${extendsMenu}
     </ul>
+    ${blockInfoTemplate}
   </div>
 `;
+  return template;
+}
+
+/**
+ *
+ * @param {Object} blockInfoObj
+ * @param {string} blockInfoObj.creUser
+ * @param {string} blockInfoObj.upUser
+ * @param {string} blockInfoObj.upDate
+ * @param {string} blockInfoObj.creDate
+ * @returns {string} blockInfoTemplate
+ */
+function makeBlockInfoTemplate({ creUser, upUser, upDate, creDate }) {
+  const template = `
+    <div>
+      <div>${upUser ? upUser : creUser}</div>
+      <div>${upDate ? upDate : creDate}</div>
+    </div>
+  `;
   return template;
 }
 

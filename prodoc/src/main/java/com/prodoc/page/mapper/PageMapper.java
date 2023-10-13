@@ -17,6 +17,8 @@ public interface PageMapper {
 	
 	public int updatePage(PageVO pageVO);
 	
+	public int updateInPage(PageVO pageVO);
+	
 	public int updateNumPlus(PageVO pageVO);
 	
 	public int updateNumMinus(PageVO pageVO);
@@ -41,4 +43,7 @@ public interface PageMapper {
 	
 	//페이지 이름 변경
 	public int newName(PageVO pageVO);
+	
+	//페이지 복사
+	public void copyPage(PageVO pageVO);
 }

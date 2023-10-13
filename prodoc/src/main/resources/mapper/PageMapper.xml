@@ -21,28 +21,46 @@
   		select page_id,page_name
   		from tbl_page
   		where parent_id = #{pageId}
+  		and delete_check != 'TRUE'
   		order by numbering
   	</select>
   	
   	<update id="updatePage">
+  		{call UPDATE_PAGE(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
+  	</update>
+  	
+  	<update id="updateInPage">
   		update tbl_page
 		set work_id = #{workId},
-			numbering = (select max(numbering)+512 from tbl_page)
+			numbering = (select max(numbering)+512 from tbl_page),
+			parent_id = #{parentId}
 		where page_id = #{pageId}
   	</update>
   	
-  	<update id="updateNumPlus">
-  		update tbl_page
-		set work_id = #{workId},
-			numbering = #{numbering} + 1
-		where page_id = #{pageId}
+  	<update id="updateNumPlus" parameterType="PageVO">
+  		{call update_numbering_plus(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
   	</update>
   	
-  	<update id="updateNumMinus">
-  		update tbl_page
-		set work_id = #{workId},
-			numbering = #{numbering} - 1
-		where page_id = #{pageId}
+  	<update id="updateNumMinus" parameterType="PageVO">
+  		{call update_numbering_plus(
+ 						#{workId}
+ 					,	#{pageId}
+ 					,	#{numbering}
+ 					,	#{parentId}
+ 						)
+ 		}
   	</update>
   	
   	<insert id="insertPage" parameterType="PageVO" statementType="CALLABLE">
@@ -63,18 +81,6 @@
   		FROM tbl_page
   		WHERE page_id = #{pageId}
   	</select>
-  	<!-- 등록 -->
-  	<!-- <insert id="insertPage" parameterType="PageVO" statementType ="CALLABLE">
-  		{call INSERT_PAGE(
-  							#{pid, mode=OUT, jdbcType=VARCHER, javaType=string}
-  						,	#{parentId}
-  						,	#{pageName}
-  						,	#{creUser}
-  						,	#{workId}
-  						,	#{caseId}
-  						,	#{result, mode=OUT, jdbcType=VARCHER, javaType=string}
-  		)}
- 	</insert> -->
  	
  	<!-- 페이지 잠금(관리자, 소유자) -->
  	<update id="LockPage" parameterType="PageVO">
@@ -127,6 +133,15 @@
 	<update id="newName" parameterType="pageVO">
 		UPDATE TBL_PAGE SET page_name = #{pageName} WHERE page_id = #{pageId}
 	</update>
+	
+	<!-- 페이지 복사 -->
+	<insert id="copyPage" parameterType="PageVO" statementType="CALLABLE">
+		{call PAGE_COPY(
+  						#{pageId}
+  						, #{creUser}
+  						, #{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string} 
+		)}
+	</insert>
 </mapper>
   
   

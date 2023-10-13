@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.block.service.BlockVO;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.member.service.MemberService;
 import com.prodoc.member.service.MemberVO;
 import com.prodoc.page.mapper.PageMapper;
@@ -32,6 +34,9 @@ public class PageController {
 
 	@Autowired
 	MemberService memberserivce;
+	
+	@Autowired
+	HistoryService historyService;
 
 	private SimpMessagingTemplate template;
 
@@ -68,6 +73,11 @@ public class PageController {
 		return pageService.updatePage(pageVO);
 	}
 	
+	@PostMapping("/inPageUpdate")
+	public int inPageUpdate(@RequestBody PageVO pageVO) {
+		return pageService.updateInPage(pageVO);
+	}
+	
 	@PostMapping("/pagePlus")
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
@@ -77,6 +87,7 @@ public class PageController {
 	public int pageMinus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumMinus(pageVO);
 	}
+
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();
@@ -131,11 +142,26 @@ public class PageController {
 	
 	//페이지 새이름
 	@GetMapping("/pageNewName")
-	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName, HttpSession session) {
 		PageVO page = new PageVO();
 		page.setPageId(pageId);
 		page.setPageName(pageName);
+		
+		BlockVO history = new BlockVO();
+		history.setWorkId(pageMapper.findWork(pageId));
+		history.setPageId(pageId);
+		history.setCreUser(((UserVO)session.getAttribute("logUser")).getEmail());
+		historyService.blockHistory(history);
+		
 		return pageService.newName(page);
+	}
+
+	// 페이지 복사
+	@PostMapping("/pageCopyPaste")
+	public String pageCopy(@RequestBody PageVO pageVO, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("logUser");
+		pageVO.setCreUser(user.getEmail());
+		return pageService.pastePage(pageVO);
 	}
 
 }

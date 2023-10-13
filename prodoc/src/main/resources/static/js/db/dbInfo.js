@@ -130,7 +130,7 @@ async function openDataPage(pageId){
         
         // insert된 div 내부에 속성 append
         getDataInfo(pageId);
-
+        showBlocks(pageId, "DATA_PAGE");
         // 모달 이벤트
         document.querySelector(".view_change").addEventListener("click", e => {          
             selectPage(pageId);
@@ -144,17 +144,23 @@ async function openDataPage(pageId){
 
 // 데이터베이스 하위 페이지
 async function createDataPage(pageId){
+    const database = await getDatabaseDBBlock(pageId);
+
     let container = document.querySelector(".container");
     let attrs = document.createElement("div");
     attrs.classList.add("db_attrList");
+    attrs.setAttribute("data-page-id", pageId);
+    attrs.setAttribute("data-block-id", database.displayId);
+    // 🔼 데이터베이스의 블럭아이디
+
     let blocks = document.createElement("div");
     blocks.classList.add("dataPage_blocks");
     // ✅ 블럭이 들어가는 위치 확인, 작성한 태그들 컨테이너 안에 넣기
     container.append(attrs, blocks);
     console.log(container);
-
     // 사용중인 속성 append
     await getDataInfo(pageId);
+    return blocks;
 }
 
 // 데이터베이스 페이지를 오픈했을 때
