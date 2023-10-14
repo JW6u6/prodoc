@@ -49,11 +49,11 @@ async function pageInfoFromMenu() {
     let info;
 
     await fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
         .then((response) => response.json())
         .then((result) => {
             info = result;
@@ -86,12 +86,12 @@ async function pageLock() {
     }
 
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(val)
+    })
         .then(response => response.text())
         .then(result => {
             if (lockCheck == 'TRUE') {
@@ -112,11 +112,11 @@ function alreadyLock() {
     let url = '/areULOCK?pageId=' + pageBlockId;
 
     fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => response.json())
         .then(result => {
             console.log(result);
@@ -144,14 +144,14 @@ async function pageLockNoti() {
     }
 
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "pageId": pageBlockId
-            })
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "pageId": pageBlockId
         })
+    })
         .then(response => response.text())
         .then(result => {
             if (lockCheck == 'FALSE') {
@@ -179,12 +179,12 @@ async function pageDelCheck() {
         let url = '/pageDelCheck';
 
         fetch(url, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(val)
-            })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
             .then(response => response.text())
             .then(result => {
                 if (result == 'true') {
@@ -201,31 +201,35 @@ async function pageDelCheck() {
 
 //현재 페이지를 메인 페이지로 등록(소유자, 관리자?)
 //워크스페이스 아이디 불러오고, 페이지 url가져오는거 해야함.
-function ThisMainPage() {
+async function ThisMainPage() {
+    let infoResult = await selectOneWork(workBlockId);
+    if (infoResult.mainPageId == pageBlockId) {
+        alert('이 페이지는 이미 메인페이지입니다.')
+    } else if (infoResult.mainPageId != pageBlockId) {
+        let val = {
+            "mainPageId": pageBlockId,
+            "workId": workBlockId
+        }
 
-    let val = {
-        "mainPageId": pageBlockId,
-        "workId": workBlockId
-    }
+        let url = '/workMainPg';
 
-    let url = '/workMainPg';
-
-    fetch(url, {
+        fetch(url, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(val)
         })
-        .then(response => response.text())
-        .then(result => {
-            if (result == 'true') {
-                alert('현재 페이지가 메인 페이지로 등록되었습니다.')
-            } else if (result == 'false') {
-                alert('유효하지 않은 요청입니다.. 다시 시도하십시오.');
-            }
-        })
-        .catch(err => console.log(err));
+            .then(response => response.text())
+            .then(result => {
+                if (result == 'true') {
+                    alert('현재 페이지가 메인 페이지로 등록되었습니다.')
+                } else if (result == 'false') {
+                    alert('유효하지 않은 요청입니다.. 다시 시도하십시오.');
+                }
+            })
+            .catch(err => console.log(err));
+   }
 }
 
 
@@ -240,12 +244,12 @@ function toggleNotiPage() {
     }
 
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(val)
+    })
         .then(response => response.text())
         .then(result => {
             console.log(result);
@@ -267,11 +271,11 @@ function areUTurnOn() {
     let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
 
     fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => response.text())
         .then(result => {
             let notiToggle = document.querySelector('#notifyPage');
@@ -320,8 +324,8 @@ async function creLink() {
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
         if (navigator.clipboard !== undefined) {
-            document.body.appendChild(linkText); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
-            url = window.document.location.href; //url에는 현재 주소값을 넣어줌
+            document.body.appendChild(linkText); 
+            url = //url: 도메인/share/페이지아이디
             linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard
@@ -350,12 +354,12 @@ function copyPagstePage() {
     }
 
     fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(val)
+    })
         .then(response => response.text())
         .then(result => {
             console.log(result);

@@ -166,7 +166,7 @@ public class PageController {
 	}
 
 	// 링크 공유로 들어온 페이지...
-	@GetMapping("/share/{pageId}")
+	@GetMapping("/shared/{pageId}")
 	public void linkedPage(@PathVariable("pageId") String pageId, HttpServletResponse response) {
 		List<PageVO> listVO = pageMapper.selectPageInfo(pageId);
 		for (PageVO pageVO : listVO) {

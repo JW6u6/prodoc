@@ -439,6 +439,7 @@ async function newWork() {
                 })
             } else {
                 newWorkSpace();
+                break;
             }
         }
     });
