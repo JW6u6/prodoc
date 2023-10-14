@@ -388,7 +388,6 @@ function updateAttrContent(data){
             console.log("속성값 전체 반영하기위한 for문");
             const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
             changeTags.forEach( async(tag) =>{
-
                 let attrId = tag.getAttribute("data-attrid");
                 let content = data.attrContent;
                 if(["A_TEXT", "NUM", "CAL", "STATE"].includes(attrId)){
@@ -415,12 +414,12 @@ function updateAttrContent(data){
                 if(attrId == "TAG"){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
                     tag.innerText = (content==''||content==null ? '' : content);
-                    let dataTag = tag;
-                    addAttrcontentToModal(dataTag);
+                    let dataTag = tag.cloneNode(true);
+                     console.log(tag)
+                    // addAttrcontentToModal(dataTag);
                 }
                 if(["USER", "CUSER", "UUSER"].includes(attrId)){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
-
                     // 이메일, 닉네임 조회용
                     const memberList = await getMembersAjax(data.pageId);
 
@@ -432,8 +431,9 @@ function updateAttrContent(data){
                             content = `${mem.nickname}(${mem.email})`;
                             if(attrId = "USER"){
                                 // 빈값에서 새롭게 등록했을 때만 실행됨
+                                console.log(tag, "아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
                                 tag.innerText = content;
-                                let dataTag = tag;
+                                let dataTag = tag.cloneNode(true);
                                 addAttrcontentToModal(dataTag);
                             }
                             else {
@@ -441,8 +441,6 @@ function updateAttrContent(data){
                             }
                         }
                     });
-                    
-                    
                 }
             }); // 속성 아이디에 따른 변경 종료
         }
@@ -568,10 +566,17 @@ async function addPageTags(e){
     caseDiv.querySelectorAll(".attr").forEach(ele => {
         thisTags.push(ele.innerText);
     })
+
+    let tagCheck = true;
     if(e.type == 'click'){
         addTag = e.target.innerText;
-        if(thisTags.indexOf(addTag) != -1) alert("이미 사용중인 태그입니다");
+        if(thisTags.indexOf(addTag) != -1){
+            alert("이미 사용중인 태그입니다");
+            tagCheck = false;
+        }
+        if(tagCheck) await insertTagToAttr(caseDiv, thisTags, addTag);
     }
+
     if(e.type == 'keydown'){
         // 앤터 이벤트
         if(e.keyCode === 13){
@@ -581,13 +586,15 @@ async function addPageTags(e){
 
             if(thisTags.indexOf(addTag) != -1){
                 alert("이미 사용중인 태그입니다");
-                e.target.value = "";
-            } else {
-                e.target.previousElementSibling.click();
-                e.target.remove();
+                tagCheck = false;
             }
+            e.target.value = "";
+            if(tagCheck) await insertTagToAttr(caseDiv, thisTags, addTag);
         }
-    }
+    }   // 키다운 이벤트 종료
+}
+
+async function insertTagToAttr(caseDiv, thisTags, addTag){
 
     if(thisTags.indexOf(addTag) == -1){
         console.log("태그 추가");
@@ -597,9 +604,12 @@ async function addPageTags(e){
             let attrDiv = caseDiv.querySelector(".attr");
             data['pageUseId'] = attrDiv.getAttribute("data-puse-id");
             data['attrContent'] = addTag;
+            console.log("님어디실행중이세요");
             updateAttrContent(data);
         } else {
         // insert
+        console.log("여기는 인서트세요");
+
             data['dbUseId'] = caseDiv.getAttribute("data-duse-id");
             data['pageId'] = caseDiv.closest("[data-page-id]").getAttribute("data-page-id");
             data['attrContent'] = addTag;
@@ -629,6 +639,8 @@ async function addPageTags(e){
 
 // 다중값 속성에서 속성 등록했을 때 속성값 추가하는 모달에 데이터 append용
 function addAttrcontentToModal(tag){
+    // 기존 모달에 this-value 클래스를 가진 element가 하나면 upda
+
     // tag == 복사한 태그
     tag.classList.remove("view-visible", "attr");
     tag.classList.add("inlineTags", "this-value");
@@ -639,7 +651,7 @@ function addAttrcontentToModal(tag){
     delBtn.innerText='✕';
     delBtn.classList.add("delete-attr");
     tag.append(delBtn);
-    
+    console.log(tag);
     const modal = document.querySelector("[data-attr-modal]");
     const lastData = modal.querySelectorAll("[data-puse-id]");
     lastData[lastData.length-1].after(tag);
@@ -886,6 +898,7 @@ async function getMembers(pageId, tag){
     for(let i=0; i<childList.length-1; i++){
         let content = childList[i].innerText;
         let pui = childList[i].getAttribute("data-puse-id");
+        if(childList.length == 1) return;
         option += `
         <div class="inlineTags this-value" data-puse-id="${pui}">
             ${content}

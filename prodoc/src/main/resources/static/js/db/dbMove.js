@@ -19,7 +19,8 @@ function dbMoveEvent(type){
             const targetDBblcok = e.currentTarget;
 
             if(!(dragDBblock.classList.contains("attr-name"))) return;
-            
+            console.log("데이터베이스 표에서 속성 드랍이벤트");
+
 
             // 마우스 위치관련 변수 정의
             const targetWidth = targetDBblcok.offsetWidth;
@@ -71,7 +72,7 @@ function dbMoveEvent(type){
             e.stopPropagation();
             e.currentTarget.classList.remove("dragging")
             console.log("드래그 종료",e.currentTarget);
-            dbNumberingUpdate(e.currentTarget);
+            AttrNumberingUpdate(e.currentTarget);
         })
 
     })
@@ -85,6 +86,8 @@ function dbMoveEvent(type){
             const targetDBblcok = e.currentTarget;
 
             if(!(dragDBblock.classList.contains("db_block"))) return;
+            console.log("데이터베이스 드랍이벤트");
+
             
             
             // 크기 정의
@@ -154,8 +157,8 @@ function datapageMove(){
             const dragDBblock = document.querySelector(".dragging").parentElement;
             const targetDBblcok = e.currentTarget.parentElement;
 
-            if(!(dragDBblock.classList.contains("attr-name"))) return;
-
+            if(!(dragDBblock.querySelector(".attr-name"))) return;
+            console.log("데이터베이스 하위 페이지 드랍이벤트");
             
             // 크기 정의
             const targetHeight = targetDBblcok.offsetHeight;
@@ -167,12 +170,20 @@ function datapageMove(){
             //부모 위치
             const offsetY = e.clientY - rect.top;
 
+            //모달로 연 페이지에서 이동했을 때 모달 밖의 데이터베이스 블럭에도 화면 업데이트
+            //조건 : dui로 체크하고 page-attr을 가지지 않은 element
+            const moveDui = document.querySelector(".dragging").getAttribute("data-duse-id");
+            const moveInnerAttr = document.querySelector(`[data-duse-id="${moveDui}"]:not(.page-attr)`);    // 드래그블럭과 같은 dui
+            const targetDui = e.currentTarget.getAttribute("data-duse-id");
+            const targetInnerAttr = document.querySelector(`[data-duse-id="${targetDui}"]:not(.page-attr)`);  // 타겟블럭과 같은 dui
             if(targetHorizonCenter > offsetY){
                 console.log("db하위페이지에서 위쪽드랍 발생");
                 targetDBblcok.parentElement.insertBefore(dragDBblock, targetDBblcok);
+                targetInnerAttr.parentElement.insertBefore(moveInnerAttr, targetInnerAttr);
             } else {
-                insertAfter(dragDBblock,targetDBblcok);
                 console.log("db하위페이지에서 아래쪽 드랍 발생")
+                insertAfter(dragDBblock,targetDBblcok);
+                insertAfter(moveInnerAttr,targetInnerAttr);
             }
         })
         tag.addEventListener("dragover",(e)=>{
@@ -194,8 +205,7 @@ function datapageMove(){
             console.log("db하위페이지에서 드래그 종료",e.currentTarget);
             
             // 속성 넘버링 추가하기
-            const attrLineTag = e.currentTarget.parentElement;
-            pageAttrNumberingUpdate(attrLineTag);
+            pageAttrNumberingUpdate(e.currentTarget.parentElement);
         })
     })
 }
@@ -257,7 +267,7 @@ function AttrNumberingUpdate(blockNode){
     let nextEle = blockNode.nextElementSibling;
 
     let newNum = dbAttrNumbering(prevEle, nextEle);
-    let nextNum = Number(nextEle.getAttribute("data-attr-order"));
+    let nextNum = nextEle == null ? null : Number(nextEle.getAttribute("data-attr-order"));
 
     //DB업데이트용 데이터들
     let caseDiv = blockNode.closest("[data-layout]");
@@ -277,26 +287,28 @@ function AttrNumberingUpdate(blockNode){
             //DB업데이트(해당 페이지 넘버, db에 히스토리 업데이트, page 업데이트)
             data['numbering'] = num;
             attrNumberUpdate(data);
-        // console.log(data);
         });
     } else {
         blockNode.setAttribute("data-attr-order", newNum);
         //DB업데이트
         data['numbering'] = newNum;
         attrNumberUpdate(data);
-        console.log(data);
     }
 }
 
-// 이동 후 데이터 처리 - 페이지 속성
+// 이동 후 데이터 처리 - 페이지의 속성
 async function pageAttrNumberingUpdate(blockNode){
+    const prevLine = blockNode.previousElementSibling;
+    const nextLine = blockNode.nextElementSibling;
+
     let targetBlock = blockNode.querySelector(".attr-name");
-    let prevEle = blockNode.previousElementSibling.querySelector(".attr-name");
-    let nextEle = blockNode.nextElementSibling.querySelector(".attr-name");
+    let prevEle = prevLine != null ? prevLine.querySelector(".attr-name") : null;
+    let nextEle = nextLine != null ? nextLine.querySelector(".attr-name") : null;
 
     let newNum = dbAttrNumbering(prevEle, nextEle);
-    let nextNum = Number(nextEle.getAttribute("data-attr-order"));
-    
+    let nextNum = nextEle == null ? null : Number(nextEle.getAttribute("data-attr-order"));
+
+    const pageId = blockNode.closest("[data-page-id]").getAttribute("data-page-id");
     //데이터베이스의 페이지아이디, 블럭아이디 가져오기
     let dbblock = await getDatabaseDBBlock(pageId);
     let data = {
@@ -306,23 +318,44 @@ async function pageAttrNumberingUpdate(blockNode){
         'workId' : document.getElementById("TitleWid").value,
         'dbUseId' : targetBlock.getAttribute("data-duse-id")
     }
+    
     //넘버링 겹쳤을 때 넘버링 재설정
+    // 모달로 연 페이지일 경우 DB블럭에도 data-attr-order 업데이트
     if(newNum == nextNum){
-        let nameNodes = document.querySelectorAll(".attr-name");
-        nameNodes.forEach((namenode, idx)=> {
-            let num = 512 * (idx+1);
-            namenode.setAttribute("data-attr-order", num);
-            //DB업데이트(해당 페이지 넘버, db에 히스토리 업데이트, page 업데이트)
-            data['numbering'] = num;
-            // attrNumberUpdate(data);
-        });
+        // dbUseId마다 새로운 넘버링 생성
+        let dbUseIdList = {};   // { dbUseId : 새로운넘버링값, dbUseId2 : 새로운넘버링값2, ... }
+
+        // 쿼리셀렉터ALL을 제한해준다. 조건 : 현재 넘버링중인 db. casePageId로 검색 후 attr-name 선택
+        const nameElements = document.querySelector(`[data-block-id="${data.casePageId}"]`).querySelectorAll(".attr-name");;
+        nameElements.forEach((nameElement, idx)=> {
+            let thisDui = nameElement.getAttribute("data-duse-id");
+            if(!dbUseIdList[thisDui]){
+                dbUseIdList[thisDui] = 512 * (idx+1);
+            }
+        }); // dbUseId마다 새로운 넘버링리스트 생성 forEach문 종료
+
+        // 새롭게 넘버링할 element 리스트
+        const newElements = document.querySelectorAll(".attr-name");
+        newElements.forEach( ele => {
+            let thisDui = ele.getAttribute("data-duse-id");
+            if(dbUseIdList[thisDui]){
+                ele.setAttribute("data-attr-order", dbUseIdList[thisDui]);
+                data['dbUseId'] = thisDui;
+                data['numbering'] = dbUseIdList[thisDui];
+                console.log(dbUseIdList[thisDui])
+                attrNumberUpdate(data);
+            }
+        }); // element 속성 변경 forEach 종료
+
     } else {
-        targetBlock.setAttribute("data-attr-order", newNum);
+        const numberingList = document.querySelectorAll(`[data-duse-id="${data.dbUseId}"]`);
+        numberingList.forEach( ele => {
+            ele.setAttribute("data-attr-order", newNum);
+        });
         //DB업데이트
         data['numbering'] = newNum;
-        // attrNumberUpdate(data);
+        attrNumberUpdate(data);
     }
-    console.log(data);
 }
 
 // 디스플레이 넘버링 계산 > 계산값 리턴
@@ -339,10 +372,22 @@ function dbDisplayNumbering(prevEle, nextEle){
 // 속성 넘버링 계산
 function dbAttrNumbering(prevEle, nextEle){
     // data-attr-order
-    let prevNum = Number(prevEle.getAttribute("data-attr-order"));
-    let nextNum = Number(nextEle.getAttribute("data-attr-order"));
+    let prevNum = prevEle != null ? Number(prevEle.getAttribute("data-attr-order")) : 0;
+    let nextNum = nextEle != null ? Number(nextEle.getAttribute("data-attr-order")) : 0;
+    let averNum;    // 계산값
+    let newNum;     // 새롭게 넘버링 될 값
 
-    let averNum = Math.ceil((nextNum - prevNum)/2);
-    let newNum = prevNum + averNum;
+    if (prevNum === 0) {
+        // 첫번째 요소로 들어갔을 때
+        newNum = Math.ceil(nextNum/2);
+    } else if (nextNum === 0){
+        // 마지막 요소로 들어갔을 때
+        newNum = prevNum + 512;
+    } else {
+        averNum = Math.ceil((nextNum - prevNum)/2);
+        newNum = prevNum + averNum;
+    }
+
+    console.log(prevNum, nextNum, newNum);
     return newNum;
 }
