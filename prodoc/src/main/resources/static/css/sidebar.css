@@ -87,9 +87,14 @@
 /* 하위 워크,페이지의 하위 표시를 위한 간격. */
 .Work {
   margin-left: 20px;
+  height: max-content;
+}
+.workName{
+  font-weight: bold;
 }
 .Page {
   margin-left: 20px;
+  height: max-content;
 }
 /* 드롭다운(셀렉트박스) */
 .selectBox * {

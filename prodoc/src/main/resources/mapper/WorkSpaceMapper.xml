@@ -13,6 +13,26 @@
 		where
 		email = #{email}) AND delete_check != 'TRUE'
 	</select>
+	
+	<!-- 찐막 리스트 -->
+	<select id="allList" resultType="allListVO">
+		select level,p.*
+		from (
+			select 'work' wp,work_id page_id,work_id,parent_id,work_type,work_name,delete_check, 0 numbering , '' case_id
+			from tbl_workspace 
+			where delete_check != 'TRUE' and work_id IN (select work_id
+			                  from tbl_member
+			                  where email=#{logUser})
+		UNION ALL
+			select 'page' ,page_id,work_id,NVL(parent_id,work_id), '' , page_name, delete_check , numbering , case_id
+			from tbl_page
+			where delete_check != 'TRUE' and work_id IN (select work_id
+				              from tbl_member
+				              where email=#{logUser}))
+            p start with (parent_id IS null) connect by prior page_id = parent_id
+        ORDER SIBLINGS BY numbering
+    </select>
+	
 	<!-- 워크 name 값 가져오기 -->
 	<select id="workId" resultType="String">
 		SELECT work_name

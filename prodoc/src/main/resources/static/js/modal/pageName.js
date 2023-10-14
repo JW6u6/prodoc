@@ -2,12 +2,14 @@
 function PageNameSettingFunc(){
 	document.querySelectorAll(".editPN").forEach(tag => {
 		let pid = tag.parentElement.dataset.id
-		let pname = tag.parentElement.dataset.name
-		let newPName = document.querySelector("#editPageMod input");
+		//let pname = tag.parentElement.children[1].innerText;
+		
 		tag.addEventListener('click', function(e){
 			PNmod.className ="view";
 			PNmod.dataset.id= pid;
-			newPName.value = pname;
+
+			let newPName = document.querySelector("#editPageMod input");
+			newPName.value = "";
 		});
 	});
 }
@@ -30,7 +32,7 @@ document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
 			//사이드바 페이지 이름 재설정
 			document.querySelectorAll("#side .Page").forEach(pageitem => {
 				if(pageitem.dataset.id == id){
-					pageitem.children[1].innerText = `  ${value}`;
+					pageitem.children[1].innerText = `${value}`;
 					pageitem.dataset.name = value;
 				}
 			});
