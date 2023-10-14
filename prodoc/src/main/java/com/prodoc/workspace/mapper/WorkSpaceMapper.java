@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceVO;
+import com.prodoc.workspace.service.allListVO;
 
 public interface WorkSpaceMapper {
 	//워크스페이스 리스트조회
 	public List<WorkSpaceVO> workList(String email);
-	
+	public List<allListVO> allList(String email);
 	//워크스페이스 단건조회
 	public WorkSpaceVO selectOneWorkspace(String workId);
 	

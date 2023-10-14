@@ -17,36 +17,35 @@
 				<div id="workspaces"></div>
 			</div>
 			<div id="searchWKDB">검색</div>
-			<!-- <div id="trashBasket">휴지통</div> -->
 			<div id="history">히스토리</div>
 		</div>
+		<div id="myWorkList" style="height:50%; overflow: auto;"></div>
+	</div>
 
 		<div id="pageModal">
 			<div class="modal-content">
 				<div class="pageDiv">
 					<input type="text" value="" id="pgName" />
 				</div>
-				<div id="pageContent"></div>
 				<div id="dbPage">
-					<div data-casetype="NONE" class="tem" onclick="selectTemp(event)">빈 페이지</div>
+					<div data-casetype="NONE" class="db" onclick="selectDb(event)">빈 페이지</div>
 					<div data-casetype="DB_LIST" class="db" onclick="selectDb(event)">리스트</div>
 					<div data-casetype="DB_BRD" class="db" onclick="selectDb(event)">칸반보드</div>
 					<div data-casetype="DB_GAL" class="db" onclick="selectDb(event)">갤러리</div>
 					<div data-casetype="DB_TBL" class="db" onclick="selectDb(event)">표</div>
 				</div>
 
-				<input type="text" value="" id="parentId" style="visibility:hidden">
 				<!-- 부모 pageId값 -->
-				<input type="text" value="" id="workId" style="visibility:hidden">
+				<input type="text" value="" id="parentId" style="display:none;">
 				<!--workId값 -->
-				<input type="text" value="" id="caseId" style="visibility:hidden">
+				<input type="text" value="" id="workId" style="display:none;">
 				<!--caseId값 -->
+				<input type="text" value="NONE" id="caseId" style="display:none;">
 
 				<button type="button" id="insert-page" class="close">생성</button>
 				<button id="close-modal" class="close" onclick="closeSideModal()">닫기</button>
 			</div>
 		</div>
-	</div>
 
 	<!--/* 워크스페이스 모달 시작 */-->
 	<div id="workModal">
