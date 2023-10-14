@@ -34,4 +34,8 @@
         </choose>
 		ORDER BY save_date
 	</select>
+	
+	<select id="fileDownload" resultType="PageAttrVO">
+	 SELECT * FROM TBL_PAGE_ATTR WHERE attr_content = #{id}
+	</select>
 </mapper>

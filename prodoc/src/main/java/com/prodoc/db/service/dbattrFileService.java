@@ -2,13 +2,19 @@ package com.prodoc.db.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.prodoc.file.service.FileSearchService;
 
 @Service
 public class dbattrFileService {
@@ -43,5 +49,24 @@ public class dbattrFileService {
 			System.out.println(savePath);							//c:\prodoc\image\profile\1694761782169img6.jpg
 		}
 		return uploadName;
+	}
+	
+	@Autowired
+	FileSearchService fileService;
+	
+	public Resource readFileAsResource(String id) {
+		PageAttrVO vo = fileService.fileDownload(id);
+		String filename = vo.getAttrContent();
+		Path filePath = Paths.get(uploadPath, filename);
+		
+		Resource resource;
+		try {
+			resource = new UrlResource(filePath.toUri());
+			return resource;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

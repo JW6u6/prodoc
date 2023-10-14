@@ -1,18 +1,23 @@
 package com.prodoc.page.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prodoc.block.service.BlockVO;
+import com.prodoc.history.service.HistoryService;
 import com.prodoc.member.service.MemberService;
 import com.prodoc.member.service.MemberVO;
 import com.prodoc.page.mapper.PageMapper;
@@ -31,7 +36,10 @@ public class PageController {
 	PageMapper pageMapper;
 
 	@Autowired
-	MemberService memberserivce;
+	MemberService memberservice;
+
+	@Autowired
+	HistoryService historyService;
 
 	private SimpMessagingTemplate template;
 
@@ -62,32 +70,33 @@ public class PageController {
 	public List<PageVO> pageInfo(@RequestParam String pageId) {
 		return pageMapper.selectPageInfo(pageId);
 	}
-	
+
 	@PostMapping("/pageUpdate")
 	public int pageUpdate(@RequestBody PageVO pageVO) {
 		return pageService.updatePage(pageVO);
 	}
-	
+
 	@PostMapping("/inPageUpdate")
 	public int inPageUpdate(@RequestBody PageVO pageVO) {
 		return pageService.updateInPage(pageVO);
 	}
-	
+
 	@PostMapping("/pagePlus")
 	public int pagePlus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumPlus(pageVO);
 	}
-	
+
 	@PostMapping("/pageMinus")
 	public int pageMinus(@RequestBody PageVO pageVO) {
 		return pageService.updateNumMinus(pageVO);
 	}
+
 	@PostMapping("/pageInsert")
 	public String pageInsert(@RequestBody PageVO pageVO, HttpSession session) {
 		MemberVO memberVO = new MemberVO();
 		UserVO user = (UserVO) session.getAttribute("logUser");
 		memberVO.setWorkId(pageVO.getWorkId());
-		List<MemberVO> list = memberserivce.listMember(memberVO);
+		List<MemberVO> list = memberservice.listMember(memberVO);
 		// 해당 워크스페이스의 유저 목록을 받아서 그 중 세션로그인값(나)와 일치하는 값이 있으면 해당 워크스페이스의 멤버들 == 구독자 정함. (
 		// 명령의 종류에 따른 소켓지정 = 소켓커맨드 번호)
 		for (int i = 0; i < list.size(); i++) {
@@ -133,14 +142,44 @@ public class PageController {
 		((PageVO) pageVO).setCreUser(user.getEmail());
 		pageService.LockAlam(pageVO);
 	}
-	
-	//페이지 새이름
+
+	// 페이지 새이름
 	@GetMapping("/pageNewName")
-	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName) {
+	public String pageNewName(@RequestParam String pageId, @RequestParam String pageName, HttpSession session) {
 		PageVO page = new PageVO();
 		page.setPageId(pageId);
 		page.setPageName(pageName);
+
+		BlockVO history = new BlockVO();
+		history.setWorkId(pageMapper.findWork(pageId));
+		history.setPageId(pageId);
+		history.setCreUser(((UserVO) session.getAttribute("logUser")).getEmail());
+		historyService.blockHistory(history);
+
 		return pageService.newName(page);
+	}
+
+	// 페이지 복사
+	@PostMapping("/pageCopyPaste")
+	public String pageCopy(@RequestBody PageVO pageVO, HttpSession session) {
+		return pageService.pastePage(pageVO);
+	}
+
+	// 링크 공유로 들어온 페이지...
+	@GetMapping("/share/{pageId}")
+	public void linkedPage(@PathVariable("pageId") String pageId, HttpServletResponse response) {
+		List<PageVO> listVO = pageMapper.selectPageInfo(pageId);
+		for (PageVO pageVO : listVO) {
+			String wid = pageVO.getWorkId();
+			MemberVO member = new MemberVO();
+			member.setWorkId(wid);
+			memberservice.listMember(member);
+		}
+		try {
+			response.sendRedirect("/shareWith?pageId=" + pageId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

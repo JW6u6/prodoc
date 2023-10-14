@@ -43,4 +43,7 @@ public interface PageMapper {
 	
 	//페이지 이름 변경
 	public int newName(PageVO pageVO);
+	
+	//페이지 복사
+	public void copyPage(PageVO pageVO);
 }

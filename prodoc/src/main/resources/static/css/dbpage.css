@@ -156,12 +156,7 @@ div[data-tagimg]{
 .attr {
 	font-size: small;
 	background-color: linen;
-	margin: 3px;
 	overflow: hidden;
-}
-
-.attr:hover {
-	overflow: visible;
 }
 
 .attr-list{
@@ -198,9 +193,8 @@ div[data-attr-modal]{
 }
 
 .attr-case {
-	padding: 3px;
-	border: 1px solid antiquewhite;
-/*	overflow: hidden; */
+	padding: 9px;
+	border: 1px solid lightgray;
 }
 
 .attr-case *{
@@ -232,10 +226,6 @@ div[data-attr-modal]{
 	display: inline-block;
 }
 
-/* 모달 css 중복 */
-.hide {
-	display: none;
-}
 .view-visible {
 	visibility: visible;
 }
@@ -280,4 +270,13 @@ div[data-attr-modal]{
 	box-shadow: 5px 5px 5px gray;
     width: 200px;
 	background-color: white;
+}
+
+.dataPage_blocks{
+	padding-top: 30px;
+	padding-bottom: 150px;
+}
+
+.db-page-name {
+	font-size: x-large;
 }

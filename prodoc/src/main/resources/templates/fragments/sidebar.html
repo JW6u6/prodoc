@@ -26,29 +26,20 @@
 				<div class="pageDiv">
 					<input type="text" value="" id="pgName" />
 				</div>
-				<div class="btnDiv">
-					<button id="temBtn" class="Type" onclick="template()">템플릿</button>
-					<button id="dbBtn" class="Type" onclick="database()">DB</button>
-				</div>
 				<div id="pageContent"></div>
-				<div id="temPage">
-					<div id="tem1" class="tem" onclick="selectTemp(event)">템플릿1</div>
-					<div id="tem2" class="tem" onclick="selectTemp(event)">템플릿2</div>
-					<div id="tem3" class="tem" onclick="selectTemp(event)">템플릿3</div>
-					<div id="tem4" class="tem" onclick="selectTemp(event)">템플릿4</div>
-				</div>
 				<div id="dbPage">
-					<div id="db1" class="db" onclick="selectDb(event)">db1</div>
-					<div id="db2" class="db" onclick="selectDb(event)">db2</div>
-					<div id="db3" class="db" onclick="selectDb(event)">db3</div>
-					<div id="db4" class="db" onclick="selectDb(event)">db4</div>
+					<div data-casetype="NONE" class="tem" onclick="selectTemp(event)">빈 페이지</div>
+					<div data-casetype="DB_LIST" class="db" onclick="selectDb(event)">리스트</div>
+					<div data-casetype="DB_BRD" class="db" onclick="selectDb(event)">칸반보드</div>
+					<div data-casetype="DB_GAL" class="db" onclick="selectDb(event)">갤러리</div>
+					<div data-casetype="DB_TBL" class="db" onclick="selectDb(event)">표</div>
 				</div>
 
-				<input type="text" value="" id="parentId" />
+				<input type="text" value="" id="parentId" style="visibility:hidden">
 				<!-- 부모 pageId값 -->
-				<input type="text" value="" id="workId" />
+				<input type="text" value="" id="workId" style="visibility:hidden">
 				<!--workId값 -->
-				<input type="text" value="" id="caseId" />
+				<input type="text" value="" id="caseId" style="visibility:hidden">
 				<!--caseId값 -->
 
 				<button type="button" id="insert-page" class="close">생성</button>
@@ -72,14 +63,14 @@
 
 				<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
 				<div id="nameArea">
-					<input type="text" id="wsName" name="workName" class="box"
+					<input type="text" id="wsName" name="workName" class="box Necessary"
 						placeholder="워크스페이스명"> <input type="hidden" id="loginUser"
 						name="email" th:value="${session.logUser.email}">
 				</div>
 
 				<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
 				<div class="selectBox" id="typeArea">
-					<select id="wsType" name="workType" class="select">
+					<select id="wsType" name="workType" class="select Necessary">
 						<option disabled selected="selected">워크스페이스 타입</option>
 						<option value="TEAM">팀 워크스페이스</option>
 						<option value="PERSONAL">개인 워크스페이스</option>
@@ -88,7 +79,7 @@
 
 				<!--/* 워크스페이스 공개범위 지정 영역. 필요한 곳: 생성/설정(개인, 팀) */-->
 				<div class="selectBox" id="pubArea">
-					<select id="wsPrivate" name="publicCheck" class="select">
+					<select id="wsPrivate" name="publicCheck" class="select Necessary">
 						<option disabled selected="selected">워크스페이스 공개</option>
 						<option value="W_PUB">전체공개</option>
 						<option value="W_MEM" class="hide" id="memOption">멤버공개</option>
@@ -112,8 +103,9 @@
 				<!--/* 워크스페이스 유저 초대 영역 */-->
 				<div id="inviteUser" class="hide">
 					<div>
-						<input type="email" id="invEmail">
+						<input type="email" id="invEmail" autocomplete="off">
 						<button type="button" id="inviteBtn">추가</button>
+						<div id="autoContain"></div>
 					</div>
 
 					<!--/* 워크스페이스 멤버, 초대받은 사람 보여주는 영역 */-->

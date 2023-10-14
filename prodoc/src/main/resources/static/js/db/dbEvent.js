@@ -46,7 +46,7 @@ function databaseAllEvent(){
         })
     });
 
-    const dataPage = document.querySelectorAll(".db_dataPage");
+    const dataPage = document.querySelectorAll(".db_attrList");
     dataPage.forEach(page => {
                 // 키다운 이벤트
         page.addEventListener("keydown", e => {
@@ -84,7 +84,7 @@ function createDBblock(block){
     console.log(block);
     const dbBlockTemp = `
     <div class="db-block database_case" data-block-id="` + block.displayId + `">
-        <div class="db_modal--attr" data-attr-option="`+block.displayId+`" class='hide'></div>
+        <div class="db_modal--attr hide" data-attr-option="`+block.displayId+`" class='hide'></div>
         <div class="db-block-header">
             <div class="db-page-name"></div>
             <div class="db-layout-list">
@@ -163,7 +163,7 @@ function insertDBpage(e){
 
     let nowLayout = caseBlock.getAttribute("data-layout");
     pageInfo['parentBlockId'] = caseBlock.getAttribute("data-block-id");    // db case page의 아이디
-    pageInfo['displayId'] = window.crypto.randomUUID();                     // ✅✅✅랜덤 아이디 생성
+    pageInfo['displayId'] = uuidv4();   // 랜덤 아이디 생성 ramdomUUID
 
     if(nowLayout == 'DB_BRD'){
         let nowState = e.target.closest('[data-state]').getAttribute("data-state"); //생성위치의 상태값
@@ -232,7 +232,7 @@ function deleteDBpage(e){
     data['displayId'] = e.target.closest("[data-block-id]").getAttribute('data-block-id');
     data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     data['workId'] = document.getElementById("TitleWid").value
-    console.log(data);
+    // console.log(data);
     fetch("deleteDBPage", {
         method : 'post',
         body : JSON.stringify(data),
@@ -274,7 +274,7 @@ function editDBPageName(e){
             })
             .then(response => response.text())
             .then(result => {
-                console.log(result);
+                // console.log(result);
                 let displayId = e.target.closest(".database_case").getAttribute("data-block-id");
                 let data = {
                     'workId' : document.getElementById("TitleWid").value,

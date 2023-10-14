@@ -109,74 +109,80 @@ function selectAttr(e){
 
 // 사용자가 속성 추가
 async function registAttr(e){
-    let check = 'true';    // 중복체크를위한 변수
+    let check = true;    // 중복체크를위한 변수
     let attrInfo = {};
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
     attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
     attrInfo['caseBlockId'] = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
     attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
-    let attrList = await getUseAttrList(attrInfo['caseBlockId']);
+    let attrList = await getUseAttrList(attrInfo['caseBlockId']);   // 현재 데이터베이스에서 사용중인 속성 리스트
     attrList.forEach(item => {
-        if(item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
+        if(attrInfo['attrId'] != "IMG" && item.attrId == attrInfo['attrId'] && item.attrName == attrInfo['attrName'] ){
             alert("해당 속성이 이미 존재합니다.");
-            check = 'false';
+            check = false;
             return;
         }
+        if(attrInfo['attrId'] == "IMG" && item.attrId == "IMG") {
+            alert("대표 이미지는 하나만 추가할수 있습니다.");
+            check = false;
+            return;
+        }
+    });
+    
+    if(check === false) return;
+    
+    // 선택한 속성을 추가할 수 있을 때
+    fetch("insertDbAttr", {
+        method : 'post',
+        body : JSON.stringify(attrInfo),
+        headers : { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(attrs => {
+        let layout = e.target.closest("[data-layout]").getAttribute("data-layout");
+        let container = document.querySelector(".container");
+        let pageList = container.querySelectorAll(".db_block");
+        //페이지 아이디 같은지 체크 후에실행
+        pageList.forEach((pageNode, idx) => {
+            let nodePageId = pageNode.getAttribute("data-page-id");
+            attrs.forEach(attr=>{
+                if(nodePageId == attr.pageId){
+                    console.log(layout);
+                    if(layout == "DB_BRD" || layout == "GAL"){
+                        //pageNode의 마지막 자식 안에 append
+                        let tagStr = getAttrList([attr]);
+                        pageNode.lastElementChild.insertAdjacentHTML("beforeend", tagStr);
+                    }
+                    else if(layout == "DB_LIST"){
+                        //pageNode.querySelector(".attr-list")에 append
+                        let tagStr = getAttrList([attr]);
+                        pageNode.querySelector(".attr-list").insertAdjacentHTML("beforeend", tagStr);
+                    }
+                    else if(layout = "DB_TBL"){
+                        if(idx == 0){
+                        // 테이블일경우 thead에 속성이름 추가
+                            let attrTitle = `
+                                <div draggable="true" data-duse-id="${attr.dbUseId}" data-attr-order="${attr.numbering}" data-attrid="${attr.attrId}" class="view-visible attr-name">
+                                    ${attr.attrName}
+                                </div>
+                            `;
+                            pageNode.previousElementSibling.lastElementChild.previousElementSibling.insertAdjacentHTML("afterend", attrTitle);
+                        }
+                        //pageNode에 append
+                        let list = dbTblAttrBlock([attr], [attr]);
+                        pageNode.append(list[0]);
+                    }   // append 끝
+                }
+            })
+        })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
+        // 모달 닫기
+        document.querySelectorAll(".db_modal--attr").forEach(modal=>{
+            modal.innerHTML = '';
+            modal.classList.remove("view");
+            modal.classList.add("hide");
+        })
     })
 
-    // 선택한 속성을 추가할 수 있을 때
-    if(check == 'true'){
-        fetch("insertDbAttr", {
-            method : 'post',
-            body : JSON.stringify(attrInfo),
-            headers : { "Content-Type": "application/json" }
-        })
-        .then(response => response.json())
-        .then(attrs => {
-            let layout = e.target.closest("[data-layout]").getAttribute("data-layout");
-            let container = document.querySelector(".container");
-            let pageList = container.querySelectorAll(".db_block");
-            //페이지 아이디 같은지 체크 후에실행
-            pageList.forEach((pageNode, idx) => {
-                let nodePageId = pageNode.getAttribute("data-page-id");
-                attrs.forEach(attr=>{
-                    if(nodePageId == attr.pageId){
-                        console.log(layout);
-                        if(layout == "DB_BRD" || layout == "GAL"){
-                            //pageNode의 마지막 자식 안에 append
-                            let tagStr = getAttrList([attr]);
-                            pageNode.lastElementChild.insertAdjacentHTML("beforeend", tagStr);
-                        }
-                        else if(layout == "DB_LIST"){
-                            //pageNode.querySelector(".attr-list")에 append
-                            let tagStr = getAttrList([attr]);
-                            pageNode.querySelector(".attr-list").insertAdjacentHTML("beforeend", tagStr);
-                        }
-                        else if(layout = "DB_TBL"){
-                            if(idx == 0){
-                            // 테이블일경우 thead에 속성이름 추가
-                                let attrTitle = `
-                                    <div draggable="true" data-duse-id="${attr.dbUseId}" data-attr-order="${attr.numbering}" data-attrid="${attr.attrId}" class="view-visible attr-name">
-                                        ${attr.attrName}
-                                    </div>
-                                `;
-                                pageNode.previousElementSibling.lastElementChild.previousElementSibling.insertAdjacentHTML("afterend", attrTitle);
-                            }
-                            //pageNode에 append
-                            let list = dbTblAttrBlock([attr], [attr]);
-                            pageNode.append(list[0]);
-                        }   // append 끝
-                    }
-                })
-            })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
-            // 모달 닫기
-            document.querySelectorAll(".db_modal--attr").forEach(modal=>{
-                modal.innerHTML = '';
-                modal.classList.remove("view");
-                modal.classList.add("hide");
-            })
-        })
-    }
 }
 
 // DB 속성 삭제
@@ -343,7 +349,7 @@ function getAttrList(attrs){    // 속성
         if(attr.attrId == 'IMG'){ // 이미지
             useAttr += `
             <div data-duse-id="${attr.dbUseId}" data-puse-id="${attr.pageUseId}" data-attrid="${attr.attrId}" class="${displayOption} attr-case" data-attr-order="${attr.numbering}">
-                <img class="attr inlineTags db-img" style="width:50px;" src="${content == '' ? "" : content}" />
+                <img class="attr inlineTags db-img" style="width:50px;" src="${content == '' ? "" : '/dbFiles/'+content}" />
                 <input type="file" style="display:none;" class="db-img-upload" accept="image/*">
             </div>
             `
@@ -381,45 +387,62 @@ function updateAttrContent(data){
         if(result.result=="success"){
             console.log("속성값 전체 반영하기위한 for문");
             const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
-            console.log(changeTags);
-            changeTags.forEach(tag=>{
+            changeTags.forEach( async(tag) =>{
                 let attrId = tag.getAttribute("data-attrid");
                 let content = data.attrContent;
-                //파일 속성일때
-                if(attrId == "MEDIA"){
-                    let contentDiv = tag.querySelector("data-fileName");
-                    contentDiv.setAttribute("data-fileName", content);
-                    contentDiv.innerText = content.substring(13);
-
-                    return;
-                }
-                //멤버관련 속성일때 ✅✅테스트 필요
-                if(["USER", "CUSER", "UUSER"].includes(attrId)){
-                    //✅
+                if(["A_TEXT", "NUM", "CAL", "STATE"].includes(attrId)){
+                    tag.innerText = content;
                 }
                 if(attrId == "CHECK"){
-                    let input = document.createElement("input");
-                    input.type = "checkbox";
-                    input.classList.add("dbattr-check");
-                    tag.append(input);
+                    let checkOp = content=="TRUE"?true:false;
+                    tag.checked = checkOp;
                 }
                 if(attrId == "URL"){
-                    let aTag = document.createElement("a");
-                    aTag.classList.add("attr", "inlineTags");
-                    aTag.textContent = content;
-                    tag.innerHTML(aTag);
-                }
-                if(attrId == "NUM" || attrId == "A_TEXT"){
-                    // tag.innerText = content;
                     console.log(tag);
+                    tag.href = content;
+                    tag.innerText = content;
                 }
-                // 그 외
-                else{
-                    let attrTag = document.createElement("div");
-                    attrTag.classList.add("attr", "inlineTags");
-                    attrTag.innerText = content;
+                if(attrId == "MEDIA"){
+                    let textDiv= tag.querySelector("div");
+                    textDiv.setAttribute("data-fileName", `/dbFiles/${content}`);
+                    textDiv.innerText = content.substring(13);
                 }
-            });
+                if(attrId == "IMG"){
+                    let imgTag = tag.querySelector("img");
+                    imgTag.src = `/dbFiles/${content}`;
+                }
+                if(attrId == "TAG"){
+                    // 값이 존재하지 않거나 하나만 있을 때 변경 적용
+                    tag.innerText = (content==''||content==null ? '' : content);
+                    let dataTag = tag.cloneNode(true);
+                     console.log(tag)
+                    // addAttrcontentToModal(dataTag);
+                }
+                if(["USER", "CUSER", "UUSER"].includes(attrId)){
+                    // 값이 존재하지 않거나 하나만 있을 때 변경 적용
+                    // 이메일, 닉네임 조회용
+                    const memberList = await getMembersAjax(data.pageId);
+
+                    memberList.forEach(mem => {
+                        if(content=="" || content==null){
+                            tag.innerText = '';
+                        }
+                        if(mem.email == content){
+                            content = `${mem.nickname}(${mem.email})`;
+                            if(attrId = "USER"){
+                                // 빈값에서 새롭게 등록했을 때만 실행됨
+                                console.log(tag, "아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
+                                tag.innerText = content;
+                                let dataTag = tag.cloneNode(true);
+                                addAttrcontentToModal(dataTag);
+                            }
+                            else {
+                                tag.querySelector("div").innerText = content;
+                            }
+                        }
+                    });
+                }
+            }); // 속성 아이디에 따른 변경 종료
         }
     })
     .catch(err=>console.log(err));
@@ -490,6 +513,8 @@ function addTagList(target){
     input.classList.add("tag-value");
     input.addEventListener("keydown", addPageTags);
     modal.append(closeBtn);
+
+    // 사용중인 태그 삭제할 수 있도록 요소 생성.
     parentDiv.querySelectorAll(".attr").forEach(ele =>{
         if(ele.innerText == '') return;
         let nowTag = document.createElement("div");
@@ -505,7 +530,7 @@ function addTagList(target){
     modal.append(input);
 
 
-
+    // 현재 사용중인 모든 태그 리스트
     fetch("/dbattr/selectAllTags",{
         method : 'post',
         body : dui,
@@ -535,62 +560,101 @@ function addTagList(target){
 
 // 태그 추가 이벤트
 async function addPageTags(e){
-    let caseDiv = e.target.closest(".attr-case");
+    const caseDiv = e.target.closest(".attr-case");
     let thisTags = [];      // 현재 사용중인 태그인지 조회
     let addTag = '';        // 사용자가 입력한 태그
     caseDiv.querySelectorAll(".attr").forEach(ele => {
         thisTags.push(ele.innerText);
     })
+
+    let tagCheck = true;
     if(e.type == 'click'){
         addTag = e.target.innerText;
-        if(thisTags.indexOf(addTag) != -1) alert("이미 사용중인 태그입니다");
+        if(thisTags.indexOf(addTag) != -1){
+            alert("이미 사용중인 태그입니다");
+            tagCheck = false;
+        }
+        if(tagCheck) await insertTagToAttr(caseDiv, thisTags, addTag);
     }
+
     if(e.type == 'keydown'){
         // 앤터 이벤트
         if(e.keyCode === 13){
             e.preventDefault();
-            e.target.blur();
+            e.target.blur();    // 원래 엔터 이벤트 막기
             addTag = e.target.value;
-            // 기존에 같은 이름의 태그가 있는지 체크 > 없으면 추가 있으면 아무일 X
+
             if(thisTags.indexOf(addTag) != -1){
                 alert("이미 사용중인 태그입니다");
-                e.target.value = "";
-            } else {
-                e.target.previousElementSibling.click();
-                e.target.remove();
+                tagCheck = false;
             }
+            e.target.value = "";
+            if(tagCheck) await insertTagToAttr(caseDiv, thisTags, addTag);
         }
-    }
+    }   // 키다운 이벤트 종료
+}
+
+async function insertTagToAttr(caseDiv, thisTags, addTag){
 
     if(thisTags.indexOf(addTag) == -1){
+        console.log("태그 추가");
         let data = {};
         if(thisTags[0] == ""){
         // update
             let attrDiv = caseDiv.querySelector(".attr");
             data['pageUseId'] = attrDiv.getAttribute("data-puse-id");
             data['attrContent'] = addTag;
+            console.log("님어디실행중이세요");
             updateAttrContent(data);
-            attrDiv.innerText = addTag;
         } else {
         // insert
-            console.log("얘는 추가");
+        console.log("여기는 인서트세요");
+
             data['dbUseId'] = caseDiv.getAttribute("data-duse-id");
             data['pageId'] = caseDiv.closest("[data-page-id]").getAttribute("data-page-id");
             data['attrContent'] = addTag;
+
             let newPui = await insertAttrContent(data);
-            let newTag = document.createElement("div");
-            let num = caseDiv.getAttribute("data-attr-order");
-            newTag.setAttribute("data-duse-id", data['dbUseId']);
-            newTag.setAttribute("data-puse-id", newPui);
-            newTag.setAttribute("data-attrid", "TAG");
-            newTag.classList.add("view-visible", "attr");
-            newTag.setAttribute("data-attr-order", num);
-            newTag.innerText = addTag;
-            caseDiv.append(newTag);
+            
+            // 모든 화면에 동일하게 추가하기 위해 append 위치를 잡기위한 id
+            const prevEleId = caseDiv.lastElementChild.previousElementSibling.getAttribute("data-puse-id");
+            let modalDataTag;
+            const beforeTags = document.querySelectorAll(`[data-puse-id="${prevEleId}"]`);
+            beforeTags.forEach(beforeTag=>{
+                let newTag = document.createElement("div");
+                let num = caseDiv.getAttribute("data-attr-order");
+                newTag.setAttribute("data-duse-id", data['dbUseId']);
+                newTag.setAttribute("data-puse-id", newPui);
+                newTag.setAttribute("data-attrid", "TAG");
+                newTag.classList.add("view-visible", "attr");
+                newTag.setAttribute("data-attr-order", num);
+                newTag.innerText = addTag;
+                modalDataTag = newTag
+                beforeTag.after(newTag);        // 형제요소 뒤에 추가된 태그 삽입
+            })  // 전체 화면 append를 위한 forEach문 종료
+            addAttrcontentToModal(modalDataTag);
         }
-
     }
+}
 
+// 다중값 속성에서 속성 등록했을 때 속성값 추가하는 모달에 데이터 append용
+function addAttrcontentToModal(tag){
+    // 기존 모달에 this-value 클래스를 가진 element가 하나면 upda
+
+    // tag == 복사한 태그
+    tag.classList.remove("view-visible", "attr");
+    tag.classList.add("inlineTags", "this-value");
+    tag.removeAttribute("data-duse-id");
+    tag.removeAttribute("data-attrid");
+    tag.removeAttribute("data-attr-order");
+    const delBtn = document.createElement("button");
+    delBtn.innerText='✕';
+    delBtn.classList.add("delete-attr");
+    tag.append(delBtn);
+    console.log(tag);
+    const modal = document.querySelector("[data-attr-modal]");
+    const lastData = modal.querySelectorAll("[data-puse-id]");
+    lastData[lastData.length-1].after(tag);
 }
 
 // 이미지 추가
@@ -635,14 +699,12 @@ async function addAttrFile(e){
     e.target.parentElement.querySelector(".attr").append(delBtn);
 }
 
-// 파일 다운로드 어케함
+// 파일 다운로드
 function selectFileAttr(e){
-    const fileName = e.target.getAttribute("data-filename");
-    console.log(fileName);
-
-    fetch(`db/filedownload?file=${fileName}`)
-    .then(response => console.log(response))
-    .catch(err => console.log(err));
+    console.log("--------------------------")
+    const filename = encodeURIComponent(e.target.getAttribute("data-filename"));
+    let URL = `/addrfile/download?id=${filename}`;
+    location.href = URL;
 }
 
 
@@ -691,24 +753,39 @@ function changeState(eTarget){
 // 날짜 속성 수정
 function selectCalAttr(eTarget){
     if(document.querySelector("[data-attr-modal]") !=null ) document.querySelector("[data-attr-modal]").remove();
+
     eTarget.style.position = "relative";
+
     let modal = document.createElement("div");
     modal.style.position = "absolute"
     modal.setAttribute("data-attr-modal", "");
     modal.classList.add("view");
+
     let closeBtn = document.createElement("div");
     closeBtn.classList.add("close-attr-modal");
     closeBtn.innerText = "✕";
+
     let date = document.createElement("input");
     date.readOnly = true;
     date.classList.add("date-value");
+    date.value = eTarget.firstElementChild.innerText;
+    date.style.display = "inline-block";
+
+    let deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "삭제";
+    deleteBtn.style.display = "inline-block";
+
     let startDate = document.createElement("input");
     startDate.setAttribute("type", "date");
     startDate.classList.add("startDate");
     startDate.addEventListener("change", inputAttrDate);
+
     let addBtn = document.createElement("button");
     addBtn.innerText="종료일 추가";
-    modal.append(closeBtn, date, startDate, addBtn);
+
+    modal.append(closeBtn, date, deleteBtn, startDate, addBtn);
+
+    // 종료일 추가 버튼이벤트
     addBtn.addEventListener("click", e => {
         if (e.target.previousElementSibling.classList.contains("endDate") == false){
             let endDate = document.createElement("input");
@@ -726,6 +803,19 @@ function selectCalAttr(eTarget){
             startDate.dispatchEvent(changeEvt);
         }
     });
+
+    // 날짜 삭제 이벤트
+    deleteBtn.addEventListener("click", e => {
+        const modal = e.target.parentElement;
+        modal.querySelector("input").value = "";
+        
+        const data = {
+            'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
+            'attrContent' : ''
+        }
+        updateAttrContent(data);
+    });
+
     eTarget.append(modal);
 }
 
@@ -773,94 +863,109 @@ function urlPatternCheck(text){
     } else  return "http://www." + url;
 }
 
-// 해당 워크스페이스의 모든 멤버 조회
-function getMembers(pageId, tag){
-    if(document.querySelector("[data-attr-modal]") != null) document.querySelector("[data-attr-modal]").remove();
-    let childList = tag.children    // 마지막 자식은 제외해야 함
-    fetch("/dbAttr/getWorkMembers", {
+
+// 해당 워크스페이스의 모든 멤버 조회 ajax
+async function getMembersAjax(pageId){
+    let memberList = [];
+    await fetch("/dbAttr/getWorkMembers", {
         method : 'post',
         body : pageId,
         headers : { "Content-Type": "application/json" }
     })
     .then(response => response.json())
-    .then(result => {
-        let modal = document.createElement('div');
-        modal.setAttribute("data-attr-modal", "");
-        modal.classList.add('db-modal');
-        tag.append(modal);
-        tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
-        modal.style.top = -100%
-        modal.setAttribute("class", "view");
-        let option = '<div class="close-attr-modal">✕</div>';
-        for(let i=0; i<childList.length-1; i++){
-            let content = childList[i].innerText;
-            let pui = childList[i].getAttribute("data-puse-id");
-            option += `
-            <div class="inlineTags this-value" data-puse-id="${pui}">
-                ${content}
-                <button class="delete-attr">✕</button>
-            </div>
-            `;
-        }
-        option += `<hr>`;
-        result.forEach(user => {
-            option += `
-            <div data-user-email="${user.email}" class="get-value">${user.nickname}(${user.email})</div>
-            `
-        });
-        modal.innerHTML = option;
-
-        // 멤버 추가 이벤트
-        document.querySelectorAll('.get-value').forEach(tag => {
-            tag.addEventListener("click", async(e) => {
-                let content = e.target.innerText;
-                let email = e.target.getAttribute("data-user-email");
-                let dUseId = e.target.closest("[data-duse-id]").getAttribute("data-duse-id");
-                let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
-                let check = 'true';
-                tag.parentElement.querySelectorAll(".this-value").forEach(item => {
-                    if( item.innerText.indexOf(e.target.innerText) != -1 ){
-                        alert("이미 등록된 멤버입니다");
-                        check = 'false';
-                    }
-                })
-                if(check == 'true'){
-                    data = {};
-                    data['pageId'] = pageId;
-                    data['attrContent'] = email;
-                    data['dbUseId'] = dUseId;
-
-                    let caseDiv = e.target.closest('.attr-case');
-                    let tagList = e.target.closest('.attr-case').querySelectorAll('.attr');
-                    let getDiv = e.target.closest('.attr-case').querySelector('.attr');
-                    if(tagList.length == 1 && getDiv.innerText == ''){
-                        data['pageUseId'] = getDiv.getAttribute('data-puse-id');
-                        updateAttrContent(data);
-                        getDiv.innerText = content;
-                        let valDiv = e.target.parentElement.querySelector('.this-value');
-                        valDiv.innerText = content;
-                    } else {
-                        let pui = await insertAttrContent(data);
-                        let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
-                        let insertDiv = `
-                        <div data-duse-id="${dUseId}" data-puse-id="${pui}" data-attrid="USER" class="view-visible attr" data-attr-order="${number}">
-                            ${content}
-                        <div>
-                        `
-                        let valListDiv = `
-                        <div class="inlineTags this-value" data-puse-id="${pui}">
-                            ${content}
-                            <button class="delete-attr">✕</button>
-                        </div>
-                        `
-                        caseDiv.insertAdjacentHTML("beforeend", insertDiv);
-                        e.target.parentElement.querySelector('hr').insertAdjacentHTML("beforebegin", valListDiv);
-                    }
-                }
-            })
-        })
+    .then(members => {
+        memberList = members;
     })
     .catch(err => console.log(err))
+    return memberList;
+}
+
+// 멤버 등록 이벤트
+async function getMembers(pageId, tag){
+    if(document.querySelector("[data-attr-modal]") != null) document.querySelector("[data-attr-modal]").remove();
+    const childList = tag.children    // 마지막 자식은 제외해야 함
+    const userList = await getMembersAjax(pageId);  // 워크스페이스의 모든 멤버들을 불러옴
+
+    // 등록 모달 생성
+    const modal = document.createElement('div');
+    modal.setAttribute("data-attr-modal", "");
+    modal.classList.add('db-modal');
+    tag.append(modal);
+    tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
+    modal.style.top = -100%
+    modal.setAttribute("class", "view");
+    let option = '<div class="close-attr-modal">✕</div>';
+    for(let i=0; i<childList.length-1; i++){
+        let content = childList[i].innerText;
+        let pui = childList[i].getAttribute("data-puse-id");
+        if(childList.length == 1) return;
+        option += `
+        <div class="inlineTags this-value" data-puse-id="${pui}">
+            ${content}
+            <button class="delete-attr">✕</button>
+        </div>
+        `;
+    };
+
+    option += `<hr>`;
+    userList.forEach(user => {
+        option += `
+        <div data-user-email="${user.email}" class="get-value">${user.nickname}(${user.email})</div>
+        `
+    });
+    modal.innerHTML = option;
+
+    // 멤버 추가를 위한 이벤트 리스너 
+    document.querySelectorAll('.get-value').forEach(tag => {
+        tag.addEventListener("click", async(e) => {
+            let content = e.target.innerText;
+            let email = e.target.getAttribute("data-user-email");
+            let dUseId = e.target.closest("[data-duse-id]").getAttribute("data-duse-id");
+            let pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
+            let check = 'true';
+            tag.parentElement.querySelectorAll(".this-value").forEach(item => {
+                if( item.innerText.indexOf(e.target.innerText) != -1 ){
+                    alert("이미 등록된 멤버입니다");
+                    check = 'false';
+                }
+            })
+            if(check == 'true'){
+                data = {};
+                data['pageId'] = pageId;
+                data['attrContent'] = email;
+                data['dbUseId'] = dUseId;
+
+                const caseDiv = e.target.closest('.attr-case');
+                let tagList = e.target.closest('.attr-case').querySelectorAll('.attr');
+                let getDiv = e.target.closest('.attr-case').querySelector('.attr');
+                if(tagList.length == 1 && getDiv.innerText == ''){
+                    data['pageUseId'] = getDiv.getAttribute('data-puse-id');
+                    updateAttrContent(data);
+                }
+                else {
+                    let pui = await insertAttrContent(data);
+                    let number = e.target.closest('.attr-case').querySelector("[data-attr-order]").getAttribute("data-attr-order");
+
+                    const prevId = caseDiv.lastElementChild.previousElementSibling.getAttribute("data-puse-id");
+                    const prevEles = document.querySelectorAll(`[data-puse-id="${prevId}"]`);
+                    let modalData;
+                    prevEles.forEach(prevEle => {
+                        let newDiv = document.createElement("div");
+                        newDiv.getAttribute("data-duse-id", dUseId);
+                        newDiv.getAttribute("data-puse-id", pui);
+                        newDiv.getAttribute("data-attr-order", number);
+                        newDiv.getAttribute("data-attrid", "USER");
+                        newDiv.classList.add("view-visible", "attr");
+                        newDiv.innerText = content
+                        modalData = newDiv;
+                        prevEle.before(newDiv);  // 선택요소 뒤에 추가
+                    })  // 새로운 유저 화면에 추가 forEach문 종료
+                    addAttrcontentToModal(modalData);   // 속성값 편집 모달에 데이터 append
+                }
+
+            }
+        })
+    })
 }
 
 async function insertAttrContent(data){
@@ -893,6 +998,11 @@ function deleteAttrContent(pui){
     .then(response => response.text())
     .then(result => {
         console.log(result);
+        let delTags = document.querySelectorAll(`[data-puse-id="${pui}"]`);
+        delTags.forEach(tag => {
+            //화면에 존재하는 모든 태그 삭제
+            tag.remove();
+        })
     })
     .catch(err => console.log(err));
 }
@@ -914,7 +1024,6 @@ async function pageAttrCheck(data){
     return ckeck;
 }
 
-
 // 파일업로드
 async function dbattrFileUpload(formData){
     let newName = '';
@@ -931,6 +1040,7 @@ async function dbattrFileUpload(formData){
     return newName;
 }
 
+// 다중값 속성 삭제
 function deleteThisAttr(e){
     let attrId = e.target.closest("[data-attrid]").getAttribute("data-attrid");
     if(attrId == "USER"){
@@ -947,10 +1057,8 @@ function deleteThisAttr(e){
             data['pageUseId'] = pui;
             data['attrContent'] = null;
             updateAttrContent(data);
-            e.target.closest(".attr-case").querySelector(`[data-puse-id="${pui}"]`).textContent = '';
         }
         e.target.parentElement.remove();
-
     }
 
     if(attrId == "TAG"){
@@ -1045,7 +1153,8 @@ function attrNumberUpdate(data){
     })
     .then(response => response.text())
     .then(result => {
-        console.log(result);
+        // console.log(result);
+        // console.log(data);
     })
     .catch(err => console.log(err));
 }
@@ -1059,7 +1168,7 @@ function dbpageNumbering(data){
     })
     .then(response => response.text())
     .then(result => {
-        console.log(result);
+        // console.log(result);
     })
     .catch(err => console.log(err));
 }

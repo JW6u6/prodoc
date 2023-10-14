@@ -188,7 +188,7 @@ function dbGalBlock(block){
     const galType = `
     <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
+        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
         <div>
             <div class="data_page">`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
@@ -275,7 +275,7 @@ function dbTblAttrBlock(attrs, uniqueList){
                 let img = document.createElement("img");
                 img.width = 50;
                 img.classList.add("attr", "inlineTags", "db-img");
-                img.src = content;
+                img.src = '/dbFiles/'+content;
                 let input = document.createElement("input");
                 input.type = "file";
                 input.style.display = "none";

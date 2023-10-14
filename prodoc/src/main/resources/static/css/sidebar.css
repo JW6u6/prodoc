@@ -202,7 +202,7 @@ select::-ms-expand {
 #temPage,
 #dbPage,
 #subTemPage,
-#subDbPage {r
+#subDbPage {
   z-index: 1;
   left: 0;
   top: 0;
@@ -225,5 +225,5 @@ select::-ms-expand {
   z-index: 999;
 }
 .highlight {
-	border: 2px dashed red;
+  border: 2px dashed red;
 }

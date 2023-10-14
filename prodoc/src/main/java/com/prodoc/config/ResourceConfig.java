@@ -18,5 +18,13 @@ public class ResourceConfig implements WebMvcConfigurer {
         
         registry.addResourceHandler("/files/**")
         .addResourceLocations("file:///c:/prodoc/image/profile/");
+        
+
+        registry.addResourceHandler("/dbFiles/**")
+        .addResourceLocations("file:///c:/prodoc/image/dbattr/");
+
+        registry.addResourceHandler("/block/files/**")
+        .addResourceLocations("file:///c:/prodoc/image/block/");
+
     }
 }

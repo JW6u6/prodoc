@@ -8,6 +8,7 @@ function handlingBlockEvent(element) {
   element.addEventListener("dragover", dragover_handler);
   element.addEventListener("drop", drop_handler);
   element.addEventListener("keydown", keydown_handler);
+
   if (element.dataset.blockType !== "DATABASE") {
     element.addEventListener("input", input_handler);
   }
@@ -18,6 +19,27 @@ function handlingBlockEvent(element) {
   blockAttrEvent(element);
   element.addEventListener("mouseenter", mouseenter_handler);
   element.addEventListener("mouseleave", mouseleave_handler);
+  element.addEventListener("focusin", (e) => {
+    //다른상대는 disabled.
+    //그리고 유저의 아이콘 보여주기.
+    console.log(e);
+    console.log("포커스인");
+    const socketEventObj = {
+      eventType: "FOCUSIN",
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
+  });
+  element.addEventListener("focusout", (e) => {
+    //다른상대는 disabled 해제
+    console.log(e);
+    console.log("포커스아웃");
+    const socketEventObj = {
+      eventType: "FOCUSOUT",
+      upUser: blockSessionUserId,
+    };
+    sendSocketEvent(socketEventObj);
+  });
 }
 const mouseenter_handler = (e) => {
   const control = e.currentTarget.querySelector(".control");
@@ -108,7 +130,7 @@ const imageEvent = async (element) => {
   const existFile = await getBlockFile(blockId); //블럭정보
   if (existFile.newName) {
     const imageBlockTemplate = createImageTemplate(
-      `./img/${existFile.newName}`
+      `/block/files/${existFile.newName}`
     );
     element.insertAdjacentHTML("afterend", imageBlockTemplate);
     element.remove();
@@ -366,7 +388,7 @@ function addHttps(url) {
 }
 
 // A버튼 이벤트
-function handleAttrBtn(e) {
+async function handleAttrBtn(e) {
   const id = e.currentTarget.parentNode.dataset.blockId;
   const blockType = e.target.closest(".prodoc_block").dataset.blockType;
   const menuArr = [];
@@ -386,7 +408,7 @@ function handleAttrBtn(e) {
   //만약 체인지 가능한 메뉴라면 이거.
   e.target.insertAdjacentHTML(
     "afterend",
-    makeDropDownMenu(id, { left: -100 }, menuArr)
+    await makeDropDownMenu(id, { left: -100 }, menuArr)
   );
 
   const menu = document.querySelector("[data-menu-type='control']");
@@ -520,6 +542,13 @@ async function blockChangeMenuEvent(e) {
   };
   updateDBBlock(blockUpdateObj);
   document.querySelector(".modalBackground").remove();
+  const socketEventObj = {
+    eventType: "CHANGETYPE",
+    displayId: blockId,
+    blockType,
+    upUser: blockSessionUserId,
+  };
+  sendSocketEvent(socketEventObj);
 }
 
 // 키보드 이벤트
@@ -529,6 +558,7 @@ async function keydown_handler(e) {
     attrContentUpdate(e);
     return;
   }
+  console.log(e.keyCode);
   const isContentBlock = e.target.classList.contains("content");
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
     const enteredBlock = e.currentTarget;
@@ -562,8 +592,18 @@ async function keydown_handler(e) {
         };
         const newBlock = displayBlock(displayObj);
         focusBlock(newBlock);
+
+        // 블럭생성이벤트 전달
+        const socketEventObj = {
+          eventType: "CREATEBLOCK",
+          template,
+          type: null,
+          enteredBlock,
+          upUser: blockSessionUserId,
+        };
+        sendSocketEvent(socketEventObj);
       } else {
-        // 비어있다면 해당 블럭을 TEXT로 만들기
+        // TODO블럭이 비어있다면 해당 블럭을 TEXT로 만들기
         // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
         let block = e.currentTarget;
         const blockId = block.dataset.blockId;
@@ -587,17 +627,32 @@ async function keydown_handler(e) {
         });
         console.log(block.querySelector(".content"));
         block.querySelector(".content").focus();
+        //블럭 체인지 이벤트 걸기
       }
     } else {
+      // 블럭을 새로 만들기
       const template = makeBlockTemplate(order);
+      const isDBpage = e.currentTarget.closest(".dataPage_blocks");
+      
+
       const displayObj = {
         template,
-        type: null,
-        element: null,
+        type: isDBpage?"DATA_PAGE":null,
+        element: enteredBlock,
       };
       //블럭 배치 및 이벤트 부여
       const newBlock = displayBlock(displayObj); //문서쪽으로 만듦
       focusBlock(newBlock);
+
+      // 블럭생성이벤트 전달
+      const socketEventObj = {
+        eventType: "CREATEBLOCK",
+        template,
+        type: isDBpage?"DATA_PAGE":null,
+        enteredBlockId: enteredBlock.dataset.blockId,
+        upUser: blockSessionUserId,
+      };
+      sendSocketEvent(socketEventObj);
     }
     // 만약 배치가 끝났는데 order이 비정상적인(ex)float) 형식이면 순서 재할당
     checkAndResetOrder(order);
@@ -622,6 +677,21 @@ async function keydown_handler(e) {
       upUser: blockSessionUserId,
     };
     sendSocketEvent(socketEventObj);
+  }
+  //위에 키
+  if (e.keyCode === 38) {
+    e.preventDefault();
+    const prevBlock = e.currentTarget.previousElementSibling;
+    console.log(e.currentTarget);
+    if (prevBlock) {
+      focusBlock(prevBlock);
+    }
+  } else if (e.keyCode === 40) {
+    e.preventDefault();
+    const nextBlock = e.currentTarget.nextElementSibling;
+    if (nextBlock) {
+      focusBlock(nextBlock);
+    }
   }
 }
 
