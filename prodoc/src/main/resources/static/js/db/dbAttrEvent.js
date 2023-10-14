@@ -381,6 +381,7 @@ function updateAttrContent(data){
         if(result.result=="success"){
             console.log("속성값 전체 반영하기위한 for문");
             const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
+            console.log(changeTags);
             changeTags.forEach(tag=>{
                 let attrId = tag.getAttribute("data-attrid");
                 let content = data.attrContent;
@@ -406,9 +407,12 @@ function updateAttrContent(data){
                     let aTag = document.createElement("a");
                     aTag.classList.add("attr", "inlineTags");
                     aTag.textContent = content;
-                    tag.append(aTag);
+                    tag.innerHTML(aTag);
                 }
-
+                if(attrId == "NUM" || attrId == "A_TEXT"){
+                    // tag.innerText = content;
+                    console.log(tag);
+                }
                 // 그 외
                 else{
                     let attrTag = document.createElement("div");
