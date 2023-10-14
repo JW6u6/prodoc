@@ -560,6 +560,8 @@ async function keydown_handler(e) {
   }
   console.log(e.keyCode);
   const isContentBlock = e.target.classList.contains("content");
+
+  // 엔터이벤트
   if (e.keyCode === 13 && !e.shiftKey && isContentBlock) {
     const enteredBlock = e.currentTarget;
     const nextBlock = enteredBlock.nextElementSibling;
@@ -588,8 +590,74 @@ async function keydown_handler(e) {
         const displayObj = {
           template,
           type: null,
-          element: null,
+          element: e.currentTarget,
         };
+        await createBlock2DB({
+          displayId: template.displayId,
+          pageId: pageBlockId,
+          creUser: blockSessionUserId,
+          blockId: "TODO",
+          rowX: order,
+        });
+        const newBlock = displayBlock(displayObj);
+        focusBlock(newBlock);
+
+        // 블럭생성이벤트 전달
+        const socketEventObj = {
+          eventType: "CREATEBLOCK",
+          template,
+          type: null,
+          enteredBlock,
+          upUser: blockSessionUserId,
+        };
+        sendSocketEvent(socketEventObj);
+      } else {
+        // TODO블럭이 비어있다면 해당 블럭을 TEXT로 만들기
+        // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
+        let block = e.currentTarget;
+        const blockId = block.dataset.blockId;
+        const blockChangeObj = {
+          displayId: blockId,
+          type: "TEXT",
+          text: "",
+          order: block.dataset.blockOrder,
+        };
+        const newBlock = await updateTemplate(blockChangeObj);
+        block.insertAdjacentHTML("afterend", newBlock.template);
+        block.remove();
+        block = document.querySelector(
+          `[data-block-id="${newBlock.displayId}"]`
+        );
+        handlingBlockEvent(block);
+        updateDBBlock({
+          displayId: blockId,
+          upUser: blockSessionUserId,
+          blockId: block.dataset.blockType,
+        });
+        console.log(block.querySelector(".content"));
+        block.querySelector(".content").focus();
+        //블럭 체인지 이벤트 걸기
+      }
+    } else if (e.currentTarget.dataset.blockType === "OLIST") {
+      if (e.target.innerHTML !== "") {
+        const template = await updateTemplate({
+          displayId: null,
+          type: "OLIST",
+          order,
+        });
+        const displayObj = {
+          template,
+          type: null,
+          element: e.currentTarget,
+        };
+
+        await createBlock2DB({
+          displayId: template.displayId,
+          pageId: pageBlockId,
+          creUser: blockSessionUserId,
+          blockId: "OLIST",
+          rowX: order,
+        });
         const newBlock = displayBlock(displayObj);
         focusBlock(newBlock);
 
@@ -633,11 +701,10 @@ async function keydown_handler(e) {
       // 블럭을 새로 만들기
       const template = makeBlockTemplate(order);
       const isDBpage = e.currentTarget.closest(".dataPage_blocks");
-      
 
       const displayObj = {
         template,
-        type: isDBpage?"DATA_PAGE":null,
+        type: isDBpage ? "DATA_PAGE" : null,
         element: enteredBlock,
       };
       //블럭 배치 및 이벤트 부여
@@ -648,7 +715,7 @@ async function keydown_handler(e) {
       const socketEventObj = {
         eventType: "CREATEBLOCK",
         template,
-        type: isDBpage?"DATA_PAGE":null,
+        type: isDBpage ? "DATA_PAGE" : null,
         enteredBlockId: enteredBlock.dataset.blockId,
         upUser: blockSessionUserId,
       };
@@ -657,6 +724,8 @@ async function keydown_handler(e) {
     // 만약 배치가 끝났는데 order이 비정상적인(ex)float) 형식이면 순서 재할당
     checkAndResetOrder(order);
   }
+  // 엔터이벤트의 끝
+
   if (e.keyCode === 8 && e.target.innerHTML.length == 0 && isContentBlock) {
     // 프리비어스엘리먼트시블링의 editable있는거 골라야함
     if (e.currentTarget.previousElementSibling) {
@@ -686,6 +755,7 @@ async function keydown_handler(e) {
     if (prevBlock) {
       focusBlock(prevBlock);
     }
+    //아래키
   } else if (e.keyCode === 40) {
     e.preventDefault();
     const nextBlock = e.currentTarget.nextElementSibling;
