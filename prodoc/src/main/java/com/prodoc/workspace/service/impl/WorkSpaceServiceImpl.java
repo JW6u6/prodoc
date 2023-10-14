@@ -19,6 +19,7 @@ import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
 import com.prodoc.workspace.service.WorkSpaceVO;
+import com.prodoc.workspace.service.allListVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -38,6 +39,12 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
 	@Autowired
 	private final JavaMailSender jmSender;
+	
+	@Override
+	public List<allListVO> allList(String email){
+		
+		return workMapper.allList(email);
+	}
 
 	// 워크스페이스 생성
 	@Override

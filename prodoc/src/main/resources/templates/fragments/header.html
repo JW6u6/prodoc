@@ -33,12 +33,11 @@
 	</div>
 
 	<th:block th:if="${session.logUser != null}">
-
 		<!-- 유저정보 모달 -->
 		<div id="modUser" th:insert="modal/userInfo.html :: userInfoFrag"></div>
+		<script th:inline="javascript" src="js/modal/userInfo.js"></script>
 	</th:block>
 	<th:block th:if="${session.logUser != null}">
-		<script th:inline="javascript" src="js/modal/userInfo.js"></script>
 		<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
 		<script th:inline="javascript" src="js/headerMenu.js"></script>
 	</th:block>

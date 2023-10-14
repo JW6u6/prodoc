@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.prodoc.notify.service.NotifyResultVO;
 import com.prodoc.notify.service.NotifyService;
 import com.prodoc.page.service.PageService;
 import com.prodoc.socket.SocketCommand;
@@ -26,6 +25,7 @@ import com.prodoc.workspace.mapper.WorkSpaceMapper;
 import com.prodoc.workspace.service.WorkJoinVO;
 import com.prodoc.workspace.service.WorkSpaceService;
 import com.prodoc.workspace.service.WorkSpaceVO;
+import com.prodoc.workspace.service.allListVO;
 
 import lombok.Setter;
 
@@ -66,7 +66,12 @@ public class WorkSpaceController {
 	public List<WorkSpaceVO> workList(String email) {
 		return WorkSpaceMapper.workList(email);
 	}
-
+	
+	@GetMapping("/allList")
+	public List<allListVO> allList(String email) {
+		return WorkSpaceMapper.allList(email);
+	}
+	
 	@GetMapping("/workId")
 	public String workId(String workName) {
 		return WorkSpaceMapper.workId(workName);
