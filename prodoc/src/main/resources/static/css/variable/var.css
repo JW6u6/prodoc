@@ -1,6 +1,7 @@
 :root {
-  --sidebar-bg-color: #fdcedf;
-  --page-bg-color: #f9f5f6;
+  --sidebar-bg-color: #f5f0ff;
+  --page-bg-color: #ffffff;
   --input-border-color: #cacaca;
   --wrapper-border-color: #b3b3b3;
+  --header--bg-color:#f1e9ff;
 }
