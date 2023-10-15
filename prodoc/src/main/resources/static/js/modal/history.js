@@ -104,12 +104,12 @@ function settingHistoryResult(history){
 			let thisDate = new Date(history[i].upDate);
 			let beforeDate = new Date(history[i-1].upDate);
 			if(thisDate.getDate() != beforeDate.getDate()){
-				let dateLine = `<div style="overflow: hidden"><h3 style="float:left">${formatDate(thisDate)}</h3>
+				let dateLine = `<div class="history_data_line" style="overflow: hidden"><h3 style="float:left">${formatDate(thisDate)}</h3>
 								<div><hr></div></div>`;
 				resultList.innerHTML += dateLine;
 			}
 		}else{		//첫 데이터임
-			let dateLine = `<div style="overflow: hidden"><h3 style="float:left">${formatDate(new Date(history[i].upDate))}</h3>
+			let dateLine = `<div class="history_data_line" style="overflow: hidden"><h3 style="float:left">${formatDate(new Date(history[i].upDate))}</h3>
 								<div><hr></div></div>`;
 			resultList.innerHTML += dateLine;
 		}
@@ -120,11 +120,11 @@ function settingHistoryResult(history){
 			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}"
 							data-pageid="${history[i].pageId}" data-blockid="${history[i].displayId}"
 							style="overflow:hidden; border:1px solid black; margin:5px 0px">
-							<div style="width:20%; float:left">
+							<div class="histroy_item--left">
 						        <p>${history[i].historyType}</p>
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
-						    <div style="width:70%; float:left">
+						    <div class="history_item--right">
 						        <p>페이지</p>
 						        <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
 						        <p>${history[i].nickname}(${history[i].creUser})</p>
@@ -136,11 +136,11 @@ function settingHistoryResult(history){
 		}else{							//워크에 관한 히스토리
 			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" 
 							style="overflow:hidden; border:1px solid black; margin:5px 0px">
-							<div style="width:20%; float:left">
+							<div class="histroy_item--left">
 						        <p>${history[i].historyType}</p>
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
-						    <div style="width:70%; float:left">
+						    <div class="history_item--right">
 						    	<p>워크스페이스</p>
 						        <h3>${history[i].workName}</h3>
 						        <p>${history[i].nickname}(${history[i].creUser})</p>

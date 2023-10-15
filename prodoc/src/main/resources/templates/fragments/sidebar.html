@@ -6,6 +6,11 @@
 	<!-- Sidebar -->
 	<div id="side">
 	<input type="text" class="logUser" style="display:none; "th:value="${session.logUser.email}">
+	<div class="side_logo">
+		<div>
+			<img alt="logo" src="images/sideLogo.png">
+		</div>
+	</div>
 		<div>
 			<div id="alarm">알림</div>
 			<div id="fileList">파일</div>
@@ -19,6 +24,7 @@
 			<div id="searchWKDB">검색</div>
 			<div id="history">히스토리</div>
 		</div>
+		<hr>
 		<div id="myWorkList" style="height:50%; overflow: auto;"></div>
 	</div>
 

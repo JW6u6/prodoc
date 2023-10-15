@@ -90,6 +90,7 @@ h4 {
   top: 0px;
   width: 100vw;
   height: 100vh;
+  z-index: 101;
 }
 
 .modal_item {
@@ -98,7 +99,7 @@ h4 {
 }
 
 .block_dropdown_menu {
-  z-index: 999;
+  z-index: 102;
 }
 
 .block_dropdown_menu ul {
@@ -174,6 +175,7 @@ a {
   position: absolute;
   width: 300px;
   max-height: 150px;
+  z-index:102;
 }
 
 .modal_reply_controller {
@@ -194,4 +196,12 @@ a {
   width: 250px;
   right: 0;
   overflow-y: auto;
+  padding-top:70px;
+}
+
+.page_reply_button{
+	position: fixed;
+	z-index:97;
+	bottom:50px;
+	right:50px;
 }

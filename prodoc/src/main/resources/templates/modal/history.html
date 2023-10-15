@@ -7,27 +7,37 @@
  -->
 <div th:fragment="historyFrag">
 	<div id="modHistory" class="hide">
-	<div>
-		<h3>히스토리</h3>
-	    <div><button class="closeBtn">&#10005;</button></div>
-	    <br>
-	    <label>내역: </label>
-	        <select id="historyType">
-	        	<option value="all" selected>전체</option>
-	        	<option value="create" >생성</option>
-	        	<option value="update" >수정</option>
-	        	<option value="delete" >삭제</option>
-	        	<option value="revoke" >복구</option>
-	        </select>
-	         <label>기간 : </label> 
-	         <input type="date" onClick="hisMinDate(); this.max=settingDates()" name="startDate"> ~ 
-	         <input type="date" onClick="this.max=settingDates()" name="endDate" disabled>
-	         <button type="button" id="hisResetBtn">기간 초기화</button>
-	         <button type="button" id="hisSearchBtn">검색</button>
-		<br>
-		<div class="historyList" style="width:70%; height:400px; overflow:auto">
+		<div>
+			<div class="history--header">
+				<h3>히스토리</h3>
+				<button class="closeBtn">&#10005;</button>
+			</div>
+			<!-- 컨트롤 메뉴 -->
+			<div class="history_control_menu">
+				<div>
+					<label for="historyType">내역: </label> <select id="historyType">
+						<option value="all" selected>전체</option>
+						<option value="create">생성</option>
+						<option value="update">수정</option>
+						<option value="delete">삭제</option>
+						<option value="revoke">복구</option>
+					</select>
+				</div>
+				<div>
+					<label>기간 : </label> <input type="date"
+						onClick="hisMinDate(); this.max=settingDates()" name="startDate">
+					~ <input type="date" onClick="this.max=settingDates()"
+						name="endDate" disabled>
+				</div>
+				<div>
+					<button type="button" id="hisResetBtn">기간 초기화</button>
+					<button type="button" id="hisSearchBtn">검색</button>
+				</div>
+			</div>
+			<!-- 히스토리 리스트 동적생성 -->
+			<div class="historyList"
+				style="width: 100%; height: 400px; overflow: auto"></div>
 		</div>
-	</div>
 	</div>
 </div>
 </html>
