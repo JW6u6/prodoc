@@ -329,8 +329,8 @@ async function creLink() {
 
         if (navigator.clipboard !== undefined) {
             document.body.appendChild(linkText);
-            url = //url: 도메인/share/페이지아이디
-                linkText.value = url; // textarea 값에 url를 넣어줌
+            url = '도메인 주소/shared/' + pageBlockId;
+            linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard
                 .writeText(linkText.value)
