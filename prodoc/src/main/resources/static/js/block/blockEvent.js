@@ -193,6 +193,7 @@ const fileEvent = async (element) => {
  */
 const fileRegiClickEvent = (e) => {
   const input = document.querySelector(".block_file-Uploader");
+  const { blockId } = e.target.closest(".prodoc_block").dataset;
   input.click();
   input.addEventListener("change", async (e) => {
     const file = input.files;
