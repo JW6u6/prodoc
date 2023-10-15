@@ -1778,3 +1778,42 @@ function renewMemberAuth(list) {
             body: JSON.stringify(list)
         })
 }
+async function listWorkJoin(workId) {
+
+    let url = `/joinList?workId=${workId}`;
+    let mailList = [];
+    await fetch(url, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (document.querySelector('#beforeJoin')) {
+                document.querySelector('#beforeJoin').remove();
+            }
+            let invList = document.querySelector('#invList');
+            let beforeJoin = document.createElement('table');
+            beforeJoin.id = 'beforeJoin';
+            for (let inv of result) {
+                mailList.push(inv.inviteEmail);
+                let trTag = document.createElement('tr');
+                let tdTag = document.createElement('td');
+
+                tdTag.textContent = inv.inviteEmail;
+
+                let also = document.createElement('td');
+                also.textContent = '초대중...';
+
+                trTag.appendChild(tdTag);
+                trTag.appendChild(also);
+                beforeJoin.appendChild(trTag);
+            }
+
+            invList.before(beforeJoin);
+
+        })
+        .catch(err => console.log(err));
+    return mailList;
+}

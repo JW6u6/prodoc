@@ -8,7 +8,7 @@ public interface NotifyService {
 	public void insertTargetNotify(NotifyVO vo);
 	
 	//알림 읽음 설정 - 상우: targetnote
-	public int readCheck(NotifyVO vo);
+	public int readCheck(List<NotifyVO> list);
 	
 	public int redReadCheck(NotifyVO vo);
 	

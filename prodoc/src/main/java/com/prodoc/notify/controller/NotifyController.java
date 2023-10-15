@@ -48,6 +48,15 @@ public class NotifyController {
 		return "{\"result\": false}";
 	}
 	
+	@ResponseBody
+	@PostMapping("/alarmRead")
+	public String alarmRead(@RequestBody List<NotifyVO> list) {
+		if( notiService.readCheck(list) > 0)
+			return "{\"result\": true}";
+		
+		return "{\"result\": false}";
+	}
+	
 	@GetMapping("/areULOCK")
 	@ResponseBody
 	public int hasLockAlam(String pageId) {

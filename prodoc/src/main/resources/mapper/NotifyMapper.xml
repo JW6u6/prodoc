@@ -68,4 +68,17 @@
 		from view_notify_invite
 		where work_id = #{workId}
 	</select>
+	
+	<!-- 초대 목록에서 제거 -->
+	<delete id='deleteInvite'>
+	   DELETE FROM WORKJOIN WHERE INVITE_ID = #{noteId}
+	</delete>
+	
+	<!-- 초대수락 -> 멤버추가 -->
+	<insert id='addMember'>
+		INSERT INTO TBL_MEMBER(email, work_id)
+		VALUES (#{email}, #{workId})
+	</insert>
+	
+	
 </mapper>

@@ -22,6 +22,8 @@ public interface NotifyMapper {
 
 	// 알림 삭제 - 상우
 	public int deleteNotify(NotifyVO vo);
+	
+//	public int deleteInvite()
 
 	// 빨간 점 알림 안받기 - 시인언니
 //	public int noNotify(NotifyVO vo);
