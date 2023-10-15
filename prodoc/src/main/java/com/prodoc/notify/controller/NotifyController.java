@@ -62,4 +62,10 @@ public class NotifyController {
 	public int hasLockAlam(String pageId) {
 		return notiService.donTDupleLock(pageId);
 	}
+	
+	@ResponseBody
+	@PostMapping("/clickInvite")
+	public void clickInvite(@RequestBody NotifyResultVO vo) {
+		notiService.clickInvite(vo);
+	}
 }

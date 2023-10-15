@@ -53,7 +53,7 @@
 		set read_check = 'TRUE'
 		where note_id = #{noteId}
 	</update>
-
+	
 	<!-- 페이지 잠금 요청 중복으로 못 넣게 조회해오는 쿼리 -->
 	<select id="notLockDuple" resultType="int">
 		select count(*)
@@ -70,14 +70,13 @@
 	</select>
 	
 	<!-- 초대 목록에서 제거 -->
-	<delete id='deleteInvite'>
-	   DELETE FROM WORKJOIN WHERE INVITE_ID = #{noteId}
-	</delete>
-	
-	<!-- 초대수락 -> 멤버추가 -->
-	<insert id='addMember'>
-		INSERT INTO TBL_MEMBER(email, work_id)
-		VALUES (#{email}, #{workId})
+	<insert id="clickInvite" parameterType="NotifyResultVO">
+		{call alarm_click(
+		  #{reUserId}
+		, #{workId}
+		, #{noteId}
+		, #{alarmType}
+		)}
 	</insert>
 	
 	

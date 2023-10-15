@@ -17,6 +17,9 @@ public interface NotifyMapper {
 	// 알림 목록 불러오기 -상우
 	public List<NotifyResultVO> selectNotify(String logUser, String type);
 
+	//초대 수락/거부
+	public void clickInvite (NotifyResultVO vo);
+	
 	// 초대 목록 불러오기
 	public List<NotifyResultVO> selectNotifyInv(String logUser);
 

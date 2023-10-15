@@ -40,6 +40,10 @@ public class NotifyServiceImpl implements NotifyService {
 	}
 	
 	@Override
+	public void clickInvite (NotifyResultVO vo) {
+		notiMapper.clickInvite(vo);
+	}
+	@Override
 	public List<NotifyResultVO> selectNotify(String logUser,String type) {
 		List<NotifyResultVO> list = new ArrayList<>();
 		if(type.equals("all") || type.equals("REPLY_TG"))

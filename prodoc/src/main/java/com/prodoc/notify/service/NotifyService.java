@@ -15,6 +15,9 @@ public interface NotifyService {
 	//알림 목록 불러오기 -상우
 	public List<NotifyResultVO> selectNotify(String logUser,String type);
 	
+	//초대 수락,거부
+	public void clickInvite (NotifyResultVO vo);
+	
 	//알림 삭제 - 상우
 	public int deleteNotify(List<NotifyVO> list);
 	

@@ -54,6 +54,7 @@ function showAlarmList(type){
 			console.log(item)
 			let text = textReturn(item);
 			insertDiv.insertAdjacentHTML("beforeend",text);
+			clickAlarmEvent()
 		})
 
 		//이벤트 세팅
@@ -135,7 +136,8 @@ function textReturn(item){
 						<span class="inviteText">${item.creUserName}(${item.creUserId})님이 ${item.workName}에 초대했습니다</span>
 					</div>
 					<div>
-						<input type="button" class="joinOkBtn" value="수락"> <input type="button" class="joinNoBtn" value="거절">
+						<input type="button" class="joinOkBtn" value="수락" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
+						<input type="button" class="joinNoBtn" value="거절" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
 					</div>
 				</div>`
 	}
@@ -144,7 +146,38 @@ function textReturn(item){
 
 
 //목록 개별 클릭 시 이벤트 함수 (초대수락거절/해당 위치로 이동)
-
+function clickAlarmEvent(){
+	document.querySelectorAll(".joinOkBtn, .joinNoBtn").forEach(result => {
+		result.addEventListener('click',function(){
+			let clickType;
+			clickType = "OK";
+			if(result.className == 'joinNoBtn'){
+				clickType = "NO";
+			}
+			let email = document.querySelector("#side input.logUser").value;
+			console.log(email);
+			let inviteAttribute = {
+				reUserId : email,
+				workId : result.dataset.wid,
+				noteId : result.dataset.nid,
+				alarmType : clickType
+			};
+			let url = "/clickInvite";
+			fetch (url,{
+				method : 'POST',
+				body:JSON.stringify(inviteAttribute),
+				headers: {'Content-Type': 'application/json'}
+			})
+			.then(res =>res.text())
+			.then(result => {
+				console.log(result);
+			})
+			.catch(reject => {
+				console.log(reject);
+			})	
+		}) 
+	})	
+}
 
 
 //읽음 체크
