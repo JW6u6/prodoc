@@ -2,7 +2,7 @@
 #pageModal,
 #workModal {
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;
@@ -29,7 +29,22 @@
   width: 800px;
   height: 500px;
   text-align: center;
-  z-index: 1;
+  z-index: 100;
+}
+
+.side_logo{
+  margin-left: 7px;
+	height: 70px;
+	display:flex;
+	align-items: center;
+}
+
+.side_logo span {
+	font-size:30px;
+}
+
+.side_logo img{
+	height:70px;
 }
 #temPage,
 #dbPage,
@@ -89,7 +104,7 @@
   margin-left: 20px;
   height: max-content;
 }
-.workName{
+.workName {
   font-weight: bold;
 }
 .Page {
@@ -204,6 +219,8 @@ select::-ms-expand {
   border: solid 2px pink;
   border-radius: 10px;
 }
+
+
 #temPage,
 #dbPage,
 #subTemPage,
@@ -232,3 +249,42 @@ select::-ms-expand {
 .highlight {
   border: 2px dashed red;
 }
+
+
+
+/* 사이드 */
+#side {
+  height: 100%;
+  float: left;
+  position: fixed;
+  list-style: none;
+  padding: 0px;
+  box-sizing: border-box;
+  margin: 0px;
+  width: 300px;
+  background: var(--sidebar-bg-color);
+  height: 1000px;
+  overflow: auto;
+  display: block;
+  border-right: 1px solid #ddd;
+  z-index: 10;
+}
+
+#side a {
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  color: #000;
+  font-weight: bold;
+}
+
+#side li a:hover {
+  background: #fcb7ad;
+  color: #fff;
+}
+
+#side li a.home {
+  background: #fcb7ad;
+  color: #fff;
+}
+

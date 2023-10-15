@@ -16,11 +16,13 @@
 	<script src="/js/app.js"></script>
 	<!--/* css */-->
 	<link th:href="@{css/common.css}" rel="stylesheet" />
-	<link th:href="@{css/block.css}" rel="stylesheet" />
+	<link th:href="@{css/page.css}" rel="stylesheet" />
 	<link th:href="@{css/dbpage.css}" rel="stylesheet" />
 	<link th:href="@{css/toggleClass.css}" rel="stylesheet" />
-	<link th:href="@{css/history.css}" rel="stylesheet" />
-	<link th:href="@{css/history.css}" rel="stylesheet" />	
+	<link th:href="@{css/modal/modal.css}" rel="stylesheet" />
+	<link th:href="@{css/alarm.css}" rel="stylesheet" />
+	<link th:href="@{css/variable/var.css}" rel="stylesheet" />
+	
 	<title>PRODOC</title>
 	<!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
@@ -41,6 +43,7 @@
 		<div layout:fragment="content" class="app">
 			<div class="container"></div>
 		</div>
+		<button class="page_reply_button">댓글</button>
 		<input type="file" class="block_file-Uploader" style="display: none" />
 		<script>
 			const blockSessionUserId = "[[${session.logUser.email}]]";
@@ -61,11 +64,14 @@
 		<div id="FileSearchModal"
 			th:insert="modal/fileModal.html :: FileSearchModal"></div>
 		<!-- 파일 검색 모달 -->
+		
+		<!-- 블럭관련 스크립트 -->
 		<script th:inline="javascript" src="js/block/blockMaker.js"></script>
 		<script th:inline="javascript" src="js/block/blockEvent.js"></script>
 		<script th:inline="javascript" src="js/block/block.js"></script>
 		<script th:inline="javascript" src="js/block/menuEvent.js"></script>
 		<script th:inline="javascript" src="js/block/blockMove.js"></script>
+		<script th:inline="javascript" src="js/block/reply.js"></script>
 		
 		<!-- 워크/디비 검색 모달 -->
 		<div id="SearchWKDBFag" th:insert="modal/search.html :: searchFrag"></div>

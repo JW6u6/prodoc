@@ -371,6 +371,7 @@ function updateAttrContent(data){
     // data = pageUseId, attrContent 필요(수정)
     let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
     console.log(eventDiv)
+    const pageEle = eventDiv.closest("[data-page-id]");
     data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
     data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     data['workId'] = document.getElementById("TitleWid").value;
@@ -385,7 +386,10 @@ function updateAttrContent(data){
     .then(result => {
         console.log(result.result);
         if(result.result=="success"){
+            upattrToDbpageViewup(pageEle);  // uuser, udate 항목도 화면에 업데이트
             console.log("속성값 전체 반영하기위한 for문");
+
+            // 속성이 변경되었을 때 모달/DB블럭 전체에 반영
             const changeTags = document.querySelectorAll(`.attr[data-puse-id="${data.pageUseId}"]`);
             changeTags.forEach( async(tag) =>{
                 let attrId = tag.getAttribute("data-attrid");
@@ -416,7 +420,7 @@ function updateAttrContent(data){
                     tag.innerText = (content==''||content==null ? '' : content);
                     let dataTag = tag.cloneNode(true);
                      console.log(tag)
-                    // addAttrcontentToModal(dataTag);
+                    addAttrcontentToModal(dataTag);
                 }
                 if(["USER", "CUSER", "UUSER"].includes(attrId)){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
@@ -738,7 +742,8 @@ function changeState(eTarget){
             updateAttrContent(data);
             console.log(eTarget.closest("[data-layout]"))
             // 보드 레이아웃에서 속성 변경했을 때 element 이동
-            if(eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
+            if( eTarget.closest("[data-layout]").getAttribute("data-layout") != null &&
+                eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
                 let moveState = data['attrContent'];
                 let moveDiv = eTarget.closest(".db_block");
                 let stateDiv = eTarget.closest(".state-container").querySelector(`[data-state="${moveState}"]`);
@@ -1171,4 +1176,45 @@ function dbpageNumbering(data){
         // console.log(result);
     })
     .catch(err => console.log(err));
+}
+
+// DB페이지 수정시(블럭) page attr 중 uuser, udate 업데이트, 화면 반영
+// 명석씨 블럭수정사항 업데이트되는 부분에 이것좀 넣어주세오
+function upblockToDbpageViewup(){
+    if(!document.querySelector(".db_attrList")) return;
+
+    const uUserAttr = document.querySelector(".db_attrList")
+                        .querySelector('[data-attrid="UUSER"].attr-case .attr');
+    const uDateAttr = document.querySelector(".db_attrList")
+                        .querySelector('[data-attrid="UDATE"].attr-case .attr');
+
+    const email = document.getElementById("UserInfoMod").querySelector(".email").innerText;
+    const nickname = document.getElementById("UserInfoMod").querySelector(".nickname").innerText;
+    const uuser = `${nickname}(${email})`
+
+    let nowDate = new Date();
+    const udate = `${nowDate.getFullYear()}-${nowDate.getMonth()+1}-${nowDate.getDate()}`
+    
+    uUserAttr.innerText = uuser;
+    uDateAttr.innerText = udate;
+}
+
+// DB페이지의 속성이 수정됐을때 uuser, udate 업데이트, 화면 반영
+function upattrToDbpageViewup(pageEle){
+    // 데이터베이스 블럭에서 속성의 수정
+    const uUserAttr = pageEle.querySelector('[data-attrid="UUSER"].attr');
+    const uDateAttr = pageEle.querySelector('[data-attrid="UDATE"].attr');
+
+    const email = document.getElementById("UserInfoMod").querySelector(".email").innerText;
+    const nickname = document.getElementById("UserInfoMod").querySelector(".nickname").innerText;
+    const uuser = `${nickname}(${email})`
+
+    let nowDate = new Date();
+    const udate = `${nowDate.getFullYear()}-${nowDate.getMonth()+1}-${nowDate.getDate()}`
+    
+    uUserAttr.innerText = uuser;
+    uDateAttr.innerText = udate;
+
+    // 모달에서 수정했을 때 모달에 있는 속성도 업데이트하기 위함
+    upblockToDbpageViewup();
 }

@@ -98,32 +98,64 @@ function settingSearch(){
 
 
 //검색프로세스
+//검색프로세스
 function searchThis(dataList){
-	const wkhead= [ {"workName" :'워크스페이스명'},	//워크스페이스
-					{"pageId" :'페이지아이디'},
-					{"pageName" :'페이지명'},
-					{"content" :'내용'},
-					{"blockCreUser" :'작성자'},
-					{"displayDate" :'최종수정일'}];
-	const dbhead= [ {"workName" :'워크스페이스명'},	//데이터베이스
-					{"pageId" :'페이지아이디'},
-					{"parentName" :'페이지명'},
-					{"pageName": '데이터베이스'},
-					{"caseName": '타입'}];
-
 	fetch("/SearchWKDB", {
 		method: 'post',
 		body : JSON.stringify(dataList),
 		headers: {'content-Type' : 'application/json'}
 	}).then(response => response.json())
 	.then(result =>{
-		//console.log(result);
-		if(wkdbType == "wk"){
-			settingSearchResult(wkhead, result.data);
-		}else{
-			settingSearchResult(dbhead, result.data);
+		//console.log(result.data);
+		let ResultDiv = document.querySelector('.SearchResult');
+		ResultDiv.innerHTML = ""; //초기화
+		let dataDiv = "";
+
+		for(let list of result.data){
+			if(wkdbType == "wk"){	//워크일 때
+				dataDiv = `
+				<div class="resultItem" data-pageid="${list.pageId}" data-blockid="${list.displayId}">
+						<div>
+							<span>최종수정일</span>
+							<span>${list.displayUpDate == null? formatDate(new Date(list.displayCreDate))
+								: formatDate(new Date(list.displayUpDate))}</span>
+						</div>
+						<div>
+							<span>${list.pageName}(${list.workName})</span>
+							<span>${list.content}</span>
+							<span>${list.nickName}(${list.blockCreUser})</span>
+							</div>
+					</div>
+				`;
+			}else{					//데이터베이스일 때
+				dataDiv = `
+				<div class="resultItem" data-pageid="${list.pageId}" data-parentid="${list.parentId}">
+				<div>
+					<span>타입</span>
+					<span>${list.caseName}</span>
+				</div>
+				<div>
+				<span>${list.parentName}(${list.workName})</span>
+				<span>${list.pageName}</span>
+				</div>
+				</div>
+				`;
+			}
+			ResultDiv.innerHTML += dataDiv;
 		}
 	}).catch(err=>console.log(err));
+}
+
+
+function getPageBlock(e){
+console.log(e.currentTarget);
+	let blockId = e.currentTarget.dataset.blockid;
+	
+	selectPage(e.currentTarget.dataset.pageid);
+	if(e.currentTarget.dataset.blockid != null){
+		setTimeout(() => cusorMove(blockId), 500);
+	}
+	WKDBMod.className = "hide"
 }
 
 

@@ -9,36 +9,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="searchFrag">
 	<div id="modSearchWKDB" class="hide">
+	<!-- 실제 모달창 -->
 	<div>
-	    <h3>검색</h3>
-	    <div><button class="closeBtn">&#10005;</button></div>
+		<div class="search_modal--header">
+		    <h3>검색</h3>
+		    <div><button class="closeBtn">&#10005;</button></div>
+		</div>
+		
 	    <div>
 	        <button type="button" id="showWorkBtn" class="findBtn">워크스페이스</button>
 	        <button type="button" id="showDBBtn" class="findBtn">데이터베이스</button>
 	    </div>
-	    <!-- ---------------------------------------------- -->
-	    <input type="text" name="keyword" id="WKDBkeyworkd">
-	    <button type="button" id="searchBtn">검색</button>
-	    <!-- ---------------------------------------------- -->
-	    <div class="menuDiv">
-	        <div id="wkDiv" class="view">
-	            <input type="date" name="startDate" onClick="this.max=settingDates()" disabled> ~ 
-	            <input type="date" name="endDate" onClick="this.max=settingDates()" disabled>
-	            <button type="button" class="none" id="dateBtn">날짜</button>
-	        </div>
-	        
-	        <div id="dbDiv" class="hide">
-	            <input type="checkbox" name="dbOption" value="page"><span>데이터베이스명</span>
-	            <input type="checkbox" name="dbOption" value="case"><span>데이터베이스 타입</span>
-	            <input type="checkbox" name="dbOption" value="work"><span>워크스페이스명</span>
-	        </div> 
-	    </div>
-	    <!-- ---------------------------------------------- -->
-	    <div class="SearchResult" style="width:100%; height:200px; overflow:auto">
-	        <table style="width:100%; border : 1px solid black; border-collapse : collapse;">
-	            <thead></thead>
-	            <tbody></tbody>
-	        </table>
+	    
+	    
+		<div class="search_filter">
+	
+
+		    <div class="menuDiv">
+		        <div id="wkDiv" class="view">
+		            <input type="date" name="startDate" onClick="this.max=settingDates()" disabled> ~ 
+		            <input type="date" name="endDate" onClick="this.max=settingDates()" disabled>
+		            <button type="button" class="none" id="dateBtn">날짜</button>
+		        </div>
+		        
+		        <div id="dbDiv" class="hide">
+		            <input type="checkbox" name="dbOption" value="page"><span>데이터베이스명</span>
+		            <input type="checkbox" name="dbOption" value="case"><span>데이터베이스 타입</span>
+		            <input type="checkbox" name="dbOption" value="work"><span>워크스페이스명</span>
+		        </div> 
+		    </div>
+			<div>
+			    <input type="text" name="keyword" id="WKDBkeyworkd">
+			    <button type="button" id="searchBtn">검색</button>			
+			</div>
+		</div>
+
+		<!-- 동적생성 -->
+	    <div class="SearchResult" style="width:100%; height:300px; overflow:auto">
+
 	    </div>
 	</div>
 	</div>

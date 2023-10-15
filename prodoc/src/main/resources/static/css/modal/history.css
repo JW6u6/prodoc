@@ -1,0 +1,100 @@
+/*히스토리, 유저정보, 검색 모달창 검은 배경*/
+#modHistory,
+#UserModiMod,
+#joinOutMod,
+#modSearchWKDB {
+  position: fixed; /* Stay in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+/*히스토리, 검색 모달창 안에 흰 div*/
+#modHistory > div,
+#modSearchWKDB > div {
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 20vw;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 60vw;
+  z-index: 51;
+}
+/*히스토리, 검색 모달창 안에 흰 div*/
+#UserModiMod > div,
+#joinOutMod > div {
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 30vw;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 40vw;
+  z-index: 51;
+}
+.historyList{
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-right: none;
+}
+
+.history--header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.history_control_menu {
+  display: flex;
+}
+
+.history_control_menu div:first-child {
+  margin-right: 10px;
+}
+
+.history_control_menu div:last-child {
+  margin-left: 10px;
+}
+.history_control_menu div > button:first-child {
+  margin-right: 10px;
+}
+
+.history_data_line{
+  position: relative;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.history_data_line div{
+  width: 100%;
+}
+
+.history_data_line h3{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  background-color: white;
+}
+
+.historyItem{
+  display: grid;
+  grid-template-columns: 3fr 8fr;
+}
+
+.histroy_item--left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.histroy_item--left p{
+  margin: 0;
+}
+
+.history_item--right p{
+  margin: 10px 0 ;
+}

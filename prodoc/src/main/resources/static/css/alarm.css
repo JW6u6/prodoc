@@ -1,0 +1,29 @@
+#alarmModal {
+  margin: 0 400px;
+  border: 1px solid black;
+  width: 300px;
+  height: 500px;
+}
+#alarmMenu ul {
+  width: 100%;
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+#alarmMenu li {
+  text-align: center;
+  display: inline-block;
+  margin: 0 auto;
+  padding-left: 25px;
+  padding-right: 25px;
+  border: 1px solid black;
+}
+#alarmFunc {
+  font-size: 10px;
+}
+#alarmFunc p {
+  margin-left: 30px;
+  margin-right: 30px;
+  border: 1px solid black;
+  display: inline;
+}

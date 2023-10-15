@@ -1,0 +1,31 @@
+.search_modal--header{
+ display: flex;
+ justify-content: space-between;
+}
+
+.search_filter{
+    display: flex;
+}
+
+.search_filter div:last-child{
+    margin-left: 10px;
+}
+.resultItem{
+    display: grid;
+    grid-template-columns: 3fr 8fr;
+    border: 1px solid black;
+    margin-bottom: 5px;
+}
+.resultItem > div{
+    display: flex;
+    flex-direction: column;
+}
+
+.resultItem > div:first-child{
+    justify-content: center;
+    align-items: center;
+}
+
+.resultItem div span {
+    margin: 2px 0;
+}
