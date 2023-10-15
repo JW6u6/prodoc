@@ -164,11 +164,15 @@ async function pageLockNoti() {
 }
 
 //페이지 삭제 체크
-//페이지 url로 읽어와서 페이지 아이디 넘기는거 해야함.
 async function pageDelCheck() {
     let infoResult = await selectOneWork(workBlockId);
-    if (infoResult.mainPageId == pageBlockId) {
-        alert('이 페이지는 삭제할 수 없습니다.')
+    let home = document.querySelector('#homePg');
+    if (home.value == pageBlockId) {
+        alert('홈은  삭제할 수 없습니다.');
+
+    } else if (infoResult.mainPageId == pageBlockId) {
+        alert('메인 페이지는 삭제할 수 없습니다.')
+
     } else if (infoResult.mainPageId != pageBlockId) {
 
         let val = {
@@ -229,7 +233,7 @@ async function ThisMainPage() {
                 }
             })
             .catch(err => console.log(err));
-   }
+    }
 }
 
 
@@ -324,9 +328,9 @@ async function creLink() {
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
         if (navigator.clipboard !== undefined) {
-            document.body.appendChild(linkText); 
+            document.body.appendChild(linkText);
             url = //url: 도메인/share/페이지아이디
-            linkText.value = url; // textarea 값에 url를 넣어줌
+                linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard
                 .writeText(linkText.value)
