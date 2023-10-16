@@ -21,7 +21,7 @@ async function createUesList(caseBlockId){
     let attrList = await getUseAttrList(caseBlockId);
     console.log(attrList);
 
-    let attrDiv = `<div class="hide">사용속성목록</div>`
+    let attrDiv = `<div>사용중인 속성</div>`
     attrList.forEach(attr => {
         let viewOption = 'checked';
         if(attr.displayCheck == 'FALSE') viewOption ='';
@@ -109,10 +109,15 @@ function selectAttr(e){
 
 // 사용자가 속성 추가
 async function registAttr(e){
+    let inputValue = e.target.parentElement.querySelector('[name="useAttrName"]').value;
+    if(inputValue == "" || inputValue == null){
+        alert("추가할 속성을 선택하세요");
+        return;
+    }
     let check = true;    // 중복체크를위한 변수
     let attrInfo = {};
     attrInfo['attrId'] = e.target.parentElement.querySelector('[name="useAttrId"]').value;
-    attrInfo['attrName'] = e.target.parentElement.querySelector('[name="useAttrName"]').value;
+    attrInfo['attrName'] = inputValue;
     attrInfo['caseBlockId'] = e.target.closest('[data-attr-option]').getAttribute("data-attr-option");
     attrInfo['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     let attrList = await getUseAttrList(attrInfo['caseBlockId']);   // 현재 데이터베이스에서 사용중인 속성 리스트
@@ -176,7 +181,7 @@ async function registAttr(e){
             })
         })  // 새로 생긴 속성 append 하기 위한 forEach문 종료
         // 모달 닫기
-        document.querySelectorAll(".db_modal--attr").forEach(modal=>{
+        document.querySelectorAll("[data-attr-option]").forEach(modal=>{
             modal.innerHTML = '';
             modal.classList.remove("view");
             modal.classList.add("hide");
@@ -714,7 +719,7 @@ function selectFileAttr(e){
 
 // 상태 속성 변경
 function changeState(eTarget){
-    let states = ['WAIT', 'RUN', 'END', 'CANCLE']
+    let states = ['WAIT', 'RUN', 'END', 'CANCEL']
     let pui = eTarget.getAttribute("data-puse-id");
     let nowStateDiv = eTarget.querySelector(".attr");
 
@@ -1202,8 +1207,10 @@ function upblockToDbpageViewup(){
 // DB페이지의 속성이 수정됐을때 uuser, udate 업데이트, 화면 반영
 function upattrToDbpageViewup(pageEle){
     // 데이터베이스 블럭에서 속성의 수정
-    const uUserAttr = pageEle.querySelector('[data-attrid="UUSER"].attr');
-    const uDateAttr = pageEle.querySelector('[data-attrid="UDATE"].attr');
+    const uUserAttr = (pageEle.querySelector('[data-attrid="UUSER"].attr') != null ?
+                    pageEle.querySelector('[data-attrid="UUSER"].attr') : pageEle.querySelector('[data-attrid="UUSER"] .attr'));
+    const uDateAttr = (pageEle.querySelector('[data-attrid="UDATE"].attr') != null ?
+                    pageEle.querySelector('[data-attrid="UDATE"].attr') : pageEle.querySelector('[data-attrid="UDATE"] .attr'));
 
     const email = document.getElementById("UserInfoMod").querySelector(".email").innerText;
     const nickname = document.getElementById("UserInfoMod").querySelector(".nickname").innerText;

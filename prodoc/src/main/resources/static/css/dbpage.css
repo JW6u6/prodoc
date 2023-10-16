@@ -1,35 +1,92 @@
 /* DB 레이아웃 */
+
+/* 데이터베이스 가장 큰 틀에 관련된것들 */
+.db-block {
+	position: relative;
+	padding: 30px;
+	box-shadow: 0px 0px 5px 1px #ddd;
+	width: 100%;
+	margin: 10px 0;
+	border-radius: 5px;
+}
+
+.db-page-name {
+	font-size: x-large;
+}
+
+.db-layout-list {
+	display: inline;
+}
+
+.db-layout-list ul {
+	margin: 20px 0 10px 0;
+	padding: 0;
+}
+
+.db-layout-list li {
+    display: inline;
+    list-style-type: none;
+    margin-right: 15px;
+    padding: 0 3px;
+}
+
+.db-layout-list li:hover {
+	border-bottom: 2px solid #8a817c;
+	cursor: pointer;
+}
+
+.db-block-body {
+	overflow : auto;
+}
+
+/* 하위 페이지 */
 .db_block{
 	padding: 10px;
 }
 
-.db-block-body{
-	overflow : auto;
-}
-.db-block {
-	position: relative;
-	padding: 30px;
-	box-shadow: 0px 0px 5px 1px #e5e5e5;
-	width: 100%;
-	margin: 10px 0;
+.del-db-page {
+	visibility: hidden;
 }
 
+.db_block:hover .del-db-page{
+	visibility: visible;
+}
+
+.del-db-page:hover {
+	cursor: pointer;	
+}
+
+/* 데이터베이스 속성 모달 */
 div[data-attr-option] {
 	position: absolute;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	box-shadow: 1px 2px 2px 1px #ccc;
+	float: left;
+	background-color: white;
+	padding: 15px;
+	z-index:99;
 }
 
-div[data-dbtype="list"]{
-	width : 90%;
-	padding: 3px;
+div[data-attr-option] div {
+	padding-top: 5px;
 }
 
-div[data-dbtype="brd"]{
-	margin: auto;
+
+div[data-attr-modal] {
+	border: 1px solid #eee;
+	border-radius: 5px;
+	box-shadow: 1px 2px 2px 1px #ccc;
+	padding: 20px;
 }
 
+div[data-attr-modal] hr {
+	width: inherit;
+}
+/* 갤러리 레이아웃 */
 div[data-layout="DB_GAL"] .db-block-body{
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
 .dbtype-gal{
@@ -39,6 +96,7 @@ div[data-layout="DB_GAL"] .db-block-body{
 	display: inline-block;
 	border: 1px solid lightgray;
 	border-radius: 7px;
+	box-shadow: 0px 0px 5px 1px #eee;
 }
 
 .dbtype_gal .data_page {
@@ -60,6 +118,8 @@ div[data-layout="DB_GAL"] .db-block-body{
 	height: 100%;
 }
 
+
+/* 테이블 레이아웃 */
 .dbtype-table{
 	border: 1px solid black;
 	margin: 10px;
@@ -69,11 +129,12 @@ div[data-layout="DB_GAL"] .db-block-body{
 	text-align: center;
 	padding: 5px 10px;
 	background: #f1f1f1;
-	border-bottom: 2px solid #ddd;
+	border-top: 1px solid #ddd;
 }
 
 .table-thead div{
 	padding: 10px;
+	border-right: 2px solid #fff;
 }
 
 .table-tr{
@@ -82,99 +143,72 @@ div[data-layout="DB_GAL"] .db-block-body{
 	grid-template-columns: repeat(100,140px);
 }
 
-div[data-gal-img]{
-	height: 80px;
-	width: 100px;
+/* 칸반보드 레이아웃 */
+.stasts {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(180px, 1fr));
+	gap: 15px;
 }
 
-div[data-state]{
-	width: 20%;
-	margin: 10px;
-	border: 1px solid salmon;
-	display: inline-block;
-	min-height: 150px;
+.stasts div {
+	margin: 7px 0 2px 13px;
+    max-width: fit-content;
+    padding: 3px 30px;
+    border-radius: 45px;
 }
 
-div[data-state-tags]{
-	width: 20%;
-	margin: 10px;
-	text-align: center;
-	background-color: beige;
-	display: inline-block;
+.stasts div[data-state-tags="WAIT"] {
+	background-color: #fff3b0;
+}
+.stasts div[data-state-tags="RUN"] {
+	background-color: #bdeaeb;
+}
+.stasts div[data-state-tags="END"] {
+	background-color: #cdeac0;	
+}
+.stasts div[data-state-tags="CANCEL"] {
+	background-color: #fec89a;	
+}
+
+.state-container {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(180px, 1fr));
+	gap: 15px
+}
+
+.db-state-box {
+	width: 100%;
+	padding: 10px;
+}
+
+.dbtype-brd {
+	border: 1px solid #eee;
+	margin-bottom: 10px;
+	border-radius: 10px;
+	box-shadow: 0px 0px 5px 1px #eee;
+	margin-right: 10px;
+	border: 1px solid lightgray;
+}
+
+.dbtype-brd .attr-case {
+	padding: 5px;
+}
+
+/* 리스트 레이아웃 */
+.dbtype-list {
+	border-bottom: 1px solid #dedede;
 }
 
 /* 기타 */
-div[data-attr-option]{
-	border: 1px solid skyblue;
-	float: left;
-	background-color: white;
-	z-index:99;
-}
-
-
-div[data-tagimg]{
-	display: inline;
-}
-
-.display-flex{
-	display: flex;
-}
-
-.db-layout-list{
-	display: inline;
-}
-
-.db-layout-list li{
-    display: inline;
-    list-style-type: none;
-}
-
 .inlineTags{
 	display: inline;
-}
-
-.cal-row{
-	/* display: inline-flex;
-	white-space: nowrap; */
-	display: flex;
-	position: relative;
-
-}
-
-.cal-date{
-	/* width: calc(100%/7); */
-	width: 90px;
-	height: 100px;
-	border: 1px solid skyblue;
-	position: relative;
-}
-
-.cal-day{
-	width: 90px;
-	height: 20px;
-	border: 1px solid skyblue;
-
-	text-align: center;
-}
-
-.dbtype-cal{
-	display: block;
-	position: absolute;
-	background-color: white;
-	border-radius: 5px;
-}
-
-.cal-date:hover .db-cal-adddata{
-	/* display: inline-block; */
-	visibility: visible;
 }
 
 /* 속성 */
 .attr {
 	font-size: small;
-	/* background-color: linen; */
 	overflow: hidden;
-	min-width: 10px;
+	min-width: 0px;
 	max-width: 120px;
 	text-overflow: ellipsis;
     white-space: nowrap;
@@ -203,18 +237,23 @@ div[data-attr-modal]{
 
 .get-value {
 	font-size: small;
-	border-bottom: 1px solid gray;
 	background-color: white;
 	padding:3px;
+	margin-right: 7px;
+	border-radius: 4px;
 }
 
 .get-value:hover {
-	background-color: cadetblue;
+	background-color: #cdb4db;
 	color: white;
 }
 
 .attr-case {
 	padding: 10px;
+}
+
+.attr-case:hover {
+	cursor: pointer;
 }
 
 .attr-case a{
@@ -223,7 +262,7 @@ div[data-attr-modal]{
 }
 
 .attr-case a:hover{
-	
+	color: #1a759f;
 }
 
 .dbtype-gal .attr-case {
@@ -244,11 +283,20 @@ div[data-attr-modal]{
 }
 
 .this-value {
-	font-size: small;
-	position: relative;
-	background-color: lightgray;
-	display: block;
-	padding: 3px
+    font-size: small;
+    position: relative;
+    padding: 3px 25px 3px 3px;
+    max-width: fit-content;
+    margin: 0 20px 10px 0;
+    background-color: #eee;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.this-value button {
+	border: 0;
+	background-color: transparent;
+	font-size: smail;
 }
 
 .delete-attr {
@@ -276,18 +324,12 @@ div[data-attr-modal]{
 	position: relative;
 }
 
-/* 데이터베이스 하위 페이지 */
-.attr-line {
-	padding: 10px;
-	border-bottom: 1px solid rgb(202, 202, 202);
+.close-attr-modal {
+	display: block;
+	text-align: right;
 }
 
-.attr-line .attr-name {
-	width: 200px;
-	font-weight: 500;
-	padding: 10px;
-}
-
+/* 데이터베이스 하위페이지 관련 */
 .db_dataPage{
 	position: fixed; /* Stay in place */
 	top: 0; left: 0;
@@ -314,11 +356,18 @@ div[data-attr-modal]{
 	background-color: white;
 }
 
+.attr-line {
+	padding: 10px;
+	border-bottom: 1px solid rgb(202, 202, 202);
+}
+
+.attr-line .attr-name {
+	width: 200px;
+	font-weight: 500;
+	padding: 10px;
+}
+
 .dataPage_blocks{
 	padding-top: 30px;
 	padding-bottom: 150px;
-}
-
-.db-page-name {
-	font-size: x-large;
 }

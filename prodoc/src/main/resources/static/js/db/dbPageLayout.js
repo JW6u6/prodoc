@@ -24,9 +24,10 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
 
        case 'DB_BRD' : 
-        let states = ["WAIT", "RUN", "END", "CANCLE"];
+        let states = ["WAIT", "RUN", "END", "CANCEL"];
 
         let statesTag = document.createElement("div");
+        statesTag.classList.add("stasts");
         states.forEach(state => {
             let stateType = document.createElement("div");
             stateType.textContent = state;
@@ -36,7 +37,7 @@ async function listLayoutEditor(dataList, displayId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        caseDiv.classList.add("display-flex", "state-container");
+        caseDiv.classList.add("state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
