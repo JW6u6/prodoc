@@ -5,12 +5,12 @@ getAllList(data);
 //이벤트 등록
 document.getElementById("fileSearchBtn").addEventListener("click", getSearchList);
 document.getElementById("fileList").addEventListener("click", function(e){
-	let FileModal = document.getElementById("FileModal");
-	if(FileModal.className == "hide"){
-		FileModal.className = "view";
-	} else {
-		FileModal.className = "hide";
-	}
+   let FileModal = document.getElementById("FileSearchModal");
+   if(FileModal.className == "hide"){
+      FileModal.className = "view";
+   } else {
+      FileModal.className = "hide";
+   }
 });
 
 // 전체 선택 체크박스
@@ -39,12 +39,12 @@ endDate.nextElementSibling.addEventListener("click", function(e){
 
 // 날짜 포멧 변경
 function changeDate(dbDate){
-	let date = new Date(dbDate);
-	let year = date.getFullYear();
-	let month = ('0' + (date.getMonth() + 1)).slice(-2);
-	let day = ('0' + date.getDate()).slice(-2);
-	
-	return `${year}-${month}-${day}`;
+   let date = new Date(dbDate);
+   let year = date.getFullYear();
+   let month = ('0' + (date.getMonth() + 1)).slice(-2);
+   let day = ('0' + date.getDate()).slice(-2);
+   
+   return `${year}-${month}-${day}`;
 };
 
 // 날짜 검색 조건
@@ -60,14 +60,14 @@ startDate.addEventListener("change", function(e){
 // 목록 조회 AJAX --------------------------------------------------------------------------------------------
 function getAllList(searchData){
     let fileSearchList = document.querySelector("#fileSearchList tbody");
-    fileSearchList.innerHTML = "";    	
-	
+    fileSearchList.innerHTML = "";       
+   
     fetch("getFileList", {
         method : "post",
         headers : {
-        	"Content-Type" : "application/json"
-		},
-		body : JSON.stringify(searchData)
+           "Content-Type" : "application/json"
+      },
+      body : JSON.stringify(searchData)
     })
     .then(response => response.json())
     .then(result => {
@@ -78,18 +78,22 @@ function getAllList(searchData){
         for(let file of fileList){
             let trTag = document.createElement("tr");
             for(let field in file){
-            	let value = file[field];
+               let value = file[field];
                 if(field == 'displayId'){
-                	trTag.setAttribute('id', file[field]);
-                	continue;
+                   trTag.setAttribute('id', file[field]);
+                    trTag.addEventListener("click", moveToFileblock);
+                   continue;
                 };
                 if(field == 'saveDate') value = changeDate(value);
                 let tdTag = document.createElement("td");
-                tdTag.addEventListener("click", getFileInfo);
                 tdTag.innerText = value;
+                if(field == 'pageId'){
+                   tdTag.classList.add("pidToFile");
+                    tdTag.innerText = file[field];
+                };
                 trTag.append(tdTag);
                 if(field == 'workName' || field == 'workId' || field == 'pageId'){
-                	tdTag.style.display = 'none';
+                   tdTag.style.display = 'none';
                 }
             }
             fileSearchList.append(trTag);
@@ -108,15 +112,15 @@ function getSearchList(e){
 
     // 날짜 태그의 value 가져오기
     for(let date of searchDate){
-		console.log(date);            
-    	if(date.disabled == true) continue;
-		let field = date.getAttribute("id");
-		searchData[field] = date.value;
+      console.log(date);            
+       if(date.disabled == true) continue;
+      let field = date.getAttribute("id");
+      searchData[field] = date.value;
     }
 
     for(let tag of checkInput){
-    	let field = tag.getAttribute("value");
-    	searchData[field] = tag.checked;
+       let field = tag.getAttribute("value");
+       searchData[field] = tag.checked;
     }
     
     console.log(searchData);
@@ -125,14 +129,10 @@ function getSearchList(e){
 }
 
 // trTag 클릭 이벤트 : fileInfo
-function getFileInfo(e){
-	let displayId = e.currentTarget.parentNode.getAttribute("id");
-	console.log(displayId);
-	
-	fetch("")
-	.then(response => response.json())
-	.then(result => {
-		console.log(result);
-	})
-	.catch(err => console.log(err))
+function moveToFileblock(e){
+   const displayId = e.currentTarget.getAttribute("id");
+    const pageId = e.currentTarget.querySelector(".pidToFile").innerText;
+   console.log(pageId, displayId);
+   if(pageId != '' || pageId != null ) selectPage(pageId);
+    if(displayId != '' || displayId != null) cusorMove(displayId);
 }

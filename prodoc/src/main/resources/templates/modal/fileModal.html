@@ -1,6 +1,8 @@
 <html xmlns:th="https://www.thymeleaf.org">
-	<div id="FileModal" th:fragment="FileSearchModal" class="hide">
+	<div id="FileModal" th:fragment="FileSearchModal">
+	<link th:href="@{css/modal/fileModal.css}" rel="stylesheet" />
         <div class="modelBtnList">
+        <h3>파일 목록</h3>
             <button class="closeBtn">&#10005;</button>
         </div>
         <div class="search_option">
