@@ -49,11 +49,11 @@ async function pageInfoFromMenu() {
     let info;
 
     await fetch(url, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then((response) => response.json())
         .then((result) => {
             info = result;
@@ -86,12 +86,12 @@ async function pageLock() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             if (lockCheck == 'TRUE') {
@@ -112,11 +112,11 @@ function alreadyLock() {
     let url = '/areULOCK?pageId=' + pageBlockId;
 
     fetch(url, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(result => {
             console.log(result);
@@ -144,14 +144,14 @@ async function pageLockNoti() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "pageId": pageBlockId
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "pageId": pageBlockId
+            })
         })
-    })
         .then(response => response.text())
         .then(result => {
             if (lockCheck == 'FALSE') {
@@ -167,7 +167,20 @@ async function pageLockNoti() {
 async function pageDelCheck() {
     let infoResult = await selectOneWork(workBlockId);
     let home = document.querySelector('#homePg');
-    if (home.value == pageBlockId) {
+    let infos = await pageInfoFromMenu();
+    let dbCheck;
+
+    for (let info of infos) {
+        if (info.caseId.indexOf('DB') == -1) {
+            dbCheck = 'FALSE';
+        } else if (info.caseId.indexOf('DB') != -1) {
+            dbCheck = 'TRUE';
+        }
+    }
+    
+    if (dbCheck) {
+        alert('데이터베이스는 여기서 삭제할 수 없습니다.')
+    } else if (home.value == pageBlockId) {
         alert('홈은  삭제할 수 없습니다.');
 
     } else if (infoResult.mainPageId == pageBlockId) {
@@ -183,12 +196,12 @@ async function pageDelCheck() {
         let url = '/pageDelCheck';
 
         fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
             .then(response => response.text())
             .then(result => {
                 if (result == 'true') {
@@ -204,7 +217,6 @@ async function pageDelCheck() {
 }
 
 //현재 페이지를 메인 페이지로 등록(소유자, 관리자?)
-//워크스페이스 아이디 불러오고, 페이지 url가져오는거 해야함.
 async function ThisMainPage() {
     let infoResult = await selectOneWork(workBlockId);
     if (infoResult.mainPageId == pageBlockId) {
@@ -218,12 +230,12 @@ async function ThisMainPage() {
         let url = '/workMainPg';
 
         fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
             .then(response => response.text())
             .then(result => {
                 if (result == 'true') {
@@ -248,12 +260,12 @@ function toggleNotiPage() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             console.log(result);
@@ -275,11 +287,11 @@ function areUTurnOn() {
     let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
 
     fetch(url, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then(response => response.text())
         .then(result => {
             let notiToggle = document.querySelector('#notifyPage');
@@ -358,12 +370,12 @@ function copyPagstePage() {
     }
 
     fetch(url, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(val)
-    })
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
         .then(response => response.text())
         .then(result => {
             console.log(result);
