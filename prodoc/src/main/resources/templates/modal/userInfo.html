@@ -14,40 +14,46 @@
 	
 	<!-- 유저정보 수정 모달 -->
 	<div id="UserModiMod" class="hide">
-	<div>
-	    <div><button class="closeBtn">&#10005;</button></div>	    
+	<div class="user_mod_wrapper">
+	    <div class="closeBtnWrapper"><div><h3>정보수정</h3></div><button class="closeBtn">&#10005;</button></div>	    
         <form id="userModForm" enctype="multipart/form-data">
 	        <input name="email" type="text" th:value="${session.logUser.email}" style="display:none;">
 		    <input name="file" type="file" accept="image/*" style="display:none;">
-	        <div>
-	        
-		        
-		        <img class="profile" id="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"  onerror="this.src='images/noneUser.jpg'"  style="width:200px; border-radius:100px">
-		         
-				
-				<button type="submit" id="infoSaveBtn">저장</button>
-				<button type="button" id="joinOutBtn">탈퇴</button>
+	        <div class="userModForm_left">
+		        <img class="profile" id="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"  onerror="this.src='images/noneUser.jpg'"  style="width:170px; border-radius:100px">
+	        	<div class="profile_btn_wrapper">
+				<button type="submit" id="infoSaveBtn" class="btn">저장</button>
+				<button type="button" id="joinOutBtn" class="btn">탈퇴</button>
+	        	</div>
 	        </div>
-	        <div>
-		        <label>이름</label>
-		        <input type="text" name="nickname" th:value="${session.logUser.nickname}">
+	        <div class="userModForm_right">
+		        <div >
+			        <label>이름</label>
+			        <input type="text" name="nickname" th:value="${session.logUser.nickname}" class="input_text-md">
+		        </div>
 		        <div>
 			        <label>비밀번호</label>
-			        <input type="password" name="password" class="password">
+			        <input type="password" name="password" class="password input_text-md">
+		        </div>
+		        <div>		        
 			        <label>비밀번호 확인</label>
-			        <input type="password" class="password">
+			        <input type="password" class="password input_text-md">
 		        </div>
 		        <div>
 			        <label>전화번호</label>
 			        <input type="tel" name="phone" 
-			        	th:value="${session.logUser.phone}" maxlength="11">
-			        <button type="button" id="authBtn">인증번호</button>
-			        <input type="text" id="auth" placeholder="인증번호">
-			        <button type="button" id="authCheckBtn">확인</button>
+			        	th:value="${session.logUser.phone}" maxlength="11" class="input_text-md">
+			        <button type="button" id="authBtn" class="btn-md authBtn">인증번호</button>
 		        </div>
+		        <div class="auth">
+			        <input type="text" id="auth" placeholder="인증번호" class="input_text-md">
+			        <button type="button" id="authCheckBtn" class="btn-md authBtn">확인</button>
+		        </div>
+		        <div>
 		        <label>생년월일</label>
 		        <input type="text" name="birth" th:value="${#dates.format(session.logUser.birth, 'yyMMdd')}"
-		        		maxlength="6" placeholder="ex.991231">
+		        		maxlength="6" placeholder="ex.991231" class="input_text-md">
+		        </div>
 	        </div>
         </form>
 	</div>
