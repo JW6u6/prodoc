@@ -81,16 +81,19 @@ const blockHandler = {
   },
   // 댓글 관련 함수 호출
   handleMenuCommentEvent: async (e) => {
+    const subMenu = document.querySelector(".child_dropdown_menu");
+    if (subMenu) {
+      subMenu.remove();
+    }
     const blockId = document.querySelector("[data-block-type='modal']").dataset
       .blockId;
-    const targetBlock = document.querySelector(
-      `.prodoc_block[data-block-id="${blockId}"]`
-    );
+
+    const menu = e.currentTarget.closest(".block_modal");
     // 해당 블럭의 댓글리스트를 서버에 요청
     const replyList = await getBlockreplyList(blockId);
 
     // 댓글창을 만들기
-    makeReplyModal(blockId, targetBlock);
+    makeReplyModal(blockId, menu, { left: 300 });
     const replyWrapper = document.querySelector(".replyWrapper");
     const replyController = document.querySelector(".modal_reply_controller");
     const replyRegistBtn = replyController.querySelector(".reply_regi_btn");
@@ -109,39 +112,60 @@ const blockHandler = {
     // 댓글 등록버튼 이벤트
     replyRegistBtn.addEventListener("click", (e) => {
       const replyInput = e.target.previousElementSibling;
-      const replyTemp = makeReplyBlock(
-        blockSessionUserId,
-        replyInput.value,
-        "지금"
-      );
-      replyWrapper.insertAdjacentHTML("beforebegin", replyTemp);
-      registReply({
+      const replyId = registReply({
         creUser: blockSessionUserId,
         content: replyInput.value,
         displayId: blockId,
         pageId: pageBlockId,
-        mentionList: null, // 어케할까
       });
+      const replyTemp = makeReplyBlock(
+        blockSessionUserId,
+        replyInput.value,
+        "지금",
+        replyId
+      );
+      replyWrapper.insertAdjacentHTML("beforebegin", replyTemp);
       replyInput.value = "";
       blockReply.scrollTop = blockReply.scrollHeight;
+
+      const replyElement = document.querySelector(
+        `[data-reply-id="${replyId}"]`
+      );
+
+      replyElement.addEventListener("click", (e) => {
+        const replyId = e.currentTarget.parentElement.dataset.replyId;
+        const result = deleteReply(replyId, blockSessionUserId);
+        if (result.result === "success") {
+          e.currentTarget.closest(".reply_block--header").remove();
+        }
+      });
     });
+
     const blockRemoveBtn = document.querySelectorAll(
       ".reply_block--remove_btn"
     );
-    blockRemoveBtn.forEach((removeBtn) => {
+
+    blockRemoveBtn.forEach(async (removeBtn) => {
       removeBtn.addEventListener("click", (e) => {
         const replyId = e.currentTarget.parentElement.dataset.replyId;
-        deleteReply(replyId, blockSessionUserId);
+        const result = deleteReply(replyId, blockSessionUserId);
+        if (result.result === "success") {
+          e.currentTarget.closest(".reply_block--header").remove();
+        }
       });
     });
     // closeBlockModal();
   },
   // 블럭 변경 함수 호출
   handleBlockChangeEvent: async (e) => {
+    const subMenu = document.querySelector(".child_dropdown_menu");
+    if (subMenu) {
+      subMenu.remove();
+    }
     const blockId = e.target.closest(`.block_dropdown_menu`).dataset.blockId;
     const menu = await makeDropDownMenu(
       blockId,
-      { right: -200, width: 100, modalClass: "child_dropdown_menu" },
+      { left: 300, width: 100, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.changeMenu]
     );
     displayModal(e.target.closest(".block_dropdown_menu"), menu);
@@ -152,10 +176,14 @@ const blockHandler = {
   },
   // 색 변경 함수 호출
   handleColorChangeEvent: async (e) => {
+    const subMenu = document.querySelector(".child_dropdown_menu");
+    if (subMenu) {
+      subMenu.remove();
+    }
     const blockId = e.target.closest(".block_dropdown_menu").dataset.blockId;
     const menu = await makeDropDownMenu(
       blockId,
-      { right: -200, width: 100, modalClass: "child_dropdown_menu" },
+      { left: 300, width: 100, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.color]
     );
     displayModal(e.target.closest(".block_dropdown_menu"), menu);
@@ -166,6 +194,10 @@ const blockHandler = {
   },
   // URL 변경 함수 호출
   handleUrlChangeEvent: (e) => {
+    const subMenu = document.querySelector(".child_dropdown_menu");
+    if (subMenu) {
+      subMenu.remove();
+    }
     const targetElement = e.target.closest(".prodoc_block");
     const targetContent = targetElement.querySelector(".content");
     const blockId = targetElement.dataset.blockId;

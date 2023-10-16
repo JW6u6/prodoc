@@ -15,20 +15,22 @@
 	<!-- 유저정보 수정 모달 -->
 	<div id="UserModiMod" class="hide">
 	<div>
-	    <div><button class="closeBtn">&#10005;</button></div>	    
+		<div>
+			<h3>정보 수정</h3>
+		    <div><button class="closeBtn">&#10005;</button></div>	    
+		</div>
         <form id="userModForm" enctype="multipart/form-data">
 	        <input name="email" type="text" th:value="${session.logUser.email}" style="display:none;">
 		    <input name="file" type="file" accept="image/*" style="display:none;">
-	        <div>
 	        
-		        
+	        <div id="userInfo-left">
 		        <img class="profile" id="profile" th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"  onerror="this.src='images/noneUser.jpg'"  style="width:200px; border-radius:100px">
-		         
 				
 				<button type="submit" id="infoSaveBtn">저장</button>
 				<button type="button" id="joinOutBtn">탈퇴</button>
 	        </div>
-	        <div>
+	        
+	        <div id="userInfo-right">
 		        <label>이름</label>
 		        <input type="text" name="nickname" th:value="${session.logUser.nickname}">
 		        <div>
