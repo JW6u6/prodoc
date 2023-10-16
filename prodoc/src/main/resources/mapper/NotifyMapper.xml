@@ -53,7 +53,7 @@
 		set read_check = 'TRUE'
 		where note_id = #{noteId}
 	</update>
-
+	
 	<!-- 페이지 잠금 요청 중복으로 못 넣게 조회해오는 쿼리 -->
 	<select id="notLockDuple" resultType="int">
 		select count(*)
@@ -68,4 +68,16 @@
 		from view_notify_invite
 		where work_id = #{workId}
 	</select>
+	
+	<!-- 초대 목록에서 제거 -->
+	<insert id="clickInvite" parameterType="NotifyResultVO">
+		{call alarm_click(
+		  #{reUserId}
+		, #{workId}
+		, #{noteId}
+		, #{alarmType}
+		)}
+	</insert>
+	
+	
 </mapper>
