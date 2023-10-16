@@ -1,7 +1,6 @@
 //DATABASE, DATA_PAGE, PAGE
 const subscribeTopics = [];
 
-
 //페이지를 불러오는 함수
 async function makeBlockPage(pageId, type = "PAGE", element) {
   //만약 구독을 하고있다면 구독해제
@@ -9,15 +8,14 @@ async function makeBlockPage(pageId, type = "PAGE", element) {
     const subs = subscribeTopics.pop();
     subs.unsubscribe();
   }
-  console.log(type === "DATA_PAGE")
+  console.log(type === "DATA_PAGE");
   if (type === "DATA_PAGE") {
     document.querySelector(".container").innerHTML = "";
     const parentContainer = await createDataPage(pageId);
     // const element = document.querySelector("dataPage_blocks");
-    console.log(parentContainer)
+    console.log(parentContainer);
     containerEvent(parentContainer);
     showBlocks(pageId, type, parentContainer);
-    
   } else if (type === "PAGE") {
     containerEvent(container);
     document.querySelector(".container").innerHTML = "";
@@ -82,15 +80,15 @@ async function makeBlockPage(pageId, type = "PAGE", element) {
   subscribeTopics.push(blockSubscribe);
 }
 
-function cusorMove(blockid){
-	let cursor = `div[data-block-id="${blockid}"]`;
-	let focusBlock = document.querySelector(cursor);
-	if(focusBlock != null){
-		console.log(focusBlock);
-		let topLocation = focusBlock.offsetTop;
-		console.log(topLocation);
-		window.scrollTo({top:topLocation, behavior:'smooth'});
-	}
+function cusorMove(blockid) {
+  let cursor = `div[data-block-id="${blockid}"]`;
+  let focusBlock = document.querySelector(cursor);
+  if (focusBlock != null) {
+    console.log(focusBlock);
+    let topLocation = focusBlock.offsetTop;
+    console.log(topLocation);
+    window.scrollTo({ top: topLocation, behavior: "smooth" });
+  }
 }
 //어떻게 해결방법이 없나?
 let isReady = true;
@@ -197,7 +195,7 @@ function sendSocketEvent(socketEventObj) {
 
 function showBlocks(pageId, type = "PAGE") {
   let container = null;
-  if (type ==="DATA_PAGE") {
+  if (type === "DATA_PAGE") {
     container = document.querySelector(".dataPage_blocks");
     container.innerHTML = "";
   } else if (type === "PAGE") {
@@ -581,11 +579,13 @@ function registReply(replyObj) {
     },
     body: JSON.stringify(replyObj),
   });
+
+  return replyId;
 }
 
-function deleteReply(replyId, userId) {
-  console.log(replyId, userId);
-  fetch("/reply/delete", {
+async function deleteReply(replyId, userId) {
+  let resultObj = null;
+  await fetch("/reply/delete", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -594,8 +594,9 @@ function deleteReply(replyId, userId) {
   })
     .then((res) => res.json())
     .then((result) => {
-      console.log(result);
+      resultObj = result;
     });
+  return resultObj;
 }
 
 /**
