@@ -17,11 +17,16 @@ public interface NotifyMapper {
 	// 알림 목록 불러오기 -상우
 	public List<NotifyResultVO> selectNotify(String logUser, String type);
 
+	//초대 수락/거부
+	public void clickInvite (NotifyResultVO vo);
+	
 	// 초대 목록 불러오기
 	public List<NotifyResultVO> selectNotifyInv(String logUser);
 
 	// 알림 삭제 - 상우
 	public int deleteNotify(NotifyVO vo);
+	
+//	public int deleteInvite()
 
 	// 빨간 점 알림 안받기 - 시인언니
 //	public int noNotify(NotifyVO vo);

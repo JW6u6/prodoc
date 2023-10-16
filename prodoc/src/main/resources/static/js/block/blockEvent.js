@@ -166,6 +166,7 @@ const imageRegiClickEvent = (e) => {
       const newName = await uploadFile(formData);
 
       updateFile({ displayId: blockId, path: null, newName, upName });
+      // 파일을 업데이트해줄것
     }
   });
 };
@@ -193,6 +194,7 @@ const fileEvent = async (element) => {
  */
 const fileRegiClickEvent = (e) => {
   const input = document.querySelector(".block_file-Uploader");
+  const { blockId } = e.target.closest(".prodoc_block").dataset;
   input.click();
   input.addEventListener("change", async (e) => {
     const file = input.files;
@@ -235,9 +237,15 @@ const toggleBtnEvent = async (newBlock) => {
   const childItem = newBlock.querySelector(".child_item");
   const checked = (await getOneBlock(id)).checked;
 
+  console.log("토글블럭", newBlock);
   // 만약 체크가 true면 숨기기 체크가 false면 보이기
-  if (checked === "true") childItem.classList.add("hide");
-  else if (checked === "false") childItem.classList.remove("hide");
+  if (checked === "true") {
+    childItem.classList.add("hide");
+    toggleBtn.classList.remove("open");
+  } else if (checked === "false") {
+    toggleBtn.classList.add("open");
+    childItem.classList.remove("hide");
+  }
   toggleBtn.addEventListener("click", handleSideBtn);
 };
 
@@ -408,7 +416,7 @@ async function handleAttrBtn(e) {
   //만약 체인지 가능한 메뉴라면 이거.
   e.target.insertAdjacentHTML(
     "afterend",
-    await makeDropDownMenu(id, { left: -100 }, menuArr)
+    await makeDropDownMenu(id, { left: 50, width: 250 }, menuArr)
   );
 
   const menu = document.querySelector("[data-menu-type='control']");

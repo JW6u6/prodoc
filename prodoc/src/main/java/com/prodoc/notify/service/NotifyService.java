@@ -8,12 +8,15 @@ public interface NotifyService {
 	public void insertTargetNotify(NotifyVO vo);
 	
 	//알림 읽음 설정 - 상우: targetnote
-	public int readCheck(NotifyVO vo);
+	public int readCheck(List<NotifyVO> list);
 	
 	public int redReadCheck(NotifyVO vo);
 	
 	//알림 목록 불러오기 -상우
 	public List<NotifyResultVO> selectNotify(String logUser,String type);
+	
+	//초대 수락,거부
+	public void clickInvite (NotifyResultVO vo);
 	
 	//알림 삭제 - 상우
 	public int deleteNotify(List<NotifyVO> list);

@@ -27,4 +27,5 @@ public class NotifyResultVO {
    private String content;
    
    private Date creDate;
+   private String alarmType;
 }

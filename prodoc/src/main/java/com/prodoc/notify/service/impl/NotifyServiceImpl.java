@@ -25,8 +25,13 @@ public class NotifyServiceImpl implements NotifyService {
 	}
 
 	@Override
-	public int readCheck(NotifyVO vo) {
-		return notiMapper.readCheck(vo);
+	public int readCheck(List<NotifyVO> list) {
+		int count = 0;
+		for(NotifyVO vo : list) {
+			notiMapper.readCheck(vo);
+			count++;
+		}
+		return count;
 	}
 	
 	@Override
@@ -34,6 +39,10 @@ public class NotifyServiceImpl implements NotifyService {
 		return notiMapper.redReadCheck(vo);
 	}
 	
+	@Override
+	public void clickInvite (NotifyResultVO vo) {
+		notiMapper.clickInvite(vo);
+	}
 	@Override
 	public List<NotifyResultVO> selectNotify(String logUser,String type) {
 		List<NotifyResultVO> list = new ArrayList<>();
@@ -50,9 +59,6 @@ public class NotifyServiceImpl implements NotifyService {
 	public int deleteNotify(List<NotifyVO> list) {
 		int count = 0;
 		for(NotifyVO vo : list) {
-			System.out.println(vo.toString()+ "---------------------");
-			//NotifyVO note = new NotifyVO();
-			//note.setNoteId(vo);;
 			notiMapper.deleteNotify(vo);
 			count++;
 		}
@@ -64,10 +70,6 @@ public class NotifyServiceImpl implements NotifyService {
 		return notiMapper.notLockDuple(pageId);
 	}
 
-//	@Override
-//	public int noNotify(NotifyVO vo) {
-//		return 0;
-//	}
 
 	@Override
 	public NotifyResultVO getNotify(String workId) {
