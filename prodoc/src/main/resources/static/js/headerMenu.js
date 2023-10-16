@@ -164,11 +164,28 @@ async function pageLockNoti() {
 }
 
 //페이지 삭제 체크
-//페이지 url로 읽어와서 페이지 아이디 넘기는거 해야함.
 async function pageDelCheck() {
     let infoResult = await selectOneWork(workBlockId);
-    if (infoResult.mainPageId == pageBlockId) {
-        alert('이 페이지는 삭제할 수 없습니다.')
+    let home = document.querySelector('#homePg');
+    let infos = await pageInfoFromMenu();
+    let dbCheck;
+
+    for (let info of infos) {
+        if (info.caseId.indexOf('DB') == -1) {
+            dbCheck = 'FALSE';
+        } else if (info.caseId.indexOf('DB') != -1) {
+            dbCheck = 'TRUE';
+        }
+    }
+    
+    if (dbCheck) {
+        alert('데이터베이스는 여기서 삭제할 수 없습니다.')
+    } else if (home.value == pageBlockId) {
+        alert('홈은  삭제할 수 없습니다.');
+
+    } else if (infoResult.mainPageId == pageBlockId) {
+        alert('메인 페이지는 삭제할 수 없습니다.')
+
     } else if (infoResult.mainPageId != pageBlockId) {
 
         let val = {
@@ -200,32 +217,35 @@ async function pageDelCheck() {
 }
 
 //현재 페이지를 메인 페이지로 등록(소유자, 관리자?)
-//워크스페이스 아이디 불러오고, 페이지 url가져오는거 해야함.
-function ThisMainPage() {
+async function ThisMainPage() {
+    let infoResult = await selectOneWork(workBlockId);
+    if (infoResult.mainPageId == pageBlockId) {
+        alert('이 페이지는 이미 메인페이지입니다.')
+    } else if (infoResult.mainPageId != pageBlockId) {
+        let val = {
+            "mainPageId": pageBlockId,
+            "workId": workBlockId
+        }
 
-    let val = {
-        "mainPageId": pageBlockId,
-        "workId": workBlockId
+        let url = '/workMainPg';
+
+        fetch(url, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result == 'true') {
+                    alert('현재 페이지가 메인 페이지로 등록되었습니다.')
+                } else if (result == 'false') {
+                    alert('유효하지 않은 요청입니다.. 다시 시도하십시오.');
+                }
+            })
+            .catch(err => console.log(err));
     }
-
-    let url = '/workMainPg';
-
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            if (result == 'true') {
-                alert('현재 페이지가 메인 페이지로 등록되었습니다.')
-            } else if (result == 'false') {
-                alert('유효하지 않은 요청입니다.. 다시 시도하십시오.');
-            }
-        })
-        .catch(err => console.log(err));
 }
 
 
@@ -320,8 +340,8 @@ async function creLink() {
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
         if (navigator.clipboard !== undefined) {
-            document.body.appendChild(linkText); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
-            url = window.document.location.href; //url에는 현재 주소값을 넣어줌
+            document.body.appendChild(linkText);
+            url = '도메인 주소/shared/' + pageBlockId;
             linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard

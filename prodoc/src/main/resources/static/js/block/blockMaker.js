@@ -9,10 +9,10 @@
 function displayBlock({ template, type, element }) {
   if (type === "DATA_PAGE") {
     // const dbModalPage = document.querySelector(".dataPage_blocks");
-    if(element){
+    if (element) {
       element.insertAdjacentHTML("afterend", template.template);
-    } else{
-      const dbPageContainer = document.querySelector(".dataPage_blocks")
+    } else {
+      const dbPageContainer = document.querySelector(".dataPage_blocks");
       dbPageContainer.insertAdjacentHTML("beforeend", template.template);
     }
   } else {
@@ -276,7 +276,7 @@ function templateMaker(
       <div class="toggle_block content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
       <div class="child_item"></div>
     </div>
-    <div><button class="block_toggle_btn">></button></div>
+    <div><button class="block_toggle_btn"></button></div>
   `;
 
   // 페이지 링크 블럭
@@ -401,7 +401,7 @@ async function makeDropDownMenu(id, option = {}, menuTemp) {
     <ul class="block_dropdown_menu_list" data-menu-type="control">
     ${extendsMenu}
     </ul>
-    ${blockInfoTemplate}
+    ${modalClass === "child_dropdown_menu" ? "" : blockInfoTemplate}
   </div>
 `;
   return template;
@@ -444,7 +444,6 @@ const menuTemplateObject = {
     <hr>
     <li data-block-type="PAGE">페이지</li>
     <li data-block-type="TODO">할 일</li>
-    <li data-block-type="SYNC">동기화</li>
     <li data-block-type="LINK">링크</li>
     <li data-block-type="IMAGE">이미지</li>
     <li data-block-type="FILE">파일</li>
@@ -525,9 +524,10 @@ function makeVideo(vId) {
  * @param {string} displayId - 해당 블럭의 아이디.
  * @param {Element} target - 모달을 달아줄 김치
  */
-function makeReplyModal(displayId, target) {
+function makeReplyModal(displayId, target, { left = "" }) {
   const template = `
     <div data-block-id="${displayId}" 
+    style="left:${left}px;"
     class="reply_modal block_modal input_modal modal_item">
       <div class="replyWrapper"></div>
       <div class="modal_reply_controller"><input placeholder="소가죽으면다이소" type="txet"/><button class="reply_regi_btn">등록</button></div>
@@ -550,7 +550,11 @@ function makeReplyBlock(user, text, date, id) {
         <div>img</div>
         <div>${user}</div>
         <div>${date}</div>
-        <div class="reply_block--remove_btn">X</div>
+        ${
+          user === blockSessionUserId
+            ? '<div class="reply_block--remove_btn">X</div>'
+            : ""
+        }
       </div>
       <div class="reply_block--content">${text}</div>
     </div>

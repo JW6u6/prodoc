@@ -1,9 +1,7 @@
 package com.prodoc.page.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.prodoc.block.service.BlockVO;
 import com.prodoc.history.service.HistoryService;
@@ -166,20 +165,16 @@ public class PageController {
 	}
 
 	// 링크 공유로 들어온 페이지...
-	@GetMapping("/share/{pageId}")
-	public void linkedPage(@PathVariable("pageId") String pageId, HttpServletResponse response) {
+	@GetMapping("/shared/{pageId}")
+	public ModelAndView linkedPage(@PathVariable("pageId") String pageId) {
+		ModelAndView modelview = new ModelAndView();
 		List<PageVO> listVO = pageMapper.selectPageInfo(pageId);
+
 		for (PageVO pageVO : listVO) {
-			String wid = pageVO.getWorkId();
-			MemberVO member = new MemberVO();
-			member.setWorkId(wid);
-			memberservice.listMember(member);
+			modelview.setViewName("content/shareWith");
+			modelview.addObject("pInfo", pageVO);
 		}
-		try {
-			response.sendRedirect("/shareWith?pageId=" + pageId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return modelview;
 	}
 
 }
