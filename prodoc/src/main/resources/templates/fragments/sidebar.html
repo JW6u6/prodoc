@@ -147,12 +147,14 @@
 	<!-- 페이지 새이름 -->
 	<div id="editPageMod" class="hide">
 		<div>
-			<h3>페이지명 수정</h3>
-			<div><button id="close-modal" class="closeBtn" onclick="closeSideModal()">&#10005;</button></div>
+			<div>
+				<h3>페이지명 수정</h3>
+				<div><button id="close-modal" class="closeBtn" onclick="closeSideModal()">&#10005;</button></div>
+			</div>
+			<br>
+			<input type="text" value="">
+			<button id="newPageNameBtn" type="button">확인</button>
 		</div>
-		<br>
-		<input type="text" value="">
-		<button id="newPageNameBtn" type="button">확인</button>
 	</div>
 
 	<script type="text/javascript" th:src="@{js/sidebar.js}"></script>

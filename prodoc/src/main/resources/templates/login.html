@@ -47,39 +47,51 @@
     </div>
 	</div>
 	<!--아이디비번찾기 모달창-->
- 	<div id="findUserInfo" style="border:1px solid black" class="hide">
- 		<div><button class="closeBtn">&#10005;</button></div>
- 		
-        <button type="button" class="findBtn">Email찾기</button>
-        <button type="button" class="findBtn">PW찾기</button><br>
-
-       	<div id="findPass" class="hide">
-       		<label>이메일</label><input id="emailMd" placeholder="EMAIL 입력">
-        </div>
-        
-           <label>전화번호</label><input id="phoneMd" maxlength="11" placeholder="-없이 연락처 입력">
-           <button type="button" id="AuthBtn">인증번호 받기</button><br>
-       	
-       	<label>인증번호</label><input id="authInput" placeholder="인증번호">
-       	<button type="button" id="authCheck">확인</button><br>
-           
-           <p id="showEmail" style="display:none"></p>
-           
-        <div id="newPassDIV" class="hide">
-            <label>비밀번호</label><input type="password" id="newPW" placeholder="새 비밀번호"><br>
-	        <label>비밀번호 확인</label><input type="password" id="newPWCheck" placeholder="비밀번호 확인">
-	        <p style="color:red; display:none;">비밀번호가 일치하지 않습니다.</p>
-        </div>        
-
-        <button type="button" id="closeFind">확인</button>
+ 	 <div id="findUserInfo" style="border:1px solid black" class="hide">
+	    <div>   
+	       <div class="find_modal--header">
+	          <h3>찾기</h3>
+	          <div><button class="closeBtn">&#10005;</button></div>
+	       </div>
+	       
+	       <div>
+	           <button type="button" class="findBtn">Email찾기</button>
+	           <button type="button" class="findBtn">PW찾기</button><br>
+	       </div>
+	          
+          <div class="find_this">
+          	<div id="findPass" style="visibility:hidden">
+                <label>이메일</label><input class="input_text" id="emailMd" placeholder="EMAIL 입력">
+           	</div>
+           	<div>
+              	<label>전화번호</label><input id="phoneMd" class="input_text" maxlength="11" placeholder="-없이 연락처 입력">
+              	<button type="button" id="AuthBtn"  class="input_text input_btn">인증번호 전송</button><br>
+                <label>인증번호</label><input id="authInput" class="input_text" placeholder="인증번호">
+                <button type="button" id="authCheck"  class="input_text input_btn">인증확인</button><br>
+              
+              	<p id="showEmail" style="visibility:hidden"></p>
+           	</div>
+	             
+	           <div id="newPassDIV" style="visibility:hidden">
+					<label>비밀번호</label>
+					<input type="password" class="input_text" id="newPW" placeholder="새 비밀번호">
+					<br>
+					<label>비밀번호 확인</label>
+					<input type="password" class="input_text" id="newPWCheck" placeholder="비밀번호 확인">
+					<p id="showPWCH" style="color:red; visibility:hidden;">비밀번호가 일치하지 않습니다.</p>
+	           </div>
+	        </div>        
+	      <div class="findEndBtn">
+	           <button type="button" id="closeFind"  class="input_text input_btn">확인</button>
+	      </div>
+	   </div>
     </div>
+
 
 
 <script src="js/modal/close.js"></script>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
-let pTag = document.querySelector("#showEmail");
-let newDiv = document.querySelector("#newPassDIV");
 let email = document.getElementById("emailMd"); 		//찾기 - 이메일 입력창
 let phone = document.getElementById("phoneMd"); 		//찾기 - 전화번호 입력창
 let newPass = document.getElementById("newPW"); 		//찾기 - 새비밀번호 입력창
@@ -92,12 +104,15 @@ let authOK = false;
 //찾기 창 내 인풋 값 초기화
 function findInit(){
 	document.querySelectorAll("#findUserInfo input").forEach(tag=>tag.value = "");
+	passOK = false;
+    authOK = false;
+    pTag.style.visibility = "hidden";
+    showPWCH.style.visibility = "hidden";
 }
 
 //아이디, 비밀번호 찾기
 let findMd = document.getElementById("findUserInfo"); //모달창 
-document.getElementById("find")	//p태그 <-버튼효과
-.addEventListener('click', function(e){
+document.getElementById("find").addEventListener('click', function(e){//p태그 <-버튼효과
 	if(findMd.className == 'view'){
 		findMd.className = 'hide';
 		findInit();
@@ -106,17 +121,21 @@ document.getElementById("find")	//p태그 <-버튼효과
 	}
 });
 
-let pwType = document.querySelector("#findPass")	//비밀번호 찾기
+let pwType = document.querySelector("#findPass")	//이메일 입력칸
+let pTag = document.querySelector("#showEmail");	//p태그
+let showPWCH = document.querySelector("#showPWCH");	//p태그
+let newDiv = document.querySelector("#newPassDIV");	//새 비밀번호 입력칸
+
 //찾기 창 내 토글 버튼
 document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
 	tag.addEventListener('click', function(e){
 		if(idx == 0){
-			pwType.className = "hide";				//아이디 찾기
-			newDiv.style.display = "none";
+			pwType.style.visibility = "hidden";				//아이디 찾기
+			newDiv.style.visibility = "hidden";
 			findInit();
 		}else{
-			pwType.className = "view";				//비밀번호 찾기
-			pTag.style.display = "none";
+			pwType.style.visibility = "visible";			//비밀번호 찾기
+			pTag.style.visibility = "hidden";
 			findInit();
 		}
 	});
@@ -171,11 +190,11 @@ document.querySelector("#authCheck").addEventListener('click', function(e){
 		}
 		console.log("findUser:" + result.email);
 		console.log("findUser:" + result.phone);
-		if(pwType.className == "hide"){	//이메일 찾기 상태
-			pTag.innerText = "가입 이메일:" + result.email;
-			pTag.style.display = "block";
+		if(pwType.style.visibility == "hidden"){	//이메일 찾기 상태
+			pTag.innerText = "가입 이메일: " + result.email;
+			pTag.style.visibility = "visible";
 		}else{							//비밀번호 찾기 상태
-			newDiv.style.display = "block";	//새 비밀번호 보이기
+			newDiv.style.visibility = "visible";	//새 비밀번호 보이기
 		}
 	})
 	.catch(err=>alert("해당 정보와 일치하는 회원이 없습니다."));
@@ -187,10 +206,10 @@ newCheck.addEventListener('change', function(e){
 	let notMatch = newCheck.nextElementSibling;	//불일치 메시지 태그
 	if(newPass.value == newCheck.value) {		//비밀번호 일치 체크
 		passOK = true;
-		notMatch.style.display = "none";
+		notMatch.style.visibility = "hidden";
 	}else {
 		passOK = false;
-		notMatch.style.display = "block";
+		notMatch.style.visibility = "visible";
 	}
 });
 
