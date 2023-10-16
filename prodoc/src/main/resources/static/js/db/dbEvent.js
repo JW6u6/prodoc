@@ -1,7 +1,6 @@
 // 그룹이벤트
 document.querySelector(".container").addEventListener("click", e =>{    // 클릭 이벤트
-    if (e.target.matches(".database-search")) databaseSearch(e);
-    else if (e.target.matches(".add-dbpage")) insertDBpage(e);
+    if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
     else if (e.target.matches(".page-attr-option")) pageAttrOption(e);
     else if (e.target.matches(".attr-view-selector")) attrViewChange(e);
@@ -139,21 +138,6 @@ async function getChildList(disId){
         listLayoutEditor(caseInfo, disId, layout);
 	})
 	.catch(err => console.log(err));
-}
-
-// 검색 이벤트
-function databaseSearch(e){
-    let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
-/*
-    fetch("",{
-
-    })
-    .then(response => response.json())
-    .then(result =>{
-        console.log(result);
-    })
-    .catch(err => console.log(err));
-*/
 }
 
 // DB 하위 페이지 생성

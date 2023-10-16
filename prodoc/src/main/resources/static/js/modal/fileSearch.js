@@ -59,7 +59,7 @@ startDate.addEventListener("change", function(e){
 
 // 목록 조회 AJAX --------------------------------------------------------------------------------------------
 function getAllList(searchData){
-    let fileSearchList = document.querySelector("#fileSearchList tbody");
+    let fileSearchList = document.querySelector("#fileSearchList .files-list");
     fileSearchList.innerHTML = "";       
    
     fetch("getFileList", {
@@ -76,16 +76,18 @@ function getAllList(searchData){
 
         // 태그 생성
         for(let file of fileList){
-            let trTag = document.createElement("tr");
+            let trTag = document.createElement("div");
+            trTag.classList.add("table-tr");
             for(let field in file){
                let value = file[field];
                 if(field == 'displayId'){
-                   trTag.setAttribute('id', file[field]);
+                    trTag.setAttribute('id', file[field]);
                     trTag.addEventListener("click", moveToFileblock);
                    continue;
                 };
                 if(field == 'saveDate') value = changeDate(value);
-                let tdTag = document.createElement("td");
+                let tdTag = document.createElement("div");
+                tdTag.classList.add("table-td", "inlineTags");
                 tdTag.innerText = value;
                 if(field == 'pageId'){
                    tdTag.classList.add("pidToFile");
