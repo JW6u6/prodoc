@@ -288,3 +288,10 @@ select::-ms-expand {
   color: #fff;
 }
 
+#autoContain {
+	width: 170px;
+	height: 200px;
+	background-color: #ddc0f8;
+	position: absolute;
+	z-index: 700;
+}
