@@ -169,10 +169,12 @@ public class PageController {
 	public ModelAndView linkedPage(@PathVariable("pageId") String pageId) {
 		ModelAndView modelview = new ModelAndView();
 		List<PageVO> listVO = pageMapper.selectPageInfo(pageId);
-
+		boolean shared = false;
 		for (PageVO pageVO : listVO) {
+			shared = true;
 			modelview.setViewName("content/shareWith");
 			modelview.addObject("pInfo", pageVO);
+			modelview.addObject("shareUser", shared);
 		}
 		return modelview;
 	}

@@ -10,6 +10,14 @@ document.querySelector('#copyPage').addEventListener('click', copyPagstePage);
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
 document.querySelector('#menuImg').addEventListener('click', function (e) {
+    let clickClose = document.createElement('div');
+    document.body.appendChild(clickClose);
+    clickClose.addEventListener('click', function (e) {
+        headerMenu.classList.toggle('hide');
+        headerMenu.classList.toggle('view');
+        clickClose.remove();
+    })
+
     pageMenuSetting();
     areUTurnOn();
     areULock();
@@ -168,17 +176,17 @@ async function pageDelCheck() {
     let infoResult = await selectOneWork(workBlockId);
     let home = document.querySelector('#homePg');
     let infos = await pageInfoFromMenu();
-    let dbCheck;
+    let dbCheck = false;
 
     for (let info of infos) {
         if (info.caseId.indexOf('DB') == -1) {
-            dbCheck = 'FALSE';
+            dbCheck = false;
         } else if (info.caseId.indexOf('DB') != -1) {
-            dbCheck = 'TRUE';
+            dbCheck = true;
         }
     }
-    
-    if (dbCheck) {
+
+    if (dbCheck == true) {
         alert('데이터베이스는 여기서 삭제할 수 없습니다.')
     } else if (home.value == pageBlockId) {
         alert('홈은  삭제할 수 없습니다.');
@@ -207,7 +215,7 @@ async function pageDelCheck() {
                 if (result == 'true') {
                     let email = document.querySelector("#side input.logUser").value;
                     alert('페이지가 삭제되었습니다.')
-                    // pageList(workBlockId);
+                    allList(email);
                 } else if (result == 'false') {
                     alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
                 }
@@ -341,7 +349,10 @@ async function creLink() {
 
         if (navigator.clipboard !== undefined) {
             document.body.appendChild(linkText);
-            url = '도메인 주소/shared/' + pageBlockId;
+            url = 'http://localhost:8099/shared/'
+                // 'http://prodox.me/shared/' 
+                +
+                pageBlockId;
             linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard
@@ -349,6 +360,7 @@ async function creLink() {
                 .then(() => {
                     alert('링크가 복사되었습니다.')
                 })
+
         } else {
             linkText.select(); //textarea를 설정
             document.execCommand("copy"); // 복사
