@@ -32,8 +32,7 @@
       th:include="@{fragments/sidebar}"></th:block>
    <th:block th:if="${session.logUser!= null}" layout:fragment="header"
       th:include="@{fragments/header}"></th:block>
-   <input type="text" id="homePg" th:if="${session.logUser!= null}"
-      style="visablity:hidden;" th:value="${session.logUser.defaultPage}">
+   <input type="text" id="homePg" th:if="${session.logUser!= null}" style="visibility: hidden;" th:value="${session.logUser.defaultPage}">
    
    <th:block th:if="${session.logUser== null}">
       <div id="nonMember" th:insert="content/nonUser :: nonMemberFrag"></div>
