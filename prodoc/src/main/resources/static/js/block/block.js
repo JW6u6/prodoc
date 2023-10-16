@@ -549,7 +549,8 @@ async function updateFile(fileObj) {
  *          upDate:string,
  *          displayId:string,
  *          replyId:string,
- *          mentionList:string}]>
+ *          platform:string,
+ *          profile:string}]>
  * }
  */
 async function getBlockreplyList(blockId) {

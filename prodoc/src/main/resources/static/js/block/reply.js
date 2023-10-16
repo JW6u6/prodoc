@@ -16,6 +16,13 @@ function showReply(e) {
     // 아니면 동적으로 생성
     const replyBox = document.createElement("div");
     replyBox.classList.add("page_reply");
+    const closeBtnWrapper = document.createElement("div");
+    closeBtnWrapper.classList.add("page_reply_btn_wrapper");
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "X";
+    closeBtn.addEventListener("click", showReply);
+    closeBtnWrapper.appendChild(closeBtn);
+    replyBox.appendChild(closeBtnWrapper);
     container.insertAdjacentElement("afterend", replyBox);
     replyTarget = document.querySelector(".page_reply");
     makeReplyList(replyTarget);
@@ -25,8 +32,15 @@ function showReply(e) {
 async function makeReplyList(appendTarget) {
   const replylist = await getPageReplyList(pageBlockId);
   replylist.forEach((reply) => {
+    console.log(reply);
     const date = reply.upDate ? reply.upDate : reply.creDate;
-    const temp = makeReplyBlock(reply.creUser, reply.content, date);
+    const temp = makeReplyBlock(
+      reply.nickname,
+      reply.content,
+      date,
+      reply.replyId,
+      reply.profile
+    );
     appendTarget.insertAdjacentHTML("beforeend", temp);
   });
 }
