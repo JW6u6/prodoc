@@ -8,6 +8,9 @@ import lombok.Data;
 public class ReplyVO {
 	private String replyId;
 	private String creUser;
+	private String profile;
+	private String platform;
+	private String nickname;
 	private Date creDate;
 	private Date upDate;
 	private String content;

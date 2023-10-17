@@ -93,11 +93,6 @@ h4 {
   z-index: 101;
 }
 
-.modal_item {
-  z-index: 2;
-  background-color: aqua;
-}
-
 .block_dropdown_menu {
   z-index: 102;
 }
@@ -175,7 +170,7 @@ a {
   position: absolute;
   width: 300px;
   max-height: 150px;
-  z-index:102;
+  z-index: 102;
 }
 
 .modal_reply_controller {
@@ -188,20 +183,7 @@ a {
   grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
 }
 
-.page_reply {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  background-color: aquamarine;
-  width: 250px;
-  right: 0;
-  overflow-y: auto;
-  padding-top:70px;
-}
-
-.page_reply_button{
-	position: fixed;
-	z-index:97;
-	bottom:50px;
-	right:50px;
+.modal_item {
+  z-index: 102;
+  background-color: #f5f0ff;
 }

@@ -12,13 +12,13 @@
   display: none;
 }
 /* 워크 생성 모달창 콘텐츠 박스크기 */
-.box {
+/* .box {
   border: 3px solid pink;
   padding: 7px;
   text-align: center;
   width: 400px;
   border-radius: 10px;
-}
+} */
 /* 모달창 본문 */
 .modal-content {
   background-color: #fefefe;
@@ -28,23 +28,25 @@
   border-radius: 10px;
   width: 800px;
   height: 500px;
-  text-align: center;
-  z-index: 100;
+}
+.modal-content--header {
+  display: flex;
+  justify-content: end;
 }
 
-.side_logo{
+.side_logo {
   margin-left: 7px;
-	height: 70px;
-	display:flex;
-	align-items: center;
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 .side_logo span {
-	font-size:30px;
+  font-size: 30px;
 }
 
-.side_logo img{
-	height:70px;
+.side_logo img {
+  height: 70px;
 }
 #temPage,
 #dbPage,
@@ -84,7 +86,6 @@
 /* 모달 내 닫기창 스타일 */
 .close {
   color: #aaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }
@@ -111,6 +112,26 @@
   margin-left: 20px;
   height: max-content;
 }
+
+#nameArea {
+  display: flex;
+  justify-content: center;
+}
+#wsName {
+  margin-bottom: 0;
+}
+
+#delCheckArea {
+  display: flex;
+  justify-content: center;
+}
+
+#delCheck {
+  width: 414px;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
 /* 드롭다운(셀렉트박스) */
 .selectBox * {
   box-sizing: border-box;
@@ -140,7 +161,6 @@
   background: transparent;
   border: 0 none;
   outline: 0 none;
-  padding: 7px;
   position: relative;
   z-index: 3;
   text-align: center;
@@ -169,6 +189,33 @@
 }
 .turn {
   transform: rotate(180deg);
+}
+
+#inviteUser {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#inviteBtn {
+  height: 40px;
+}
+
+#invEmail {
+  width: 414px;
+  margin-left: 104px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+.invWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#autoContain {
+  top: 63px;
+  left: 110px;
 }
 
 /* IE */
@@ -220,7 +267,6 @@ select::-ms-expand {
   border-radius: 10px;
 }
 
-
 #temPage,
 #dbPage,
 #subTemPage,
@@ -249,8 +295,6 @@ select::-ms-expand {
 .highlight {
   border: 2px dashed red;
 }
-
-
 
 /* 사이드 */
 #side {
@@ -289,9 +333,21 @@ select::-ms-expand {
 }
 
 #autoContain {
-	width: 170px;
-	height: 200px;
-	background-color: #ddc0f8;
-	position: absolute;
-	z-index: 700;
+  display: none;
+  width: 410px;
+  height: 200px;
+  background-color: #ddc0f8;
+  position: absolute;
+  z-index: 700;
+}
+
+#btnArea {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#btnArea button {
+  margin-left: 10px;
 }

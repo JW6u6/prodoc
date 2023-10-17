@@ -26,11 +26,11 @@
 	        <div class="login_form_wrapper">
 	        
 	        	<form method="post"	action="/login" >
-	            <input class="input_text-xl" type="text" id="email" placeholder="EMAIL" name="email" value="">
-	            <input class="input_text-xl" type="password" id="password" placeholder="PASSWORD" name="password" value="">
+	            <input class="input_text-xl input-login" type="text" id="email" placeholder="이메일" name="email" value="">
+	            <input class="input_text-xl input-login" type="password" id="password" placeholder="비밀번호" name="password" value="">
 	            <div class="button_wrapper">
-	            <button class="input_text-xl" type="submit" id="loginBtn">로그인</button>
-	            <button class="input_text-xl" type="button" id="joinBtn">회원가입</button>
+	            <button class="btn-xl btn-login" type="submit" id="loginBtn">로그인</button>
+	            <button class="btn-xl btn-login" type="button" id="joinBtn">회원가입</button>
 	            </div>
 	            </form>
 		        <p id="failMsg" th:text="${errorMsg}" style="color:red;"></p>
