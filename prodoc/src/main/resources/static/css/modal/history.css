@@ -2,7 +2,8 @@
 #modHistory,
 #UserModiMod,
 #joinOutMod,
-#modSearchWKDB {
+#modSearchWKDB,
+#editPageMod {
   position: fixed; /* Stay in place */
   top: 0;
   left: 0;
@@ -13,7 +14,8 @@
 }
 /*히스토리, 검색 모달창 안에 흰 div*/
 #modHistory > div,
-#modSearchWKDB > div {
+#modSearchWKDB > div,
+#editPageMod > div{
   overflow: auto;
   margin-top: 200px;
   margin-left: 20vw;

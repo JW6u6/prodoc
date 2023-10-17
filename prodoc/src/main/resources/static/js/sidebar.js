@@ -433,7 +433,8 @@ function PageNameSettingFunc(){
 let PNmod = document.querySelector("#editPageMod");
 document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
    let value = this.previousElementSibling.value;   //바뀐 페이지명
-   let id = this.closest("div").dataset.id;      //해당 페이지id
+   let id = this.closest("#editPageMod").dataset.id;      //해당 페이지id
+   console.log(value, id);
    let URL = `/pageNewName?pageId=${id}&pageName=${value}`;
    
    fetch(URL, {

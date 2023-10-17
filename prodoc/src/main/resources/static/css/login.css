@@ -81,3 +81,79 @@ body {
 .button_wrapper button {
   width: 47%;
 }
+
+
+/*모달 css*/
+#findUserInfo {
+  position: fixed; /* Stay in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+/*히스토리, 검색 모달창 안에 흰 div*/
+#findUserInfo > div {
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 30%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 550px; height: 363px;
+  z-index: 51;
+}
+#findUserInfo h3{
+  margin: 0;
+}
+.find_modal--header{
+  display: flex;
+  justify-content: space-between;
+}
+.find_this{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding:10px 0px;
+}
+.find_this label{
+  width: 70px;
+  margin-left:10%;
+}
+.find_this div{
+  width: 100%;
+}
+.input_text {
+  width: 200px;
+  height: 30px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  border: 3px solid ;
+  border-color: var(--input-border-color);
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+.find_this button{
+  width: 130px;   
+}
+#findPass>input{
+	margin-left:68px;
+}
+#authInput, #phoneMd{
+	margin-left:48px;
+}
+#newPW{
+	margin-left:46px;
+}
+.find_this p{
+	margin: 0;
+	text-align: center;
+	margin-left:auto;
+}
+.findEndBtn{
+   text-align: center;
+   align-items:flex-end;
+   margin: 0;
+}
