@@ -7,8 +7,6 @@ async function listLayoutEditor(dataList, displayId, layout){
         else ele.classList.remove("lay-pick");
     })
 
-    // nowLayout.classList.add("lay-pick");
-    
     dbbody.innerHTML = "";
     let pageList = [];  // 삭제되지 않은 페이지 목록
     dataList.forEach(item => {
@@ -31,7 +29,7 @@ async function listLayoutEditor(dataList, displayId, layout){
             dbbody.insertAdjacentHTML("beforeend", addDbpage()); 
             break;
 
-       case 'DB_BRD' : 
+        case 'DB_BRD' : 
         let states = ["WAIT", "RUN", "END", "CANCEL"];
 
         let statesTag = document.createElement("div");
@@ -160,7 +158,9 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="
+                `+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="
+                `+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags data_page">📄</div>
             <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
@@ -173,7 +173,8 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" 
+                class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags data_page">📄</div>
             <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
@@ -193,7 +194,8 @@ function dbGalBlock(block){
     })
 
     const galType = `
-    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" 
+                class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
         <div class="gal-thumbnail" class="data_page">
             <img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}">
