@@ -33,6 +33,21 @@
         ORDER SIBLINGS BY numbering
     </select>
 	
+	<select id="partList" resultType ="allListVO">
+		select level,p.*
+      from (
+         select 'work' wp,work_id page_id,work_id,parent_id,work_type,work_name,delete_check, 0 numbering , '' case_id
+         from tbl_workspace 
+         where delete_check != 'TRUE' 
+          
+      UNION ALL
+         select 'page' ,page_id,work_id,NVL(parent_id,work_id), '' , page_name, delete_check , numbering , case_id
+         from tbl_page
+         where delete_check != 'TRUE'
+          
+          )  p start with (work_id =#{workId} and parent_id IS NULL) connect by prior page_id = parent_id
+        ORDER SIBLINGS BY numbering
+	</select>
 	<!-- 워크 name 값 가져오기 -->
 	<select id="workId" resultType="String">
 		SELECT work_name
