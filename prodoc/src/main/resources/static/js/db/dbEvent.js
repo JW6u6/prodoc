@@ -10,7 +10,6 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
     else if (e.target.matches(".del-attr")) deleteAttr(e);
     else if (e.target.matches(".del-db-page")) deleteDBpage(e);
     else if (e.target.matches(".data_page")) getDatapageId(e);  // 데이터베이스에서 하위 페이지 클릭
-    // else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
 
     // 속성 이벤트
     else if (e.target.matches(".attr-case")) updateContent(e);
@@ -21,9 +20,6 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
 
     // 모달
     else if (e.target.matches(".close-attr-modal")) closeAttrModal(e);
-
-    // 페이지 모달 이벤트
-
 })
 
 // db블럭 클릭 제외 모든 이벤트
