@@ -1071,7 +1071,7 @@ async function setWork(e) {
             owner = mAuth.email;
         }
     })
-    document.querySelector('#ownArea').firstElementChild.value = owner;
+    document.querySelector('#ownerId').value = owner;
 
     let editBtn = document.createElement('button');
     editBtn.id = 'wsEdit';
@@ -1807,12 +1807,12 @@ function renewMemberAuth(list) {
 }
 
 //팀 워크스페이스 소유자 부분 수정시 소유자 변경
-document.querySelector('#ownArea').firstElementChild.addEventListener('change', changeOwner);
+document.querySelector('#ownerId').addEventListener('change', changeOwner);
 
 async function changeOwner(e) {
     let workId = document.querySelector('#wid').value;
     let checkManager = await memberList(workId);
-    let email = document.querySelector('#ownArea').firstElementChild;
+    let email = document.querySelector('#ownerId');
     let check = false;
     let owner = '';
     checkManager.forEach(own => {
