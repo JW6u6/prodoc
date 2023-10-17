@@ -1712,7 +1712,7 @@ async function memberList(workId) {
                     let trTag = document.createElement("tr");
 
                     for (let field of arr) {
-                        if (field == "workId") {
+                        if (field == "workId" || field == 'auth') {
                             let tdTag = document.createElement("td");
                             let inputTag = document.createElement("input");
                             inputTag.type = "hidden";
