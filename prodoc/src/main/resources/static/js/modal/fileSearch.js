@@ -132,9 +132,10 @@ function getSearchList(e){
 
 // trTag 클릭 이벤트 : fileInfo
 function moveToFileblock(e){
-   const displayId = e.currentTarget.getAttribute("id");
+    e.target.closest("#FileSearchModal").classList.add("hide");
+    const displayId = e.currentTarget.getAttribute("id");
     const pageId = e.currentTarget.querySelector(".pidToFile").innerText;
-   console.log(pageId, displayId);
-   if(pageId != '' || pageId != null ) selectPage(pageId);
+    console.log(pageId, displayId);
+    if(pageId != '' || pageId != null ) selectPage(pageId);
     if(displayId != '' || displayId != null) cusorMove(displayId);
 }
