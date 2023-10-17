@@ -177,7 +177,9 @@ function openDatabase(pageId){
         // 데이터베이스 탬플릿 형성
         let database = createDBblock(block);
         targetDom.insertAdjacentHTML("afterbegin", database);
-        targetDom.querySelector(".db-page-name").style.display = "none";
+        targetDom.querySelector(".db-page-name").style.display = "none";    // 페이지명 제거
+        document.querySelector(".database_case").style.boxShadow = "none";  // box-shadow 제거
+        
         // 하위페이지 불러오기
         getChildList(block.displayId);
     })

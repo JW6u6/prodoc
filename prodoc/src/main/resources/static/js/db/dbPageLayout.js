@@ -24,9 +24,10 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
 
        case 'DB_BRD' : 
-        let states = ["WAIT", "RUN", "END", "CANCLE"];
+        let states = ["WAIT", "RUN", "END", "CANCEL"];
 
         let statesTag = document.createElement("div");
+        statesTag.classList.add("stasts");
         states.forEach(state => {
             let stateType = document.createElement("div");
             stateType.textContent = state;
@@ -36,7 +37,7 @@ async function listLayoutEditor(dataList, displayId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        caseDiv.classList.add("display-flex", "state-container");
+        caseDiv.classList.add("state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
@@ -117,8 +118,6 @@ async function listLayoutEditor(dataList, displayId, layout){
     databaseAllEvent();
 }
 
-const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
-
 function updateCase(pageId, layout){
     let data = {"pageId" : pageId, "caseId" : layout};
     data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
@@ -188,7 +187,9 @@ function dbGalBlock(block){
     const galType = `
     <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
+        <div class="gal-thumbnail" class="data_page">
+            <img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}">
+        </div>
         <div>
             <div class="data_page">`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
