@@ -99,12 +99,14 @@ const blockHandler = {
     const replyRegistBtn = replyController.querySelector(".reply_regi_btn");
     // 댓글을 순회하면서 조건에 맞게 뿌리기
     replyList.forEach((reply) => {
+      console.log(reply);
       const date = reply.upDate ? reply.upDate : reply.creDate;
       const temp = makeReplyBlock(
-        reply.creUser,
+        reply.nickname,
         reply.content,
         date,
-        reply.replyId
+        reply.replyId,
+        reply.profile
       );
       replyWrapper.insertAdjacentHTML("beforebegin", temp);
     });
@@ -122,7 +124,8 @@ const blockHandler = {
         blockSessionUserId,
         replyInput.value,
         "지금",
-        replyId
+        replyId,
+        blockSessionUserProfile
       );
       replyWrapper.insertAdjacentHTML("beforebegin", replyTemp);
       replyInput.value = "";
@@ -132,11 +135,13 @@ const blockHandler = {
         `[data-reply-id="${replyId}"]`
       );
 
-      replyElement.addEventListener("click", (e) => {
-        const replyId = e.currentTarget.parentElement.dataset.replyId;
-        const result = deleteReply(replyId, blockSessionUserId);
+      replyElement.addEventListener("click", async (e) => {
+        const reply = e.currentTarget.closest(".block_reply");
+        const replyId = e.currentTarget.dataset.replyId;
+        const result = await deleteReply(replyId, blockSessionUserId);
+
         if (result.result === "success") {
-          e.currentTarget.closest(".reply_block--header").remove();
+          reply.remove();
         }
       });
     });
@@ -145,12 +150,15 @@ const blockHandler = {
       ".reply_block--remove_btn"
     );
 
-    blockRemoveBtn.forEach(async (removeBtn) => {
-      removeBtn.addEventListener("click", (e) => {
-        const replyId = e.currentTarget.parentElement.dataset.replyId;
-        const result = deleteReply(replyId, blockSessionUserId);
+    blockRemoveBtn.forEach((removeBtn) => {
+      removeBtn.addEventListener("click", async (e) => {
+        const reply = e.currentTarget.closest(".block_reply");
+        const replyId = e.currentTarget.dataset.replyId;
+        const result = await deleteReply(replyId, blockSessionUserId);
+
         if (result.result === "success") {
-          e.currentTarget.closest(".reply_block--header").remove();
+          console.log(e.currentTarget);
+          reply.remove();
         }
       });
     });

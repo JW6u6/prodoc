@@ -530,7 +530,7 @@ function makeReplyModal(displayId, target, { left = "" }) {
     style="left:${left}px;"
     class="reply_modal block_modal input_modal modal_item">
       <div class="replyWrapper"></div>
-      <div class="modal_reply_controller"><input placeholder="소가죽으면다이소" type="txet"/><button class="reply_regi_btn">등록</button></div>
+      <div class="modal_reply_controller"><input placeholder="댓글을 입력하세요" type="txet"/><button class="reply_regi_btn">등록</button></div>
     </div>
   `;
   displayModal(target, template);
@@ -541,13 +541,14 @@ function makeReplyModal(displayId, target, { left = "" }) {
  * @param {string} user - 댓글을 단 사람
  * @param {string} text - 댓글 내용
  * @param {string} date - 댓글을 단 시간 or 업데이트된 시간
+ * @param
  * @returns {string} 댓글블럭템플릿
  */
-function makeReplyBlock(user, text, date, id) {
+function makeReplyBlock(user, text, date, id, src) {
   const replyTemp = `
     <div class="block_reply">
       <div class="reply_block--header" data-reply-id="${id}">
-        <div>img</div>
+        <div><img src="/files/${src}"></img></div>
         <div>${user}</div>
         <div>${date}</div>
         ${

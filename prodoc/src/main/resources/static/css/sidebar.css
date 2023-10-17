@@ -84,6 +84,7 @@
 	float: right;
 	font-size: 28px;
 	font-weight: bold;
+
 }
 
 .close:hover, .close:focus {
@@ -110,6 +111,26 @@
 	margin-left: 20px;
 	height: max-content;
 }
+
+#nameArea {
+  display: flex;
+  justify-content: center;
+}
+#wsName {
+  margin-bottom: 0;
+}
+
+#delCheckArea {
+  display: flex;
+  justify-content: center;
+}
+
+#delCheck {
+  width: 414px;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
 /* 드롭다운(셀렉트박스) */
 .selectBox * {
 	box-sizing: border-box;
@@ -174,6 +195,33 @@
 
 .turn {
 	transform: rotate(180deg);
+}
+
+#inviteUser {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#inviteBtn {
+  height: 40px;
+}
+
+#invEmail {
+  width: 414px;
+  margin-left: 104px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+.invWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#autoContain {
+  top: 63px;
+  left: 110px;
 }
 
 /* IE */

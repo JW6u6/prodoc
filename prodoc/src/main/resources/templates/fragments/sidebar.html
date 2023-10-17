@@ -76,14 +76,14 @@
 					<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
 					<div id="nameArea">
 						<input type="text" id="wsName" name="workName"
-							class="box Necessary" placeholder="워크스페이스명"> <input
+							class="Necessary input_text-xl box selectBox" placeholder="워크스페이스명"> <input
 							type="hidden" id="loginUser" name="email"
 							th:value="${session.logUser.email}">
 					</div>
 
 					<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
 					<div class="selectBox" id="typeArea">
-						<select id="wsType" name="workType" class="select Necessary">
+						<select id="wsType" name="workType" class="select Necessary input_text-xl">
 							<option disabled selected="selected">워크스페이스 타입</option>
 							<option value="TEAM">팀 워크스페이스</option>
 							<option value="PERSONAL">개인 워크스페이스</option>
@@ -92,7 +92,7 @@
 
 					<!--/* 워크스페이스 공개범위 지정 영역. 필요한 곳: 생성/설정(개인, 팀) */-->
 					<div class="selectBox" id="pubArea">
-						<select id="wsPrivate" name="publicCheck" class="select Necessary">
+						<select id="wsPrivate" name="publicCheck" class="select Necessary input_text-xl">
 							<option disabled selected="selected">워크스페이스 공개</option>
 							<option value="W_PUB">전체공개</option>
 							<option value="W_MEM" class="hide" id="memOption">멤버공개</option>
@@ -109,15 +109,15 @@
 					<div id="deleteBtn" class="hide" style="color: red">워크스페이스 삭제</div>
 					<!--/* 워크스페이스 삭제시 이름 입력 부분 */-->
 					<div id="delCheckArea" class="hide">
-						<input type="text" id="delCheck"
+						<input type="text" id="delCheck" class="input_text-xl"
 							placeholder="삭제하실 워크스페이스의 이름을 입력하세요.">
 					</div>
 
 					<!--/* 워크스페이스 유저 초대 영역 */-->
 					<div id="inviteUser" class="hide">
-						<div>
-							<input type="email" id="invEmail" autocomplete="off">
-							<button type="button" id="inviteBtn">추가</button>
+						<div class="invWrapper">
+							<input type="email" id="invEmail" class="input_text-xl" autocomplete="off">
+							<button type="button" id="inviteBtn" class="btn">추가</button>
 							<div id="autoContain"></div>
 						</div>
 
