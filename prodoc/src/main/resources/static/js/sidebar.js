@@ -18,6 +18,7 @@ function init() {
 
 function allList(email){
     document.querySelector('#side #myWorkList').innerText = "";
+    document.querySelector('#side #teamWorkList').innerText = "";
     let url = "/allList?email="+email
     let temp_dbpageList = [];
     fetch(url, { method: 'GET' })
@@ -553,7 +554,7 @@ function dropItem(event){
         })
         .then(res => res.json())
         .then(result => {
-            init();
+            allList();
         })
         .catch(err => console.log(err))
     }
@@ -608,7 +609,7 @@ function dropPage(event){
         })
         .then(res => res.json())
         .then(result => {
-            init();
+            allList();
         })
         .catch(err => console.log(err))
     } else 
@@ -891,7 +892,7 @@ function newPage() {
             // sendSocket(pageId);
             selectPage(pageId); //새 페이지로 이동
             closeSideModal();   //모달 닫기
-            init();             //사이드 초기화
+            allList();            //사이드 초기화
         })
         .catch(err => console.log(err));
 }

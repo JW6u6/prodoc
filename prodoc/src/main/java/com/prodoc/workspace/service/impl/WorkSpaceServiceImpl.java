@@ -148,4 +148,9 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 		return workMapper.MainPgWorkspace(workVO) == 1;
 	}
 
+	@Override
+	public List<allListVO> partList(String workId) {
+		return workMapper.partList(workId);
+	}
+
 }

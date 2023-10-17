@@ -11,6 +11,20 @@
   background-color: rgba(0, 0, 0, 0.4);
   display: none;
 }
+
+#myWorkList, #teamWorkList{
+	overflow: auto;
+}
+#teamWork, #myWork{
+	margin-top : 20px;
+	margin-left : 10px;
+	color : rgba(78,112,108);
+	font-weight: bolder;
+	font-size : 13px;
+}
+.workName:hover {
+	
+}
 /* 워크 생성 모달창 콘텐츠 박스크기 */
 .box {
   border: 3px solid pink;
