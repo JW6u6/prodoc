@@ -361,8 +361,9 @@ async function creLink() {
         } else {
             linkText.select(); //textarea를 설정
             document.execCommand("copy"); // 복사
-            linkText.remove();
+            console.log(linkText);
             alert("링크가 복사되었습니다.") // 알림창
+            linkText.remove();
         }
     }
 }
