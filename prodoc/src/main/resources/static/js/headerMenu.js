@@ -346,16 +346,16 @@ async function creLink() {
         let url = ''; // <a>태그에서 호출한 함수인 clip 생성
         let linkText = document.createElement("textarea");
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
+        document.body.appendChild(linkText);
+        url = 'http://prodox.me/shared/' + pageBlockId;
+        linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {
-            document.body.appendChild(linkText);
-            url = 'http://prodox.me/shared/' + pageBlockId;
-            linkText.value = url; // textarea 값에 url를 넣어줌
-
             navigator.clipboard
                 .writeText(linkText.value)
                 .then(() => {
-                    alert('링크가 복사되었습니다.')
+                    alert('링크가 복사되었습니다.');
+                    linkText.remove();
                 })
 
         } else {
