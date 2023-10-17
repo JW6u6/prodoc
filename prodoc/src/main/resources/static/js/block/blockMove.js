@@ -2,18 +2,19 @@ const blocks = document.querySelectorAll(".prodoc_block");
 const container = document.querySelector(".container");
 let blockCount = 1;
 
-
-function containerEvent(box){
+function containerEvent(box) {
   box.addEventListener("dragover", (e) => {
     e.preventDefault();
   });
-  console.log(box)
+  console.log(box);
   box.addEventListener("drop", (e) => {
     let newOrder = null;
     let isColumn = null;
     const pointer = document.querySelector(".block_pointer");
     const target = pointer.closest(".prodoc_block");
-    const dragItem = document.querySelector(".dragging").closest(".prodoc_block");
+    const dragItem = document
+      .querySelector(".dragging")
+      .closest(".prodoc_block");
     //만약 드래그된애가 컬럼블럭에 있다면 이 블럭을 주시.
     if (dragItem.parentElement.classList.contains("block_column")) {
       isColumn = dragItem.parentElement;
@@ -35,7 +36,7 @@ function containerEvent(box){
       pointer.remove();
     }
   });
-  
+
   //컨테이너 클릭 이벤트
   box.addEventListener("mouseup", (e) => {
     let newElement = null;
@@ -45,9 +46,9 @@ function containerEvent(box){
     const targetHeight = e.target.clientHeight;
     const clickHeight = e.offsetY;
     const prevBlock = e.target.lastElementChild;
-    
+
     console.log(prevBlock);
-  
+
     if (targetHeight - paddingBottom < clickHeight && prevBlock !== null) {
       const isSeparator = prevBlock.querySelector(".separator");
       if (isSeparator) return;
@@ -72,7 +73,6 @@ function containerEvent(box){
   });
 }
 
-
 // 드래그를 끝냈을때
 function dragend_handler(event) {
   event.target.classList.remove("dragging"); // 드래그가 끝났으므로 삭제.
@@ -81,7 +81,7 @@ function dragend_handler(event) {
 function dragStart(event) {
   event.target.classList.add("dragging"); // 드래그중인 요소를 알기위해 클래스 지정
   event.dataTransfer.dropEffect = "copy"; //드래그중 마우스 커서 모양을 정하기
-  console.log(event)
+  console.log(event);
 }
 
 // 사이드면 state를 side, 위면 top 아래면 bottom.

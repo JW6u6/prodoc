@@ -26,14 +26,14 @@
   z-index: 51;
 }
 /*히스토리, 검색 모달창 안에 흰 div*/
-#UserModiMod > div{
+#UserModiMod > div {
   overflow: auto;
   margin-top: 200px;
   margin-left: 30vw;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 50vw;
+  width: 645px;
   z-index: 51;
 }
 #joinOutMod > div {
@@ -141,7 +141,7 @@
   margin-bottom: 10px;
   object-fit: cover;
   background-size: cover;
-  aspect-ratio:1/1;
+  aspect-ratio: 1/1;
 }
 
 .userModForm_right {
