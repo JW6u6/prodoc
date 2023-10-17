@@ -20,6 +20,7 @@ function showReply(e) {
     closeBtnWrapper.classList.add("page_reply_btn_wrapper");
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "X";
+    closeBtn.classList.add("closeBtn");
     closeBtn.addEventListener("click", showReply);
     closeBtnWrapper.appendChild(closeBtn);
     replyBox.appendChild(closeBtnWrapper);
@@ -36,6 +37,7 @@ async function makeReplyList(appendTarget) {
     const date = reply.upDate ? reply.upDate : reply.creDate;
     const temp = makeReplyBlock(
       reply.nickname,
+      reply.creUser,
       reply.content,
       date,
       reply.replyId,

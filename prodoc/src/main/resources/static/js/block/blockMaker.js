@@ -17,7 +17,11 @@ function displayBlock({ template, type, element }) {
     }
   } else {
     if (element) {
-      element.insertAdjacentHTML("afterend", template.template);
+      if (element.classList.contains("container")) {
+        container.insertAdjacentHTML("beforeend", template.template);
+      } else {
+        element.insertAdjacentHTML("afterend", template.template);
+      }
     } else {
       container.insertAdjacentHTML("beforeend", template.template);
     }
@@ -418,7 +422,8 @@ async function makeDropDownMenu(id, option = {}, menuTemp) {
  */
 function makeBlockInfoTemplate({ creUser, upUser, upDate, creDate }) {
   const template = `
-    <div>
+    <div class="dropdown_user_info">
+      <div>${upDate ? "(수정됨)" : ""}</div>
       <div>${upUser ? upUser : creUser}</div>
       <div>${upDate ? upDate : creDate}</div>
     </div>
@@ -544,7 +549,8 @@ function makeReplyModal(displayId, target, { left = "" }) {
  * @param
  * @returns {string} 댓글블럭템플릿
  */
-function makeReplyBlock(user, text, date, id, src) {
+function makeReplyBlock(user, creUser, text, date, id, src) {
+  console.log(user === blockSessionUserId, user, blockSessionUserId);
   const replyTemp = `
     <div class="block_reply">
       <div class="reply_block--header" data-reply-id="${id}">
@@ -552,8 +558,8 @@ function makeReplyBlock(user, text, date, id, src) {
         <div>${user}</div>
         <div>${date}</div>
         ${
-          user === blockSessionUserId
-            ? '<div class="reply_block--remove_btn">X</div>'
+          creUser === blockSessionUserId
+            ? '<div class="reply_block--remove_btn closeBtn">&times;</div>'
             : ""
         }
       </div>

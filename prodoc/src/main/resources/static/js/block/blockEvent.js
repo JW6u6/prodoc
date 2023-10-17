@@ -267,11 +267,6 @@ function handleSideBtn(event) {
   console.log(sideBtn);
   child.classList.toggle("hide");
   sideBtn.classList.toggle("open");
-  if (sideBtn.classList.contains("open")) {
-    sideBtn.innerText = "▼";
-  } else {
-    sideBtn.innerText = "▶";
-  }
   let checked = child.classList.contains("hide") ? true : false;
   console.log(checked);
   updateDBBlock({ displayId, checked });

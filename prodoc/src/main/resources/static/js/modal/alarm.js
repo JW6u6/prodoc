@@ -85,59 +85,71 @@ function showAlarmList(type){
 function textReturn(item){
 	if(item.noteType == 'LOCK_FR'){
 		return `<div class="alarms" data-note="${item.noteId}" data-id="${item.pageId}">
-					<div>
-						<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
-						onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+					<div class="alarm_header">
+						<div>
+							<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
+							onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+						</div>
+						<div><span>${item.creDate}</span></div>
+						<div>
+							<input type="checkbox" data-id="${item.noteId}">
+						</div>
 					</div>
-					<div>
-						<span>${item.creDate}</span>
+					<div class="alarm_content">
 						<span class="tagMe">${item.creUserName}(${item.creUserId})님이 페이지 잠금을 요청했습니다.</span>
-					</div>
-					<div>
-						<input type="checkbox" data-id="${item.noteId}">
 					</div>
 				</div>`
 	}else if (item.noteType == 'LOCK_TR'){
 		return `<div class="alarms" data-note="${item.noteId}" data-id="${item.pageId}">
-					<div>
-						<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
-						onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+					<div class="alarm_header">
+						<div>
+							<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
+							onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+						</div>
+						<div><span>${item.creDate}</span></div>
+						<div>
+							<input type="checkbox" data-id="${item.noteId}">
+						</div>
 					</div>
-					<div>
-						<span>${item.creDate}</span>
+					<div class="alarm_content">
 						<span class="tagMe">${item.creUserName}(${item.creUserId})님이 페이지 잠금해제를 요청했습니다.</span>
-					</div>
-					<div>
-						<input type="checkbox" data-id="${item.noteId}">
 					</div>
 				</div>`
 	}else if(item.noteType == 'REPLY_TG'){
 		return `<div class="alarms" data-note="${item.noteId}" data-id="${item.pageId}" data-block="${item.displayId}" data-reply="${item.replyId}">
-					<div>
-						<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
-						onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+					<div class="alarm_header">
+						<div>
+							<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
+							onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+						</div>
+						<div>
+							<span>${item.creDate}</span>
+						</div>
+						<div>
+							<input type="checkbox" data-id="${item.noteId}">
+						</div>
 					</div>
-					<div>
-						<span>${item.creDate}</span>
+					<div class="alarm_content">
 						<span class="whoTagMe">${item.creUserName}(${item.creUserId})님이 내 글에 댓글을 달았습니다</span>
-					</div>
-					<div>
-						<input type="checkbox" data-id="${item.noteId}">
 					</div>
 				</div>`
 	}else{
 		return `<div class="alarms" data-note="${item.noteId}">
-					<div>
-						<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
-						onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+					<div class="alarm_header">
+						<div>
+							<img src="${item.platform == 'KAKAO' ? item.profile : '/files/'+ item.profile}"
+							onerror="this.src='images/noneUser.jpg'" style="width:30px; height:30px; border-radius:15px;">
+						</div>
+						<div>
+							<span class="inviteDate">${item.creDate}</span>
+						</div>
+						<div>
+							<input type="button" class="joinOkBtn btn" value="수락" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
+							<input type="button" class="joinNoBtn btn" value="거절" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
+						</div>
 					</div>
-					<div>
-						<span class="inviteDate">${item.creDate}</span>
+					<div class="alarm_content">
 						<span class="inviteText">${item.creUserName}(${item.creUserId})님이 ${item.workName}에 초대했습니다</span>
-					</div>
-					<div>
-						<input type="button" class="joinOkBtn" value="수락" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
-						<input type="button" class="joinNoBtn" value="거절" data-nid = "${item.noteId}" data-email = "${item.creUserId}" data-wid ="${item.workId}">
 					</div>
 				</div>`
 	}
