@@ -42,6 +42,12 @@ async function makeReplyList(appendTarget) {
       reply.profile
     );
     appendTarget.insertAdjacentHTML("beforeend", temp);
+    const replyBlockImg = document.querySelector(
+      `[data-reply-id="${reply.replyId}"] img`
+    );
+    replyBlockImg.addEventListener("error", (e) => {
+      e.currentTarget.src = "images/noneUser.jpg";
+    });
   });
 }
 

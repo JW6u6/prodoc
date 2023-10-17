@@ -59,11 +59,10 @@
       <div>
          <div>
             <div class="modal-content">
-            <div>
+            <div class="modal-content-header">
                <h3 style="text-align:left" id="workModalName">워크스페이스 모달</h3>
                <button id="close-modal" class="close" onclick="closeSideModal()">&#10005;</button>
             </div>
-               <br>
 
                <!--/* 워크스페이스 설정 토글(팀) */-->
                <div id="teamToggleArea" class="hide">
@@ -100,7 +99,7 @@
 
                <!--/* 팀 워크스페이스 소유자 표시 영역. 소유자 권한 이전 가능. */-->
                <div id="ownArea" class="hide">
-                  <input type="text">
+                  <input type="text" class="input_text-xl">
                </div>
 
                <!--/* 워크스페이스 삭제 영역 */-->
@@ -139,9 +138,9 @@
                </div>
 
                <!--/* 워크스페이스 모달 버튼 영역. 생성 -> 설정으로 열 시 삭제, 저장으로 바뀜. */-->
-               <div id="btnArea" class="btn">
-                  <button id="wsCreate" type="button">생성</button>
-                  <button id="cancel" class="close" type="button"
+               <div id="btnArea">
+                  <button id="wsCreate" class="btn" type="button">생성</button>
+                  <button id="cancel" class="close btn-md" type="button"
                      onclick="closeSideModal()">취소</button>
                </div>
             </div>
