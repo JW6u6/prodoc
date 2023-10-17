@@ -18,3 +18,8 @@
   z-index: 51;
   
 }
+
+#FileSearchModal .table-tr{
+  margin-top: 20px;
+  padding-bottom: 10px;
+}

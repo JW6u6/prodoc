@@ -57,6 +57,8 @@ body {
   border: 1px solid #ccc;
 }
 
+.attrDate-con:hover,
+.caldel-btn:hover,
 .btn-login:hover,
 .btn:hover,
 .btn-md:hover,

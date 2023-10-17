@@ -119,7 +119,7 @@ async function openDataPage(pageId){
                         <button class="view_change">❒</button>
                         <button class="dbPage_close">✕</button>
                     </div>
-                    <div class="pageName">${pageVO.pageName}</div>
+                    <h1 class="pageName">${pageVO.pageName}</h1>
                     <div class="db_attrList"></div>
                     <div class="dataPage_blocks"></div>
                 </div>
@@ -132,6 +132,9 @@ async function openDataPage(pageId){
         getDataInfo(pageId);
         showBlocks(pageId, "DATA_PAGE");
         // 모달 이벤트
+        document.querySelector(".db_dataPage").addEventListener("dblclick", e => {
+            pageNameRegisterToModal(e);
+        })
         document.querySelector(".view_change").addEventListener("click", e => {          
             selectPage(pageId);
         })
@@ -286,4 +289,39 @@ async function pageAttrnameUpdate(e){
         // 속성수정 모달 닫기
         modal.remove();
     }
+}
+
+// 페이지 모달에서 페이지 이름 수정
+function pageNameRegisterToModal(e){
+    const titleEle = e.target;
+    const nowTitle = titleEle.innerText;
+    titleEle.style.display = "none";
+    let input = document.createElement("input");
+    input.classList.add("PN-input");
+    input.value = nowTitle;
+    input.style.margin = "21px 0";
+    titleEle.after(input);
+    input.focus();
+    input.addEventListener("keydown", async(key) => {
+        if( key.key == "Enter"){
+            const newTitle = input.value;
+            const pageId = titleEle.closest("[data-page-id]").getAttribute("data-page-id");
+            let result = await registerPNAjax(pageId, newTitle);
+
+            if(result){
+                titleEle.innerText =  newTitle;
+                input.remove();
+                titleEle.style.display = "block";
+
+                const sidePage = document.getElementById("side").querySelector(`[data-id="${pageId}"]`);
+                sidePage.setAttribute("data-name", newTitle);
+                sidePage.querySelector(".pageName").innerText = newTitle;
+
+                let dbinfo = await getDatabaseDBBlock(pageId);
+                document.querySelector(`[data-block-id="${dbinfo.displayId}"] [data-page-id="${pageId}"] .data_pageNM`)
+                .innerText = newTitle;
+            }
+        }
+    })
+
 }

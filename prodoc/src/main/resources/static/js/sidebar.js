@@ -843,32 +843,37 @@ function selectPage(pageId) {
                 //이미 있으면 제거
                 const title = document.querySelector(".pageHead");
 
-                if (title) {
-                    title.remove();
-                }
-                let app = document.querySelector(".container");
-                let pageTitle = `<div class="pageHead">
-                       <h1 id="TitleName">${item.pageName}</h1>
+        if (title) {
+            title.remove();
+        }
+        let app = document.querySelector(".container");
+        let pageTitle = `<div class="pageHead">
+                       <h1 id="TitleName" class="TN-modi">${item.pageName}</h1>
                         <input type="text" id="TitleWid" 
                            data-pageId="${item.pageId}" value="${item.workId}"
                            style="visibility:hidden;">
                      </div>`;
-                app.insertAdjacentHTML("beforebegin", pageTitle);
-                // 페이지 타입 체크
-                let type = await pageTypeCheck(pageId);
-                console.log("페이지 타입 체크", type);
-                if (type == "DATABASE") {
-                    // 데이터베이스일 때
-                    openDatabase(pageId);
-                } else {
-                    // 일반 페이지일 때
-                    //페이지 뿌려주기
-                    pageBlockId = pageId;
-                    workBlockId = item.workId;
-                    makeBlockPage(pageId, type);
-                }
-            });
-            let lastPageSession = sessionStorage.getItem("lastPage");
+        app.insertAdjacentHTML("beforebegin", pageTitle);
+
+        // 페이지 이름 수정용
+        const titleEles = document.querySelectorAll(".TN-modi");
+        titleEles.forEach(ele=>{ ele.addEventListener("dblclick", pageNameModi) });
+
+        // 페이지 타입 체크
+        let type = await pageTypeCheck(pageId);
+        console.log("페이지 타입 체크", type);
+        if(type=="DATABASE"){
+            // 데이터베이스일 때
+            openDatabase(pageId);
+        }else {
+            // 일반 페이지일 때
+            //페이지 뿌려주기
+            pageBlockId = pageId;
+            workBlockId = item.workId;
+            makeBlockPage(pageId, type);
+        }
+      });
+        let lastPageSession = sessionStorage.getItem("lastPage");
             lastPageSession = pageId;
             sessionStorage.setItem("lastPage", lastPageSession)
         });
@@ -1906,4 +1911,38 @@ async function listWorkJoin(workId) {
         })
         .catch(err => console.log(err));
     return mailList;
+}
+
+// content에서 페이지 이름 수정 :: 준위
+function pageNameModi(e){
+    const titleEle = e.currentTarget;
+    const orgTitle = titleEle.innerText;
+
+    titleEle.style.display = "none";
+    const div = document.createElement("div");
+    const input = document.createElement("input");
+    input.classList = "PN-input";
+    input.value = orgTitle;
+    div.append(input);
+    titleEle.after(div);
+    input.focus();
+    
+    input.addEventListener("keydown", async(key) => {
+        if(key.key == "Enter"){
+            const newTitle = input.value
+            const pageId = titleEle.parentElement.querySelector("[data-pageid]").getAttribute("data-pageid");
+            
+            let result = await registerPNAjax(pageId, newTitle);
+            if(result){
+                // 화면처리
+                titleEle.innerText = newTitle;
+                div.remove();
+                titleEle.style.display = "block";
+
+                const sidePage = document.getElementById("side").querySelector(`[data-id="${pageId}"]`);
+                sidePage.setAttribute("data-name", newTitle);
+                sidePage.querySelector(".pageName").innerText = newTitle;
+            }
+        }
+    })
 }
