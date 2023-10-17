@@ -26,8 +26,7 @@
   z-index: 51;
 }
 /*히스토리, 검색 모달창 안에 흰 div*/
-#UserModiMod > div,
-#joinOutMod > div {
+#UserModiMod > div{
   overflow: auto;
   margin-top: 200px;
   margin-left: 30vw;
@@ -36,6 +35,17 @@
   padding: 20px;
   width: 45vw;
   z-index: 51;
+}
+#joinOutMod > div {
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 40vw;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  z-index: 51;
+  text-align: center;
 }
 .historyList {
   margin-top: 10px;

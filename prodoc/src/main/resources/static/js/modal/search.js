@@ -12,13 +12,15 @@ document.querySelector("#searchWKDB").addEventListener('click', function(e){
 let wkdbType = "wk";
 let workMd = document.querySelector("#wkDiv");	//work 찾기
 let dbMd = document.querySelector("#dbDiv") 	//db 찾기
-document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
+document.querySelectorAll(".findBtn").forEach((tag, idx, list) => {	
 	tag.addEventListener('click', function(e){
 		searchCaseInit(WKDBkeyword);			//키워드 값 지우기
 		if(idx == 0){
 			wkdbType = "wk";					//wk 찾기
 			workMd.className = "view";
 			dbMd.className = "hide";
+			list[0].classList.add('wd-clicked');
+			list[1].classList.remove('wd-clicked');
 			document.querySelectorAll('input[name="dbOption"]')
 			.forEach(item => item.checked = false )
 			settingSearch();
@@ -27,6 +29,8 @@ document.querySelectorAll(".findBtn").forEach((tag,idx) => {
 			workMd.className = "hide";
 			dbMd.className = "view";
 			settingSearch();
+			list[0].classList.remove('wd-clicked');
+			list[1].classList.add('wd-clicked');
 		}
 	});
 });

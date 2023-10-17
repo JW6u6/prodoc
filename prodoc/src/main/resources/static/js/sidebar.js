@@ -214,60 +214,8 @@ function allList(email){
 
 
 function sideReloadEvent(){
-    //열린 워크 유지하기
-    let workClickSession = sessionStorage.getItem("workClickList");
-        if(workClickSession == null){  return;  }
-        
-        workClickSession = JSON.parse(workClickSession);    //스토리지 리스트
-        let workList = [];//워크 리스트
-        document.querySelectorAll('.Work').forEach(workDiv => workList.push(workDiv.dataset.id)); 
-        
-        // console.log('workList: ' + workList);
-        // console.log('workClickSession: ' + workClickSession);
-        // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
-        for(let i=0;i<workClickSession.length;i++){
-            let selector = `.Work[data-id="${workClickSession[i]}"]`;
-            let autoToggle = document.querySelector(selector);
-            if(autoToggle != null){
-                let workListShow = autoToggle.querySelector('.workListShow');
-                workListShow.classList.add("clicked");
-                workListShow.innerHTML = "▲";
-                let pageDiv = workListShow.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            }else{
-                console.log('삭제 워크:' + workClickSession[i]);
-                workClickSession = workClickSession.filter(data=> workList.includes(data));
-                sessionStorage.setItem("workClickList" ,JSON.stringify(workClickSession));
-            }
-        }
 
-    //열린 페이지 유지하기
-    let pageClickSession = sessionStorage.getItem("pageClickList")
-        if(pageClickSession == null){   return;  }
-        
-        pageClickSession = JSON.parse(pageClickSession);
-        let pageList = [];//워크 리스트
-        document.querySelectorAll('.Page').forEach(workDiv => pageList.push(workDiv.dataset.id)); 
-        // console.log('pageList: ' + pageList);
-        // console.log('pageClickSession: ' + pageClickSession);
-        // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
-        for(let i=0;i<pageClickSession.length;i++){
-
-            let selector = `.Page[data-id="${pageClickSession[i]}"]`;
-            let autoToggle = document.querySelector(selector)
-            if(autoToggle != null){
-                let pageListShow = autoToggle.querySelector('.pageListShow');
-                pageListShow.classList.add("clicked");
-                pageListShow.innerHTML = "▲";
-                let pageDiv = pageListShow.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            }else{
-                pageClickSession = pageClickSession.filter(data=> pageList.includes(data));
-                sessionStorage.setItem("pageClickList" ,JSON.stringify(pageClickSession));
-            }
-        }
-
-    //마지막으로 본 페이지가 있는지 체크
+	//마지막으로 본 페이지가 있는지 체크
     let lastPageSession = sessionStorage.getItem("lastPage") //마지막으로 본 페이지
     let myMainPage = document.querySelector("#homePg").value;
     
@@ -285,6 +233,58 @@ function sideReloadEvent(){
             selectPage(lastPageSession)
         }
     }
+    
+    //열린 워크 유지하기
+    let workClickSession = sessionStorage.getItem("workClickList");
+        if(workClickSession != null){
+	        workClickSession = JSON.parse(workClickSession);    //스토리지 리스트
+	        let workList = [];//워크 리스트
+	        document.querySelectorAll('.Work').forEach(workDiv => workList.push(workDiv.dataset.id)); 
+	        
+	        // console.log('workList: ' + workList);
+	        // console.log('workClickSession: ' + workClickSession);
+	        // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
+	        for(let i=0;i<workClickSession.length;i++){
+	            let selector = `.Work[data-id="${workClickSession[i]}"]`;
+	            let autoToggle = document.querySelector(selector);
+	            if(autoToggle != null){
+	                let workListShow = autoToggle.querySelector('.workListShow');
+	                workListShow.classList.add("clicked");
+	                workListShow.innerHTML = "▲";
+	                let pageDiv = workListShow.parentElement.querySelector('.pageMain');
+	                pageDiv.classList.toggle("hide");
+	            }else{
+	                console.log('삭제 워크:' + workClickSession[i]);
+	                workClickSession = workClickSession.filter(data=> workList.includes(data));
+	                sessionStorage.setItem("workClickList" ,JSON.stringify(workClickSession));
+	            }
+	        }
+		}
+    //열린 페이지 유지하기
+    let pageClickSession = sessionStorage.getItem("pageClickList")
+        if(pageClickSession != null){
+	        pageClickSession = JSON.parse(pageClickSession);
+	        let pageList = [];//워크 리스트
+	        document.querySelectorAll('.Page').forEach(workDiv => pageList.push(workDiv.dataset.id)); 
+	        // console.log('pageList: ' + pageList);
+	        // console.log('pageClickSession: ' + pageClickSession);
+	        // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
+	        for(let i=0;i<pageClickSession.length;i++){
+	
+	            let selector = `.Page[data-id="${pageClickSession[i]}"]`;
+	            let autoToggle = document.querySelector(selector)
+	            if(autoToggle != null){
+	                let pageListShow = autoToggle.querySelector('.pageListShow');
+	                pageListShow.classList.add("clicked");
+	                pageListShow.innerHTML = "▲";
+	                let pageDiv = pageListShow.parentElement.querySelector('.pageMain');
+	                pageDiv.classList.toggle("hide");
+	            }else{
+	                pageClickSession = pageClickSession.filter(data=> pageList.includes(data));
+	                sessionStorage.setItem("pageClickList" ,JSON.stringify(pageClickSession));
+	            }
+	        }
+		}
 }
 
 
