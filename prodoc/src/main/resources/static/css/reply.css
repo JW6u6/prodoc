@@ -27,8 +27,9 @@
 }
 
 .block_reply {
-  border: 1px solid black;
+  background-color: #dcccfc;
   margin-bottom: 10px;
+  border-radius: 10px;
 }
 
 .page_reply_btn_wrapper {

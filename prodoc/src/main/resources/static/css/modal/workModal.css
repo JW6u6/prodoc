@@ -1,0 +1,44 @@
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#btnArea {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#btnArea button:first-child {
+  margin-right: 40px;
+}
+
+.modal-content input:not([type="checkbox"]),
+.modal-content select {
+  font-size: 18px;
+  width: 414px;
+}
+.modal-content-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#inviteUser {
+  display: flex;
+  flex-direction: column;
+}
+
+#beforeJoin {
+  margin-top: 50px;
+  background-color: #f7f2ff;
+}
+
+#beforeJoin td {
+  background-color: #ede1ff;
+}
+
+#ownArea {
+  margin-top: 20px;
+}

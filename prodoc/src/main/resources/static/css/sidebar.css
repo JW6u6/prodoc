@@ -82,7 +82,6 @@
 .close {
 	color: #aaa;
 	float: right;
-	font-size: 28px;
 	font-weight: bold;
 
 }
@@ -198,8 +197,6 @@
 }
 
 #inviteUser {
-  display: flex;
-  justify-content: center;
   margin-top: 20px;
 }
 
@@ -209,7 +206,7 @@
 
 #invEmail {
   width: 414px;
-  margin-left: 104px;
+  margin-left: 97px;
   margin-bottom: 0px;
   margin-right: 5px;
 }

@@ -15,7 +15,7 @@
 /*히스토리, 검색 모달창 안에 흰 div*/
 #modHistory > div,
 #modSearchWKDB > div,
-#editPageMod > div{
+#editPageMod > div {
   overflow: auto;
   margin-top: 200px;
   margin-left: 20vw;
@@ -26,16 +26,26 @@
   z-index: 51;
 }
 /*히스토리, 검색 모달창 안에 흰 div*/
-#UserModiMod > div,
-#joinOutMod > div {
+#UserModiMod > div{
   overflow: auto;
   margin-top: 200px;
   margin-left: 30vw;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 45vw;
+  width: 50vw;
   z-index: 51;
+}
+#joinOutMod > div {
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 40vw;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  z-index: 51;
+  text-align: center;
 }
 .historyList {
   margin-top: 10px;
@@ -129,6 +139,9 @@
   border-radius: 50%;
   border: 1px solid #ccc;
   margin-bottom: 10px;
+  object-fit: cover;
+  background-size: cover;
+  aspect-ratio:1/1;
 }
 
 .userModForm_right {
