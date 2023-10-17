@@ -1,8 +1,7 @@
 //나중에 따로 다른데로 옮기던가 해도 괜찮을거같은데...(이걸 왜 여기서?하고있지?)
-
 document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
 document.querySelector('#delPage').addEventListener('click', pageDelCheck);
-document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
+// document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
 document.querySelector('#notiLockPg').addEventListener('click', alreadyLock);
 document.querySelector('#copyPage').addEventListener('click', copyPagstePage);
@@ -10,8 +9,15 @@ document.querySelector('#copyPage').addEventListener('click', copyPagstePage);
 document.querySelector('#lockPg').addEventListener('click', pageLock);
 
 document.querySelector('#menuImg').addEventListener('click', function (e) {
+    let clickClose = document.createElement('div');
+    document.body.appendChild(clickClose);
+    clickClose.addEventListener('click', function (e) {
+        headerMenu.classList.toggle('hide');
+        headerMenu.classList.toggle('view');
+        clickClose.remove();
+    })
     pageMenuSetting();
-    areUTurnOn();
+    // areUTurnOn();
     areULock();
 });
 
@@ -26,7 +32,7 @@ headerMenu.addEventListener('click', async function (e) {
 async function pageMenuSetting() {
 
     let memberAuth = await memberCheck(workBlockId);
-
+    console.log(memberAuth);
     if (memberAuth == 'OWNER' || memberAuth == 'MANAGER') {
 
         document.querySelector('#mainPage').classList.remove('hide');
@@ -168,17 +174,17 @@ async function pageDelCheck() {
     let infoResult = await selectOneWork(workBlockId);
     let home = document.querySelector('#homePg');
     let infos = await pageInfoFromMenu();
-    let dbCheck;
+    let dbCheck = false;
 
     for (let info of infos) {
         if (info.caseId.indexOf('DB') == -1) {
-            dbCheck = 'FALSE';
+            dbCheck = false;
         } else if (info.caseId.indexOf('DB') != -1) {
-            dbCheck = 'TRUE';
+            dbCheck = true;
         }
     }
-    
-    if (dbCheck) {
+
+    if (dbCheck == true) {
         alert('데이터베이스는 여기서 삭제할 수 없습니다.')
     } else if (home.value == pageBlockId) {
         alert('홈은  삭제할 수 없습니다.');
@@ -207,7 +213,7 @@ async function pageDelCheck() {
                 if (result == 'true') {
                     let email = document.querySelector("#side input.logUser").value;
                     alert('페이지가 삭제되었습니다.')
-                    // pageList(workBlockId);
+                    allList(email);
                 } else if (result == 'false') {
                     alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
                 }
@@ -249,73 +255,82 @@ async function ThisMainPage() {
 }
 
 
-//페이지 알림 끄기
-function toggleNotiPage() {
-    let url = '/pageNotify';
-    let email = document.querySelector("#side input.logUser").value;
+// //페이지 알림 끄기
+// function toggleNotiPage() {
+//     let url = '/pageNotify';
+//     let email = document.querySelector("#side input.logUser").value;
 
-    let val = {
-        "pageId": pageBlockId,
-        email
-    }
+//     let val = {
+//         "pageId": pageBlockId,
+//         email
+//     }
 
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result);
-            if (result == '0') {
-                alert('페이지 알림이 켜졌습니다.')
-                areUTurnOn();
-            } else if (result == '1') {
-                alert('페이지 알림이 꺼졌습니다.')
-                areUTurnOn();
-            }
-        })
-        .catch(err => console.log(err));
-}
+//     fetch(url, {
+//             method: 'post',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(val)
+//         })
+//         .then(response => response.text())
+//         .then(result => {
+//             console.log(result);
+//             if (result == '0') {
+//                 alert('페이지 알림이 켜졌습니다.')
+//                 areUTurnOn();
+//             } else if (result == '1') {
+//                 alert('페이지 알림이 꺼졌습니다.')
+//                 areUTurnOn();
+//             }
+//         })
+//         .catch(err => console.log(err));
+// }
 
-//페이지 알림 끄고켜는거...
-function areUTurnOn() {
-    let email = document.querySelector("#side input.logUser").value;
+// //페이지 알림 끄고켜는거...
+// function areUTurnOn() {
+//     let email = document.querySelector("#side input.logUser").value;
 
-    let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
+//     let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
 
-    fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.text())
-        .then(result => {
-            let notiToggle = document.querySelector('#notifyPage');
-            if (result == 0) {
-                notiToggle.textContent = '페이지 알림 끄기';
-            } else if (result == 1) {
-                notiToggle.textContent = '페이지 알림 켜기';
-            }
-        })
-        .catch(err => console.log(err));
-}
+//     fetch(url, {
+//             method: 'get',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         })
+//         .then(response => response.text())
+//         .then(result => {
+//             let notiToggle = document.querySelector('#notifyPage');
+//             if (result == 0) {
+//                 notiToggle.textContent = '페이지 알림 끄기';
+//             } else if (result == 1) {
+//                 notiToggle.textContent = '페이지 알림 켜기';
+//             }
+//         })
+//         .catch(err => console.log(err));
+// }
 
 async function areULock() {
     let infos = await pageInfoFromMenu();
     let LockToggle = document.querySelector('#lockPg');
     let LockNotiToggle = document.querySelector('#notiLockPg');
-
+    let displayedBlock = document.querySelectorAll(".prodoc_block");
+    
     for (let info of infos) {
         if (info.lockCheck == 'FALSE') {
             LockToggle.textContent = '페이지 잠금 설정';
             LockNotiToggle.textContent = '페이지 잠금 요청';
+            for (let block of displayedBlock) {
+                let targetblock = block.lastElementChild.firstElementChild;
+                targetblock.removeAttribute('disabled');
+            }
         } else if (info.lockCheck == 'TRUE') {
             LockToggle.textContent = '페이지 잠금 해제';
             LockNotiToggle.textContent = '페이지 잠금 해제 요청';
+            for (let block of displayedBlock) {
+                let targetblock = block.lastElementChild.firstElementChild;
+                targetblock.setAttribute('disabled', 'true');
+            }
         }
     }
 }
@@ -338,23 +353,27 @@ async function creLink() {
         let url = ''; // <a>태그에서 호출한 함수인 clip 생성
         let linkText = document.createElement("textarea");
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
+        document.body.appendChild(linkText);
+        url =
+            'http://prodox.me/shared/'
+            // 'http://localhost:8099/shared/'
+            + pageBlockId;
+        linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {
-            document.body.appendChild(linkText);
-            url = '도메인 주소/shared/' + pageBlockId;
-            linkText.value = url; // textarea 값에 url를 넣어줌
-
             navigator.clipboard
                 .writeText(linkText.value)
                 .then(() => {
-                    alert('링크가 복사되었습니다.')
+                    alert('링크가 복사되었습니다.');
+                    linkText.remove();
                 })
+
         } else {
             linkText.select(); //textarea를 설정
             document.execCommand("copy"); // 복사
-            document.body.removeChild(linkText); //extarea 요소를 없애줌
-
+            console.log(linkText);
             alert("링크가 복사되었습니다.") // 알림창
+            linkText.remove();
         }
     }
 }
@@ -362,28 +381,31 @@ async function creLink() {
 //페이지 복사
 function copyPagstePage() {
     let url = '/pageCopyPaste';
-    let email = document.querySelector("#side input.logUser").value;
+    let email = document.querySelector("#side input.logUser");
+    if (email.value == '') {
+        alert('세션이 만료되었습니다. 다시 로그인 해주십시오.')
+    } else {
+        let val = {
+            "pageId": pageBlockId,
+            "email": email.value
+        }
 
-    let val = {
-        "pageId": pageBlockId,
-        email
+        fetch(url, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                if (result == 'SUCCESS') {
+                    alert('페이지가 복사되었습니다.');
+                } else if (result == 'FAIL') {
+                    alert('복사할 수 없는 블록이 포함되어있습니다.');
+                }
+            })
+            .catch(err => console.log(err));
     }
-
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result);
-            if (result == 'SUCCESS') {
-                alert('페이지가 복사되었습니다.');
-            } else if (result == 'FAIL') {
-                alert('복사할 수 없는 블록이 포함되어있습니다.');
-            }
-        })
-        .catch(err => console.log(err));
 }

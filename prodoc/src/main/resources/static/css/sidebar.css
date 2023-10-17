@@ -43,20 +43,21 @@
   z-index: 100;
 }
 
-.side_logo{
+.side_logo {
   margin-left: 7px;
-	height: 70px;
-	display:flex;
-	align-items: center;
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 .side_logo span {
-	font-size:30px;
+  font-size: 30px;
 }
 
-.side_logo img{
-	height:70px;
+.side_logo img {
+  height: 70px;
 }
+
 #temPage,
 #dbPage,
 #subTemPage,
@@ -70,6 +71,7 @@
   overflow: auto;
   display: none;
 }
+
 #pageContent,
 #subPageContent {
   z-index: 1;
@@ -83,8 +85,8 @@
   border: solid 2px pink;
   border-radius: 10px;
 }
-.tem,
-.db {
+
+.tem {
   background-color: yellow;
   width: 100px;
   margin: 40px;
@@ -96,9 +98,9 @@
 .close {
   color: #aaa;
   float: right;
-  font-size: 28px;
   font-weight: bold;
 }
+
 .close:hover,
 .close:focus {
   color: black;
@@ -116,9 +118,11 @@
   height: max-content;
   margin-top:1px;
 }
+
 .workName {
   font-weight: bold;
 }
+
 .Page {
   margin-left: 20px;
   height: max-content;
@@ -127,10 +131,31 @@
 	font-size:13px;
 	color: rgb(90,90,90)
 }
+
+#nameArea {
+  display: flex;
+  justify-content: center;
+}
+#wsName {
+  margin-bottom: 0;
+}
+
+#delCheckArea {
+  display: flex;
+  justify-content: center;
+}
+
+#delCheck {
+  width: 414px;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
 /* 드롭다운(셀렉트박스) */
 .selectBox * {
   box-sizing: border-box;
 }
+
 .selectBox {
   position: relative;
   padding: 0px;
@@ -141,6 +166,7 @@
   background-size: 20px;
   cursor: pointer;
 }
+
 .selectBox {
   position: relative;
   margin: 0 auto;
@@ -150,6 +176,7 @@
   border-radius: 10px;
   border: 3px solid blue;
 }
+
 .selectBox .select {
   width: inherit;
   height: inherit;
@@ -161,12 +188,14 @@
   z-index: 3;
   text-align: center;
 }
+
 .selectBox .select option {
   background: lightcoral;
   color: #fff;
   padding: 0;
   font-size: 16px;
 }
+
 .selectBox .icoArrow {
   position: absolute;
   top: 0;
@@ -183,20 +212,48 @@
   width: 20%;
   transition: 0.3s;
 }
+
 .turn {
   transform: rotate(180deg);
+}
+
+#inviteUser {
+  margin-top: 20px;
+}
+
+#inviteBtn {
+  height: 40px;
+}
+
+#invEmail {
+  width: 414px;
+  margin-left: 97px;
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+.invWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#autoContain {
+  top: 63px;
+  left: 110px;
 }
 
 /* IE */
 select::-ms-expand {
   display: none;
 }
+
 .select {
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
+
 .Type {
   margin: 10px;
   box-shadow: inset 1px 1px 0px 1px #ffffff;
@@ -217,17 +274,21 @@ select::-ms-expand {
   text-shadow: 1px 2px 0px #ffffff;
   margin-top: 80px;
 }
+
 .Type:hover {
   background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
   background-color: #dfdfdf;
 }
+
 .Type:active {
   position: relative;
   top: 1px;
 }
+
 .btnDiv {
   float: left;
 }
+
 .pageDiv {
   width: 300px;
   height: 40px;
@@ -235,7 +296,6 @@ select::-ms-expand {
   border: solid 2px pink;
   border-radius: 10px;
 }
-
 
 #temPage,
 #dbPage,
@@ -252,21 +312,22 @@ select::-ms-expand {
   border: solid 2px pink;
   border-radius: 10px;
 }
+
 .workIdVal,
 .pageIdVal {
   display: none;
 }
+
 #subWorkMenu {
   display: none;
   position: absolute;
   background-color: #ccc;
   z-index: 999;
 }
+
 .highlight {
   border: 2px dashed red;
 }
-
-
 
 /* 사이드 */
 #side {
@@ -304,3 +365,88 @@ select::-ms-expand {
   color: #fff;
 }
 
+#autoContain {
+  width: 175px;
+  background-color: #edf3fa;
+  position: absolute;
+  z-index: 700;
+  left: 847px;
+}
+
+#autoContain > div {
+  border-bottom: #f2f2f2 solid 0.7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#autoContain > div:hover {
+  background-color: #e4dfff;
+}
+
+#invEmail {
+  position: relative;
+}
+.setting {
+  display: none;
+  cursor: pointer;
+}
+.Work:hover .setting {
+  display: inline-block;
+  transition: 1s ease-out;
+  opacity: 0.3;
+}
+
+#dbPage {
+  flex-direction: column;
+}
+
+.pageModal_page_list,
+.pageModal_db_list {
+  display: flex;
+}
+
+.db {
+  display: grid;
+  height: 150px;
+  width: 150px;
+  grid-template-rows: 130px 20px;
+  margin-left: 15px;
+}
+
+.db div:first-child {
+  background-color: rgb(43, 43, 255);
+}
+
+.db div:last-child {
+  background-color: #eee;
+}
+
+#dbPage {
+  width: 700px;
+  padding: 20px;
+  margin-top: 0px;
+}
+
+#dbPage h3 {
+  background-color: #ddd;
+}
+
+.db img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+}
+
+.pageModal_page {
+  margin-bottom: 10px;
+}
+
+.insert_page_btn_wrapper {
+  display: flex;
+  margin-top: 10px;
+}
+
+.insert_page_btn_wrapper button:first-child {
+  margin-right: 10px;
+}

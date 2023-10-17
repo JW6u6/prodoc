@@ -1,13 +1,15 @@
 #alarmModal {
-  margin: 0 350px;
+  position: fixed;
+  z-index: 150;
+  top: 82px;
+  left: -80px;
+  margin: 0 400px;
   border: 1px solid black;
-  width: 300px;
+  width: 400px;
   height: 500px;
-  overflow: auto;
-}
-#alarmMenu {
-  position : fixed;
-  margin-left : 15px;
+  overflow: scroll;
+  overflow-x: hidden;
+  background-color:#ffffff;
 }
 #alarmMenu ul {
   width: 100%;
@@ -26,6 +28,7 @@
 }
 #alarmFunc {
   font-size: 10px;
+  margin-bottom: 10px;
 }
 #alarmFunc p {
   margin-left: 30px;
@@ -33,6 +36,36 @@
   border: 1px solid black;
   display: inline;
 }
-.whoTagMe, .inviteText {
-	font-size : 13px;
+
+.alarm_header{
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-bottom: 5px;
 }
+
+.alarm_header div{
+  display: flex;
+  align-items: center;
+}
+.alarm_header input[type="button"]{
+  width: 50px;
+}
+.alarm_header input[type="button"]:first-child{
+  margin-right: 10px;
+}
+
+.alarms{
+  background-color: #ccc;
+  height: 100px;
+  padding: 5px 0;
+  margin-bottom: 5px;
+  padding-left:10px ;
+}
+
+#alarmFunc{
+  display: flex;
+  justify-content: space-around ;
+  align-items: center;
+}
+

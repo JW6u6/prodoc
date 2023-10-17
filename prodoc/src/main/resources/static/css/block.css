@@ -93,11 +93,6 @@ h4 {
   z-index: 101;
 }
 
-.modal_item {
-  z-index: 2;
-  background-color: aqua;
-}
-
 .block_dropdown_menu {
   z-index: 102;
 }
@@ -106,7 +101,6 @@ h4 {
   margin: 0;
   padding: 0;
   list-style: none;
-  background-color: wheat;
 }
 
 a {
@@ -175,7 +169,7 @@ a {
   position: absolute;
   width: 300px;
   max-height: 150px;
-  z-index:102;
+  z-index: 102;
 }
 
 .modal_reply_controller {
@@ -185,23 +179,46 @@ a {
 
 .reply_block--header {
   display: grid;
-  grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
+  grid-template-columns: 0.5fr 1fr 1fr 0.3fr;
+  place-items: center;
 }
 
-.page_reply {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  background-color: aquamarine;
-  width: 250px;
-  right: 0;
-  overflow-y: auto;
-  padding-top:70px;
+.modal_item {
+  z-index: 102;
+  background-color: #f5f0ff;
 }
 
-.page_reply_button{
-	position: fixed;
-	z-index:97;
-	bottom:50px;
-	right:50px;
+.block_dropdown_menu {
+  background-color: #f2f2f2;
+  border: 1px solid #aaa;
+}
+.block_dropdown_menu_list li {
+  padding: 10px 0;
+  padding-left: 5px;
+}
+.dropdown_user_info {
+  font-size: 15px;
+  color: #aaa;
+}
+
+.block_toggle_btn {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+.block_toggle_btn:hover {
+  background-color: #ccc;
+}
+
+.block_toggle_btn:active {
+  background-color: #aaa;
+}
+
+.block_toggle_btn {
+  height: 25px;
+  display: block;
+}
+
+.open {
+  transform: rotate(0.5turn);
 }

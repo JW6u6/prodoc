@@ -20,7 +20,10 @@
    <link th:href="@{css/dbpage.css}" rel="stylesheet" />
    <link th:href="@{css/toggleClass.css}" rel="stylesheet" />
    <link th:href="@{css/modal/modal.css}" rel="stylesheet" />
+   <link th:href="@{css/modal/userInfo.css}" rel="stylesheet" />
    <link th:href="@{css/alarm.css}" rel="stylesheet" />
+   <link th:href="@{css/reply.css}" rel="stylesheet" />
+   <link th:href="@{css/modal/workModal.css}" rel="stylesheet" />
    <link th:href="@{css/variable/var.css}" rel="stylesheet" />
    
    <title>PRODOC</title>
@@ -32,8 +35,7 @@
       th:include="@{fragments/sidebar}"></th:block>
    <th:block th:if="${session.logUser!= null}" layout:fragment="header"
       th:include="@{fragments/header}"></th:block>
-   <input type="text" id="homePg" th:if="${session.logUser!= null}"
-      style="visablity:hidden;" th:value="${session.logUser.defaultPage}">
+   <input type="text" id="homePg" th:if="${session.logUser!= null}" style="visibility: hidden;" th:value="${session.logUser.defaultPage}">
    
    <th:block th:if="${session.logUser== null}">
       <div id="nonMember" th:insert="content/nonUser :: nonMemberFrag"></div>
@@ -43,10 +45,11 @@
       <div layout:fragment="content" class="app">
          <div class="container"></div>
       </div>
-      <button class="page_reply_button">댓글</button>
+      <button class="page_reply_button modal_btn">댓글</button>
       <input type="file" class="block_file-Uploader" style="display: none" />
       <script>
          const blockSessionUserId = "[[${session.logUser.email}]]";
+         const blockSessionUserProfile = "[[${session.logUser.profile}]]";
       </script>
       <script th:inline="javascript" src="js/common.js"></script>
    
@@ -62,7 +65,7 @@
       <script th:inline="javascript" src="js/db/dbInfo.js"></script>
 
       <div id="FileSearchModal"
-         th:insert="modal/fileModal.html :: FileSearchModal"></div>
+         th:insert="modal/fileModal.html :: FileSearchModal" class="hide"></div>
       <!-- 파일 검색 모달 -->
       
       <!-- 블럭관련 스크립트 -->

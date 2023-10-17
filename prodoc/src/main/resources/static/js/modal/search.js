@@ -12,13 +12,15 @@ document.querySelector("#searchWKDB").addEventListener('click', function(e){
 let wkdbType = "wk";
 let workMd = document.querySelector("#wkDiv");	//work 찾기
 let dbMd = document.querySelector("#dbDiv") 	//db 찾기
-document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
+document.querySelectorAll(".findBtn").forEach((tag, idx, list) => {	
 	tag.addEventListener('click', function(e){
 		searchCaseInit(WKDBkeyword);			//키워드 값 지우기
 		if(idx == 0){
 			wkdbType = "wk";					//wk 찾기
 			workMd.className = "view";
 			dbMd.className = "hide";
+			list[0].classList.add('wd-clicked');
+			list[1].classList.remove('wd-clicked');
 			document.querySelectorAll('input[name="dbOption"]')
 			.forEach(item => item.checked = false )
 			settingSearch();
@@ -27,6 +29,8 @@ document.querySelectorAll(".findBtn").forEach((tag,idx) => {
 			workMd.className = "hide";
 			dbMd.className = "view";
 			settingSearch();
+			list[0].classList.remove('wd-clicked');
+			list[1].classList.add('wd-clicked');
 		}
 	});
 });
@@ -98,7 +102,6 @@ function settingSearch(){
 
 
 //검색프로세스
-//검색프로세스
 function searchThis(dataList){
 	fetch("/SearchWKDB", {
 		method: 'post',
@@ -143,86 +146,14 @@ function searchThis(dataList){
 			}
 			ResultDiv.innerHTML += dataDiv;
 		}
+		document.querySelectorAll(".resultItem").forEach(resultDIV=>{
+			resultDIV.addEventListener('click', getPageBlock);
+		});
 	}).catch(err=>console.log(err));
 }
 
 
 function getPageBlock(e){
-console.log(e.currentTarget);
-	let blockId = e.currentTarget.dataset.blockid;
-	
-	selectPage(e.currentTarget.dataset.pageid);
-	if(e.currentTarget.dataset.blockid != null){
-		setTimeout(() => cusorMove(blockId), 500);
-	}
-	WKDBMod.className = "hide"
-}
-
-
-//검색 결과 테이블 세팅
-function settingSearchResult(headers, data){
-	let pageId = "";
-	//헤더 재설정--------------------------------------------------------------
-	let WKDBHeader = document.querySelector('.SearchResult thead');
-	WKDBHeader.innerHTML = "";
-	let headerTr = document.createElement('tr');
-	for(let head of headers){
-		for(let pair in head){
-			if(pair != "pageId"){
-				let td = document.createElement('td');
-				td.innerText = head[pair];
-				headerTr.appendChild(td);
-			}
-		}
-	}
-	WKDBHeader.appendChild(headerTr);
-	
-	//바디 재설정--------------------------------------------------------------
-	let WKDBbody = document.querySelector('.SearchResult tbody');
-	WKDBbody.innerHTML = "";
-	if(data.length == 0){ return;}	//검색 결과가 없으면 종료
-	
-	for(let list of data){								//결과 리스트 한 행 중
-		//console.log(list);
-		let tr = document.createElement('tr');
-		for(let head of headers){ 	
-			for(let pair in head){					//헤더와 아이디가 같은 데이터만
-				if(pair == "pageId"){
-				 	tr.setAttribute('data-pageid', list.pageId);
-					tr.setAttribute('data-blockid', list.displayId);
-				}else if(pair == "blockCreUser"){
-					let td = document.createElement('td');	//컬럼 만들기				
-					td.innerText = list.nickName +"("+ list[pair] + ")";
-					tr.appendChild(td);
-				}else if(pair == "displayDate"){
-					let td = document.createElement('td');	//컬럼 만들기
-					if(list.displayUpDate == null){
-						let date = new Date(list.displayCreDate);
-						let year = date.getFullYear().toString();
-						let month = (date.getMonth()+1) >= 10?
-									(date.getMonth()+1) : "0"+ (date.getMonth()+1);
-						let day = date.getDate() >= 10?
-									date.getDate() : "0" + date.getDate();
-						
-						td.innerText = `${year}-${month}-${day}`;
-					}else{
-						let date = new Date(list.displayUpDate);
-						td.innerText = date.toISOString().substr(0, 10);
-					}
-					tr.appendChild(td);
-				}else if(list[pair] != null){
-					let td = document.createElement('td');	//컬럼 만들기
-					td.innerText = list[pair];
-					tr.appendChild(td);
-				}
-			}
-		}
-		tr.addEventListener('click', getPageBlock);
-		WKDBbody.appendChild(tr);
-	}
-}
-
-function getPageBlock(e){	//TODO: 클릭 시 로우 이동 후 모달 닫기
 console.log(e.currentTarget);
 	let blockId = e.currentTarget.dataset.blockid;
 	

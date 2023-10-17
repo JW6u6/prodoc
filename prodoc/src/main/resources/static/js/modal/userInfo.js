@@ -1,48 +1,42 @@
+let UserInfoMod = document.querySelector("#UserInfoMod");    //회원정보 모달
+let UserModiMod = document.querySelector("#UserModiMod");   //정보수정 모달
+let joinOutMod = document.querySelector("#joinOutMod");      //탈퇴 모달
+let joinout = document.querySelector("#joinout");         //탈퇴 비번 입력창
+
 //정보수정 버튼 클릭
 let modInfoBtn = document.querySelector("#modInfoBtn")
 .addEventListener('click', function(e){
-	//console.log(e.target.parentElement);
-	e.target.parentElement.classList.toggle('hide');
-	e.target.parentElement.classList.toggle('view');
-	let UserModiMod = document.querySelector("#UserModiMod");
-	UserModiMod.classList.toggle('view');
-	UserModiMod.classList.toggle('hide');
+   UserInfoMod.className = 'hide';
+   UserModiMod.className = 'view';
 });
 
 //탈퇴 버튼 클릭 ->탈퇴창 보여줌
 let joinOutBtn = document.querySelector("#joinOutBtn")
 .addEventListener('click', function(e){
-	//console.log(e.target.closest('form').parentElement);
-	e.target.closest('form').parentElement.classList.toggle('hide');
-	e.target.closest('form').parentElement.classList.toggle('view');
-	let joinOutMod = document.querySelector("#joinOutMod");
-	joinOutMod.classList.toggle('view');
-	joinOutMod.classList.toggle('hide');
+   UserModiMod.className = 'hide';
+   joinOutMod.className = 'view';
 });
 //탈퇴 진행
 let jOutBtn = document.querySelector("#jOutBtn")
 .addEventListener('click', function(e){
-	if(joinout.value != ''){
-		console.log(e.target.parentElement);
-		e.target.parentElement.classList.toggle('hide');
-		e.target.parentElement.classList.toggle('view');
-		let joinout = document.querySelector("#joinout");
-		
-		fetch("/joinout", {
-			method: "post",
-			body: JSON.stringify({"password" : joinout.value}),
-			headers: {'content-Type' : 'application/json'}
-		}).then(response => response.json())
-		.then( result => {
-			if(result.result == true)
-				document.location.href = "/";	//탈퇴 성공 -> 로그인으로 이동
-			else
-				alert(result.msg);	//실패 메시지
-			
-		}).catch(err => console.log(err));
-	}
+  console.log(e.target.parentElement);
+  e.target.closest("#joinOutMod").className = 'hide';
+   if(joinout.value != ''){
+      
+      fetch("/joinout", {
+         method: "post",
+         body: JSON.stringify({"password" : joinout.value}),
+         headers: {'content-Type' : 'application/json'}
+      }).then(response => response.json())
+      .then( result => {
+         if(result.result == true)
+            document.location.href = "/";   //탈퇴 성공 -> 로그인으로 이동
+         else
+            alert(result.msg);   //실패 메시지
+         
+      }).catch(err => console.log(err));
+   }
 });
-
 //프로필 이미지 변경 처리
 let img = document.querySelector("#profile");
 let profile = document.querySelector('input[name="file"]');

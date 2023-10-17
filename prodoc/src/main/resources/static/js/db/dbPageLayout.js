@@ -1,6 +1,12 @@
 async function listLayoutEditor(dataList, displayId, layout){
     console.log(dataList);
-    let dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
+    const dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
+    const nowLayouts = document.querySelector(`[data-block-id="${displayId}"]`).querySelectorAll(`[data-dblayout]`);
+    nowLayouts.forEach(ele=>{
+        if(ele.getAttribute("data-dblayout") == layout) ele.classList.add("lay-pick");
+        else ele.classList.remove("lay-pick");
+    })
+
     dbbody.innerHTML = "";
     let pageList = [];  // 삭제되지 않은 페이지 목록
     dataList.forEach(item => {
@@ -23,10 +29,11 @@ async function listLayoutEditor(dataList, displayId, layout){
             dbbody.insertAdjacentHTML("beforeend", addDbpage()); 
             break;
 
-       case 'DB_BRD' : 
-        let states = ["WAIT", "RUN", "END", "CANCLE"];
+        case 'DB_BRD' : 
+        let states = ["WAIT", "RUN", "END", "CANCEL"];
 
         let statesTag = document.createElement("div");
+        statesTag.classList.add("stasts");
         states.forEach(state => {
             let stateType = document.createElement("div");
             stateType.textContent = state;
@@ -36,7 +43,7 @@ async function listLayoutEditor(dataList, displayId, layout){
         dbbody.append(statesTag);
 
         let caseDiv = document.createElement("div");
-        caseDiv.classList.add("display-flex", "state-container");
+        caseDiv.classList.add("state-container");
         states.forEach(state => {
             let stateTag = document.createElement("div");
             stateTag.setAttribute("data-state", state);
@@ -56,11 +63,11 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
 
         case 'DB_GAL' : 
-            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             pageList.forEach(block => {
                 let blockTag = dbGalBlock(block);
-                dbbody.insertAdjacentHTML("afterbegin", blockTag);
+                dbbody.insertAdjacentHTML("beforeend", blockTag);
             });
+            dbbody.insertAdjacentHTML("beforeend", addDbpage());
             break;
 
         case 'DB_TBL' :
@@ -117,8 +124,6 @@ async function listLayoutEditor(dataList, displayId, layout){
     databaseAllEvent();
 }
 
-const nowDateList = [];     // 캘린더 형성시 현재 날짜에 대한 정보를 저장하기 위한 배열
-
 function updateCase(pageId, layout){
     let data = {"pageId" : pageId, "caseId" : layout};
     data['creUser'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
@@ -153,9 +158,11 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="
+                `+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="
+                `+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags data_page">📄</div>
-            <div class="inlineTags data_page">`+block['page']['pageName']+`</div>
+            <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div class="attr-list inlineTags">`+useAttr+`</div>
         </div>
@@ -166,9 +173,10 @@ function dblistBlock(block){
 function dbBrdBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const brdType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" 
+                class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags data_page">📄</div>
-            <div class="inlineTags data_page">`+block['page']['pageName']+`</div>
+            <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
         </div>
@@ -186,11 +194,14 @@ function dbGalBlock(block){
     })
 
     const galType = `
-    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+    <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" 
+                class="dbtype-gal db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
         <div class="inlineTags del-db-page">&#10005;</div>
-        <div class="gal-thumbnail" class="data_page"><img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}" width="100%" height="100%"></div>
+        <div class="gal-thumbnail" class="data_page">
+            <img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}">
+        </div>
         <div>
-            <div class="data_page">`+block['page']['pageName']+`</div>
+            <div class="data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
         </div>
     </div>
@@ -207,7 +218,7 @@ function dbTblBlock(block){
     tr.setAttribute("data-page-order", block.page.numbering);
     tr.classList.add("dbtype-tbl", "table-tr", "db_block", "data_page");
     let td = document.createElement("div");
-    td.classList.add("data_page");
+    td.classList.add("data_page", "data_pageNM");
     td.textContent = block.page.pageName;
     tr.append(td);
     return tr;
@@ -275,7 +286,8 @@ function dbTblAttrBlock(attrs, uniqueList){
                 let img = document.createElement("img");
                 img.width = 50;
                 img.classList.add("attr", "inlineTags", "db-img");
-                img.src = '/dbFiles/'+content;
+                img.src = content == null || content == "" ?
+                                    'images/dbimg/noimg.jpg' : '/dbFiles/'+content;
                 let input = document.createElement("input");
                 input.type = "file";
                 input.style.display = "none";

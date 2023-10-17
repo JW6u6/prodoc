@@ -25,7 +25,7 @@ public class dbattrFileService {
 		String uploadName = "";
 		if(mfile != null && mfile.getSize() > 0) { //이미지 등록을 했음
 			File file = new File(uploadPath);
-			if(file.exists()) {						//지정된 파일 경로의 디렉토리가 없으면 생성함
+			if(!file.exists()) {						//지정된 파일 경로의 디렉토리가 없으면 생성함
 				if (file.mkdirs() == true) { 		//중첩된 폴더를 모두 생성해주는 메소드 mkdirs
 			    	System.out.println("디렉토리가 생성되었습니다."); 
 			    }

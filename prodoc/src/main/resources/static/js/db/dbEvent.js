@@ -1,7 +1,6 @@
 // 그룹이벤트
 document.querySelector(".container").addEventListener("click", e =>{    // 클릭 이벤트
-    if (e.target.matches(".database-search")) databaseSearch(e);
-    else if (e.target.matches(".add-dbpage")) insertDBpage(e);
+    if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
     else if (e.target.matches(".page-attr-option")) pageAttrOption(e);
     else if (e.target.matches(".attr-view-selector")) attrViewChange(e);
@@ -11,7 +10,6 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
     else if (e.target.matches(".del-attr")) deleteAttr(e);
     else if (e.target.matches(".del-db-page")) deleteDBpage(e);
     else if (e.target.matches(".data_page")) getDatapageId(e);  // 데이터베이스에서 하위 페이지 클릭
-    else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
 
     // 속성 이벤트
     else if (e.target.matches(".attr-case")) updateContent(e);
@@ -22,9 +20,6 @@ document.querySelector(".container").addEventListener("click", e =>{    // 클�
 
     // 모달
     else if (e.target.matches(".close-attr-modal")) closeAttrModal(e);
-
-    // 페이지 모달 이벤트
-
 })
 
 // db블럭 클릭 제외 모든 이벤트
@@ -43,6 +38,11 @@ function databaseAllEvent(){
         block.addEventListener("change", e => {
             if (e.target.matches(".db-img-upload")) addAttrImage(e);
             else if (e.target.matches(".db-file-upload")) addAttrFile(e);
+        })
+
+        // 더블클릭
+        block.addEventListener("dblclick", e => {
+            if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
         })
     });
 
@@ -84,7 +84,7 @@ function createDBblock(block){
     console.log(block);
     const dbBlockTemp = `
     <div class="db-block database_case" data-block-id="` + block.displayId + `">
-        <div class="db_modal--attr hide" data-attr-option="`+block.displayId+`" class='hide'></div>
+        <div class="hide" data-attr-option="`+block.displayId+`"></div>
         <div class="db-block-header">
             <div class="db-page-name"></div>
             <div class="db-layout-list">
@@ -96,7 +96,7 @@ function createDBblock(block){
                 </ul>
             </div>
                 <div class="db-attr-option">
-                    <button class="page-attr-option">속성</button>
+                    <button class="page-attr-option btn-db-attr">속성</button>
                 </div>
         </div>
         <div class="db-block-body"></div>
@@ -139,21 +139,6 @@ async function getChildList(disId){
         listLayoutEditor(caseInfo, disId, layout);
 	})
 	.catch(err => console.log(err));
-}
-
-// 검색 이벤트
-function databaseSearch(e){
-    let pageId = e.target.closest('[data-page-id]').getAttribute("data-page-id");   // db case page의 아이디
-/*
-    fetch("",{
-
-    })
-    .then(response => response.json())
-    .then(result =>{
-        console.log(result);
-    })
-    .catch(err => console.log(err));
-*/
 }
 
 // DB 하위 페이지 생성
@@ -245,36 +230,31 @@ function deleteDBpage(e){
     .catch(err => console.log(err));
 }
 
-function editDBPageName(e){
+async function editDBPageName(e){
     const titleDiv = e.target;
     const pageId = e.target.closest("[data-page-id]").getAttribute("data-page-id");
     let inputText;
     
-    if(e.type=="click"){
+    if(e.type=="dblclick"){
         titleDiv.setAttribute("contenteditable", true);
         titleDiv.focus();
     }
     if(e.type=="keydown"){
-        if(e.keyCode === 13){
+        if( e.keyCode === 13){
             titleDiv.removeAttribute("contenteditable");
             inputText = titleDiv.textContent;
             console.log(inputText);
 
-            // 변경 내용 화면에 반영
-            titleDiv.textContent = inputText;
-            const side = document.querySelector("#side");
-            const pageDiv = side.querySelector(`[data-id="${pageId}"]`);
-            pageDiv.querySelector(".pageName").textContent = `  ${inputText}`;
-            // pageDiv.setAttribute("data-name", inputText);    // ✅ 머지 후에 데이터셋 추가
+            let result = await registerPNAjax(pageId, inputText);
+            if(result){
+                // 변경 내용 화면에 반영
+                titleDiv.textContent = inputText;
+                const side = document.querySelector("#side");
+                const pageDiv = side.querySelector(`[data-id="${pageId}"]`);
+                pageDiv.querySelector(".pageName").textContent = `  ${inputText}`;
+                pageDiv.setAttribute("data-name", inputText);
 
-            // DB에 업데이트
-            fetch(`/pageNewName?pageId=${pageId}&pageName=${inputText}`, {
-                method : 'get',
-                headers : {'Content-Type' : 'application/json'}
-            })
-            .then(response => response.text())
-            .then(result => {
-                // console.log(result);
+                // 히스토리 업데이트
                 let displayId = e.target.closest(".database_case").getAttribute("data-block-id");
                 let data = {
                     'workId' : document.getElementById("TitleWid").value,
@@ -282,13 +262,24 @@ function editDBPageName(e){
                     'upUser' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
                     'displayId' : displayId
                 }
-                console.log(data);
                 dbhistoryUpdate(data);
-            })
+            }
         }
     }
 }
 
+async function registerPNAjax(pageId, pageName){
+    let text;
+    await fetch(`/pageNewName?pageId=${pageId}&pageName=${pageName}`, {
+        method : 'get',
+        headers : {'Content-Type' : 'application/json'}
+    })
+    .then(response => response.json())
+    .then(result => {
+        text = result.result;
+    });
+    return text;
+}
 
 // 페이지 히스토리 업데이트
 function dbhistoryUpdate(data){

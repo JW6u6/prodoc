@@ -242,9 +242,11 @@ const toggleBtnEvent = async (newBlock) => {
   if (checked === "true") {
     childItem.classList.add("hide");
     toggleBtn.classList.remove("open");
+    toggleBtn.innerText = "▶";
   } else if (checked === "false") {
     toggleBtn.classList.add("open");
     childItem.classList.remove("hide");
+    toggleBtn.innerText = "▼";
   }
   toggleBtn.addEventListener("click", handleSideBtn);
 };
@@ -261,7 +263,10 @@ const blockAttrEvent = (newBlock) => {
 function handleSideBtn(event) {
   const displayId = this.closest(".prodoc_block").dataset.blockId;
   const child = this.closest(".prodoc_block").querySelector(".child_item");
+  const sideBtn = event.target;
+  console.log(sideBtn);
   child.classList.toggle("hide");
+  sideBtn.classList.toggle("open");
   let checked = child.classList.contains("hide") ? true : false;
   console.log(checked);
   updateDBBlock({ displayId, checked });
