@@ -1,14 +1,20 @@
 #alarmModal {
-  margin: 0 400px;
+  margin: 0 350px;
   border: 1px solid black;
   width: 300px;
   height: 500px;
+  overflow: auto;
+}
+#alarmMenu {
+  position : fixed;
+  margin-left : 15px;
 }
 #alarmMenu ul {
   width: 100%;
   display: flex;
   list-style: none;
   padding: 0;
+  display: flex;
 }
 #alarmMenu li {
   text-align: center;
@@ -26,4 +32,7 @@
   margin-right: 30px;
   border: 1px solid black;
   display: inline;
+}
+.whoTagMe, .inviteText {
+	font-size : 13px;
 }

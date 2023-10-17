@@ -7,16 +7,16 @@ let wt = document.querySelector("#wsType");
 let ta = document.querySelector("#typeArrow");
 let workModal = document.querySelector("#workModal");
 let pageModal = document.querySelector("#pageModal");
+let email = document.querySelector("#side input.logUser").value;
 
 init();
 //전체 JS 기능 실행함수
 function init() {
-    let email = document.querySelector("#side input.logUser").value;
-    allList(email);
+    allList();
     document.querySelector("#insert-page").addEventListener("click", newPage);
 }
 
-function allList(email){
+function allList(){
     document.querySelector('#side #myWorkList').innerText = "";
     document.querySelector('#side #teamWorkList').innerText = "";
     let url = "/allList?email="+email
@@ -1347,7 +1347,7 @@ function newWorkSpace() {
                     inviteWork(result); //워크스페이스 초대하는 메소드
                 }
                 closeSideModal();
-                allList(email);
+                allList();
             }
         })
         .catch(err => console.log(err));

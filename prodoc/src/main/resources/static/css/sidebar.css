@@ -22,9 +22,6 @@
 	font-weight: bolder;
 	font-size : 13px;
 }
-.workName:hover {
-	
-}
 /* 워크 생성 모달창 콘텐츠 박스크기 */
 .box {
   border: 3px solid pink;
@@ -117,6 +114,7 @@
 .Work {
   margin-left: 20px;
   height: max-content;
+  margin-top:1px;
 }
 .workName {
   font-weight: bold;
@@ -124,6 +122,10 @@
 .Page {
   margin-left: 20px;
   height: max-content;
+}
+.workListShow, .pageListShow {
+	font-size:13px;
+	color: rgb(90,90,90)
 }
 /* 드롭다운(셀렉트박스) */
 .selectBox * {
