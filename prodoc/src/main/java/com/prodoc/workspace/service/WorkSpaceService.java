@@ -5,6 +5,7 @@ import java.util.List;
 public interface WorkSpaceService {
 
 	public List<allListVO> allList(String email);
+	public List<allListVO> partList(String workId);
 	
 	// 워크스페이스 단건 조회
 	public WorkSpaceVO infoWorkspace(String workId);

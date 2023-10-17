@@ -13,10 +13,29 @@ stompClient.onConnect = (frame) => {
     let socketVO = JSON.parse(data.body);
     console.log(data);
     console.log(socketVO);
+    console.log(typeof socketVO.cmd)
     if (socketVO.cmd == 1) {
       console.log("생성완료");
-    }
-  });
+      if (document.querySelector("#alarmModal").className == "hide") {
+        //알림 모달이 닫혀있을 때 사이드(알림) 노란줄
+        document.querySelector("#alarm").style.backgroundColor = "yellow";
+      } else {
+        //알림이 열려 있을 때 목록 다시 불러오기
+        showAlarmList("all");
+      }
+    }else if(socketVO.cmd == 3){
+      console.log("업데이트");
+      allList();
+      if (document.querySelector("#alarmModal").className == "hide") {
+        //알림 모달이 닫혀있을 때 사이드(알림) 노란줄
+        document.querySelector("#alarm").style.backgroundColor = "yellow";
+      } else {
+        //알림이 열려 있을 때 목록 다시 불러오기
+        showAlarmList("all");
+      }
+  }
+})
+  ;
 
   //초대
   stompClient.subscribe("/user/topic/inviteWork", (data) => {

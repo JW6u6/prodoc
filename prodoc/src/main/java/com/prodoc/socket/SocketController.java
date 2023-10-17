@@ -24,7 +24,7 @@ public class SocketController {
   @MessageMapping("/updateCmd") // 메세지 경로 매핑
   @SendTo("/topic/updatePage")  // 
   public SocketVO greeting(SocketVO socketVO) throws Exception {
-	  Thread.sleep(1000); // simulated delay
+	  Thread.sleep(2000); // simulated delay
 	  return socketVO;
   }
   //워크스페이스 invite

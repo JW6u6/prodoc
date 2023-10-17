@@ -7,18 +7,19 @@ let wt = document.querySelector("#wsType");
 let ta = document.querySelector("#typeArrow");
 let workModal = document.querySelector("#workModal");
 let pageModal = document.querySelector("#pageModal");
+let email = document.querySelector("#side input.logUser").value;
 
 init();
 //전체 JS 기능 실행함수
 function init() {
-    let email = document.querySelector("#side input.logUser").value;
-    allList(email);
+    allList();
     document.querySelector("#insert-page").addEventListener("click", newPage);
 }
 
-function allList(email) {
-    document.querySelector("#side #myWorkList").innerText = "";
-    let url = "/allList?email=" + email;
+function allList(){
+    document.querySelector('#side #myWorkList').innerText = "";
+    document.querySelector('#side #teamWorkList').innerText = "";
+    let url = "/allList?email="+email
     let temp_dbpageList = [];
     fetch(url, {
             method: "GET"
@@ -633,17 +634,17 @@ function dropItem(event) {
         };
         let url = "/pageUpdate";
         fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(val),
-            })
-            .then((res) => res.json())
-            .then((result) => {
-                init();
-            })
-            .catch((err) => console.log(err));
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            allList();
+        })
+        .catch(err => console.log(err))
     }
 }
 
@@ -690,18 +691,19 @@ function dropPage(event) {
         };
         let url = "/inPageUpdate";
         fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(val),
-            })
-            .then((res) => res.json())
-            .then((result) => {
-                init();
-            })
-            .catch((err) => console.log(err));
-    } else if (offsetY > center + targetArea) {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(val)
+        })
+        .then(res => res.json())
+        .then(result => {
+            allList();
+        })
+        .catch(err => console.log(err))
+    } else 
+    if(offsetY > center + targetArea){
         insertAfter(dragItem, targetItem.parentElement);
         console.log("뒤");
         let pageId = dragItem.dataset.id;
@@ -992,8 +994,8 @@ function newPage() {
             console.log(pageId);
             // sendSocket(pageId);
             selectPage(pageId); //새 페이지로 이동
-            closeSideModal(); //모달 닫기
-            init(); //사이드 초기화
+            closeSideModal();   //모달 닫기
+            allList();            //사이드 초기화
         })
         .catch((err) => console.log(err));
 }
@@ -1002,15 +1004,9 @@ function changeSideView() {}
 
 //새로운 페이지 생성 모달창(+ 클릭시)
 function newPageModal(event) {
-<<<<<<< HEAD
-  pageModal.style.display = "block";
-  dbPage.style.display = "flex";
-  document.body.style.overflow = "hidden";
-=======
     pageModal.style.display = "block";
     dbPage.style.display = "block";
     document.body.style.overflow = "hidden";
->>>>>>> refs/heads/master
 
     let wId = event.target.closest(".Work").dataset.id;
     let pId = "";
@@ -1461,7 +1457,7 @@ function newWorkSpace() {
                     inviteWork(result); //워크스페이스 초대하는 메소드
                 }
                 closeSideModal();
-                allList(email);
+                allList();
             }
         })
         .catch((err) => console.log(err));
