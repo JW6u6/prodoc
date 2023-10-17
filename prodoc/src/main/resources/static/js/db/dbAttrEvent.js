@@ -777,23 +777,25 @@ function selectCalAttr(eTarget){
 
     let date = document.createElement("input");
     date.readOnly = true;
-    date.classList.add("date-value");
+    date.classList.add("date-value", "input_text");
     date.value = eTarget.firstElementChild.innerText;
     date.style.display = "inline-block";
 
-    let deleteBtn = document.createElement("button");
+    let deleteBtn = document.createElement("div");
     deleteBtn.innerText = "삭제";
-    deleteBtn.style.display = "inline-block";
+    deleteBtn.classList.add("caldel-btn");
 
+    let hrTag = document.createElement("hr");
     let startDate = document.createElement("input");
     startDate.setAttribute("type", "date");
     startDate.classList.add("startDate");
     startDate.addEventListener("change", inputAttrDate);
 
     let addBtn = document.createElement("button");
+    addBtn.classList.add("attrDate-con");
     addBtn.innerText="종료일 추가";
 
-    modal.append(closeBtn, date, deleteBtn, startDate, addBtn);
+    modal.append(closeBtn, date, deleteBtn, hrTag, startDate, addBtn);
 
     // 종료일 추가 버튼이벤트
     addBtn.addEventListener("click", e => {

@@ -139,7 +139,7 @@ body {
   width: 130px;   
 }
 #findPass>input{
-	margin-left:68px;
+	margin-left:65px;
 }
 #authInput, #phoneMd{
 	margin-left:48px;
@@ -156,4 +156,7 @@ body {
    text-align: center;
    align-items:flex-end;
    margin: 0;
+}
+.wd-clicked{
+	background-color: lavender
 }
