@@ -57,11 +57,11 @@ async function listLayoutEditor(dataList, displayId, layout){
             break;
 
         case 'DB_GAL' : 
-            dbbody.insertAdjacentHTML("afterbegin", addDbpage());
             pageList.forEach(block => {
                 let blockTag = dbGalBlock(block);
-                dbbody.insertAdjacentHTML("afterbegin", blockTag);
+                dbbody.insertAdjacentHTML("beforeend", blockTag);
             });
+            dbbody.insertAdjacentHTML("beforeend", addDbpage());
             break;
 
         case 'DB_TBL' :
@@ -276,7 +276,7 @@ function dbTblAttrBlock(attrs, uniqueList){
                 let img = document.createElement("img");
                 img.width = 50;
                 img.classList.add("attr", "inlineTags", "db-img");
-                img.src = '/dbFiles/'+content;
+                if(content != null || content != "") img.src = '/dbFiles/'+content;
                 let input = document.createElement("input");
                 input.type = "file";
                 input.style.display = "none";
