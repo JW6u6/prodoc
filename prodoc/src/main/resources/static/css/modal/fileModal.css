@@ -1,0 +1,20 @@
+#FileSearchModal{
+  position: fixed; /* Stay in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 50;
+}
+#FileSearchModal > div{
+  overflow: auto;
+  margin-top: 200px;
+  margin-left: 20vw;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 60vw;
+  z-index: 51;
+  
+}

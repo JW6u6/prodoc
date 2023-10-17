@@ -35,21 +35,27 @@
 		        <input type="text" name="nickname" th:value="${session.logUser.nickname}">
 		        <div>
 			        <label>비밀번호</label>
-			        <input type="password" name="password" class="password">
+			        <input type="password" name="password" class="password input_text-md">
+		        </div>
+		        <div>		        
 			        <label>비밀번호 확인</label>
-			        <input type="password" class="password">
+			        <input type="password" class="password input_text-md">
 		        </div>
 		        <div>
 			        <label>전화번호</label>
 			        <input type="tel" name="phone" 
-			        	th:value="${session.logUser.phone}" maxlength="11">
-			        <button type="button" id="authBtn">인증번호</button>
-			        <input type="text" id="auth" placeholder="인증번호">
-			        <button type="button" id="authCheckBtn">확인</button>
+			        	th:value="${session.logUser.phone}" maxlength="11" class="input_text-md">
+			        <button type="button" id="authBtn" class="btn-md authBtn">인증번호</button>
 		        </div>
+		        <div class="auth">
+			        <input type="text" id="auth" placeholder="인증번호" class="input_text-md">
+			        <button type="button" id="authCheckBtn" class="btn-md authBtn">확인</button>
+		        </div>
+		        <div>
 		        <label>생년월일</label>
 		        <input type="text" name="birth" th:value="${#dates.format(session.logUser.birth, 'yyMMdd')}"
-		        		maxlength="6" placeholder="ex.991231">
+		        		maxlength="6" placeholder="ex.991231" class="input_text-md">
+		        </div>
 	        </div>
         </form>
 	</div>
