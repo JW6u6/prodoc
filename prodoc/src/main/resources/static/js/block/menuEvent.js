@@ -103,6 +103,7 @@ const blockHandler = {
       const date = reply.upDate ? reply.upDate : reply.creDate;
       const temp = makeReplyBlock(
         reply.nickname,
+        reply.creUser,
         reply.content,
         date,
         reply.replyId,
@@ -121,6 +122,7 @@ const blockHandler = {
         pageId: pageBlockId,
       });
       const replyTemp = makeReplyBlock(
+        blockSessionUserNickName,
         blockSessionUserId,
         replyInput.value,
         "지금",

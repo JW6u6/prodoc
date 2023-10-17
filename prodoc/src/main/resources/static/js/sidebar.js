@@ -1002,15 +1002,10 @@ function changeSideView() {}
 
 //새로운 페이지 생성 모달창(+ 클릭시)
 function newPageModal(event) {
-<<<<<<< HEAD
   pageModal.style.display = "block";
   dbPage.style.display = "flex";
   document.body.style.overflow = "hidden";
-=======
-    pageModal.style.display = "block";
-    dbPage.style.display = "block";
-    document.body.style.overflow = "hidden";
->>>>>>> refs/heads/master
+
 
     let wId = event.target.closest(".Work").dataset.id;
     let pId = "";

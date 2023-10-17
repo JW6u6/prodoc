@@ -535,7 +535,7 @@ function makeReplyModal(displayId, target, { left = "" }) {
     style="left:${left}px;"
     class="reply_modal block_modal input_modal modal_item">
       <div class="replyWrapper"></div>
-      <div class="modal_reply_controller"><input placeholder="댓글을 입력하세요" type="txet"/><button class="reply_regi_btn">등록</button></div>
+      <div class="modal_reply_controller"><input placeholder="댓글을 입력하세요" class="input_text-md" type="txet"/><button class="reply_regi_btn btn">등록</button></div>
     </div>
   `;
   displayModal(target, template);
@@ -605,7 +605,7 @@ function createBookMarkTemplate({ title, description, imgAdrs, url }) {
 function createFileTemplate({ fileName }) {
   const fileTemp = `
     <div class="content block_file">
-      <div>❤</div>
+      <div><img src="images/fileImg.png"/></div>
       <div>${fileName}</div>
     <div>
   `;

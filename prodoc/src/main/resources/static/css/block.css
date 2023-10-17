@@ -168,7 +168,7 @@ a {
   overflow-y: scroll;
   position: absolute;
   width: 300px;
-  max-height: 150px;
+  max-height: 300px;
   z-index: 102;
 }
 
@@ -221,4 +221,16 @@ a {
 
 .open {
   transform: rotate(0.5turn);
+}
+
+.block_file {
+  display: flex;
+}
+
+.modal_reply_controller input {
+  margin: 0px;
+  width: 190px;
+}
+.modal_reply_controller button {
+  background-color: #ccb;
 }
