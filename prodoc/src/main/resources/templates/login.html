@@ -55,8 +55,8 @@
 	       </div>
 	       
 	       <div>
-	           <button type="button" class="findBtn">Email찾기</button>
-	           <button type="button" class="findBtn">PW찾기</button><br>
+	           <button type="button" class="findBtn btn-md wd-clicked">Email찾기</button>
+	           <button type="button" class="findBtn btn-md">PW찾기</button><br>
 	       </div>
 	          
           <div class="find_this">
@@ -127,16 +127,20 @@ let showPWCH = document.querySelector("#showPWCH");	//p태그
 let newDiv = document.querySelector("#newPassDIV");	//새 비밀번호 입력칸
 
 //찾기 창 내 토글 버튼
-document.querySelectorAll(".findBtn").forEach((tag,idx) => {	
+document.querySelectorAll(".findBtn").forEach((tag,idx,list) => {	
 	tag.addEventListener('click', function(e){
 		if(idx == 0){
 			pwType.style.visibility = "hidden";				//아이디 찾기
 			newDiv.style.visibility = "hidden";
+			list[0].classList.add('wd-clicked');
+			list[1].classList.remove('wd-clicked');
 			findInit();
 		}else{
 			pwType.style.visibility = "visible";			//비밀번호 찾기
 			pTag.style.visibility = "hidden";
 			findInit();
+			list[0].classList.remove('wd-clicked');
+			list[1].classList.add('wd-clicked');
 		}
 	});
 });

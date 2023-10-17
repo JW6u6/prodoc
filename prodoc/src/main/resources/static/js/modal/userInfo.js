@@ -1,32 +1,28 @@
+let UserInfoMod = document.querySelector("#UserInfoMod"); 	//회원정보 모달
+let UserModiMod = document.querySelector("#UserModiMod");	//정보수정 모달
+let joinOutMod = document.querySelector("#joinOutMod");		//탈퇴 모달
+let joinout = document.querySelector("#joinout");			//탈퇴 비번 입력창
+
 //정보수정 버튼 클릭
 let modInfoBtn = document.querySelector("#modInfoBtn")
 .addEventListener('click', function(e){
-	//console.log(e.target.parentElement);
-	e.target.parentElement.classList.toggle('hide');
-	e.target.parentElement.classList.toggle('view');
-	let UserModiMod = document.querySelector("#UserModiMod");
-	UserModiMod.classList.toggle('view');
-	UserModiMod.classList.toggle('hide');
+	UserInfoMod.className = 'hide';
+	UserModiMod.className = 'view';
 });
 
 //탈퇴 버튼 클릭 ->탈퇴창 보여줌
 let joinOutBtn = document.querySelector("#joinOutBtn")
 .addEventListener('click', function(e){
-	//console.log(e.target.closest('form').parentElement);
-	e.target.closest('form').parentElement.classList.toggle('hide');
-	e.target.closest('form').parentElement.classList.toggle('view');
-	let joinOutMod = document.querySelector("#joinOutMod");
-	joinOutMod.classList.toggle('view');
-	joinOutMod.classList.toggle('hide');
+	UserModiMod.className = 'hide';
+	joinOutMod.className = 'view';
 });
 //탈퇴 진행
 let jOutBtn = document.querySelector("#jOutBtn")
 .addEventListener('click', function(e){
 	if(joinout.value != ''){
 		console.log(e.target.parentElement);
-		e.target.parentElement.classList.toggle('hide');
-		e.target.parentElement.classList.toggle('view');
-		let joinout = document.querySelector("#joinout");
+		e.target.closest("#joinOutMod").classList.toggle('hide');
+		e.target.closest("#joinOutMod").classList.toggle('view');
 		
 		fetch("/joinout", {
 			method: "post",
