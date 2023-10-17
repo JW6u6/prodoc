@@ -2,7 +2,8 @@
 #modHistory,
 #UserModiMod,
 #joinOutMod,
-#modSearchWKDB {
+#modSearchWKDB,
+#editPageMod {
   position: fixed; /* Stay in place */
   top: 0;
   left: 0;
@@ -13,7 +14,8 @@
 }
 /*히스토리, 검색 모달창 안에 흰 div*/
 #modHistory > div,
-#modSearchWKDB > div {
+#modSearchWKDB > div,
+#editPageMod > div{
   overflow: auto;
   margin-top: 200px;
   margin-left: 20vw;
@@ -32,10 +34,10 @@
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 40vw;
+  width: 45vw;
   z-index: 51;
 }
-.historyList{
+.historyList {
   margin-top: 10px;
   border: 1px solid #ccc;
   border-right: none;
@@ -61,40 +63,91 @@
   margin-right: 10px;
 }
 
-.history_data_line{
+.history_data_line {
   position: relative;
   height: 30px;
   display: flex;
   align-items: center;
 }
 
-.history_data_line div{
+.history_data_line div {
   width: 100%;
 }
 
-.history_data_line h3{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
+.history_data_line h3 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: white;
 }
 
-.historyItem{
+.historyItem {
   display: grid;
   grid-template-columns: 3fr 8fr;
 }
 
-.histroy_item--left{
+.histroy_item--left {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.histroy_item--left p{
+.histroy_item--left p {
   margin: 0;
 }
 
-.history_item--right p{
-  margin: 10px 0 ;
+.history_item--right p {
+  margin: 10px 0;
+}
+
+/* 여기서 부터는 userModInfo */
+
+#auth {
+  margin-left: 126px;
+}
+.closeBtnWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+#userModForm {
+  display: flex;
+}
+
+.authBtn {
+  width: 75px !important;
+}
+
+.userModForm_left {
+  display: flex;
+  flex-direction: column;
+}
+
+.userModForm_left img {
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.userModForm_right {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.userModForm_right label {
+  display: inline-block;
+  width: 120px;
+  text-align: end;
+}
+
+.profile_btn_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile_btn_wrapper button:first-child {
+  margin-right: 5px;
 }

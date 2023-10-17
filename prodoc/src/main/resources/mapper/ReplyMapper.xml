@@ -9,48 +9,50 @@
 		where reply_id = #{replyId}
 	</select>
 	<select id="selectBlockReply" resultType="ReplyVO">
-		select * 
-		from tbl_reply
+		select u.platform, u.profile,u.nickname, r.*
+		from tbl_reply r join tbl_user u
+						on r.cre_user = u.email
 		where display_id = #{displayId}
 	</select>
 	<select id="selectPageReply" resultType="ReplyVO">
-		select *
-		from tbl_reply
+		select u.platform, u.profile,u.nickname,	 r.*
+		from tbl_reply r join tbl_user u
+						on r.cre_user = u.email
 		where page_id = #{pageId}
 	</select>
 	<insert id="createComment">
-	insert into tbl_reply 
-		  (
-		  reply_id
-		  ,cre_user
-		  ,cre_date
-		  ,content
-		  ,display_id
-		  ,mention_list
-		  ,page_id
-		  )
-	values(
-		   #{replyId}
-		  ,#{creUser}
-		  ,sysdate
-		  ,#{content}
-		  ,#{displayId}
-		  ,#{mentionList}
-		  ,#{pageId}
-		  )
+		insert into tbl_reply
+		(
+		reply_id
+		,cre_user
+		,cre_date
+		,content
+		,display_id
+		,mention_list
+		,page_id
+		)
+		values(
+		#{replyId}
+		,#{creUser}
+		,sysdate
+		,#{content}
+		,#{displayId}
+		,#{mentionList}
+		,#{pageId}
+		)
 	</insert>
 	<update id="editComment">
-	update tbl_reply
-		set up_date    = sysdate,
-	    content        = #{content},
-	    mention_list   = #{mentionList}
+		update tbl_reply
+		set up_date = sysdate,
+		content = #{content},
+		mention_list = #{mentionList}
 		where reply_id = #{replyId}
 	</update>
 	<delete id="deleteComment" parameterType="ReplyVO">
 		delete from tbl_reply
 		<choose>
 			<when test="replyId != null">
-				where reply_id = #{replyId}			
+				where reply_id = #{replyId}
 			</when>
 			<when test="displayId != null">
 				where display_id = #{displayId}

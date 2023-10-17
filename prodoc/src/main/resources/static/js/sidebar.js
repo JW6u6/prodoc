@@ -433,7 +433,8 @@ function PageNameSettingFunc(){
 let PNmod = document.querySelector("#editPageMod");
 document.querySelector("#newPageNameBtn").addEventListener('click', function(e){
    let value = this.previousElementSibling.value;   //바뀐 페이지명
-   let id = this.closest("div").dataset.id;      //해당 페이지id
+   let id = this.closest("#editPageMod").dataset.id;      //해당 페이지id
+   console.log(value, id);
    let URL = `/pageNewName?pageId=${id}&pageName=${value}`;
    
    fetch(URL, {
@@ -702,6 +703,7 @@ function makeWid(e) {
 
 //새로운 워크스페이스 삽입 모달창생성(+ 클릭시)
 async function newWork() {
+    document.querySelector('#workModalName').textContent = '워크스페이스 생성';
     workModal.style.display = "block";
     document.body.style.overflow = "hidden";
     document.querySelector('#typeArea').classList.remove('hide');
@@ -1029,7 +1031,8 @@ async function memberCheck(workId) {
 
 //워크스페이스 설정창 여는..거
 async function setWork(e) {
-    subCheck = false;
+    document.querySelector('#workModalName').textContent = '워크스페이스 설정';
+
     workModal.style.display = 'block';
     document.body.style.overflow = "hidden";
     document.querySelector('#wsName').readOnly = false;
@@ -1038,8 +1041,17 @@ async function setWork(e) {
     let infoResult = await selectOneWork(workId);
     let membAuth = await memberCheck(workId);
 
+    if(infoResult.parentId == ''){
+        subCheck = false;
+    }else if(infoResult.parentId != ''){
+        subCheck = true;
+    }
 
     await listWorkJoin(workId);
+
+    if(subCheck == true){
+        autoCheckList();
+    }
 
     let tTog = document.querySelector('#teamToggleArea');
     let name = document.querySelector('#nameArea'); //워.스.이름영역
@@ -1203,6 +1215,8 @@ async function setWork(e) {
 }
 
 async function areUDelete(e) {
+    document.querySelector('#workModalName').textContent = '워크스페이스 삭제';
+
     let tTog = document.querySelector('#teamToggleArea');
     let pub = document.querySelector('#pubArea'); //공개범위 영역
     let own = document.querySelector('#ownArea'); //소유자 영역
