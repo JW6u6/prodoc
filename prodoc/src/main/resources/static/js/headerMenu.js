@@ -1,8 +1,7 @@
 //나중에 따로 다른데로 옮기던가 해도 괜찮을거같은데...(이걸 왜 여기서?하고있지?)
-
 document.querySelector('#mainPage').addEventListener('click', ThisMainPage);
 document.querySelector('#delPage').addEventListener('click', pageDelCheck);
-document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
+// document.querySelector('#notifyPage').addEventListener('click', toggleNotiPage);
 document.querySelector('#copyLink').addEventListener('click', creLink);
 document.querySelector('#notiLockPg').addEventListener('click', alreadyLock);
 document.querySelector('#copyPage').addEventListener('click', copyPagstePage);
@@ -17,9 +16,8 @@ document.querySelector('#menuImg').addEventListener('click', function (e) {
         headerMenu.classList.toggle('view');
         clickClose.remove();
     })
-
     pageMenuSetting();
-    areUTurnOn();
+    // areUTurnOn();
     areULock();
 });
 
@@ -34,7 +32,7 @@ headerMenu.addEventListener('click', async function (e) {
 async function pageMenuSetting() {
 
     let memberAuth = await memberCheck(workBlockId);
-
+    console.log(memberAuth);
     if (memberAuth == 'OWNER' || memberAuth == 'MANAGER') {
 
         document.querySelector('#mainPage').classList.remove('hide');
@@ -257,73 +255,82 @@ async function ThisMainPage() {
 }
 
 
-//페이지 알림 끄기
-function toggleNotiPage() {
-    let url = '/pageNotify';
-    let email = document.querySelector("#side input.logUser").value;
+// //페이지 알림 끄기
+// function toggleNotiPage() {
+//     let url = '/pageNotify';
+//     let email = document.querySelector("#side input.logUser").value;
 
-    let val = {
-        "pageId": pageBlockId,
-        email
-    }
+//     let val = {
+//         "pageId": pageBlockId,
+//         email
+//     }
 
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result);
-            if (result == '0') {
-                alert('페이지 알림이 켜졌습니다.')
-                areUTurnOn();
-            } else if (result == '1') {
-                alert('페이지 알림이 꺼졌습니다.')
-                areUTurnOn();
-            }
-        })
-        .catch(err => console.log(err));
-}
+//     fetch(url, {
+//             method: 'post',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(val)
+//         })
+//         .then(response => response.text())
+//         .then(result => {
+//             console.log(result);
+//             if (result == '0') {
+//                 alert('페이지 알림이 켜졌습니다.')
+//                 areUTurnOn();
+//             } else if (result == '1') {
+//                 alert('페이지 알림이 꺼졌습니다.')
+//                 areUTurnOn();
+//             }
+//         })
+//         .catch(err => console.log(err));
+// }
 
-//페이지 알림 끄고켜는거...
-function areUTurnOn() {
-    let email = document.querySelector("#side input.logUser").value;
+// //페이지 알림 끄고켜는거...
+// function areUTurnOn() {
+//     let email = document.querySelector("#side input.logUser").value;
 
-    let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
+//     let url = `/pageNotify?pageId=${pageBlockId}&email=${email}`;
 
-    fetch(url, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.text())
-        .then(result => {
-            let notiToggle = document.querySelector('#notifyPage');
-            if (result == 0) {
-                notiToggle.textContent = '페이지 알림 끄기';
-            } else if (result == 1) {
-                notiToggle.textContent = '페이지 알림 켜기';
-            }
-        })
-        .catch(err => console.log(err));
-}
+//     fetch(url, {
+//             method: 'get',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         })
+//         .then(response => response.text())
+//         .then(result => {
+//             let notiToggle = document.querySelector('#notifyPage');
+//             if (result == 0) {
+//                 notiToggle.textContent = '페이지 알림 끄기';
+//             } else if (result == 1) {
+//                 notiToggle.textContent = '페이지 알림 켜기';
+//             }
+//         })
+//         .catch(err => console.log(err));
+// }
 
 async function areULock() {
     let infos = await pageInfoFromMenu();
     let LockToggle = document.querySelector('#lockPg');
     let LockNotiToggle = document.querySelector('#notiLockPg');
-
+    let displayedBlock = document.querySelectorAll(".prodoc_block");
+    
     for (let info of infos) {
         if (info.lockCheck == 'FALSE') {
             LockToggle.textContent = '페이지 잠금 설정';
             LockNotiToggle.textContent = '페이지 잠금 요청';
+            for (let block of displayedBlock) {
+                let targetblock = block.lastElementChild.firstElementChild;
+                targetblock.removeAttribute('disabled');
+            }
         } else if (info.lockCheck == 'TRUE') {
             LockToggle.textContent = '페이지 잠금 해제';
             LockNotiToggle.textContent = '페이지 잠금 해제 요청';
+            for (let block of displayedBlock) {
+                let targetblock = block.lastElementChild.firstElementChild;
+                targetblock.setAttribute('disabled', 'true');
+            }
         }
     }
 }
@@ -347,10 +354,10 @@ async function creLink() {
         let linkText = document.createElement("textarea");
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
         document.body.appendChild(linkText);
-        url = 
-        //'http://prodox.me/shared/'
-        'http://localhost:8099/shared/' 
-        + pageBlockId;
+        url =
+            'http://prodox.me/shared/'
+            // 'http://localhost:8099/shared/'
+            + pageBlockId;
         linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {
@@ -375,30 +382,30 @@ async function creLink() {
 function copyPagstePage() {
     let url = '/pageCopyPaste';
     let email = document.querySelector("#side input.logUser");
-	if(email.value == ''){
-		alert('세션이 만료되었습니다. 다시 로그인 해주십시오.')
-	}else{
-    let val = {
-        "pageId": pageBlockId,
-        "email": email.value
-    }
-
-    fetch(url, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(val)
-        })
-        .then(response => response.text())
-        .then(result => {
-            console.log(result);
-            if (result == 'SUCCESS') {
-                alert('페이지가 복사되었습니다.');
-            } else if (result == 'FAIL') {
-                alert('복사할 수 없는 블록이 포함되어있습니다.');
-            }
-        })
-        .catch(err => console.log(err));
+    if (email.value == '') {
+        alert('세션이 만료되었습니다. 다시 로그인 해주십시오.')
+    } else {
+        let val = {
+            "pageId": pageBlockId,
+            "email": email.value
         }
+
+        fetch(url, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(val)
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                if (result == 'SUCCESS') {
+                    alert('페이지가 복사되었습니다.');
+                } else if (result == 'FAIL') {
+                    alert('복사할 수 없는 블록이 포함되어있습니다.');
+                }
+            })
+            .catch(err => console.log(err));
+    }
 }
