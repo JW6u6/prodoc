@@ -58,13 +58,14 @@
 
 	<!--/* 워크스페이스 모달 시작 */-->
 	<div id="workModal">
-		<div id="workModalName">워크스페이스 모달</div>
 		<div>
 			<div>
 				<div class="modal-content">
-					<div class="modal-content--header">
-						<button id="close-modal" class="close" onclick="closeSideModal()">&#10005;</button>					
-					</div>
+				<div>
+					<h3 style="text-align:left" id="workModalName">워크스페이스 모달</h3>
+					<button id="close-modal" class="close" onclick="closeSideModal()">&#10005;</button>
+				</div>
+					<br>
 
 					<!--/* 워크스페이스 설정 토글(팀) */-->
 					<div id="teamToggleArea" class="hide">
@@ -141,8 +142,9 @@
 
 					<!--/* 워크스페이스 모달 버튼 영역. 생성 -> 설정으로 열 시 삭제, 저장으로 바뀜. */-->
 					<div id="btnArea" class="btn">
-						<button id="wsCreate" type="button" class="btn-xl">생성</button>
-						<button id="cancel" class="close" type="button" onclick="closeSideModal()">취소</button>
+						<button id="wsCreate" type="button">생성</button>
+						<button id="cancel" class="close" type="button"
+							onclick="closeSideModal()">취소</button>
 					</div>
 				</div>
 			</div>

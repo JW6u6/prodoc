@@ -1,116 +1,115 @@
 /* 모달창 크기 */
-#pageModal,
-#workModal {
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: none;
+#pageModal, #workModal {
+	position: fixed;
+	z-index: 100;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
 }
 /* 워크 생성 모달창 콘텐츠 박스크기 */
-/* .box {
-  border: 3px solid pink;
-  padding: 7px;
-  text-align: center;
-  width: 400px;
-  border-radius: 10px;
-} */
+.box {
+	border: 3px solid pink;
+	padding: 7px;
+	text-align: center;
+	width: 400px;
+	border-radius: 10px;
+}
 /* 모달창 본문 */
 .modal-content {
-  background-color: #fefefe;
-  margin: 10% auto;
-  padding: 20px;
-  border: 3px solid #888;
-  border-radius: 10px;
-  width: 800px;
-  height: 500px;
-}
-.modal-content--header {
-  display: flex;
-  justify-content: end;
+	background-color: #fefefe;
+	margin: 10% auto;
+	padding: 20px;
+	border: 3px solid #888;
+	border-radius: 10px;
+	width: 800px;
+	height: 500px;
+	text-align: center;
+	z-index: 100;
 }
 
 .side_logo {
-  margin-left: 7px;
-  height: 70px;
-  display: flex;
-  align-items: center;
+	margin-left: 7px;
+	height: 70px;
+	display: flex;
+	align-items: center;
 }
 
 .side_logo span {
-  font-size: 30px;
+	font-size: 30px;
 }
 
 .side_logo img {
-  height: 70px;
+	height: 70px;
 }
-#temPage,
-#dbPage,
-#subTemPage,
-#subDbPage {
-  display: inherit;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  display: none;
+
+#temPage, #dbPage, #subTemPage, #subDbPage {
+	display: inherit;
+	z-index: 2;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	display: none;
 }
-#pageContent,
-#subPageContent {
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 500px;
-  float: left;
-  height: 70%;
-  margin: 0 auto;
-  margin-top: 30px;
-  border: solid 2px pink;
-  border-radius: 10px;
+
+#pageContent, #subPageContent {
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 500px;
+	float: left;
+	height: 70%;
+	margin: 0 auto;
+	margin-top: 30px;
+	border: solid 2px pink;
+	border-radius: 10px;
 }
-.tem,
-.db {
-  background-color: yellow;
-  width: 100px;
-  margin: 40px;
-  margin-top: 30px;
-  padding: 10px;
-  float: left;
+
+.tem, .db {
+	background-color: yellow;
+	width: 100px;
+	margin: 40px;
+	margin-top: 30px;
+	padding: 10px;
+	float: left;
 }
 /* 모달 내 닫기창 스타일 */
 .close {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+
 }
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
 }
 /* +에 마우스 올렸을때 포인터 변경 */
 .addWS {
-  cursor: pointer;
-  float: right;
+	cursor: pointer;
+	float: right;
 }
 /* 하위 워크,페이지의 하위 표시를 위한 간격. */
 .Work {
-  margin-left: 20px;
-  height: max-content;
+	margin-left: 20px;
+	height: max-content;
 }
+
 .workName {
-  font-weight: bold;
+	font-weight: bold;
 }
+
 .Page {
-  margin-left: 20px;
-  height: max-content;
+	margin-left: 20px;
+	height: max-content;
 }
 
 #nameArea {
@@ -134,61 +133,68 @@
 
 /* 드롭다운(셀렉트박스) */
 .selectBox * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
+
 .selectBox {
-  position: relative;
-  padding: 0px;
-  width: 150px;
-  height: 35px;
-  border-radius: 4px;
-  border: 2px solid lightcoral;
-  background-size: 20px;
-  cursor: pointer;
+	position: relative;
+	padding: 0px;
+	width: 150px;
+	height: 35px;
+	border-radius: 4px;
+	border: 2px solid lightcoral;
+	background-size: 20px;
+	cursor: pointer;
 }
+
 .selectBox {
-  position: relative;
-  margin: 0 auto;
-  margin-top: 20px;
-  width: 414px;
-  height: 35px;
-  border-radius: 10px;
-  border: 3px solid blue;
+	position: relative;
+	margin: 0 auto;
+	margin-top: 20px;
+	width: 414px;
+	height: 35px;
+	border-radius: 10px;
+	border: 3px solid blue;
 }
+
 .selectBox .select {
-  width: inherit;
-  height: inherit;
-  background: transparent;
-  border: 0 none;
-  outline: 0 none;
-  position: relative;
-  z-index: 3;
-  text-align: center;
+	width: inherit;
+	height: inherit;
+	background: transparent;
+	border: 0 none;
+	outline: 0 none;
+	padding: 7px;
+	position: relative;
+	z-index: 3;
+	text-align: center;
 }
+
 .selectBox .select option {
-  background: lightcoral;
-  color: #fff;
-  padding: 0;
-  font-size: 16px;
-}
-.selectBox .icoArrow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
-  width: 35px;
-  height: inherit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	background: lightcoral;
+	color: #fff;
+	padding: 0;
+	font-size: 16px;
 }
 
 .selectBox .icoArrow {
-  width: 20%;
-  transition: 0.3s;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	width: 35px;
+	height: inherit;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
+
+.selectBox .icoArrow {
+	width: 20%;
+	transition: 0.3s;
+}
+
 .turn {
-  transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 
 #inviteUser {
@@ -220,134 +226,150 @@
 
 /* IE */
 select::-ms-expand {
-  display: none;
-}
-.select {
-  -o-appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-.Type {
-  margin: 10px;
-  box-shadow: inset 1px 1px 0px 1px #ffffff;
-  background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
-  background-color: #ededed;
-  border-radius: 6px;
-  border: 1px solid #dcdcdc;
-  display: block;
-  cursor: pointer;
-  color: #777777;
-  font-family: Arial;
-  font-size: 17px;
-  font-weight: bold;
-  padding: 12px;
-  width: 150px;
-  height: 50px;
-  text-decoration: none;
-  text-shadow: 1px 2px 0px #ffffff;
-  margin-top: 80px;
-}
-.Type:hover {
-  background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
-  background-color: #dfdfdf;
-}
-.Type:active {
-  position: relative;
-  top: 1px;
-}
-.btnDiv {
-  float: left;
-}
-.pageDiv {
-  width: 300px;
-  height: 40px;
-  margin: 0 auto;
-  border: solid 2px pink;
-  border-radius: 10px;
+	display: none;
 }
 
-#temPage,
-#dbPage,
-#subTemPage,
-#subDbPage {
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 500px;
-  float: left;
-  height: 70%;
-  margin: 0 auto;
-  margin-top: 30px;
-  border: solid 2px pink;
-  border-radius: 10px;
+.select {
+	-o-appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
-.workIdVal,
-.pageIdVal {
-  display: none;
+
+.Type {
+	margin: 10px;
+	box-shadow: inset 1px 1px 0px 1px #ffffff;
+	background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+	background-color: #ededed;
+	border-radius: 6px;
+	border: 1px solid #dcdcdc;
+	display: block;
+	cursor: pointer;
+	color: #777777;
+	font-family: Arial;
+	font-size: 17px;
+	font-weight: bold;
+	padding: 12px;
+	width: 150px;
+	height: 50px;
+	text-decoration: none;
+	text-shadow: 1px 2px 0px #ffffff;
+	margin-top: 80px;
 }
+
+.Type:hover {
+	background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+	background-color: #dfdfdf;
+}
+
+.Type:active {
+	position: relative;
+	top: 1px;
+}
+
+.btnDiv {
+	float: left;
+}
+
+.pageDiv {
+	width: 300px;
+	height: 40px;
+	margin: 0 auto;
+	border: solid 2px pink;
+	border-radius: 10px;
+}
+
+#temPage, #dbPage, #subTemPage, #subDbPage {
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 500px;
+	float: left;
+	height: 70%;
+	margin: 0 auto;
+	margin-top: 30px;
+	border: solid 2px pink;
+	border-radius: 10px;
+}
+
+.workIdVal, .pageIdVal {
+	display: none;
+}
+
 #subWorkMenu {
-  display: none;
-  position: absolute;
-  background-color: #ccc;
-  z-index: 999;
+	display: none;
+	position: absolute;
+	background-color: #ccc;
+	z-index: 999;
 }
+
 .highlight {
-  border: 2px dashed red;
+	border: 2px dashed red;
 }
 
 /* 사이드 */
 #side {
-  height: 100%;
-  float: left;
-  position: fixed;
-  list-style: none;
-  padding: 0px;
-  box-sizing: border-box;
-  margin: 0px;
-  width: 300px;
-  background: var(--sidebar-bg-color);
-  height: 1000px;
-  overflow: auto;
-  display: block;
-  border-right: 1px solid #ddd;
-  z-index: 10;
+	height: 100%;
+	float: left;
+	position: fixed;
+	list-style: none;
+	padding: 0px;
+	box-sizing: border-box;
+	margin: 0px;
+	width: 300px;
+	background: var(- -sidebar-bg-color);
+	height: 1000px;
+	overflow: auto;
+	display: block;
+	border-right: 1px solid #ddd;
+	z-index: 10;
 }
 
 #side a {
-  text-decoration: none;
-  padding: 10px;
-  display: block;
-  color: #000;
-  font-weight: bold;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+	color: #000;
+	font-weight: bold;
 }
 
 #side li a:hover {
-  background: #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 #side li a.home {
-  background: #fcb7ad;
-  color: #fff;
+	background: #fcb7ad;
+	color: #fff;
 }
 
 #autoContain {
-  display: none;
-  width: 410px;
-  height: 200px;
-  background-color: #ddc0f8;
-  position: absolute;
-  z-index: 700;
+	width: 175px;
+	background-color: #edf3fa;
+	position: absolute;
+	z-index: 700;
+	left: 847px;
 }
 
-#btnArea {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  margin-top: 20px;
+#autoContain>div{
+	border-bottom: #f2f2f2solid 0.7px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-#btnArea button {
-  margin-left: 10px;
+#autoContain>div:hover {
+	background-color: #e4dfff;
+}
+
+#invEmail {
+	position: relative;
+}
+.setting{
+	display:none;
+	cursor: pointer;
+}
+.Work:hover .setting{
+	display: inline-block;
+	transition: 1s ease-out;
+    opacity : 0.3;
 }

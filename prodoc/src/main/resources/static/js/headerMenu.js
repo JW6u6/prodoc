@@ -349,10 +349,7 @@ async function creLink() {
 
         if (navigator.clipboard !== undefined) {
             document.body.appendChild(linkText);
-            url = 'http://localhost:8099/shared/'
-                // 'http://prodox.me/shared/' 
-                +
-                pageBlockId;
+            url = 'http://prodox.me/shared/' + pageBlockId;
             linkText.value = url; // textarea 값에 url를 넣어줌
 
             navigator.clipboard
