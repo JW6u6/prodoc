@@ -15,7 +15,7 @@
 /*히스토리, 검색 모달창 안에 흰 div*/
 #modHistory > div,
 #modSearchWKDB > div,
-#editPageMod > div{
+#editPageMod > div {
   overflow: auto;
   margin-top: 200px;
   margin-left: 20vw;
@@ -33,7 +33,7 @@
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 45vw;
+  width: 50vw;
   z-index: 51;
 }
 #joinOutMod > div {
@@ -139,6 +139,9 @@
   border-radius: 50%;
   border: 1px solid #ccc;
   margin-bottom: 10px;
+  object-fit: cover;
+  background-size: cover;
+  aspect-ratio:1/1;
 }
 
 .userModForm_right {

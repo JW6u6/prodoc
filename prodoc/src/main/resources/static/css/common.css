@@ -44,7 +44,8 @@ body {
 }
 .btn {
   width: 90px;
-  height: 20px;
+  height: 28px;
+  padding: 5px 0;
   border: none;
   border-radius: 4px;
 }
@@ -94,7 +95,6 @@ body {
   border: 2.5px solid #fd5f16;
   font-weight: bold;
   color: #fd5f16;
-  border-radius: 10000px;
 }
 
 /* 인풋창 */

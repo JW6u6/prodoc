@@ -548,7 +548,7 @@ function makeReplyBlock(user, text, date, id, src) {
   const replyTemp = `
     <div class="block_reply">
       <div class="reply_block--header" data-reply-id="${id}">
-        <div><img src="/files/${src}"></img></div>
+        <div><img src="/files/${src}" onerror="this.src='images/noneUser.jpg'"></img></div>
         <div>${user}</div>
         <div>${date}</div>
         ${
