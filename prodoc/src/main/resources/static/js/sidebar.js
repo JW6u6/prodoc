@@ -45,12 +45,20 @@ function allList(email) {
                                     <img class="setting" src="/images/settings.svg" width="15px" height="15px">
                                     <div class = "pageMain hide"></div>
                                 <input type="hidden" class ="num" value="0"></div>`;
-                        side.insertAdjacentHTML("beforeend", text);
-                    } //워크
-                } else if (item.level == 2) { //워크 or 페이지
-                    if (item.wp == 'page') { //page
-                        let workSite = document.querySelector('.Work[data-id="' + item.workId + '"]');
-                        let text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="2" data-number="${item.numbering}">
+            side.insertAdjacentHTML("beforeend", text);
+          } //워크
+        } else if (item.level == 2) {
+          //워크 or 페이지
+          if (item.wp == "page") {
+            //page
+            let workSite = document.querySelector(
+              '.Work[data-id="' + item.workId + '"]'
+            );
+            let text = `<div class= "Page" data-id="${
+              item.pageId
+            }"  data-name="${item.workName}" data-level="2" data-number="${
+              item.numbering
+            }">
                                     <span class="pageListShow">▼</span>
                                     <span class="pageName" draggable="true">${
                                       item.workName
@@ -63,24 +71,36 @@ function allList(email) {
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                                     <div class = "pageMain hide"></div>
                                 </div>`;
-                        if (item.caseId.substr(0, 2) == 'DB') temp_dbpageList.push(item.pageId);
-                        workSite.children[4].insertAdjacentHTML("beforeend", text);
-                    } else if (item.wp == 'work') { //work
-                        let workSite = document.querySelector('.Work[data-id="' + item.parentId + '"]');
-                        let text = `<div class= "Work" data-id="${item.workId}" data-check="childWork" data-level="2">
+            if (item.caseId.substr(0, 2) == "DB")
+              temp_dbpageList.push(item.pageId);
+            workSite.children[4].insertAdjacentHTML("beforeend", text);
+          } else if (item.wp == "work") {
+            //work
+            let workSite = document.querySelector(
+              '.Work[data-id="' + item.parentId + '"]'
+            );
+            let text = `<div class= "Work" data-id="${item.workId}" data-check="childWork" data-level="2">
                                     <span class="workListShow">▼</span>
                                     <span class="workName" draggable="true">${item.workName}</span>
                                     <span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>
                                     <img class="setting" src="/images/settings.svg" width="15px" height="15px">
                                     <div class = "pageMain hide"></div>
                                     <input type="hidden" class ="num" value="0">
-                                <div>`
-                        workSite.children[4].insertAdjacentHTML("beforeend", text);
-                    }
-                } else if (item.level == 3) { //페이지
-                    let pageSite = document.querySelector('.Page[data-id="' + item.parentId + '"]');
-                    if (pageSite != null) { //부모가 페이지
-                        let text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="3" data-number="${item.numbering}" >
+                                <div>`;
+            workSite.children[4].insertAdjacentHTML("beforeend", text);
+          }
+        } else if (item.level == 3) {
+          //페이지
+          let pageSite = document.querySelector(
+            '.Page[data-id="' + item.parentId + '"]'
+          );
+          if (pageSite != null) {
+            //부모가 페이지
+            let text = `<div class= "Page" data-id="${
+              item.pageId
+            }"  data-name="${item.workName}" data-level="3" data-number="${
+              item.numbering
+            }" >
                                     <span class="pageListShow">▼</span>
                                     <span class="pageName" draggable="true">${
                                       item.workName
@@ -92,19 +112,28 @@ function allList(email) {
                                     }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                              <div class="pageMain hide"></div>
-                             </div>`
-                        if (item.caseId.substr(0, 2) == 'DB') temp_dbpageList.push(item.pageId);
-                        let isIt = false;
-                        for (let list of temp_dbpageList) {
-                            if (item.parentId == list) {
-                                pageSite.children[3].insertAdjacentHTML("beforeend", text);
-                                isIt = true;
-                            }
-                        }
-                        if (!isIt) pageSite.children[4].insertAdjacentHTML("beforeend", text);
-                    } else { //부모가 워크
-                        let workSite = document.querySelector('.Work[data-id="' + item.workId + '"]');
-                        let text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="3" data-number="${item.numbering}" >
+                             </div>`;
+            if (item.caseId.substr(0, 2) == "DB")
+              temp_dbpageList.push(item.pageId);
+            let isIt = false;
+            for (let list of temp_dbpageList) {
+              if (item.parentId == list) {
+                pageSite.children[3].insertAdjacentHTML("beforeend", text);
+                isIt = true;
+              }
+            }
+            if (!isIt)
+              pageSite.children[4].insertAdjacentHTML("beforeend", text);
+          } else {
+            //부모가 워크
+            let workSite = document.querySelector(
+              '.Work[data-id="' + item.workId + '"]'
+            );
+            let text = `<div class= "Page" data-id="${
+              item.pageId
+            }"  data-name="${item.workName}" data-level="3" data-number="${
+              item.numbering
+            }" >
                                     <span class="pageListShow">▼</span>
                                     <span class="pageName" draggable="true">${
                                       item.workName
@@ -116,18 +145,23 @@ function allList(email) {
                                     }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                              <div class = "pageMain hide"></div>
-                             </div>`
-                        if (item.caseId.substr(0, 2) == 'DB') temp_dbpageList.push(item.pageId);
-                        workSite.children[4].insertAdjacentHTML("beforeend", text);
-                    }
-
-                } else if (item.level == 4) { //마지막 레벨 페이지(하위워크 내x)
-                    let pageSite = document.querySelector('.Page[data-id="' + item.parentId + '"]');
-                    //console.log(pageSite.parentElement.parentElement);
-                    if (pageSite != null) {
-                        let text = "";
-                        if (pageSite.parentElement.parentElement.className == "Work") {
-                            text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="4" data-number="${item.numbering}" >
+                             </div>`;
+            if (item.caseId.substr(0, 2) == "DB")
+              temp_dbpageList.push(item.pageId);
+            workSite.children[4].insertAdjacentHTML("beforeend", text);
+          }
+        } else if (item.level == 4) {
+          //마지막 레벨 페이지(하위워크 내x)
+          let pageSite = document.querySelector(
+            '.Page[data-id="' + item.parentId + '"]'
+          );
+          //console.log(pageSite.parentElement.parentElement);
+          if (pageSite != null) {
+            let text = "";
+            if (pageSite.parentElement.parentElement.className == "Work") {
+              text = `<div class= "Page" data-id="${item.pageId}"  data-name="${
+                item.workName
+              }" data-level="4" data-number="${item.numbering}" >
                                     <span class="pageListShow">▼</span>
                                     <span class="pageName" draggable="true">${
                                       item.workName
@@ -138,233 +172,191 @@ function allList(email) {
                                         : ""
                                     }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain hide"></div>
-                                </div>`
-                        } else {
-                            text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="4" data-number="${item.numbering}" >
+                                </div>`;
+            } else {
+              text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="4" data-number="${item.numbering}" >
                                     <span class="pageListShow">▼</span>
                                     <span class="pageName" draggable="true">${item.workName}</span>
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain hide"></div>
-                                </div>`
-                        }
-                        if (item.caseId.substr(0, 2) == 'DB') temp_dbpageList.push(item.pageId);
-                        let isIt = false;
-                        for (let list of temp_dbpageList) {
-                            if (item.parentId == list) {
-                                pageSite.children[3].insertAdjacentHTML("beforeend", text);
-                                isIt = true;
-                            }
-                        }
-                        if (!isIt) pageSite.children[4].insertAdjacentHTML("beforeend", text);
-                    }
-                } else if (item.level == 5) { //마지막 레벨 페이지(하위워크 내o)
-                    let pageSite = document.querySelector('.Page[data-id="' + item.parentId + '"]');
-                    console.log(pageSite);
-                    if (pageSite != null) {
-                        text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="5" data-number="${item.numbering}" >
+                                </div>`;
+            }
+            if (item.caseId.substr(0, 2) == "DB")
+              temp_dbpageList.push(item.pageId);
+            let isIt = false;
+            for (let list of temp_dbpageList) {
+              if (item.parentId == list) {
+                pageSite.children[3].insertAdjacentHTML("beforeend", text);
+                isIt = true;
+              }
+            }
+            if (!isIt)
+              pageSite.children[4].insertAdjacentHTML("beforeend", text);
+          }
+        } else if (item.level == 5) {
+          //마지막 레벨 페이지(하위워크 내o)
+          let pageSite = document.querySelector(
+            '.Page[data-id="' + item.parentId + '"]'
+          );
+          console.log(pageSite);
+          if (pageSite != null) {
+            text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName}" data-level="5" data-number="${item.numbering}" >
                                 <span class="pageListShow"></span>
                                 <span class="pageName" draggable="true">${item.workName}</span>
                                 <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain hide"></div>
-                            </div>`
+                            </div>`;
 
-                        let isIt = false;
-                        for (let list of temp_dbpageList) {
-                            if (item.parentId == list) {
-                                pageSite.children[3].insertAdjacentHTML("beforeend", text);
-                                isIt = true;
-                            }
-                        }
-                        if (!isIt) pageSite.children[4].insertAdjacentHTML("beforeend", text);
-                    }
-                }
+            let isIt = false;
+            for (let list of temp_dbpageList) {
+              if (item.parentId == list) {
+                pageSite.children[3].insertAdjacentHTML("beforeend", text);
+                isIt = true;
+              }
+            }
+            if (!isIt)
+              pageSite.children[4].insertAdjacentHTML("beforeend", text);
+          }
+        }
 
-                //forEach의 마지막에 닿음
-                if (dataList.length - 1 == idx) {
-                    //워크스페이스 하위 표시 토글 이벤트 :: OK
-                    setSideToggleEvent();
+        //forEach의 마지막에 닿음
+        if (dataList.length - 1 == idx) {
+          //워크스페이스 하위 표시 토글 이벤트 :: OK
+          setSideToggleEvent();
 
-                    //워크네임 우클릭 이벤트:: OK
-                    setSideRightClick();
+          //워크네임 우클릭 이벤트:: OK
+          setSideRightClick();
 
+          //페이지 이름 클릭 시 화면 재설정 이벤트 :: OK
+          document.querySelectorAll("span.pageName").forEach((pageNameArea) => {
+            let id = pageNameArea.closest(".Page").dataset.id;
+            pageNameArea.addEventListener("click", function (e) {
+              selectPage(id);
+            });
+          });
 
-                    //페이지 이름 클릭 시 화면 재설정 이벤트 :: OK
-                    document.querySelectorAll('span.pageName').forEach(pageNameArea => {
-                        let id = pageNameArea.closest('.Page').dataset.id;
-                        pageNameArea.addEventListener('click', function (e) {
-                            selectPage(id);
-                        });
-                    })
+          //세팅 이미지 클릭 시 워크스페이스 세팅 모달 :: OK
+          document.querySelectorAll(".setting").forEach(async (tag) => {
+            let setWId = tag.closest(".Work").dataset.id;
+            let SettingAuth = await memberCheck(setWId);
+            if (SettingAuth == "OWNER" || SettingAuth == "MANAGER") {
+              tag.addEventListener("click", workSetting);
+            } else if (SettingAuth == "NOMAL") {
+              let targetTag = tag;
+              targetTag.removeEventListener("click", workSetting);
+              targetTag.remove();
+            }
+          });
 
-                    //세팅 이미지 클릭 시 워크스페이스 세팅 모달 :: OK
-                    document.querySelectorAll('.setting').forEach(async (tag) => {
-                        let setWId = tag.closest('.Work').dataset.id;
-                        let SettingAuth = await memberCheck(setWId);
-                        if (SettingAuth == 'OWNER' || SettingAuth == 'MANAGER') {
-                            tag.addEventListener('click', workSetting);
-                        } else if (SettingAuth == 'NOMAL') {
-                            let targetTag = tag;
-                            targetTag.removeEventListener('click', workSetting);
-                            targetTag.remove();
-                        }
-                    })
+          //리로드 목록불러오기
+          sideReloadEvent();
 
-                    //리로드 목록불러오기
-                    sideReloadEvent();
+          //워크 work 드래그 이벤트
+          document.querySelectorAll("#side .workName").forEach((items) => {
+            items.addEventListener("dragstart", dragStart);
+            items.addEventListener("dragover", dragOver);
+            items.addEventListener("dragend", dragEnd);
+            items.addEventListener("drop", dropItem);
+          });
 
+          //페이지 page 드래그 이벤트
+          document.querySelectorAll("#side .pageName").forEach((items) => {
+            items.addEventListener("dragstart", dragStart);
+            items.addEventListener("dragover", dragOver);
+            items.addEventListener("dragend", dragEnd);
+            items.addEventListener("drop", dropPage);
+          });
 
-                    //워크 work 드래그 이벤트
-                    document.querySelectorAll('#side .workName').forEach(items => {
-                        items.addEventListener("dragstart", dragStart);
-                        items.addEventListener("dragover", dragOver);
-                        items.addEventListener("dragend", dragEnd);
-                        items.addEventListener("drop", dropItem);
-                    })
-
-                    //페이지 page 드래그 이벤트
-                    document.querySelectorAll('#side .pageName').forEach(items => {
-                        items.addEventListener("dragstart", dragStart)
-                        items.addEventListener("dragover", dragOver);
-                        items.addEventListener("dragend", dragEnd);
-                        items.addEventListener("drop", dropPage);
-                    })
-
-                    //페이지 이름 변경 모달 열기 :: 은주 :: OK
-                    PageNameSettingFunc();
-
-                } //if(data 마지막) END
-            }) //data.forEach END
-
-        }) //then END
+          //페이지 이름 변경 모달 열기 :: 은주 :: OK
+          PageNameSettingFunc();
+        } //if(data 마지막) END
+      }); //data.forEach END
+    }); //then END
 }
 
-
 function sideReloadEvent() {
-    //열린 워크 유지하기
-    let workClickSession = sessionStorage.getItem("workClickList");
-    if (workClickSession == null) {
-        return;
-    }
+  //열린 워크 유지하기
+  let workClickSession = sessionStorage.getItem("workClickList");
+  if (workClickSession == null) {
+    return;
+  }
 
-    workClickSession = JSON.parse(workClickSession); //스토리지 리스트
-    let workList = []; //워크 리스트
-    document.querySelectorAll('.Work').forEach(workDiv => workList.push(workDiv.dataset.id));
+  workClickSession = JSON.parse(workClickSession); //스토리지 리스트
+  let workList = []; //워크 리스트
+  document
+    .querySelectorAll(".Work")
+    .forEach((workDiv) => workList.push(workDiv.dataset.id));
 
-    // console.log('workList: ' + workList);
-    // console.log('workClickSession: ' + workClickSession);
-    // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
-    for (let i = 0; i < workClickSession.length; i++) {
-        let selector = `.Work[data-id="${workClickSession[i]}"]`;
-        let autoToggle = document.querySelector(selector);
-        if (autoToggle != null) {
-            let workListShow = autoToggle.querySelector('.workListShow');
-            workListShow.classList.add("clicked");
-            workListShow.innerHTML = "▲";
-            let pageDiv = workListShow.parentElement.querySelector('.pageMain');
-            pageDiv.classList.toggle("hide");
-        } else {
-            console.log('삭제 워크:' + workClickSession[i]);
-            workClickSession = workClickSession.filter(data => workList.includes(data));
-            sessionStorage.setItem("workClickList", JSON.stringify(workClickSession));
-        }
-    }
-
-    //열린 페이지 유지하기
-    let pageClickSession = sessionStorage.getItem("pageClickList")
-    if (pageClickSession == null) {
-        return;
-    }
-
-    pageClickSession = JSON.parse(pageClickSession);
-    let pageList = []; //워크 리스트
-    document.querySelectorAll('.Page').forEach(workDiv => pageList.push(workDiv.dataset.id));
-    // console.log('pageList: ' + pageList);
-    // console.log('pageClickSession: ' + pageClickSession);
-    // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
-    for (let i = 0; i < pageClickSession.length; i++) {
-
-        let selector = `.Page[data-id="${pageClickSession[i]}"]`;
-        let autoToggle = document.querySelector(selector)
-        if (autoToggle != null) {
-            let pageListShow = autoToggle.querySelector('.pageListShow');
-            pageListShow.classList.add("clicked");
-            pageListShow.innerHTML = "▲";
-            let pageDiv = pageListShow.parentElement.querySelector('.pageMain');
-            pageDiv.classList.toggle("hide");
-        } else {
-            pageClickSession = pageClickSession.filter(data => pageList.includes(data));
-            sessionStorage.setItem("pageClickList", JSON.stringify(pageClickSession));
-        }
-    }
-
-    //마지막으로 본 페이지가 있는지 체크
-    let lastPageSession = sessionStorage.getItem("lastPage") //마지막으로 본 페이지
-    let myMainPage = document.querySelector("#homePg").value;
-
-    if (lastPageSession == null) {
-        console.log("마지막 페이지 세션 없음");
-        selectPage(myMainPage);
+  // console.log('workList: ' + workList);
+  // console.log('workClickSession: ' + workClickSession);
+  // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
+  for (let i = 0; i < workClickSession.length; i++) {
+    let selector = `.Work[data-id="${workClickSession[i]}"]`;
+    let autoToggle = document.querySelector(selector);
+    if (autoToggle != null) {
+      let workListShow = autoToggle.querySelector(".workListShow");
+      workListShow.classList.add("clicked");
+      workListShow.innerHTML = "▲";
+      let pageDiv = workListShow.parentElement.querySelector(".pageMain");
+      pageDiv.classList.toggle("hide");
     } else {
-        let isItLastPage = document.querySelector('.Page[data-id="' + lastPageSession + '"]');
-        if (isItLastPage == null) {
-            console.log("마지막 페이지 세션 삭제됨");
-            sessionStorage.removeItem("lastPage");
-            selectPage(myMainPage);
-        } else {
-            console.log("마지막 페이지 세션 있음");
-            selectPage(lastPageSession)
-        }
+      console.log("삭제 워크:" + workClickSession[i]);
+      workClickSession = workClickSession.filter((data) =>
+        workList.includes(data)
+      );
+      sessionStorage.setItem("workClickList", JSON.stringify(workClickSession));
     }
-    
-    //열린 워크 유지하기
-    let workClickSession = sessionStorage.getItem("workClickList");
-        if(workClickSession != null){
-	        workClickSession = JSON.parse(workClickSession);    //스토리지 리스트
-	        let workList = [];//워크 리스트
-	        document.querySelectorAll('.Work').forEach(workDiv => workList.push(workDiv.dataset.id)); 
-	        
-	        // console.log('workList: ' + workList);
-	        // console.log('workClickSession: ' + workClickSession);
-	        // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
-	        for(let i=0;i<workClickSession.length;i++){
-	            let selector = `.Work[data-id="${workClickSession[i]}"]`;
-	            let autoToggle = document.querySelector(selector);
-	            if(autoToggle != null){
-	                let workListShow = autoToggle.querySelector('.workListShow');
-	                workListShow.classList.add("clicked");
-	                workListShow.innerHTML = "▲";
-	                let pageDiv = workListShow.parentElement.querySelector('.pageMain');
-	                pageDiv.classList.toggle("hide");
-	            }else{
-	                console.log('삭제 워크:' + workClickSession[i]);
-	                workClickSession = workClickSession.filter(data=> workList.includes(data));
-	                sessionStorage.setItem("workClickList" ,JSON.stringify(workClickSession));
-	            }
-	        }
-		}
-    //열린 페이지 유지하기
-    let pageClickSession = sessionStorage.getItem("pageClickList")
-        if(pageClickSession != null){
-	        pageClickSession = JSON.parse(pageClickSession);
-	        let pageList = [];//워크 리스트
-	        document.querySelectorAll('.Page').forEach(workDiv => pageList.push(workDiv.dataset.id)); 
-	        // console.log('pageList: ' + pageList);
-	        // console.log('pageClickSession: ' + pageClickSession);
-	        // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
-	        for(let i=0;i<pageClickSession.length;i++){
-	
-	            let selector = `.Page[data-id="${pageClickSession[i]}"]`;
-	            let autoToggle = document.querySelector(selector)
-	            if(autoToggle != null){
-	                let pageListShow = autoToggle.querySelector('.pageListShow');
-	                pageListShow.classList.add("clicked");
-	                pageListShow.innerHTML = "▲";
-	                let pageDiv = pageListShow.parentElement.querySelector('.pageMain');
-	                pageDiv.classList.toggle("hide");
-	            }else{
-	                pageClickSession = pageClickSession.filter(data=> pageList.includes(data));
-	                sessionStorage.setItem("pageClickList" ,JSON.stringify(pageClickSession));
-	            }
-	        }
-		}
+  }
+
+  //열린 페이지 유지하기
+  let pageClickSession = sessionStorage.getItem("pageClickList");
+  if (pageClickSession == null) {
+    return;
+  }
+
+  pageClickSession = JSON.parse(pageClickSession);
+  let pageList = []; //워크 리스트
+  document
+    .querySelectorAll(".Page")
+    .forEach((workDiv) => pageList.push(workDiv.dataset.id));
+  // console.log('pageList: ' + pageList);
+  // console.log('pageClickSession: ' + pageClickSession);
+  // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
+  for (let i = 0; i < pageClickSession.length; i++) {
+    let selector = `.Page[data-id="${pageClickSession[i]}"]`;
+    let autoToggle = document.querySelector(selector);
+    if (autoToggle != null) {
+      let pageListShow = autoToggle.querySelector(".pageListShow");
+      pageListShow.classList.add("clicked");
+      pageListShow.innerHTML = "▲";
+      let pageDiv = pageListShow.parentElement.querySelector(".pageMain");
+      pageDiv.classList.toggle("hide");
+    } else {
+      pageClickSession = pageClickSession.filter((data) =>
+        pageList.includes(data)
+      );
+      sessionStorage.setItem("pageClickList", JSON.stringify(pageClickSession));
+    }
+  }
+
+  //마지막으로 본 페이지가 있는지 체크
+  let lastPageSession = sessionStorage.getItem("lastPage"); //마지막으로 본 페이지
+  let myMainPage = document.querySelector("#homePg").value;
+
+  if (lastPageSession == null) {
+    console.log("마지막 페이지 세션 없음");
+    selectPage(myMainPage);
+  } else {
+    let isItLastPage = document.querySelector(
+      '.Page[data-id="' + lastPageSession + '"]'
+    );
+    if (isItLastPage == null) {
+      console.log("마지막 페이지 세션 삭제됨");
+      sessionStorage.removeItem("lastPage");
+      selectPage(myMainPage);
+    } else {
+      console.log("마지막 페이지 세션 있음");
+      selectPage(lastPageSession);
+    }
+  }
 }
 
 //세션저장소에 담긴 데이터 삭제
@@ -436,80 +428,38 @@ function setSideToggleEvent() {
         pageClickSession = JSON.parse(pageClickSession);
       }
 
-function setSideToggleEvent() {
-    //워크 하위 표시 토글 이벤트 :: OK
-    document.querySelectorAll('#side .workListShow').forEach(works => {
-        works.addEventListener('click', function (e) {
-            let workClickSession = sessionStorage.getItem("workClickList");
-            if (workClickSession == null) {
-                workClickSession = [];
-            } else {
-                workClickSession = JSON.parse(workClickSession);
-            }
-            let target = e.target;
-            let clickWid = e.currentTarget.parentElement.dataset.id;
-            console.log(clickWid)
-            if (target.classList.contains("clicked")) {
-                target.classList.remove("clicked");
-                target.innerHTML = "▼";
-                sessionStorageDelete(workClickSession, clickWid, "workClickList");
+      let target = e.target;
+      let clickPid = e.currentTarget.parentElement.dataset.id;
+      if (target.classList.contains("clicked")) {
+        target.classList.remove("clicked");
+        target.innerHTML = "▼";
+        sessionStorageDelete(pageClickSession, clickPid, "pageClickList");
 
-                let pageDiv = target.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            } else {
-                target.classList.add("clicked");
-                target.innerHTML = "▲";
+        let pageDiv = target.parentElement.querySelector(".pageMain");
+        pageDiv.classList.toggle("hide");
+      } else {
+        target.classList.add("clicked");
+        target.innerHTML = "▲";
 
-                let check = isItInSession(workClickSession, clickWid); //세션에 해당 id가 있는지 확인
-                if (!check) {
-                    workClickSession.push(clickWid);
-                    sessionStorage.setItem("workClickList", JSON.stringify(workClickSession))
-                }
-                let pageDiv = target.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            }
-        })
-    })
-
-    //페이지 하위 표시 토글 이벤트 :: OK
-    document.querySelectorAll('#side .pageListShow').forEach(Pages => {
-        Pages.addEventListener('click', function (e) {
-            let pageClickSession = sessionStorage.getItem("pageClickList")
-            if (pageClickSession == null) {
-                pageClickSession = [];
-            } else {
-                pageClickSession = JSON.parse(pageClickSession);
-            }
-
-            let target = e.target;
-            let clickPid = e.currentTarget.parentElement.dataset.id;
-            if (target.classList.contains("clicked")) {
-                target.classList.remove("clicked");
-                target.innerHTML = "▼";
-                sessionStorageDelete(pageClickSession, clickPid, "pageClickList");
-
-                let pageDiv = target.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            } else {
-                target.classList.add("clicked");
-                target.innerHTML = "▲";
-
-                let check = isItInSession(pageClickSession, clickPid); //세션에 해당 id가 있는지 확인
-                if (!check) {
-                    pageClickSession.push(clickPid);
-                    sessionStorage.setItem("pageClickList", JSON.stringify(pageClickSession))
-                }
-                let pageDiv = target.parentElement.querySelector('.pageMain');
-                pageDiv.classList.toggle("hide");
-            }
-        })
-    })
+        let check = isItInSession(pageClickSession, clickPid); //세션에 해당 id가 있는지 확인
+        if (!check) {
+          pageClickSession.push(clickPid);
+          sessionStorage.setItem(
+            "pageClickList",
+            JSON.stringify(pageClickSession)
+          );
+        }
+        let pageDiv = target.parentElement.querySelector(".pageMain");
+        pageDiv.classList.toggle("hide");
+      }
+    });
+  });
 }
 
 function setSideRightClick() {
-    let list = side.querySelectorAll('.workName');
-    list.forEach(targetDiv => {
-        //워크스페이스 부모 아이디가 있는지 없는지 불러와서 있으면 막음
+  let list = side.querySelectorAll(".workName");
+  list.forEach((targetDiv) => {
+    //워크스페이스 부모 아이디가 있는지 없는지 불러와서 있으면 막음
 
     //원래 우클릭하면 일어나는 이벤트 막음(사이드 name에서만 막음)
     targetDiv.oncontextmenu = function () {
@@ -614,7 +564,6 @@ document
       })
       .catch((err) => console.log(err));
   });
-
 
 //워크 세팅 이미지 관련
 function workSetting(e) {
@@ -721,7 +670,6 @@ function dropPage(event) {
       exceptMove = targetItem.closest('.Page[data-level="' + targetLevel + '"]')
         .dataset.id;
       console.log(exceptMove);
-
     }
     if (parentId == pageId || parentId == exceptMove || targetLevel == 4) {
       console.log("안돼!!!!!!!");
@@ -977,17 +925,12 @@ function selectPage(pageId) {
         }
         let app = document.querySelector(".container");
         let pageTitle = `<div class="pageHead">
-                       <h1 id="TitleName" class="TN-modi">${item.pageName}</h1>
+                       <h1 id="TitleName">${item.pageName}</h1>
                         <input type="text" id="TitleWid" 
                            data-pageId="${item.pageId}" value="${item.workId}"
                            style="visibility:hidden;">
                      </div>`;
         app.insertAdjacentHTML("beforebegin", pageTitle);
-
-        // 페이지 이름 수정용
-        const titleEles = document.querySelectorAll(".TN-modi");
-        titleEles.forEach(ele=>{ ele.addEventListener("dblclick", pageNameModi) });
-
         // 페이지 타입 체크
         let type = await pageTypeCheck(pageId);
         console.log("페이지 타입 체크", type);
@@ -1079,7 +1022,6 @@ function closeSideModal() {
   input.forEach((item) => {
     if (item.id != "loginUser") {
       item.value = "";
-
     }
   });
 
@@ -1209,7 +1151,6 @@ async function setWork(e) {
   members.forEach((mAuth) => {
     if (mAuth.auth == "OWNER") {
       owner = mAuth.email;
-
     }
   });
   document.querySelector("#ownArea").firstElementChild.value = owner;
@@ -1351,7 +1292,6 @@ async function setWork(e) {
           });
         }
       }
-
     });
   });
 }
@@ -1505,7 +1445,6 @@ function newWorkSpace() {
       }
     })
     .catch((err) => console.log(err));
-
 }
 
 //워크스페이스 타입별 select option 구분 / 초대 부분 노출여부
@@ -1656,7 +1595,6 @@ async function addList() {
 
           mail.value = "";
           mail.focus();
-
         }
 
         //하위 워크스페이스가 아니고 설정에서 사용자를 새로 초대하는 경우
@@ -1722,7 +1660,6 @@ function inviteWork(workId) {
       console.log(result + "건 성공");
     })
     .catch((err) => console.log(err));
-
 }
 
 const arr = ["workId", "email", "auth"];
@@ -1820,7 +1757,6 @@ async function memberList(workId) {
     })
     .catch((err) => console.log(err));
   return mail;
-
 }
 
 //워크스페이스 설정에 쓸 단건조회
@@ -1883,7 +1819,6 @@ function deleteWorkS(workId) {
   } else {
     alert("워크스페이스명이 일치하지 않습니다. 확인 후 다시 시도해주세요.");
   }
-
 }
 
 //워크스페이스 수정
@@ -1915,7 +1850,6 @@ function editWorkSpace(workId) {
       allList(email);
     })
     .catch((err) => console.log(err));
-
 }
 
 //멤버 제외
@@ -1933,7 +1867,6 @@ function memberOut(list) {
       closeSideModal();
     })
     .catch((err) => console.log(err));
-
 }
 
 //멤버 권한 재설정
@@ -1971,7 +1904,6 @@ async function changeOwner(e) {
   checkManager.forEach((own) => {
     if (own.auth == "OWNER") {
       owner = own.email;
-
     }
   });
   for (id of checkManager) {
@@ -2043,6 +1975,7 @@ async function listWorkJoin(workId) {
         trTag.appendChild(also);
         beforeJoin.appendChild(trTag);
       }
+
       invList.before(beforeJoin);
     })
     .catch((err) => console.log(err));
