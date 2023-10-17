@@ -355,9 +355,9 @@ async function creLink() {
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
         document.body.appendChild(linkText);
         url =
-            //'http://prodox.me/shared/'
-            'http://localhost:8099/shared/' +
-            pageBlockId;
+            'http://prodox.me/shared/'
+            // 'http://localhost:8099/shared/'
+            + pageBlockId;
         linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {
