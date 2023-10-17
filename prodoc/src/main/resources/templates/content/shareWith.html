@@ -17,16 +17,28 @@
 	<link th:href="@{css/common.css}" rel="stylesheet" />
 	<link th:href="@{css/block.css}" rel="stylesheet" />
 	<link th:href="@{css/sidebar.css}" rel="stylesheet" />
+	<link th:href="@{css/page.css}" rel="stylesheet" />
+	<link th:href="@{css/dbpage.css}" rel="stylesheet" />
+	<link th:href="@{css/toggleClass.css}" rel="stylesheet" />
+	<link th:href="@{css/modal/modal.css}" rel="stylesheet" />
+	<link th:href="@{css/modal/userInfo.css}" rel="stylesheet" />
+	<link th:href="@{css/alarm.css}" rel="stylesheet" />
+	<link th:href="@{css/reply.css}" rel="stylesheet" />
+	<link th:href="@{css/modal/workModal.css}" rel="stylesheet" />
+	<link th:href="@{css/variable/var.css}" rel="stylesheet" />
 	<title>PRODOC</title>
 </th:block>
 
 <body>
-	<th:block th:if="${session.logUser!= null}" layout:fragment="header" th:include="@{fragments/header}"></th:block>
-	<th:block th:if="${session.logUser!= null}" layout:fragment="sidebar" th:include="@{fragments/sidebar}"></th:block>
-	<input id="mainPID" type="text" style="visibility: hidden;"th:value="${param.pageId}">
+	<th:block layout:fragment="header"
+		th:include="@{fragments/header}"></th:block>
+	<th:block th:if="${session.logUser!= null}" layout:fragment="sidebar"
+		th:include="@{fragments/sidebar}"></th:block>
+	<input id="mainPID" type="text" style="visibility: hidden;"
+		th:value="${param.pageId}">
 	<!-- 링크로 공유된 페이지 보여주는 곳 -->
 	<div class="container"></div>
-	
+
 	</th:block>
 	<script>
 	
