@@ -1,43 +1,147 @@
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.modal-contents {
+	background-color: #fefefe;
+	margin: 10% auto;
+	padding: 20px;
+	border: 3px solid #888;
+	border-radius: 10px;
+	width: 800px;
+	height: 400px;
+	text-align: center;
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+}
+
+#workModal {
+	position: fixed;
+	z-index: 100;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 500px;
+	overflow: auto;
+}
+
+#workbackhide {
+	position: fixed;
+	z-index: 90;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 #btnArea {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+	position: absolute;
+	top: 380px;
 }
 
 #btnArea button:first-child {
-  margin-right: 40px;
+	margin-right: 40px;
 }
 
-.modal-content input:not([type="checkbox"]),
-.modal-content select {
-  font-size: 18px;
-  width: 414px;
+.modal-contents input:not([type="checkbox"]), .modal-contents select {
+	font-size: 14px;
+	width: 414px;
 }
+
 .modal-content-header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 12px;
 }
 
 #inviteUser {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
-#beforeJoin {
-  background-color: #f7f2ff;
+#invList {
+	width: 390px;
+	height: 60px;
+	border: 0.3px solid #e0d5fd;
+	overflow: auto;
+	position: relative;
+	left: 107px;
+	top: -10px;
 }
 
-#beforeJoin td {
-  background-color: #ede1ff;
+#outmemList {
+	overflow: auto;
+	position: relative;
+}
+
+#beforeJoin, #memList, #outmemList {
+	background-color: #f7f2ff;
+	width: 600px;
+}
+
+#outmemList td:first-child {
+	width: 490px;
+}
+
+#beforeJoin td, #memList td, #outmemList td {
+	background-color: #f2e6fd;
 }
 
 #ownArea {
-  margin-top: 20px;
+	margin-top: 20px;
+}
+
+#teamToggleArea {
+	position: relative;
+	left: -300px;
+}
+
+.btnClicked {
+	background-color: #e9defe;
+	border: 0.3px solid #e0d5fd;
+}
+
+
+#memList > tr > td:nth-child(2) {
+	width: 490px;
+}
+
+#msg {
+	position: absolute;
+	top: 350px;
+	left: 240px;
+}
+
+.workCloseBtn {
+	background-color: transparent;
+	border: none;
+	font-size: large;
+}
+
+.workCloseBtn:hover {
+	background-color: #e4e4e4;
+	cursor: pointer;
+	border: none;
+	font-size: large;
+}
+
+#memberOut:hover {
+	background-color: #e4e4e4;
+}
+
+#memberOut {
+	background-color: transparent;
+	border: 0;
+	font-size: 16px;
+}
+#memberAuth{
+	width: 70px;
+}
+#memberArea{
+	width:600px;
 }
