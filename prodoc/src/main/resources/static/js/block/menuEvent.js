@@ -175,7 +175,7 @@ const blockHandler = {
     const blockId = e.target.closest(`.block_dropdown_menu`).dataset.blockId;
     const menu = await makeDropDownMenu(
       blockId,
-      { left: 300, width: 100, modalClass: "child_dropdown_menu" },
+      { left: 300, width: 200, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.changeMenu]
     );
     displayModal(e.target.closest(".block_dropdown_menu"), menu);

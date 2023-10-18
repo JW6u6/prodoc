@@ -234,3 +234,23 @@ a {
 .modal_reply_controller button {
   background-color: #ccb;
 }
+.child_item .content{
+  margin-left: 10px;
+}
+
+.modal_item:not(.reply_modal){
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 270px;
+  height: 100px;
+  justify-content: space-around;
+}
+
+.colorMenuDiv{
+  color:#ccc;
+}
+
+.colorMenuDiv li{
+  color:black;
+}
