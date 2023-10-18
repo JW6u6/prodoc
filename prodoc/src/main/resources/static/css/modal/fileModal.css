@@ -19,7 +19,38 @@
   
 }
 
-#FileSearchModal .table-tr{
-  margin-top: 20px;
-  padding-bottom: 10px;
+#fileSearchList {
+	border: 1px solid #ddd;
+    height: 400px;
+    overflow: auto;
+}
+
+.modelBtnList {
+	margin-bottom: 10px;
+}
+
+.modelBtnList .closeBtn {
+	float: right;
+}
+
+.filedate {
+	background-color: #f2e0fb;
+}
+
+.file-thead {
+	font-weight: 700;
+	background-color: #eee;
+}
+
+.file-tr {
+	display: grid;
+	grid-template-columns: 250px 100px 170px 170px 150px;
+	border-bottom: 1px solid gray;
+	padding: 15px 0;
+	text-align: center;
+}
+
+
+.files-list .file-tr:hover {
+	background-color: #f2f1f3;
 }
