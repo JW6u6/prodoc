@@ -147,5 +147,5 @@ function moveToFileblock(e){
     const pageId = e.currentTarget.querySelector(".pidToFile").innerText;
     console.log(pageId, displayId);
     if(pageId != '' || pageId != null ) selectPage(pageId);
-    if(displayId != '' || displayId != null) cusorMove(displayId);
+    if(displayId != '' || displayId != null) setTimeout(() => cusorMove(displayId), 500);
 }

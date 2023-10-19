@@ -374,13 +374,11 @@ function getAttrList(attrs){    // 속성
 function updateAttrContent(data){
     // data = pageUseId, attrContent 필요(수정)
     let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
-    console.log(eventDiv)
     const pageEle = eventDiv.closest("[data-page-id]");
     data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
     data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     data['workId'] = document.getElementById("TitleWid").value;
     data['casePageId'] = eventDiv.closest("[data-block-id]").getAttribute("data-block-id");
-    console.log(data);
     fetch("updateAttrContent", {
         method : 'post',
         body : JSON.stringify(data),
@@ -1069,6 +1067,7 @@ function deleteThisAttr(e){
 // 속성 이름 변경
 function modifyAttrName(e){
     if(e.target.classList.contains("page-attr")) return;
+<<<<<<< HEAD
     const attrId = e.target.getAttribute("data-attrid");
     e.target.setAttribute("data-nowan", e.target.innerText);
 
@@ -1105,8 +1104,43 @@ async function modAttrNameFix(e){
             e.target.innerText = orgName;
         }else {
             modifyAttrNameAjax(data);
+=======
+    let dui = e.target.getAttribute("data-duse-id");
+    let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
+    let attrId = e.target.getAttribute("data-attrid");
+    if(e.type == 'click'){
+        if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
+        e.target.setAttribute("contenteditable", true);
+    }else if(e.type == 'keydown' && e.keyCode === 13){
+        e.preventDefault();
+        e.target.setAttribute("contenteditable", false);
+        let attrName = e.target.innerText;
+        let check = true;
+        let attrList = await getUseAttrList(caseId);
+        console.log(attrId, attrName)
+        attrList.forEach(useAttr => {
+            if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+        });
+        if(check == false){
+            alert("해당 속성이 이미 존재합니다.");
+            // ✅✅✅✅ 이름 원래 값으로 바꿔놔야한다
+            return;
+>>>>>>> branch '준위' of https://github.com/ParkSangg/YD1JO.git
         }
+<<<<<<< HEAD
         e.target.removeAttribute("data-nowan");
+=======
+        let data = {
+            'dbUseId' : dui,
+            'attrName' : attrName,
+            'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'casePageId' : caseId,  // 블럭아이디
+            'workId' : document.getElementById("TitleWid").value
+        };
+        modifyAttrNameAjax(data);
+
+>>>>>>> branch '준위' of https://github.com/ParkSangg/YD1JO.git
     }
 }
 
