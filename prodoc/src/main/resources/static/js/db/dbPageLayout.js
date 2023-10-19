@@ -158,9 +158,9 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="
-                `+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="
-                `+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" 
+            data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" 
+            data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
             <div class="inlineTags data_page">📄</div>
             <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
             <div class="inlineTags del-db-page">&#10005;</div>
