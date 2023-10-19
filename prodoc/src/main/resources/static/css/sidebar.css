@@ -12,14 +12,14 @@
 }
 
 #myWorkList, #teamWorkList{
-	overflow: auto;
+   overflow: auto;
 }
 #teamWork, #myWork{
-	margin-top : 20px;
-	margin-left : 10px;
-	color : rgba(78,112,108);
-	font-weight: bolder;
-	font-size : 13px;
+   margin-top : 20px;
+   margin-left : 10px;
+   color : rgba(78,112,108);
+   font-weight: bolder;
+   font-size : 13px;
 }
 /* 워크 생성 모달창 콘텐츠 박스크기 */
 .box {
@@ -127,8 +127,8 @@
   height: max-content;
 }
 .workListShow, .pageListShow {
-	font-size:13px;
-	color: rgb(90,90,90)
+   font-size:13px;
+   color: rgb(90,90,90)
 }
 
 #nameArea {
@@ -174,7 +174,7 @@
   width: 414px;
   height: 35px;
   border-radius: 10px;
-  border: 3px solid blue;
+  border: 2px solid #dbcafb;
 }
 
 .selectBox .select {
@@ -190,8 +190,8 @@
 }
 
 .selectBox .select option {
-  background: lightcoral;
-  color: #fff;
+  background: #f8faf8;
+  color: #2c304e;
   padding: 0;
   font-size: 16px;
 }
@@ -226,8 +226,8 @@
 }
 
 #invEmail {
-  width: 414px;
-  margin-left: 97px;
+  width: 505px;
+  margin-left: 5px;
   margin-bottom: 0px;
   margin-right: 5px;
 }
@@ -322,8 +322,11 @@ select::-ms-expand {
 #subWorkMenu {
   display: none;
   position: absolute;
-  background-color: #ccc;
+  background-color: #ccbbe8;
   z-index: 999;
+  padding: 3.4px;
+  border: 0.3px solid #fbecf1;
+  color: #ffffff;
 }
 
 .highlight {
