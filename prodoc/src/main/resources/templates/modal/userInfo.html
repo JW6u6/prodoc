@@ -5,7 +5,7 @@
 
 		<img class="profile"
 			th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"
-			onerror="this.src='images/noneUser.jpg'"
+			onerror="this.src='images/noneUser.png'"
 			style="width: 200px; border-radius: 100px">
 
 		<p class="email">[[${session.logUser.email == null ? '':
@@ -30,7 +30,7 @@
 				<div class="userModForm_left">
 					<img class="profile" id="profile"
 						th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"
-						onerror="this.src='images/noneUser.jpg'"
+						onerror="this.src='images/noneUser.png'"
 						style="width: 170px; border-radius: 100px">
 					<div class="profile_btn_wrapper">
 						<button type="submit" id="infoSaveBtn" class="btn">저장</button>

@@ -3,8 +3,10 @@
 <th:block th:fragment="sidebarFragment">
 	<link th:href="@{css/sidebar.css}" rel="stylesheet" />
 
-	<!-- Sidebar -->
+   <!-- Sidebar -->
 	<div id="side">
+		<input th:if="${session.logUser!= null}" type="text" id="homePg"
+	   	  style="display:none;" th:value="${session.logUser.defaultPage}">
 		<input type="text" class="logUser" style="display: none;"
 			th:value="${session.logUser.email}">
 		<div class="side_logo">

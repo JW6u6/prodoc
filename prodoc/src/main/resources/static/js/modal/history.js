@@ -125,14 +125,23 @@ function settingHistoryResult(history){
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
 						    <div class="history_item--right">
-						        <p>페이지</p>
-						        <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
-						        <p>${history[i].nickname}(${history[i].creUser})</p>
-						    </div>`;
+						        <div class="inline-div">
+						            <div>
+						                <div class="inline-div">
+						                    <span class="material-symbols-outlined">draft</span>
+						                </div>
+						                <div class="inline-div">
+						                    <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
+						                </div>
+						            </div>
+						            <div>
+						                <p>${history[i].nickname}(${history[i].creUser})</p>
+						            </div>
+						        </div>`;
 			if(history[i].historyType == 'DELETE'){
-				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+				historyDIV += ` <div class="inline-div"><button type="button" class="revokeBtn">복구</button></div>`;
 			}
-				historyDIV += `</div>`;
+				historyDIV += `</div></div>`;
 		}else{							//워크에 관한 히스토리
 			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" 
 							style="overflow:hidden; border:1px solid black; margin:5px 0px">
@@ -141,15 +150,27 @@ function settingHistoryResult(history){
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
 						    <div class="history_item--right">
-						    	<p>워크스페이스</p>
-						        <h3>${history[i].workName}</h3>
-						        <p>${history[i].nickname}(${history[i].creUser})</p>
-						    </div>`
+						        <div class="inline-div">
+						            <div>
+						                <div class="inline-div">
+						                    <span class="material-symbols-outlined">folder</span>
+						                </div>
+						                <div class="inline-div">
+						                    <h3>${history[i].workName}</h3>
+						                </div>
+						            </div>
+						            <div>
+						                <p>${history[i].nickname}(${history[i].creUser})</p>
+						            </div>
+						        </div>`
 						    
 			if(history[i].historyType == 'DELETE'){
-				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+				historyDIV += ` <div class="inline-div">
+						            <button type="button" class="revokeBtn">복구</button>
+						        </div>`;
 			}
-			historyDIV += `</div>`;
+			historyDIV += `		</div>
+							</div>`;
 		}
 		
 		resultList.innerHTML += historyDIV;
