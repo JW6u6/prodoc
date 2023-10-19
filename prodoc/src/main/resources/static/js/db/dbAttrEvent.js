@@ -374,13 +374,11 @@ function getAttrList(attrs){    // 속성
 function updateAttrContent(data){
     // data = pageUseId, attrContent 필요(수정)
     let eventDiv = document.querySelector('[data-puse-id="'+data.pageUseId+'"]');
-    console.log(eventDiv)
     const pageEle = eventDiv.closest("[data-page-id]");
     data['pageId'] = eventDiv.closest("[data-page-id]").getAttribute("data-page-id");
     data['email'] = document.getElementById("UserInfoMod").querySelector(".email").textContent;
     data['workId'] = document.getElementById("TitleWid").value;
     data['casePageId'] = eventDiv.closest("[data-block-id]").getAttribute("data-block-id");
-    console.log(data);
     fetch("updateAttrContent", {
         method : 'post',
         body : JSON.stringify(data),
