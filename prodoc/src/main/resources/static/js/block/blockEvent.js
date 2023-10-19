@@ -24,11 +24,11 @@ function handlingBlockEvent(element) {
     //그리고 유저의 아이콘 보여주기.
     console.log(e);
     const block = e.target.closest(".prodoc_block");
-    if(block){
+    if (block) {
       const socketEventObj = {
         eventType: "FOCUSIN",
         upUser: blockSessionUserId,
-        displayId:block.dataset.blockId,
+        displayId: block.dataset.blockId,
         imgSrc: document.querySelector("#userImg").src,
       };
       sendSocketEvent(socketEventObj);
@@ -37,12 +37,12 @@ function handlingBlockEvent(element) {
   });
   element.addEventListener("focusout", (e) => {
     //다른상대는 disabled 해제
-    const block = e.target.closest(".prodoc_block")
-    if(block){
+    const block = e.target.closest(".prodoc_block");
+    if (block) {
       const socketEventObj = {
         eventType: "FOCUSOUT",
         upUser: blockSessionUserId,
-        displayId: block.dataset.blockId
+        displayId: block.dataset.blockId,
       };
       sendSocketEvent(socketEventObj);
     }
@@ -224,7 +224,9 @@ const fileRegiClickEvent = (e) => {
       const upName = file[0].name;
       const newName = await uploadFile(formData);
       await updateFile({ displayId: blockId, path: null, newName, upName });
-      await fileEvent(document.querySelector(`[data-block-id="${blockId}"] .content`));
+      await fileEvent(
+        document.querySelector(`[data-block-id="${blockId}"] .content`)
+      );
     }
   });
 };
@@ -730,7 +732,7 @@ async function keydown_handler(e) {
         block.querySelector(".content").focus();
         //블럭 체인지 이벤트 걸기
       }
-    } else if(e.currentTarget.dataset.blockType === "ULIST") {
+    } else if (e.currentTarget.dataset.blockType === "ULIST") {
       if (e.target.innerHTML !== "") {
         const template = await updateTemplate({
           displayId: null,
@@ -762,7 +764,7 @@ async function keydown_handler(e) {
           upUser: blockSessionUserId,
         };
         sendSocketEvent(socketEventObj);
-      }else {
+      } else {
         // TODO블럭이 비어있다면 해당 블럭을 TEXT로 만들기
         // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
         let block = e.currentTarget;
@@ -791,7 +793,19 @@ async function keydown_handler(e) {
       }
     } else {
       // 블럭을 새로 만들기
-      const template = makeBlockTemplate(order);
+      let template = makeBlockTemplate(order);
+      let parentBlockType = null;
+      let parentBlockId = null;
+      const isChild = e.target.closest(".child_item");
+      if (isChild) {
+        parentBlockType = isChild.closest(".prodoc_block").dataset.blockType;
+        parentBlockId = isChild.closest(".prodoc_block").dataset.blockId;
+      }
+      if (parentBlockType === "TOGGLE") {
+        //아이디가 넘어가야함
+        template = makeBlockTemplate(order, parentBlockId);
+      }
+
       const isDBpage = e.currentTarget.closest(".dataPage_blocks");
 
       const displayObj = {
