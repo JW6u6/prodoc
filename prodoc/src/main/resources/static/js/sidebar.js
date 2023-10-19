@@ -26,7 +26,6 @@ function allList() {
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             data.forEach((item, idx, dataList) => {
                 if (item.level == 1) {
                     if (item.workType == "TEAM") {
@@ -219,7 +218,7 @@ function allList() {
                             pageSite.children[4].insertAdjacentHTML("beforeend", text);
                     }
                 }
-
+                
                 //forEach의 마지막에 닿음
                 if (dataList.length - 1 == idx) {
                     //워크스페이스 하위 표시 토글 이벤트 :: OK
@@ -1013,7 +1012,7 @@ function newPageModal(event) {
 
     let wId = event.target.closest(".Work").dataset.id;
     let pId = "";
-    if (event.target.closest(".pageMain")) {
+    if (event.target.closest(".Page")) {
         pId = event.target.closest(".Page").dataset.id;
     }
     let workId = document.querySelector("#workId");
