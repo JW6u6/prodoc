@@ -100,7 +100,7 @@
 	</div>
 
 	<!--/* 워크스페이스 모달 시작 */-->
-	<div id="workModal" style="display:none;">
+	<div id="workModal" style="display: none;">
 		<div id="workbackhide">
 			<div class="modal-contents">
 				<div class="modal-content-header">
@@ -146,11 +146,13 @@
 
 				<!--/* 팀 워크스페이스 소유자 표시 영역. 소유자 권한 이전 가능. */-->
 				<div id="ownArea" class="hide">
-					<label>소유자: </label><input type="text" class="input_text-md" style="width:340px; color:#ccc;">
+					<label>소유자: </label><input type="text" class="input_text-md"
+						style="width: 340px; color: #ccc;">
 				</div>
 
 				<!--/* 워크스페이스 삭제 영역 */-->
-				<div id="deleteBtn" class="hide" style="color: red; cursor: pointer;">워크스페이스 삭제</div>
+				<div id="deleteBtn" class="hide"
+					style="color: red; cursor: pointer;">워크스페이스 삭제</div>
 				<!--/* 워크스페이스 삭제시 이름 입력 부분 */-->
 				<div id="delCheckArea" class="hide">
 					<input type="text" id="delCheck" class="input_text-xl"
@@ -168,9 +170,12 @@
 
 					<!--/* 워크스페이스 멤버, 초대받은 사람 보여주는 영역 */-->
 					<div id="memberArea" class="hide" align="right">
+					<div style="position: absolute; text-align: left; font-size:12px; top:172;">전체 인원: <span id="allmember"></span> 명</div>
 						<button id="memberOut" style="color: #650a39; cursor: pointer;">내보내기</button>
 						전체 선택<input type="checkbox" name="member" value="checkAll"
 							onclick="selectAll(this)">
+					</div>
+					<div id="memberCheckArea">
 						<table id="memList">
 						</table>
 					</div>
