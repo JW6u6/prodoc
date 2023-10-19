@@ -1,49 +1,53 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sidebarFragment">
-   <link th:href="@{css/sidebar.css}" rel="stylesheet" />
+	<link th:href="@{css/sidebar.css}" rel="stylesheet" />
 
-   <!-- Sidebar -->
-   <div id="side">
-   <input type="text" class="logUser" style="display:none; "th:value="${session.logUser.email}">
-   <div class="side_logo">
-      <div>
-         <img alt="logo" src="images/sideLogo.png">
-      </div>
-   </div>
-      <div>
-         <div id="alarm">알림</div>
-         <div id="fileList">파일</div>
-         <div id="sidebar">
-            <span>새 워크스페이스 생성</span> <span onclick="newWork()" class="addWS">
-               <img class="plus" th:src="@{images/plus.svg}" width="15px"
-               height="15px">
-            </span>
-            <div id="workspaces"></div>
-         </div>
-         <div id="searchWKDB">검색</div>
-         <div id="history">히스토리</div>
-      </div>
-      <hr>
-      <div id="myWork">개인 워크스페이스</div>
-      <div id="myWorkList" ></div>
-      <br>
-      <hr>
-      <div id="teamWork">팀 워크스페이스</div>
-      <div id="teamWorkList"></div>
-   </div>
+	<!-- Sidebar -->
+	<div id="side">
+		<input type="text" class="logUser" style="display: none;"
+			th:value="${session.logUser.email}">
+		<div class="side_logo">
+			<div>
+				<img alt="logo" src="images/sideLogo.png">
+			</div>
+		</div>
+		<div>
+			<div id="alarm">알림</div>
+			<div id="fileList">파일</div>
+			<div id="sidebar">
+				<span>새 워크스페이스 생성</span> <span class="addWS" onclick="newWork()">
+					<img class="plus" th:src="@{images/plus.svg}" width="15px"
+					height="15px">
+				</span>
+				<div id="workspaces"></div>
+			</div>
+			<div id="searchWKDB">검색</div>
+			<div id="history">히스토리</div>
+		</div>
+		<hr>
+		<div id="myWork">개인 워크스페이스</div>
+		<div id="myWorkList"></div>
+		<br>
+		<hr>
+		<div id="teamWork">팀 워크스페이스</div>
+		<div id="teamWorkList"></div>
+	</div>
 
-     <div id="pageModal">
+	<div id="pageModal">
 		<div class="modal-content">
-				<input type="text" placeholder="새 페이지" value="" id="pgName" class="input_text-md" />
-				<div id="dbPage">
+			<input type="text" placeholder="새 페이지" value="" id="pgName"
+				class="input_text-md" />
+			<div id="dbPage">
 				<div class="pageModal_page">
 					<div>
 						<h3>페이지</h3>
 					</div>
 					<div class="pageModal_page_list">
 						<div data-casetype="NONE" class="db" onclick="selectDb(event)">
-							<div><img th:src="@{images/thumb/page.png}" /></div>
+							<div>
+								<img th:src="@{images/thumb/page.png}" />
+							</div>
 							<div>새 페이지</div>
 						</div>
 					</div>
@@ -54,20 +58,28 @@
 					</div>
 					<div class="pageModal_db_list">
 						<div data-casetype="DB_LIST" class="db" onclick="selectDb(event)">
-						<div><img th:src="@{images/thumb/list.png}" /></div>
-						<div>리스트</div>
+							<div>
+								<img th:src="@{images/thumb/list.png}" />
+							</div>
+							<div>리스트</div>
 						</div>
 						<div data-casetype="DB_BRD" class="db" onclick="selectDb(event)">
-						<div><img th:src="@{images/thumb/kanban.png}" /></div>
-						<div>칸반보드</div>
+							<div>
+								<img th:src="@{images/thumb/kanban.png}" />
+							</div>
+							<div>칸반보드</div>
 						</div>
 						<div data-casetype="DB_GAL" class="db" onclick="selectDb(event)">
-						<div><img th:src="@{images/thumb/gal.png}" /></div>
-						<div>갤러리</div>
+							<div>
+								<img th:src="@{images/thumb/gal.png}" />
+							</div>
+							<div>갤러리</div>
 						</div>
 						<div data-casetype="DB_TBL" class="db" onclick="selectDb(event)">
-						<div><img th:src="@{images/thumb/brd.png}" /></div>
-						<div>표</div>
+							<div>
+								<img th:src="@{images/thumb/brd.png}" />
+							</div>
+							<div>표</div>
 						</div>
 					</div>
 				</div>
@@ -80,112 +92,111 @@
 			<!--caseId값 -->
 			<input type="text" value="NONE" id="caseId" style="display: none;">
 			<div class="insert_page_btn_wrapper">
-			<button type="button" id="insert-page" class="close btn-md">생성</button>
-			<button id="close-modal" class="close btn-md" onclick="closeSideModal()">닫기</button>
+				<button type="button" id="insert-page" class="close btn-md">생성</button>
+				<button id="close-modal" class="close btn-md"
+					onclick="closeSideModal()">닫기</button>
 			</div>
 		</div>
 	</div>
 
-  <!--/* 워크스페이스 모달 시작 */-->
-	<div id="workModal">
-		<div>
-			<div>
-				<div class="modal-content">
-					<div class="modal-content-header">
-						<h3 style="text-align: left" id="workModalName">워크스페이스 모달</h3>
-						<button id="close-modal" class="close closeBtn"
-							onclick="closeSideModal()">&#10005;</button>
+	<!--/* 워크스페이스 모달 시작 */-->
+	<div id="workModal" style="display:none;">
+		<div id="workbackhide">
+			<div class="modal-contents">
+				<div class="modal-content-header">
+					<h3 style="text-align: left" id="workModalName">워크스페이스 모달</h3>
+					<button id="close-modal" class="close workCloseBtn"
+						onclick="closeSideModal()">&#10005;</button>
+				</div>
+
+				<!--/* 워크스페이스 설정 토글(팀) */-->
+				<div id="teamToggleArea" class="hide">
+					<button type="button" class="btn" id="workEdit">설정</button>
+					<button type="button" class="btn" id="teamEdit">멤버</button>
+				</div>
+
+				<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
+				<div id="nameArea">
+					<input type="text" id="wsName" name="workName"
+						class="Necessary input_text-xl box" autocomplete="off"
+						placeholder="워크스페이스명"> <input type="hidden" id="loginUser"
+						name="email" th:value="${session.logUser.email}">
+				</div>
+
+				<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
+				<div class="selectBox" id="typeArea">
+					<select id="wsType" name="workType"
+						class="select Necessary input_text-xl">
+						<option disabled selected="selected">워크스페이스 타입</option>
+						<option value="TEAM">팀 워크스페이스</option>
+						<option value="PERSONAL">개인 워크스페이스</option>
+					</select> <span id="typeArrow" class="icoArrow">&#9660;</span>
+				</div>
+
+				<!--/* 워크스페이스 공개범위 지정 영역. 필요한 곳: 생성/설정(개인, 팀) */-->
+				<div class="selectBox" id="pubArea">
+					<select id="wsPrivate" name="publicCheck"
+						class="select Necessary input_text-xl">
+						<option disabled selected="selected">워크스페이스 공개</option>
+						<option value="W_PUB">전체공개</option>
+						<option value="W_MEM" class="hide" id="memOption">멤버공개</option>
+						<option value="W_PRIV" id="privOption">비공개</option>
+					</select> <span id="priArrow" class="icoArrow">&#9660;</span>
+				</div>
+
+				<!--/* 팀 워크스페이스 소유자 표시 영역. 소유자 권한 이전 가능. */-->
+				<div id="ownArea" class="hide">
+					<label>소유자: </label><input type="text" class="input_text-md" style="width:340px; color:#ccc;">
+				</div>
+
+				<!--/* 워크스페이스 삭제 영역 */-->
+				<div id="deleteBtn" class="hide" style="color: red; cursor: pointer;">워크스페이스 삭제</div>
+				<!--/* 워크스페이스 삭제시 이름 입력 부분 */-->
+				<div id="delCheckArea" class="hide">
+					<input type="text" id="delCheck" class="input_text-xl"
+						placeholder="삭제하실 워크스페이스의 이름을 입력하세요.">
+				</div>
+
+				<!--/* 워크스페이스 유저 초대 영역 */-->
+				<div id="inviteUser" class="hide">
+					<div class="invWrapper">
+						<input type="email" id="invEmail" class="input_text-xl"
+							autocomplete="off" placeholder="워크스페이스에 초대하실 분의 이메일을 입력해주세요.">
+						<button type="button" id="inviteBtn" class="btn">추가</button>
+						<div id="autoContain"></div>
 					</div>
 
-					<!--/* 워크스페이스 설정 토글(팀) */-->
-					<div id="teamToggleArea" class="hide">
-						<button type="button" id="workEdit">설정</button>
-						<button type="button" id="teamEdit">멤버</button>
-					</div>
-
-					<!--/* 워크스페이스 이름 영역. 필요한 곳: 생성, 삭제, 설정(개인, 팀) */-->
-					<div id="nameArea">
-						<input type="text" id="wsName" name="workName"
-							class="Necessary input_text-xl box selectBox"
-							placeholder="워크스페이스명"> <input type="hidden"
-							id="loginUser" name="email" th:value="${session.logUser.email}">
-					</div>
-
-					<!--/* 워크스페이스 타입 영역. 필요한 곳: 생성 */-->
-					<div class="selectBox" id="typeArea">
-						<select id="wsType" name="workType"
-							class="select Necessary input_text-xl">
-							<option disabled selected="selected">워크스페이스 타입</option>
-							<option value="TEAM">팀 워크스페이스</option>
-							<option value="PERSONAL">개인 워크스페이스</option>
-						</select> <span id="typeArrow" class="icoArrow">&#9660;</span>
-					</div>
-
-					<!--/* 워크스페이스 공개범위 지정 영역. 필요한 곳: 생성/설정(개인, 팀) */-->
-					<div class="selectBox" id="pubArea">
-						<select id="wsPrivate" name="publicCheck"
-							class="select Necessary input_text-xl">
-							<option disabled selected="selected">워크스페이스 공개</option>
-							<option value="W_PUB">전체공개</option>
-							<option value="W_MEM" class="hide" id="memOption">멤버공개</option>
-							<option value="W_PRIV" id="privOption">비공개</option>
-						</select> <span id="priArrow" class="icoArrow">&#9660;</span>
-					</div>
-
-					<!--/* 팀 워크스페이스 소유자 표시 영역. 소유자 권한 이전 가능. */-->
-					<div id="ownArea" class="hide">
-						<input type="text" class="input_text-xl">
-					</div>
-
-					<!--/* 워크스페이스 삭제 영역 */-->
-					<div id="deleteBtn" class="hide" style="color: red">워크스페이스 삭제</div>
-					<!--/* 워크스페이스 삭제시 이름 입력 부분 */-->
-					<div id="delCheckArea" class="hide">
-						<input type="text" id="delCheck" class="input_text-xl"
-							placeholder="삭제하실 워크스페이스의 이름을 입력하세요.">
-					</div>
-
-					<!--/* 워크스페이스 유저 초대 영역 */-->
-					<div id="inviteUser" class="hide">
-						<div class="invWrapper">
-							<input type="email" id="invEmail" class="input_text-xl"
-								autocomplete="off" placeholder="워크스페이스에 초대하실 분의 이메일을 입력해주세요.">
-							<button type="button" id="inviteBtn" class="btn">추가</button>
-							<div id="autoContain"></div>
-						</div>
-
-						<!--/* 워크스페이스 멤버, 초대받은 사람 보여주는 영역 */-->
-						<div id="memberArea" class="hide">
-							<button id="memberOut" style="all: unset;">내보내기</button>
-							전체 선택<input type="checkbox" name="member" value="checkAll"
-								onclick="selectAll(this)">
-							<table id="memList">
-							</table>
-						</div>
-
-						<div id="invList"></div>
-					</div>
-
-					<div id="outmemArea" class="hide">
-						<table id="outmemList">
+					<!--/* 워크스페이스 멤버, 초대받은 사람 보여주는 영역 */-->
+					<div id="memberArea" class="hide" align="right">
+						<button id="memberOut" style="color: #650a39; cursor: pointer;">내보내기</button>
+						전체 선택<input type="checkbox" name="member" value="checkAll"
+							onclick="selectAll(this)">
+						<table id="memList">
 						</table>
-						<div id="msg" style="color: red">선택한 멤버를 워크스페이스에서 내보내시겠습니까?</div>
 					</div>
 
-					<!--/* 워크스페이스 모달 버튼 영역. 생성 -> 설정으로 열 시 삭제, 저장으로 바뀜. */-->
-					<div id="btnArea">
-						<button id="wsCreate" class="btn" type="button">생성</button>
-						<button id="cancel" class="close btn-md" type="button"
-							onclick="closeSideModal()">취소</button>
-					</div>
+					<div id="invList"></div>
+				</div>
+
+				<div id="outmemArea" class="hide">
+					<table id="outmemList">
+					</table>
+					<div id="msg" style="color: red">선택한 멤버를 워크스페이스에서 내보내시겠습니까?</div>
+				</div>
+
+				<!--/* 워크스페이스 모달 버튼 영역. 생성 -> 설정으로 열 시 삭제, 저장으로 바뀜. */-->
+				<div id="btnArea">
+					<button id="wsCreate" class="btn" type="button">생성</button>
+					<button id="cancel" class="close btn-md" type="button"
+						onclick="closeSideModal()">취소</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
-   <div id="subWorkMenu">하위 워크스페이스 생성</div>
+	<div id="subWorkMenu">하위 워크스페이스 생성</div>
 
-   <!-- 페이지 새이름 -->
+	<!-- 페이지 새이름 -->
 	<div id="editPageMod" class="hide">
 		<div>
 			<div>
