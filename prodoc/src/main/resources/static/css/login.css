@@ -110,6 +110,7 @@ body {
 .find_modal--header{
   display: flex;
   justify-content: space-between;
+  margin-bottom: 12px;
 }
 .find_this{
   display: flex;

@@ -142,3 +142,11 @@ body {
 .input-date {
   background-color: #f8f8f8;
 }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}

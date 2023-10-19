@@ -22,7 +22,7 @@
 				</nav>
 				<img id="userImg" class="menuBtn profile"
 					th:src="|${session.logUser.platform == 'KAKAO' ? session.logUser.profile: '/files/'+session.logUser.profile}|"
-					onerror="this.src='images/noneUser.jpg'"
+					onerror="this.src='images/noneUser.png'"
 					style="width: 30px; height: 30px; border-radius: 15px;">
 			</th:block>
 			<button th:if="${session.logUser == null}" id="logBtn" onclick="location.href='/'">로그인</button>
