@@ -29,6 +29,22 @@
 	margin-bottom: 12px;
 }
 
+.search_option {
+	margin-bottom: 15px;
+}
+
+.search_option input {
+	margin-bottom: 10px;
+}
+
+.search_option #startDate {
+	margin-left: 60px;
+}
+
+.search_option span {
+	margin-right: 8px;
+}
+
 .modelBtnList .closeBtn {
 	float: right;
 }

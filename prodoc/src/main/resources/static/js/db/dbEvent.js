@@ -30,7 +30,7 @@ function databaseAllEvent(){
         // 키다운 이벤트
         block.addEventListener("keydown", e => {
             if (e.target.matches(".attr")) attrContentUpdate(e);
-            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".attr-name")) modAttrNameFix(e);
             else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
         });
 
@@ -51,7 +51,7 @@ function databaseAllEvent(){
                 // 키다운 이벤트
         page.addEventListener("keydown", e => {
             if (e.target.matches(".attr")) attrContentUpdate(e);
-            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".attr-name")) modAttrNameFix(e);
             else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
         });
 
@@ -204,6 +204,8 @@ function insertDBpage(e){
             })
             targetNode.prepend(block);
         }
+
+        allList(); // 사이드바 리로드
     })
     .catch(err => console.log(err));
 }
