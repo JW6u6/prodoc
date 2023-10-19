@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.prodoc.member.service.MemberService;
+import com.prodoc.member.service.MemberVO;
 import com.prodoc.notify.service.NotifyService;
 import com.prodoc.page.service.PageService;
 import com.prodoc.socket.SocketCommand;
@@ -41,6 +44,9 @@ public class WorkSpaceController {
 
 	@Autowired
 	NotifyService notifyService;
+	
+	@Autowired
+	MemberService memberService;
 	
 	@Setter(onMethod_ = @Autowired)
 	WorkSpaceMapper WorkSpaceMapper;
@@ -72,6 +78,11 @@ public class WorkSpaceController {
 		return WorkSpaceMapper.allList(email);
 	}
 	
+	@GetMapping("/partList")
+	public List<allListVO> partList(String workId) {
+		return WorkSpaceMapper.partList(workId);
+	}
+	
 	@GetMapping("/workId")
 	public String workId(String workName) {
 		return WorkSpaceMapper.workId(workName);
@@ -86,8 +97,7 @@ public class WorkSpaceController {
 
 	// 워크스페이스 새로 생성
 	@PostMapping("/workInsert")
-	public String workspaceInsert(@RequestBody WorkSpaceVO workVO) {
-		// 워크스페이스 생성
+	public String workspaceInsert(@RequestBody WorkSpaceVO workVO,HttpSession session) {
 		return workspaceService.insertWorkspace(workVO);
 		// 워크스페이스 생성할때 유저 초대하는 경우 리턴으로 받아온 워크스페이스 아이디를 넘김.
 	}

@@ -185,7 +185,7 @@ async function pageDelCheck() {
     }
 
     if (dbCheck == true) {
-        alert('데이터베이스는 여기서 삭제할 수 없습니다.')
+        pageBlockId = '';
     } else if (home.value == pageBlockId) {
         alert('홈은  삭제할 수 없습니다.');
 

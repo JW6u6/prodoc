@@ -19,10 +19,9 @@ let joinOutBtn = document.querySelector("#joinOutBtn")
 //탈퇴 진행
 let jOutBtn = document.querySelector("#jOutBtn")
 .addEventListener('click', function(e){
+  console.log(e.target.parentElement);
+  e.target.closest("#joinOutMod").className = 'hide';
    if(joinout.value != ''){
-      console.log(e.target.parentElement);
-      e.target.closest("#joinOutMod").classList.toggle('hide');
-      e.target.closest("#joinOutMod").classList.toggle('view');
       
       fetch("/joinout", {
          method: "post",

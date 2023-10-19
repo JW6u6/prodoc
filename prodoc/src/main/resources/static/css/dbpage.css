@@ -82,6 +82,7 @@ div[data-attr-option] {
 	background-color: white;
 	padding: 15px;
 	z-index:99;
+	right: 20px;
 }
 
 div[data-attr-option] * {

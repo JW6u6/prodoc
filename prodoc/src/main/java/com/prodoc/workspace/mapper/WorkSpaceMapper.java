@@ -10,6 +10,7 @@ public interface WorkSpaceMapper {
 	//워크스페이스 리스트조회
 	public List<WorkSpaceVO> workList(String email);
 	public List<allListVO> allList(String email);
+	public List<allListVO> partList(String workId);
 	//워크스페이스 단건조회
 	public WorkSpaceVO selectOneWorkspace(String workId);
 	

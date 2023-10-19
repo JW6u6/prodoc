@@ -26,7 +26,8 @@
 					onerror="this.src='images/noneUser.jpg'"
 					style="width: 30px; height: 30px; border-radius: 15px;">
 			</th:block>
-			<button th:if="${session.logUser == null}" id="logBtn" onClick="location='/'">로그인</button>
+			<button th:if="${session.logUser == null}" id="logBtn"
+				onClick="location='/'">로그인</button>
 
 		</header>
 	</div>
@@ -40,8 +41,8 @@
 		<!-- 어디 넣어야할지 모르겠어서 일단 여기넣어둠 -->
 		<script th:inline="javascript" src="js/headerMenu.js"></script>
 	</th:block>
-</th:block>
-<script>
+
+	<script>
 	let menuBtn = document.querySelectorAll('.menuBtn') 	//헤더에 위치한 이미지
 		.forEach(tag => tag.addEventListener('click', function(e){
 			let id = e.target.id;
@@ -56,4 +57,5 @@
 		})
 	);
 </script>
+</th:block>
 </html>

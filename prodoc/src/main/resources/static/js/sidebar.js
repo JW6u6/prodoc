@@ -7,25 +7,25 @@ let wt = document.querySelector("#wsType");
 let ta = document.querySelector("#typeArrow");
 let workModal = document.querySelector("#workModal");
 let pageModal = document.querySelector("#pageModal");
+let email = document.querySelector("#side input.logUser").value;
 
 init();
 //전체 JS 기능 실행함수
 function init() {
-    let email = document.querySelector("#side input.logUser").value;
-    allList(email);
+    allList();
     document.querySelector("#insert-page").addEventListener("click", newPage);
 }
 
-function allList(email) {
-    document.querySelector("#side #myWorkList").innerText = "";
-    let url = "/allList?email=" + email;
+function allList() {
+    document.querySelector('#side #myWorkList').innerText = "";
+    document.querySelector('#side #teamWorkList').innerText = "";
+    let url = "/allList?email=" + email
     let temp_dbpageList = [];
     fetch(url, {
             method: "GET"
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             data.forEach((item, idx, dataList) => {
                 if (item.level == 1) {
                     if (item.workType == "TEAM") {
@@ -218,7 +218,7 @@ function allList(email) {
                             pageSite.children[4].insertAdjacentHTML("beforeend", text);
                     }
                 }
-
+                
                 //forEach의 마지막에 닿음
                 if (dataList.length - 1 == idx) {
                     //워크스페이스 하위 표시 토글 이벤트 :: OK
@@ -275,70 +275,6 @@ function allList(email) {
 }
 
 function sideReloadEvent() {
-    //열린 워크 유지하기
-    let workClickSession = sessionStorage.getItem("workClickList");
-    if (workClickSession == null) {
-        return;
-    }
-
-    workClickSession = JSON.parse(workClickSession); //스토리지 리스트
-    let workList = []; //워크 리스트
-    document
-        .querySelectorAll(".Work")
-        .forEach((workDiv) => workList.push(workDiv.dataset.id));
-
-    // console.log('workList: ' + workList);
-    // console.log('workClickSession: ' + workClickSession);
-    // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
-    for (let i = 0; i < workClickSession.length; i++) {
-        let selector = `.Work[data-id="${workClickSession[i]}"]`;
-        let autoToggle = document.querySelector(selector);
-        if (autoToggle != null) {
-            let workListShow = autoToggle.querySelector(".workListShow");
-            workListShow.classList.add("clicked");
-            workListShow.innerHTML = "▲";
-            let pageDiv = workListShow.parentElement.querySelector(".pageMain");
-            pageDiv.classList.toggle("hide");
-        } else {
-            console.log("삭제 워크:" + workClickSession[i]);
-            workClickSession = workClickSession.filter((data) =>
-                workList.includes(data)
-            );
-            sessionStorage.setItem("workClickList", JSON.stringify(workClickSession));
-        }
-    }
-
-    //열린 페이지 유지하기
-    let pageClickSession = sessionStorage.getItem("pageClickList");
-    if (pageClickSession == null) {
-        return;
-    }
-
-    pageClickSession = JSON.parse(pageClickSession);
-    let pageList = []; //워크 리스트
-    document
-        .querySelectorAll(".Page")
-        .forEach((workDiv) => pageList.push(workDiv.dataset.id));
-    // console.log('pageList: ' + pageList);
-    // console.log('pageClickSession: ' + pageClickSession);
-    // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
-    for (let i = 0; i < pageClickSession.length; i++) {
-        let selector = `.Page[data-id="${pageClickSession[i]}"]`;
-        let autoToggle = document.querySelector(selector);
-        if (autoToggle != null) {
-            let pageListShow = autoToggle.querySelector(".pageListShow");
-            pageListShow.classList.add("clicked");
-            pageListShow.innerHTML = "▲";
-            let pageDiv = pageListShow.parentElement.querySelector(".pageMain");
-            pageDiv.classList.toggle("hide");
-        } else {
-            pageClickSession = pageClickSession.filter((data) =>
-                pageList.includes(data)
-            );
-            sessionStorage.setItem("pageClickList", JSON.stringify(pageClickSession));
-        }
-    }
-
     //마지막으로 본 페이지가 있는지 체크
     let lastPageSession = sessionStorage.getItem("lastPage"); //마지막으로 본 페이지
     let myMainPage = document.querySelector("#homePg").value;
@@ -359,6 +295,72 @@ function sideReloadEvent() {
             selectPage(lastPageSession);
         }
     }
+
+    //열린 워크 유지하기
+    let workClickSession = sessionStorage.getItem("workClickList");
+    if (workClickSession != null) {
+
+
+
+        workClickSession = JSON.parse(workClickSession); //스토리지 리스트
+        let workList = []; //워크 리스트
+        document
+            .querySelectorAll(".Work")
+            .forEach((workDiv) => workList.push(workDiv.dataset.id));
+
+        // console.log('workList: ' + workList);
+        // console.log('workClickSession: ' + workClickSession);
+        // console.log('filter: ' + workClickSession.filter(data=> workList.includes(data)));
+        for (let i = 0; i < workClickSession.length; i++) {
+            let selector = `.Work[data-id="${workClickSession[i]}"]`;
+            let autoToggle = document.querySelector(selector);
+            if (autoToggle != null) {
+                let workListShow = autoToggle.querySelector(".workListShow");
+                workListShow.classList.add("clicked");
+                workListShow.innerHTML = "▲";
+                let pageDiv = workListShow.parentElement.querySelector(".pageMain");
+                pageDiv.classList.toggle("hide");
+            } else {
+                console.log("삭제 워크:" + workClickSession[i]);
+                workClickSession = workClickSession.filter((data) =>
+                    workList.includes(data)
+                );
+                sessionStorage.setItem("workClickList", JSON.stringify(workClickSession));
+            }
+        }
+    }
+    //열린 페이지 유지하기
+    let pageClickSession = sessionStorage.getItem("pageClickList");
+    if (pageClickSession != null) {
+
+
+
+        pageClickSession = JSON.parse(pageClickSession);
+        let pageList = []; //워크 리스트
+        document
+            .querySelectorAll(".Page")
+            .forEach((workDiv) => pageList.push(workDiv.dataset.id));
+        // console.log('pageList: ' + pageList);
+        // console.log('pageClickSession: ' + pageClickSession);
+        // console.log('filter: ' + pageClickSession.filter(data=> pageList.includes(data)));
+        for (let i = 0; i < pageClickSession.length; i++) {
+            let selector = `.Page[data-id="${pageClickSession[i]}"]`;
+            let autoToggle = document.querySelector(selector);
+            if (autoToggle != null) {
+                let pageListShow = autoToggle.querySelector(".pageListShow");
+                pageListShow.classList.add("clicked");
+                pageListShow.innerHTML = "▲";
+                let pageDiv = pageListShow.parentElement.querySelector(".pageMain");
+                pageDiv.classList.toggle("hide");
+            } else {
+                pageClickSession = pageClickSession.filter((data) =>
+                    pageList.includes(data)
+                );
+                sessionStorage.setItem("pageClickList", JSON.stringify(pageClickSession));
+            }
+        }
+    }
+
 }
 
 //세션저장소에 담긴 데이터 삭제
@@ -633,17 +635,17 @@ function dropItem(event) {
         };
         let url = "/pageUpdate";
         fetch(url, {
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(val),
+                body: JSON.stringify(val)
             })
-            .then((res) => res.json())
-            .then((result) => {
-                init();
+            .then(res => res.json())
+            .then(result => {
+                allList();
             })
-            .catch((err) => console.log(err));
+            .catch(err => console.log(err))
     }
 }
 
@@ -690,18 +692,19 @@ function dropPage(event) {
         };
         let url = "/inPageUpdate";
         fetch(url, {
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(val),
+                body: JSON.stringify(val)
             })
-            .then((res) => res.json())
-            .then((result) => {
-                init();
+            .then(res => res.json())
+            .then(result => {
+                allList();
             })
-            .catch((err) => console.log(err));
-    } else if (offsetY > center + targetArea) {
+            .catch(err => console.log(err))
+    } else
+    if (offsetY > center + targetArea) {
         insertAfter(dragItem, targetItem.parentElement);
         console.log("뒤");
         let pageId = dragItem.dataset.id;
@@ -793,6 +796,7 @@ function makeWid(e) {
 async function newWork() {
     document.querySelector("#workModalName").textContent = "워크스페이스 생성";
     workModal.style.display = "block";
+
     document.body.style.overflow = "hidden";
     document.querySelector("#typeArea").classList.remove("hide");
     document.querySelector("#deleteBtn").classList.add("hide");
@@ -886,7 +890,7 @@ async function newWork() {
                     });
                 checkBool = true;
 
-            } else if (checkBool == false){
+            } else if (checkBool == false) {
                 newWorkSpace();
                 break;
             }
@@ -993,7 +997,7 @@ function newPage() {
             // sendSocket(pageId);
             selectPage(pageId); //새 페이지로 이동
             closeSideModal(); //모달 닫기
-            init(); //사이드 초기화
+            allList(); //사이드 초기화
         })
         .catch((err) => console.log(err));
 }
@@ -1002,14 +1006,20 @@ function changeSideView() {}
 
 //새로운 페이지 생성 모달창(+ 클릭시)
 function newPageModal(event) {
+<<<<<<< HEAD
   pageModal.style.display = "block";
   dbPage.style.display = "flex";
   document.body.style.overflow = "hidden";
 
+=======
+    pageModal.style.display = "block";
+    dbPage.style.display = "block";
+    document.body.style.overflow = "hidden";
+>>>>>>> refs/heads/master
 
     let wId = event.target.closest(".Work").dataset.id;
     let pId = "";
-    if (event.target.closest(".pageMain")) {
+    if (event.target.closest(".Page")) {
         pId = event.target.closest(".Page").dataset.id;
     }
     let workId = document.querySelector("#workId");
@@ -1020,7 +1030,7 @@ function newPageModal(event) {
 
 //모달창 닫는 기능
 function closeSideModal() {
-    workModal.style.display = "none";
+    workModal.style.display = "none";;
     pageModal.style.display = "none";
     document.body.style.overflow = "auto";
     document.querySelector("#caseId").value = "NONE";
@@ -1131,7 +1141,8 @@ async function setWork(e) {
     subCheck = false;
     document.querySelector("#workModalName").textContent = "워크스페이스 설정";
 
-    workModal.style.display = "block";
+    workModal.style.display = "block";;
+
     document.body.style.overflow = "hidden";
     document.querySelector("#wsName").readOnly = false;
 
@@ -1169,16 +1180,24 @@ async function setWork(e) {
             owner = mAuth.email;
         }
     });
-    document.querySelector("#ownArea").firstElementChild.value = owner;
+    document.querySelector("#ownArea > input").value = owner;
 
     let editBtn = document.createElement("button");
     editBtn.id = "wsEdit";
     editBtn.textContent = "저장";
     editBtn.classList.add("btn-md");
     btnAr.firstElementChild.replaceWith(editBtn);
-
+    let btns = document.querySelectorAll('#teamToggleArea > button');
+    btns.forEach(targetBtn => {
+        targetBtn.addEventListener('click', function (e) {
+            if (targetBtn.classList.contains('btnClicked')) {
+                targetBtn.classList.remove('btnClicked');
+            }
+            e.currentTarget.classList.add('btnClicked');
+        })
+    })
     let targetType = document.querySelector("#wsType");
-
+    document.querySelector('#invList').classList.add('hide');
     if (targetType.value == "TEAM") {
         tTog.classList.remove("hide");
         //팀 워크스페이스인 경우 설정/멤버 토글.
@@ -1260,6 +1279,7 @@ async function setWork(e) {
 
         let outBtn = document.createElement("button");
         outBtn.id = "outMem";
+        outBtn.classList.add('btn-md');
         outBtn.textContent = "내보내기";
         btnAr.firstElementChild.replaceWith(outBtn);
 
@@ -1285,6 +1305,7 @@ async function setWork(e) {
                     let td = document.createElement("td");
                     let noBtn = document.createElement("button");
                     noBtn.textContent = "제외";
+                    noBtn.classList.add('btn-md');
                     td.appendChild(noBtn);
                     trTag.appendChild(td);
                     document.querySelector("#outmemList").appendChild(trTag);
@@ -1451,12 +1472,12 @@ function newWorkSpace() {
         .then((response) => response.text())
         .then((result) => {
             if (workType.value == "TEAM") {
-                let tdList = document.querySelectorAll("#invList > tr > td");
-                if (tdList.length > 0) {
+                let invDivList = document.querySelectorAll("#invList > tr > td");
+                if (invDivList.length > 0) {
                     inviteWork(result); //워크스페이스 초대하는 메소드
                 }
                 closeSideModal();
-                allList(email);
+                allList();
             }
         })
         .catch((err) => console.log(err));
@@ -1466,6 +1487,7 @@ function newWorkSpace() {
 
 function typeChange(e) {
     let invite = document.querySelector("#inviteUser"); //초대 부분
+    document.querySelector('#invList').classList.remove('hide');
     let memberOption = document.querySelector("#memOption"); //멤버공개옵션(팀)
     let privateOption = document.querySelector("#privOption"); //비공개옵션(개인)
     if (e.target.value == "TEAM") {
@@ -1549,12 +1571,10 @@ async function addList() {
     ) {
         //wid부분이 비어있는 경우(새 워크스페이스를 생성하는 경우)
         if (!workId || workId.value == "") {
-            let trTag = document.createElement("tr");
-            let tdTag = document.createElement("td");
-            tdTag.textContent = mail.value;
+            let divTag = document.createElement("div");
+            divTag.textContent = mail.value;
 
-            trTag.appendChild(tdTag);
-            invList.appendChild(trTag);
+            invList.appendChild(divTag);
 
             mail.value = "";
             mail.focus();
@@ -1565,7 +1585,7 @@ async function addList() {
             let invite = await listWorkJoin(workId.value);
             let thisM = false;
             let thisI = false;
-            let tdList = document.querySelectorAll("#invList > tr > td");
+            let invDivList = document.querySelectorAll("#invList > div");
 
             for (let mem of member) {
                 if (mem.email == mail.value) {
@@ -1575,11 +1595,11 @@ async function addList() {
                     thisM = false;
                 }
             }
-            for (let tL of tdList) {
-                if (tL.textContent == mail.value) {
+            for (let dL of invDivList) {
+                if (dL.textContent == mail.value) {
                     thisI = true;
                     break;
-                } else if (tL.textContent != mail.value) {
+                } else if (dL.textContent != mail.value) {
                     thisI = false;
                 }
             }
@@ -1601,12 +1621,10 @@ async function addList() {
                     thisM == true ||
                     (thisI == false && invite.includes(mail.value) == false)
                 ) {
-                    let trTag = document.createElement("tr");
-                    let tdTag = document.createElement("td");
-                    tdTag.textContent = mail.value;
+                    let divTag = document.createElement("div");
+                    divTag.textContent = mail.value;
 
-                    trTag.appendChild(tdTag);
-                    invList.appendChild(trTag);
+                    invList.appendChild(divTag);
 
                     mail.value = "";
                     mail.focus();
@@ -1644,9 +1662,9 @@ async function addList() {
 function inviteWork(workId) {
     let inviteList = []; //workJoin에 workId랑 초대 이메일 담아서 json으로 넘기는 배열
     let creUser = document.querySelector("#loginUser").value;
-    let tdList = document.querySelectorAll("#invList > tr > td");
-    if (tdList.length > 0) {
-        tdList.forEach((item) => {
+    let invDivList = document.querySelectorAll("#invList > div");
+    if (invDivList.length > 0) {
+        invDivList.forEach((item) => {
             let inviteEmail = item.textContent;
             inviteList.push({
                 workId,
@@ -1654,7 +1672,7 @@ function inviteWork(workId) {
                 creUser,
             });
         });
-    } else if (tdList.length == 0) {
+    } else if (invDivList.length == 0) {
         let inviteEmail = document.querySelector("#invEmail").value;
         inviteList.push({
             workId,
@@ -1713,13 +1731,15 @@ async function memberList(workId) {
                     let trTag = document.createElement("tr");
 
                     for (let field of arr) {
-                        if (field == "workId" || field == 'auth') {
+                        if (field == "workId") {
                             let tdTag = document.createElement("td");
                             let inputTag = document.createElement("input");
                             inputTag.type = "hidden";
                             inputTag.value = num[field];
                             tdTag.appendChild(inputTag);
                             trTag.appendChild(tdTag);
+                        } else if (field == 'auth') {
+                            continue;
                         } else {
                             let tdTag = document.createElement("td");
                             tdTag.textContent = num[field];
@@ -1906,13 +1926,12 @@ function renewMemberAuth(list) {
 
 //팀 워크스페이스 소유자 부분 수정시 소유자 변경
 document
-    .querySelector("#ownArea")
-    .firstElementChild.addEventListener("change", changeOwner);
+    .querySelector("#ownArea > input").addEventListener("change", changeOwner);
 
 async function changeOwner(e) {
     let workId = document.querySelector("#wid").value;
     let checkManager = await memberList(workId);
-    let email = document.querySelector("#ownArea").firstElementChild;
+    let email = document.querySelector("#ownArea > input");
     let check = false;
     let owner = "";
     checkManager.forEach((own) => {
