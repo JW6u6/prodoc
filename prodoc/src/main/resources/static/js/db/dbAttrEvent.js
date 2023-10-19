@@ -412,7 +412,7 @@ function updateAttrContent(data){
                 }
                 if(attrId == "MEDIA"){
                     let textDiv= tag.querySelector("div");
-                    textDiv.setAttribute("data-fileName", `/dbFiles/${content}`);
+                    textDiv.setAttribute("data-fileName", content);
                     textDiv.innerText = content.substring(13);
                 }
                 if(attrId == "IMG"){
@@ -670,7 +670,7 @@ async function addAttrFile(e){
     let newName = await dbattrFileUpload(formData);
     let fileDiv = e.target.previousElementSibling;
     fileDiv.innerText = newName.substring(13);
-    fileDiv.setAttribute("data-file-name", newName);
+    fileDiv.setAttribute("data-filename", newName);
     console.log(newName);
     let data = {
         'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
@@ -1067,41 +1067,46 @@ function deleteThisAttr(e){
 }
 
 // 속성 이름 변경
-async function modifyAttrName(e){
+function modifyAttrName(e){
     if(e.target.classList.contains("page-attr")) return;
-    let dui = e.target.getAttribute("data-duse-id");
-    let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
-    let attrId = e.target.getAttribute("data-attrid");
-    if(e.type == 'click'){
-        if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
-        e.target.setAttribute("contenteditable", true);
-    }else if(e.type == 'keydown'){
-        if(e.keyCode === 13){
-            e.preventDefault();
-            e.target.setAttribute("contenteditable", false);
-            let attrName = e.target.innerText;
-            let check = true;
-            let attrList = await getUseAttrList(caseId);
-            console.log(attrId, attrName)
-            attrList.forEach(useAttr => {
-                if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
-            });
-            if(check == false){
-                alert("해당 속성이 이미 존재합니다.");
-                return;
-            }
-            let data = {
-                'dbUseId' : dui,
-                'attrName' : attrName,
-                'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
-                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
-                'casePageId' : caseId,  // 블럭아이디
-                'workId' : document.getElementById("TitleWid").value
-            };
+    const attrId = e.target.getAttribute("data-attrid");
+    e.target.setAttribute("data-nowan", e.target.innerText);
 
+    if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
+    e.target.setAttribute("contenteditable", true);
+}
+
+async function modAttrNameFix(e){
+    if(e.keyCode === 13){
+        const attrId = e.target.getAttribute("data-attrid");
+        const orgName = e.target.getAttribute("data-nowan");
+        e.preventDefault();
+        e.target.setAttribute("contenteditable", false);
+        let attrName = e.target.innerText;
+        let check = true;
+    
+        let data = {
+            'dbUseId' : e.target.getAttribute("data-duse-id"),
+            'attrName' : attrName,
+            'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'casePageId' : e.target.closest("[data-layout]").getAttribute("data-block-id"),  // 블럭아이디
+            'workId' : document.getElementById("TitleWid").value
+        };
+
+        let attrList = await getUseAttrList(data.casePageId);
+
+        attrList.forEach(useAttr => {
+            if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+        });
+
+        if(check == false){
+            alert("해당 속성이 이미 존재합니다.");
+            e.target.innerText = orgName;
+        }else {
             modifyAttrNameAjax(data);
         }
-
+        e.target.removeAttribute("data-nowan");
     }
 }
 
