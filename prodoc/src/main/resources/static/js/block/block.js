@@ -595,7 +595,7 @@ async function getBlockreplyList(blockId) {
  *          pageId:string}} replyObj
  */
 function registReply(replyObj) {
-  const replyId = self.crypto.randomUUID();
+  const replyId = uuidv4();;
   replyObj.replyId = replyId;
   fetch("/reply/regist", {
     method: "POST",

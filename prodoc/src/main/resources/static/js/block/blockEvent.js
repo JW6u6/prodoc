@@ -223,7 +223,8 @@ const fileRegiClickEvent = (e) => {
       console.log(file[0]);
       const upName = file[0].name;
       const newName = await uploadFile(formData);
-      updateFile({ displayId: blockId, path: null, newName, upName });
+      await updateFile({ displayId: blockId, path: null, newName, upName });
+      await fileEvent(document.querySelector(`[data-block-id="${blockId}"] .content`));
     }
   });
 };
