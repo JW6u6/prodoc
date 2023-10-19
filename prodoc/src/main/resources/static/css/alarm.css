@@ -18,6 +18,9 @@
   padding: 0;
   display: flex;
 }
+.whoTagMe{
+	color : rgb(110,110,110)
+}
 #alarmMenu li {
   text-align: center;
   display: inline-block;
