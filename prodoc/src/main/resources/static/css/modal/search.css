@@ -2,19 +2,29 @@
  display: flex;
  justify-content: space-between;
 }
-
+.chooseWKDB{
+	margin-top: 10px;
+}
 .search_filter{
     display: flex;
+    margin-top: 10px;
 }
 
 .search_filter div:last-child{
     margin-left: 10px;
 }
+.SearchResult{
+	width:90%; 
+	height:400px; 
+	overflow:auto;
+	margin: 0 auto;
+}
 .resultItem{
     display: grid;
     grid-template-columns: 3fr 8fr;
-    border: 1px solid black;
+    border: 1px solid lightgray;
     margin-bottom: 5px;
+    padding: 10px;
 }
 .resultItem > div{
     display: flex;

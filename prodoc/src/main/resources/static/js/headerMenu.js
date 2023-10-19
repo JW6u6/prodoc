@@ -171,55 +171,56 @@ async function pageLockNoti() {
 
 //페이지 삭제 체크
 async function pageDelCheck() {
-    let infoResult = await selectOneWork(workBlockId);
-    let home = document.querySelector('#homePg');
-    let infos = await pageInfoFromMenu();
-    let dbCheck = false;
+    let dbcont = document.querySelector('.container').firstElementChild.dataset.pageId;
+    let pageId = '';
 
-    for (let info of infos) {
-        if (info.caseId.indexOf('DB') == -1) {
-            dbCheck = false;
-        } else if (info.caseId.indexOf('DB') != -1) {
-            dbCheck = true;
-        }
+    if (dbcont) {
+        console.log('나는데이터베이스페이지입니다.');
+        pageId = dbcont;
+
+        
+
+    } else if(!dbcont){        
+        console.log('나는 데이터베이스페이지가 아니다.');
+        let infoResult = await selectOneWork(workBlockId);
+        let home = document.querySelector('#homePg');
+        let infos = await pageInfoFromMenu();
+        pageId = pageBlockId;
     }
+    // else if (home.value == pageBlockId) {
+    //     alert('홈은  삭제할 수 없습니다.');
 
-    if (dbCheck == true) {
-        pageBlockId = '';
-    } else if (home.value == pageBlockId) {
-        alert('홈은  삭제할 수 없습니다.');
+    // } else if (infoResult.mainPageId == pageBlockId) {
+    //     alert('메인 페이지는 삭제할 수 없습니다.')
 
-    } else if (infoResult.mainPageId == pageBlockId) {
-        alert('메인 페이지는 삭제할 수 없습니다.')
+    // } else if (infoResult.mainPageId != pageBlockId) {
 
-    } else if (infoResult.mainPageId != pageBlockId) {
+    //     let val = {
+    //         "pageId": pageBlockId,
+    //         "workId": workBlockId
+    //     }
 
-        let val = {
-            "pageId": pageBlockId,
-            "workId": workBlockId
-        }
+    //     let url = '/pageDelCheck';
 
-        let url = '/pageDelCheck';
-
-        fetch(url, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(val)
-            })
-            .then(response => response.text())
-            .then(result => {
-                if (result == 'true') {
-                    let email = document.querySelector("#side input.logUser").value;
-                    alert('페이지가 삭제되었습니다.')
-                    allList(email);
-                } else if (result == 'false') {
-                    alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
-                }
-            })
-            .catch(err => console.log(err));
-    }
+    //     fetch(url, {
+    //             method: 'post',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(val)
+    //         })
+    //         .then(response => response.text())
+    //         .then(result => {
+    //             if (result == 'true') {
+    //                 let email = document.querySelector("#side input.logUser").value;
+    //                 alert('페이지가 삭제되었습니다.')
+    //                 allList(email);
+    //             } else if (result == 'false') {
+    //                 alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
+    //             }
+    //         })
+    //         .catch(err => console.log(err));
+    // }
 }
 
 //현재 페이지를 메인 페이지로 등록(소유자, 관리자?)
@@ -315,7 +316,7 @@ async function areULock() {
     let LockToggle = document.querySelector('#lockPg');
     let LockNotiToggle = document.querySelector('#notiLockPg');
     let displayedBlock = document.querySelectorAll(".prodoc_block");
-    
+
     for (let info of infos) {
         if (info.lockCheck == 'FALSE') {
             LockToggle.textContent = '페이지 잠금 설정';
@@ -357,7 +358,8 @@ async function creLink() {
         url =
             'http://prodox.me/shared/'
             // 'http://localhost:8099/shared/'
-            + pageBlockId;
+            +
+            pageBlockId;
         linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {

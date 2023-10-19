@@ -23,22 +23,31 @@ function handlingBlockEvent(element) {
     //다른상대는 disabled.
     //그리고 유저의 아이콘 보여주기.
     console.log(e);
+    const block = e.target.closest(".prodoc_block");
+    if(block){
+      const socketEventObj = {
+        eventType: "FOCUSIN",
+        upUser: blockSessionUserId,
+        displayId:block.dataset.blockId,
+        imgSrc: document.querySelector("#userImg").src,
+      };
+      sendSocketEvent(socketEventObj);
+    }
     console.log("포커스인");
-    const socketEventObj = {
-      eventType: "FOCUSIN",
-      upUser: blockSessionUserId,
-    };
-    sendSocketEvent(socketEventObj);
   });
   element.addEventListener("focusout", (e) => {
     //다른상대는 disabled 해제
+    const block = e.target.closest(".prodoc_block")
+    if(block){
+      const socketEventObj = {
+        eventType: "FOCUSOUT",
+        upUser: blockSessionUserId,
+        displayId: block.dataset.blockId
+      };
+      sendSocketEvent(socketEventObj);
+    }
     console.log(e);
     console.log("포커스아웃");
-    const socketEventObj = {
-      eventType: "FOCUSOUT",
-      upUser: blockSessionUserId,
-    };
-    sendSocketEvent(socketEventObj);
   });
 }
 const mouseenter_handler = (e) => {
@@ -179,10 +188,20 @@ const fileEvent = async (element) => {
   const { blockId } = element.closest(".prodoc_block").dataset;
   const existFile = await getBlockFile(blockId); //블럭정보
 
+  console.log(existFile);
   if (existFile.newName) {
     const fileBlockTemp = createFileTemplate({ fileName: existFile.upName });
     element.insertAdjacentHTML("afterend", fileBlockTemp);
     element.remove();
+    const fileBlock = document
+      .querySelector(`[data-block-id="${blockId}"]`)
+      .querySelector(".content");
+    fileBlock.addEventListener("click", (e) => {
+      const download = document.createElement("a");
+      download.download = existFile.newName;
+      download.href = `/block/files/${existFile.newName}`;
+      download.click();
+    });
   } else {
     element.addEventListener("click", fileRegiClickEvent);
   }
@@ -684,6 +703,65 @@ async function keydown_handler(e) {
         };
         sendSocketEvent(socketEventObj);
       } else {
+        // TODO블럭이 비어있다면 해당 블럭을 TEXT로 만들기
+        // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
+        let block = e.currentTarget;
+        const blockId = block.dataset.blockId;
+        const blockChangeObj = {
+          displayId: blockId,
+          type: "TEXT",
+          text: "",
+          order: block.dataset.blockOrder,
+        };
+        const newBlock = await updateTemplate(blockChangeObj);
+        block.insertAdjacentHTML("afterend", newBlock.template);
+        block.remove();
+        block = document.querySelector(
+          `[data-block-id="${newBlock.displayId}"]`
+        );
+        handlingBlockEvent(block);
+        updateDBBlock({
+          displayId: blockId,
+          upUser: blockSessionUserId,
+          blockId: block.dataset.blockType,
+        });
+        console.log(block.querySelector(".content"));
+        block.querySelector(".content").focus();
+        //블럭 체인지 이벤트 걸기
+      }
+    } else if(e.currentTarget.dataset.blockType === "ULIST") {
+      if (e.target.innerHTML !== "") {
+        const template = await updateTemplate({
+          displayId: null,
+          type: "ULIST",
+          order,
+        });
+        const displayObj = {
+          template,
+          type: null,
+          element: e.currentTarget,
+        };
+
+        await createBlock2DB({
+          displayId: template.displayId,
+          pageId: pageBlockId,
+          creUser: blockSessionUserId,
+          blockId: "ULIST",
+          rowX: order,
+        });
+        const newBlock = displayBlock(displayObj);
+        focusBlock(newBlock);
+
+        // 블럭생성이벤트 전달
+        const socketEventObj = {
+          eventType: "CREATEBLOCK",
+          template,
+          type: null,
+          enteredBlock,
+          upUser: blockSessionUserId,
+        };
+        sendSocketEvent(socketEventObj);
+      }else {
         // TODO블럭이 비어있다면 해당 블럭을 TEXT로 만들기
         // 똑같은 아이디의 블럭을 만들어서 붙이고 기존의 블럭을 지우는 방식.
         let block = e.currentTarget;
