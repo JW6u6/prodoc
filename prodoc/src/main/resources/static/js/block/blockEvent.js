@@ -179,10 +179,20 @@ const fileEvent = async (element) => {
   const { blockId } = element.closest(".prodoc_block").dataset;
   const existFile = await getBlockFile(blockId); //블럭정보
 
+  console.log(existFile);
   if (existFile.newName) {
     const fileBlockTemp = createFileTemplate({ fileName: existFile.upName });
     element.insertAdjacentHTML("afterend", fileBlockTemp);
     element.remove();
+    const fileBlock = document
+      .querySelector(`[data-block-id="${blockId}"]`)
+      .querySelector(".content");
+    fileBlock.addEventListener("click", (e) => {
+      const download = document.createElement("a");
+      download.download = existFile.newName;
+      download.href = `/block/files/${existFile.newName}`;
+      download.click();
+    });
   } else {
     element.addEventListener("click", fileRegiClickEvent);
   }

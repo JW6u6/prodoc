@@ -45,11 +45,12 @@
       <div layout:fragment="content" class="app">
          <div class="container"></div>
       </div>
-      <button class="page_reply_button modal_btn">댓글</button>
-      <input type="file" class="block_file-Uploader" style="display: none" />
+      <img class="page_reply_button modal_btn" src="/images/replyIcon.png"/>
+      <input type="file" class="block_file-Uploader" accept="image/*,*" style="display: none" />
       <script>
          const blockSessionUserId = "[[${session.logUser.email}]]";
          const blockSessionUserProfile = "[[${session.logUser.profile}]]";
+         const blockSessionUserNickName = "[[${session.logUser.nickname}]]";
       </script>
       <script th:inline="javascript" src="js/common.js"></script>
    

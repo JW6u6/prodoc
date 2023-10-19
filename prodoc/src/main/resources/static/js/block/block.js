@@ -219,11 +219,14 @@ function showBlocks(pageId, type = "PAGE") {
             if (displayId === childBlocks[i].parentId) {
               await asyncChildDisplay(childBlocks[i], block);
               childBlocks.splice(i, 1);
+              console.log(childBlocks[i],displayId);
               i--;
             }
           }
         }
       }
+      //탐색재귀함수 끝 
+      
       blockCount = data.length + 1;
       let parentBlocks = [];
       let childBlocks = [];
@@ -253,6 +256,8 @@ function showBlocks(pageId, type = "PAGE") {
           parentBlocks.push(blockObj);
         }
       });
+      console.log(childBlocks);
+      console.log(parentBlocks)
       for (const block of parentBlocks) {
         await asyncDisplay(block, type);
       }
@@ -598,6 +603,12 @@ async function deleteReply(replyId, userId) {
       resultObj = result;
     });
   return resultObj;
+}
+
+const obj ={
+  apple:"사과",
+  banana:"바나나",
+  wiki:"나무",
 }
 
 /**

@@ -280,7 +280,7 @@ function templateMaker(
       <div class="toggle_block content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
       <div class="child_item"></div>
     </div>
-    <div><button class="block_toggle_btn"></button></div>
+    <div><button class="block_toggle_btn">▼</button></div>
   `;
 
   // 페이지 링크 블럭
@@ -355,18 +355,15 @@ function templateMaker(
     H2: h2,
     H3: h3,
     LINE: hr,
-    PAGE: block_page,
     TODO: block_todo,
     FILE: block_file,
     ULIST: block_uList,
     OLIST: block_oList,
     TOGGLE: block_toggle,
-    PLINK: block_pLink,
     IMAGE: block_img,
     VIDEO: block_video,
     BOOKMARK: block_bookMark,
     DATABASE: block_db,
-    SYNC: block_sync,
     COLUMN: block_column,
   };
 
@@ -442,14 +439,12 @@ const menuTemplateObject = {
   urlMenu: `<li data-block-menu="urlChange">바꾸기</li>`,
   changeMenu: `
     <li data-block-type="TEXT">텍스트</li>
-    <li data-block-type="H1">h1</li>
-    <li data-block-type="H2">h2</li>
-    <li data-block-type="H3">h3</li>
-    <li data-block-type="LINE">line</li>
+    <li data-block-type="H1">제목1</li>
+    <li data-block-type="H2">제목2</li>
+    <li data-block-type="H3">제목3</li>
+    <li data-block-type="LINE">구분선</li>
     <hr>
-    <li data-block-type="PAGE">페이지</li>
     <li data-block-type="TODO">할 일</li>
-    <li data-block-type="LINK">링크</li>
     <li data-block-type="IMAGE">이미지</li>
     <li data-block-type="FILE">파일</li>
     <li data-block-type="TOGGLE">토글</li>
@@ -460,6 +455,7 @@ const menuTemplateObject = {
     <li data-block-type="DATABASE">데이터베이스</li>
 `,
   color: `
+      <div class="colorMenuDiv">글자색<div>
       <li data-block-color="faa0a0">빨간색</li>
       <li data-block-color="99b5e9">파란색</li>
       <li data-block-color="1db37b">초록색</li>
@@ -468,6 +464,7 @@ const menuTemplateObject = {
       <li data-block-color="ffffff">하얀색</li>
       <li data-block-color="000000">검은색</li>
       <hr>
+      <div class="colorMenuDiv">배경색<div>
       <li data-block-back-color="faa0a0">빨간색</li>
       <li data-block-back-color="99b5e9">파란색</li>
       <li data-block-back-color="1db37b">초록색</li>
@@ -483,7 +480,7 @@ function createMessage(text) {
 }
 
 function createInput() {
-  return `<div><input type="text"/></div>`;
+  return `<div><input type="text" class="input_text-md"/></div>`;
 }
 
 function makeInputModal(text) {
@@ -535,7 +532,7 @@ function makeReplyModal(displayId, target, { left = "" }) {
     style="left:${left}px;"
     class="reply_modal block_modal input_modal modal_item">
       <div class="replyWrapper"></div>
-      <div class="modal_reply_controller"><input placeholder="댓글을 입력하세요" type="txet"/><button class="reply_regi_btn">등록</button></div>
+      <div class="modal_reply_controller"><input placeholder="댓글을 입력하세요" class="input_text-md" type="txet"/><button class="reply_regi_btn btn">등록</button></div>
     </div>
   `;
   displayModal(target, template);
@@ -605,7 +602,7 @@ function createBookMarkTemplate({ title, description, imgAdrs, url }) {
 function createFileTemplate({ fileName }) {
   const fileTemp = `
     <div class="content block_file">
-      <div>❤</div>
+      <div><img src="images/fileImg.png"/></div>
       <div>${fileName}</div>
     <div>
   `;
