@@ -125,14 +125,23 @@ function settingHistoryResult(history){
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
 						    <div class="history_item--right">
-						        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
-						        <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
-						        <p>${history[i].nickname}(${history[i].creUser})</p>
-						    </div>`;
+						        <div class="inline-div">
+						            <div>
+						                <div class="inline-div">
+						                    <span class="material-symbols-outlined">draft</span>
+						                </div>
+						                <div class="inline-div">
+						                    <h3>${history[i].pageName}<span>(${history[i].workName})</span></h3>
+						                </div>
+						            </div>
+						            <div>
+						                <p>${history[i].nickname}(${history[i].creUser})</p>
+						            </div>
+						        </div>`;
 			if(history[i].historyType == 'DELETE'){
-				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+				historyDIV += ` <div class="inline-div"><button type="button" class="revokeBtn">복구</button></div>`;
 			}
-				historyDIV += `</div>`;
+				historyDIV += `</div></div>`;
 		}else{							//워크에 관한 히스토리
 			historyDIV = `<div class="historyItem" data-workid="${history[i].workId}" 
 							style="overflow:hidden; border:1px solid black; margin:5px 0px">
@@ -141,15 +150,27 @@ function settingHistoryResult(history){
 						        <p>${formatTime(new Date(history[i].upDate))}</p>
 						    </div>
 						    <div class="history_item--right">
-						    	<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H447l-80-80H160v480Zm0 0v-480 480Z"/></svg>
-						    	<p>${history[i].nickname}(${history[i].creUser})</p>
-						        <h3>${history[i].workName}</h3>
-						    </div>`
+						        <div class="inline-div">
+						            <div>
+						                <div class="inline-div">
+						                    <span class="material-symbols-outlined">folder</span>
+						                </div>
+						                <div class="inline-div">
+						                    <h3>${history[i].workName}</h3>
+						                </div>
+						            </div>
+						            <div>
+						                <p>${history[i].nickname}(${history[i].creUser})</p>
+						            </div>
+						        </div>`
 						    
 			if(history[i].historyType == 'DELETE'){
-				historyDIV += ` <div float:left"><button type="button" class="revokeBtn">복구</button></div>`;
+				historyDIV += ` <div class="inline-div">
+						            <button type="button" class="revokeBtn">복구</button>
+						        </div>`;
 			}
-			historyDIV += `</div>`;
+			historyDIV += `		</div>
+							</div>`;
 		}
 		
 		resultList.innerHTML += historyDIV;

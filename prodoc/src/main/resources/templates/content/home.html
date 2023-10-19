@@ -1,17 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
    layout:decorate="~{layout/default_layout}">
 <th:block layout:fragment="head">
-   <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
-   <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-   <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-   <script
-      src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
    <script src="/js/app.js"></script>
    <!--/* css */-->
@@ -25,18 +20,16 @@
    <link th:href="@{css/reply.css}" rel="stylesheet" />
    <link th:href="@{css/modal/workModal.css}" rel="stylesheet" />
    <link th:href="@{css/variable/var.css}" rel="stylesheet" />
-   
+  
    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+   
    <title>PRODOC</title>
-   <!-- 기존 head와 다른경우(예: title이 다름) <head>제목</head>식으로 따로 지정해주셔야하는거같네욘... -->
 </th:block>
 <body>
-
    <th:block th:if="${session.logUser!= null}" layout:fragment="sidebar"
       th:include="@{fragments/sidebar}"></th:block>
    <th:block th:if="${session.logUser!= null}" layout:fragment="header"
       th:include="@{fragments/header}"></th:block>
-   <input type="text" id="homePg" th:if="${session.logUser!= null}" style="visibility: hidden;" th:value="${session.logUser.defaultPage}">
    
    <th:block th:if="${session.logUser== null}">
       <div id="nonMember" th:insert="content/nonUser :: nonMemberFrag"></div>
@@ -85,16 +78,7 @@
       <div id="HistoryFrag" th:insert="modal/history.html :: historyFrag"></div>
       <script th:inline="javascript" src="js/modal/history.js"></script>
 
-   <script src="js/modal/close.js"></script>
-   <script>
-      //로그인 시 개인페이지의 메인페이지 로드
-      function setLoginMainPage() {
-      //   let myMainPage = document.querySelector("#homePg").value;
-      //   console.log(myMainPage);
-      //   selectPage(myMainPage);
-      }
-      
-   </script>
-   </th:block>
+   	<script src="js/modal/close.js"></script>
+	</th:block>
 </body>
 </html>

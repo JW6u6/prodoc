@@ -168,6 +168,7 @@ async function createDataPage(pageId){
 
 // 데이터베이스 페이지를 오픈했을 때
 function openDatabase(pageId){
+    console.log(pageId);
     fetch(`getDatabaseBlock?pageId=${pageId}`,{
         method : 'get',
         headers : {'Content-Type' : 'application/json'}

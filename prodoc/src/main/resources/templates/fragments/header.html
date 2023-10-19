@@ -25,8 +25,8 @@
 					onerror="this.src='images/noneUser.png'"
 					style="width: 30px; height: 30px; border-radius: 15px;">
 			</th:block>
+			
 			<button th:if="${session.logUser == null}" id="logBtn" onclick="location.href='/'">로그인</button>
-
 		</header>
 	</div>
 
@@ -56,3 +56,4 @@
 	);
 </script>
 </th:block>
+</html>
