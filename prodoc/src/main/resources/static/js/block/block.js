@@ -71,7 +71,24 @@ async function makeBlockPage(pageId, type = "PAGE", element) {
         const blockType = socketDataObj.blockType;
         changeEvent(displayId, blockType);
       } else if (eventType === "FOCUSIN") {
+        console.log(socketDataObj);
+        const block = document.querySelector(`[data-block-id="${socketDataObj.displayId}"]`)
+        const img = document.createElement("img");
+        img.src= socketDataObj.imgSrc;
+        img.addEventListener("error",(e)=>{
+          e.target.src = "images/noneUser.jpg";
+        })
+        img.classList.add("profile");
+        img.classList.add("move_profile")
+        img.style.width = "30px";
+
+        img.dataset.who = socketDataObj.upUser;
+        block.append(img);
       } else if (eventType === "FOCUSOUT") {
+        console.log(socketDataObj);
+        const block = document.querySelector(`[data-block-id="${socketDataObj.displayId}"]`)
+        block.querySelector(".content").contenteditable = true;
+        document.querySelector(`[data-who="${socketDataObj.upUser}"]`).remove();
       }
     }
   );
@@ -240,6 +257,7 @@ function showBlocks(pageId, type = "PAGE") {
           parentId,
           color,
           backColor,
+          checked
         } = item;
         const blockObj = {
           displayId,
@@ -250,6 +268,7 @@ function showBlocks(pageId, type = "PAGE") {
           color,
           backColor,
         };
+        if(blockObj.checked === "true" && blockId === "DATABASE") return;
         if (blockObj.parentId) {
           childBlocks.push(blockObj);
         } else {

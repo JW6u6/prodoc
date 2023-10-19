@@ -254,3 +254,9 @@ a {
 .colorMenuDiv li{
   color:black;
 }
+
+.move_profile{
+  position: absolute;
+  right:-50px;
+  border-radius: 50%;
+}
