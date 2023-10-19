@@ -95,15 +95,21 @@ div[data-attr-option] div {
 
 
 div[data-attr-modal] {
+	position: absolute;
+	background-color: white;
+	width:200px;
+	
 	border: 1px solid #eee;
 	border-radius: 5px;
 	box-shadow: 1px 2px 2px 1px #ccc;
 	padding: 20px;
 	min-width: fit-content;
+	z-index: 90;
 }
 
 div[data-attr-modal] hr {
 	width: inherit;
+	display: block;
 }
 /* 갤러리 레이아웃 */
 div[data-layout="DB_GAL"] .db-block-body{
@@ -267,13 +273,6 @@ div[data-layout="DB_TBL"] .attrAtag {
 	float: right;
 }
 
-div[data-attr-modal]{
-	position: absolute;
-	background-color: white;
-	top: 100%;
-	width:200px
-}
-
 div[data-attrid="CAL"] div[data-attr-modal] {
 	width: 320px;
 }
@@ -296,6 +295,12 @@ div[data-attrid="CAL"] div[data-attr-modal] {
 	border-radius: 4px;
 	text-align: center;
 	background-color: #e8cff5;
+}
+
+div[data-attrid="USER"] .get-value,
+div[data-attrid="USER"] .this-value
+ {
+	display: block;
 }
 
 .get-value {
@@ -381,10 +386,6 @@ div[data-attrid="CAL"] div[data-attr-modal] {
 
 .view-visible {
 	visibility: visible;
-}
-
-.modal-top {
-	position: relative;
 }
 
 .close-attr-modal {

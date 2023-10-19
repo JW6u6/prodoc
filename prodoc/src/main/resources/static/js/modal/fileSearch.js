@@ -129,10 +129,10 @@ function getSearchList(e){
     // 검색어 체크
     let shCheck = false;
     for(let data in searchData){
-        if(searchData[data] != '') shCheck = true;
+        if( data != 'keyword' && searchData[data] != '') shCheck = true;
     }
     if(!shCheck){
-        alert("검색어를 입력하세요");
+        alert("검색 조건을 선택하세요");
     }else{
         getAllList(searchData);
     }
