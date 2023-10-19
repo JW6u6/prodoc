@@ -64,6 +64,10 @@
 	padding: 10px;
 }
 
+.data_page {
+	float: left;
+}
+
 .del-db-page {
 	visibility: hidden;
 }

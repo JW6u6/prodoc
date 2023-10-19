@@ -668,7 +668,7 @@ async function addAttrFile(e){
     let newName = await dbattrFileUpload(formData);
     let fileDiv = e.target.previousElementSibling;
     fileDiv.innerText = newName.substring(13);
-    fileDiv.setAttribute("data-file-name", newName);
+    fileDiv.setAttribute("data-filename", newName);
     console.log(newName);
     let data = {
         'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
@@ -1073,32 +1073,30 @@ async function modifyAttrName(e){
     if(e.type == 'click'){
         if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
         e.target.setAttribute("contenteditable", true);
-    }else if(e.type == 'keydown'){
-        if(e.keyCode === 13){
-            e.preventDefault();
-            e.target.setAttribute("contenteditable", false);
-            let attrName = e.target.innerText;
-            let check = true;
-            let attrList = await getUseAttrList(caseId);
-            console.log(attrId, attrName)
-            attrList.forEach(useAttr => {
-                if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
-            });
-            if(check == false){
-                alert("해당 속성이 이미 존재합니다.");
-                return;
-            }
-            let data = {
-                'dbUseId' : dui,
-                'attrName' : attrName,
-                'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
-                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
-                'casePageId' : caseId,  // 블럭아이디
-                'workId' : document.getElementById("TitleWid").value
-            };
-
-            modifyAttrNameAjax(data);
+    }else if(e.type == 'keydown' && e.keyCode === 13){
+        e.preventDefault();
+        e.target.setAttribute("contenteditable", false);
+        let attrName = e.target.innerText;
+        let check = true;
+        let attrList = await getUseAttrList(caseId);
+        console.log(attrId, attrName)
+        attrList.forEach(useAttr => {
+            if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+        });
+        if(check == false){
+            alert("해당 속성이 이미 존재합니다.");
+            // ✅✅✅✅ 이름 원래 값으로 바꿔놔야한다
+            return;
         }
+        let data = {
+            'dbUseId' : dui,
+            'attrName' : attrName,
+            'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'casePageId' : caseId,  // 블럭아이디
+            'workId' : document.getElementById("TitleWid").value
+        };
+        modifyAttrNameAjax(data);
 
     }
 }
