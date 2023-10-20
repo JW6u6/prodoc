@@ -45,7 +45,6 @@
 		update tbl_reply
 		set up_date = sysdate,
 		content = #{content},
-		mention_list = #{mentionList}
 		where reply_id = #{replyId}
 	</update>
 	<delete id="deleteComment" parameterType="ReplyVO">

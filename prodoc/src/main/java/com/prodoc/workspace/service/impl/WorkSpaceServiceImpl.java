@@ -84,6 +84,7 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 			String url = "<div>"//
 					+ "<h1>PRODOC 워크스페이스에 초대되었습니다.</h1>"//
 					+ "<br>"//
+					+ "<img src=\"http://prodox.me/images/prodocLogo.png\">"//
 					+ "<p>링크를 클릭하여"//
 					+ "<a href=\"http://prodox.me/invite/" + joinVO.getInviteId()
 					+ "\"> → 워크스페이스 구경가기</a></p></div>";

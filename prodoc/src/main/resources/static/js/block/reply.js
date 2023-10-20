@@ -47,6 +47,16 @@ async function makeReplyList(appendTarget) {
     const replyBlockImg = document.querySelector(
       `[data-reply-id="${reply.replyId}"] img`
     );
+    const replyBlock = document.querySelector(`[data-reply-id="${reply.replyId}"]`).querySelector(".reply_block--remove_btn");
+      console.log(replyBlock) ;
+      replyBlock.addEventListener("click",async (e)=>{
+        const replyBlock = e.currentTarget.closest(".block_reply");
+        const result = await deleteReply(reply.replyId, blockSessionUserId);
+
+        if (result.result === "success") {
+          replyBlock.remove();
+        }
+      })
     replyBlockImg.addEventListener("error", (e) => {
       e.currentTarget.src = "images/noneUser.jpg";
     });

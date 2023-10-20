@@ -3,32 +3,34 @@
 		<div>
 			<link th:href="@{css/modal/fileModal.css}" rel="stylesheet" />
         <div class="modelBtnList">
-        <h3>파일 목록</h3>
-            <button class="closeBtn">&#10005;</button>
+        <h3 class="inlineTags">파일 목록</h3>
+            <button class="closeBtn inlineTags">&#10005;</button>
         </div>
         <div class="search_option">
             <div>
-                <input type="text" name="searchWord" placeholder="검색어">
-                <button id="fileSearchBtn">검색</button>
+                <input type="text" name="searchWord" class="input_text-md" placeholder="검색어">
+                <button id="fileSearchBtn" class="btn">검색</button>
             </div>
             <div>
+                <input type="checkbox" id="checkAll" checked><span>전체선택</span>
+                <input type="checkbox" name="searchOption" value="upName" checked><span>파일명</span>
+                <input type="checkbox" name="searchOption" value="upUser" checked><span>업로더</span>
+                <input type="checkbox" name="searchOption" value="pageName" checked><span>페이지명</span>
+                <input type="checkbox" name="searchOption" value="workName" checked><span>워크스페이스명</span>
+                
                 <input type="date" name="searchDate" id="startDate" disabled> ~ <input type="date" name="searchDate" id="endDate" disabled>
-                <button>업로드일</button><br>
-                <input type="checkbox" id="checkAll"><span>전체선택</span>
-                <input type="checkbox" name="searchOption" value="upName"><span>파일명</span>
-                <input type="checkbox" name="searchOption" value="upUser"><span>업로더</span>
-                <input type="checkbox" name="searchOption" value="pageName"><span>페이지명</span>
-                <input type="checkbox" name="searchOption" value="workName"><span>워크스페이스명</span>
+                <button class="btn">업로드일</button>
             </div>
         </div>
         
         <div class="searchList">
             <div id="fileSearchList">
-                <div class="files-header">
-	                <div class="inlineTags">파일명</div>
-	                <div class="inlineTags">업로더</div>
-	                <div class="inlineTags">페이지명</div>
-	                <div class="inlineTags">날짜</div>
+                <div class="files-header file-thead file-tr">
+	                <div class="file-th">파일명</div>
+	                <div class="file-th">업로더</div>
+	                <div class="file-th">페이지명</div>
+	                <div class="file-th">워크스페이스명</div>
+	                <div class="file-th">업로드일</div>
                 </div>
                 <div class="files-list">
 

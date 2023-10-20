@@ -231,8 +231,7 @@ function updateContent(e){
         e.target.insertAdjacentHTML("afterbegin", inputTag);
         e.target.querySelector('input').focus();
     }else if(attrId == 'IMG'){
-        console.log("이미지");
-        e.target.querySelector('input').click()
+        e.target.querySelector('input').click();
     }else if(attrId == 'TAG'){
         addTagList(e.target);
     }else if(attrId == 'STATE'){
@@ -246,7 +245,7 @@ function updateContent(e){
     }else if(attrId == 'MEDIA'){
         e.target.querySelector("input").click();
     }else if(attrId == 'CHECK'){
-        console.log("체크박스");
+
     }else if(attrId == 'URL'){
         let aTag = e.target.querySelector('a')  // 클래스 : hide 지우기
         aTag.classList.remove('hide');
@@ -413,7 +412,7 @@ function updateAttrContent(data){
                 }
                 if(attrId == "MEDIA"){
                     let textDiv= tag.querySelector("div");
-                    textDiv.setAttribute("data-fileName", `/dbFiles/${content}`);
+                    textDiv.setAttribute("data-fileName", content);
                     textDiv.innerText = content.substring(13);
                 }
                 if(attrId == "IMG"){
@@ -424,8 +423,7 @@ function updateAttrContent(data){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
                     tag.innerText = (content==''||content==null ? '' : content);
                     let dataTag = tag.cloneNode(true);
-                     console.log(tag)
-                    addAttrcontentToModal(dataTag);
+                    document.querySelector("[data-attr-modal]").remove();
                 }
                 if(["USER", "CUSER", "UUSER"].includes(attrId)){
                     // 값이 존재하지 않거나 하나만 있을 때 변경 적용
@@ -440,10 +438,8 @@ function updateAttrContent(data){
                             content = `${mem.nickname}(${mem.email})`;
                             if(attrId = "USER"){
                                 // 빈값에서 새롭게 등록했을 때만 실행됨
-                                console.log(tag, "아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
                                 tag.innerText = content;
-                                let dataTag = tag.cloneNode(true);
-                                addAttrcontentToModal(dataTag);
+                                document.querySelector("[data-attr-modal]").remove();
                             }
                             else {
                                 tag.querySelector("div").innerText = content;
@@ -510,7 +506,6 @@ function addTagList(target){
     let dui = parentDiv.getAttribute("data-duse-id")
 
     if(document.querySelector("[data-attr-modal]") !=null ) document.querySelector("[data-attr-modal]").remove();
-    target.style.position = "relative";
     let modal = document.createElement("div");
     modal.style.position = "absolute";
     modal.setAttribute("data-attr-modal", "");
@@ -641,29 +636,9 @@ async function insertTagToAttr(caseDiv, thisTags, addTag){
                 modalDataTag = newTag
                 beforeTag.after(newTag);        // 형제요소 뒤에 추가된 태그 삽입
             })  // 전체 화면 append를 위한 forEach문 종료
-            addAttrcontentToModal(modalDataTag);
+            document.querySelector("[data-attr-modal]").remove();
         }
     }
-}
-
-// 다중값 속성에서 속성 등록했을 때 속성값 추가하는 모달에 데이터 append용
-function addAttrcontentToModal(tag){
-    // 기존 모달에 this-value 클래스를 가진 element가 하나면 upda
-
-    // tag == 복사한 태그
-    tag.classList.remove("view-visible", "attr");
-    tag.classList.add("inlineTags", "this-value");
-    tag.removeAttribute("data-duse-id");
-    tag.removeAttribute("data-attrid");
-    tag.removeAttribute("data-attr-order");
-    const delBtn = document.createElement("button");
-    delBtn.innerText='✕';
-    delBtn.classList.add("delete-attr");
-    tag.append(delBtn);
-    console.log(tag);
-    const modal = document.querySelector("[data-attr-modal]");
-    const lastData = modal.querySelectorAll("[data-puse-id]");
-    lastData[lastData.length-1].after(tag);
 }
 
 // 이미지 추가
@@ -695,7 +670,7 @@ async function addAttrFile(e){
     let newName = await dbattrFileUpload(formData);
     let fileDiv = e.target.previousElementSibling;
     fileDiv.innerText = newName.substring(13);
-    fileDiv.setAttribute("data-file-name", newName);
+    fileDiv.setAttribute("data-filename", newName);
     console.log(newName);
     let data = {
         'pageUseId' : e.target.closest("[data-puse-id]").getAttribute("data-puse-id"),
@@ -725,7 +700,6 @@ function changeState(eTarget){
 
     // 모달 오픈
     if(document.querySelector("[data-attr-modal]") !=null ) document.querySelector("[data-attr-modal]").remove();
-    eTarget.style.position = "relative";
     let modal = document.createElement("div");
     modal.style.position = "absolute";
     modal.setAttribute("data-attr-modal", "");
@@ -745,10 +719,11 @@ function changeState(eTarget){
             nowStateDiv.innerText = e.target.innerText;
             closeBtn.click();
             updateAttrContent(data);
-            console.log(eTarget.closest("[data-layout]"))
+            const dbblockDiv = eTarget.closest("[data-layout]");
             // 보드 레이아웃에서 속성 변경했을 때 element 이동
-            if( eTarget.closest("[data-layout]").getAttribute("data-layout") != null &&
-                eTarget.closest("[data-layout]").getAttribute("data-layout") == "DB_BRD"){
+            if( dbblockDiv != null &&
+                dbblockDiv.getAttribute("data-layout") != null &&
+                dbblockDiv.getAttribute("data-layout") == "DB_BRD"){
                 let moveState = data['attrContent'];
                 let moveDiv = eTarget.closest(".db_block");
                 let stateDiv = eTarget.closest(".state-container").querySelector(`[data-state="${moveState}"]`);
@@ -763,8 +738,6 @@ function changeState(eTarget){
 // 날짜 속성 수정
 function selectCalAttr(eTarget){
     if(document.querySelector("[data-attr-modal]") !=null ) document.querySelector("[data-attr-modal]").remove();
-
-    eTarget.style.position = "relative";
 
     let modal = document.createElement("div");
     modal.style.position = "absolute"
@@ -903,20 +876,20 @@ async function getMembers(pageId, tag){
     modal.setAttribute("data-attr-modal", "");
     modal.classList.add('db-modal');
     tag.append(modal);
-    tag.classList.add("modal-top"); // relative 속성 일시적으로 추가 제거 위함
     modal.style.top = -100%
     modal.setAttribute("class", "view");
     let option = '<div class="close-attr-modal">✕</div>';
     for(let i=0; i<childList.length-1; i++){
-        let content = childList[i].innerText;
-        let pui = childList[i].getAttribute("data-puse-id");
-        if(childList.length == 1) return;
-        option += `
-        <div class="inlineTags this-value" data-puse-id="${pui}">
-            ${content}
-            <button class="delete-attr">✕</button>
-        </div>
-        `;
+        if(childList[0].innerText != ''){
+            let content = childList[i].innerText;
+            let pui = childList[i].getAttribute("data-puse-id");
+            option += `
+            <div class="inlineTags this-value" data-puse-id="${pui}">
+                ${content}
+                <button class="delete-attr">✕</button>
+            </div>
+            `;
+        }
     };
 
     option += `<hr>`;
@@ -972,7 +945,7 @@ async function getMembers(pageId, tag){
                         modalData = newDiv;
                         prevEle.before(newDiv);  // 선택요소 뒤에 추가
                     })  // 새로운 유저 화면에 추가 forEach문 종료
-                    addAttrcontentToModal(modalData);   // 속성값 편집 모달에 데이터 append
+                    document.querySelector("[data-attr-modal]").remove();
                 }
 
             }
@@ -1095,41 +1068,46 @@ function deleteThisAttr(e){
 }
 
 // 속성 이름 변경
-async function modifyAttrName(e){
+function modifyAttrName(e){
     if(e.target.classList.contains("page-attr")) return;
-    let dui = e.target.getAttribute("data-duse-id");
-    let caseId = e.target.closest("[data-layout]").getAttribute("data-block-id");
-    let attrId = e.target.getAttribute("data-attrid");
-    if(e.type == 'click'){
-        if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
-        e.target.setAttribute("contenteditable", true);
-    }else if(e.type == 'keydown'){
-        if(e.keyCode === 13){
-            e.preventDefault();
-            e.target.setAttribute("contenteditable", false);
-            let attrName = e.target.innerText;
-            let check = true;
-            let attrList = await getUseAttrList(caseId);
-            console.log(attrId, attrName)
-            attrList.forEach(useAttr => {
-                if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
-            });
-            if(check == false){
-                alert("해당 속성이 이미 존재합니다.");
-                return;
-            }
-            let data = {
-                'dbUseId' : dui,
-                'attrName' : attrName,
-                'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
-                'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
-                'casePageId' : caseId,  // 블럭아이디
-                'workId' : document.getElementById("TitleWid").value
-            };
+    const attrId = e.target.getAttribute("data-attrid");
+    e.target.setAttribute("data-nowan", e.target.innerText);
 
+    if(['UUSER', 'CUSER', 'CDATE', 'UDATE', 'STATE'].includes(attrId)) return;
+    e.target.setAttribute("contenteditable", true);
+}
+
+async function modAttrNameFix(e){
+    if(e.keyCode === 13){
+        const attrId = e.target.getAttribute("data-attrid");
+        const orgName = e.target.getAttribute("data-nowan");
+        e.preventDefault();
+        e.target.setAttribute("contenteditable", false);
+        let attrName = e.target.innerText;
+        let check = true;
+    
+        let data = {
+            'dbUseId' : e.target.getAttribute("data-duse-id"),
+            'attrName' : attrName,
+            'pageId' : e.target.closest("[data-layout]").getAttribute("data-page-id"),
+            'email' : document.getElementById("UserInfoMod").querySelector(".email").textContent,
+            'casePageId' : e.target.closest("[data-layout]").getAttribute("data-block-id"),  // 블럭아이디
+            'workId' : document.getElementById("TitleWid").value
+        };
+
+        let attrList = await getUseAttrList(data.casePageId);
+
+        attrList.forEach(useAttr => {
+            if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+        });
+
+        if(check == false){
+            alert("해당 속성이 이미 존재합니다.");
+            e.target.innerText = orgName;
+        }else {
             modifyAttrNameAjax(data);
         }
-
+        e.target.removeAttribute("data-nowan");
     }
 }
 

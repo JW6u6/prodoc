@@ -103,6 +103,7 @@ const blockHandler = {
       const date = reply.upDate ? reply.upDate : reply.creDate;
       const temp = makeReplyBlock(
         reply.nickname,
+        reply.creUser,
         reply.content,
         date,
         reply.replyId,
@@ -121,6 +122,7 @@ const blockHandler = {
         pageId: pageBlockId,
       });
       const replyTemp = makeReplyBlock(
+        blockSessionUserNickName,
         blockSessionUserId,
         replyInput.value,
         "지금",
@@ -173,7 +175,7 @@ const blockHandler = {
     const blockId = e.target.closest(`.block_dropdown_menu`).dataset.blockId;
     const menu = await makeDropDownMenu(
       blockId,
-      { left: 300, width: 100, modalClass: "child_dropdown_menu" },
+      { left: 300, width: 200, modalClass: "child_dropdown_menu" },
       [menuTemplateObject.changeMenu]
     );
     displayModal(e.target.closest(".block_dropdown_menu"), menu);

@@ -1,7 +1,8 @@
 package com.prodoc.user.service.impl;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,8 +40,15 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	}
 
 	@Override
-	public UserVO getFind(UserVO user) {	//유저 찾기
-		return mapper.findUser(user);	
+	public List<String> getFind(UserVO user) {	//유저 찾기
+		List<UserVO> userList = mapper.findUser(user);
+		List<String> emailList = new ArrayList<>();
+		
+		for(UserVO find : userList) {
+			emailList.add(find.getEmail());
+		}
+		
+		return emailList;	
 	}
 	
 	@Override

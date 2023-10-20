@@ -12,9 +12,9 @@ public class SelectFileVO {
 	private String upName;
 	private String nickName;
 	private String pageName;
+	private String workName;
 	private Date saveDate;
 	private String displayId;
-	private String workName;
 	private String workId;
 	private String pageId;
 }

@@ -1,0 +1,28 @@
+<div class="historyItem" data-workid="${history[i].workId}" style="overflow:hidden; border:1px solid black; margin:5px 0px">
+    <div class="histroy_item--left">
+        <p>${history[i].historyType}</p>
+        <p>${formatTime(new Date(history[i].upDate))}</p>
+    </div>
+
+
+    <div class="history_item--right">
+        <div class="inline-div">
+            <div>
+                <div class="inline-div">
+                    <span class="material-symbols-outlined">draft</span>
+                </div>
+                <div class="inline-div">
+                    <h3>${history[i].workName}</h3>
+                </div>
+            </div>
+            <div>
+                <p>${history[i].nickname}(${history[i].creUser})</p>
+            </div>
+        </div>
+            
+        <div class="inline-div">
+            <button type="button" class="revokeBtn">복구</button>
+        </div>
+	</div>
+
+</div>

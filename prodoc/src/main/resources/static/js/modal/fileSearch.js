@@ -25,7 +25,8 @@ document.getElementById("checkAll").addEventListener("click", function(e){
 checkInput.forEach(tag => {
     tag.addEventListener("change", function(e){
         if(tag.checked == false) document.getElementById("checkAll").checked = false;
-    })
+    });
+
 });
 
 // 날짜 버튼 클릭으로 input date 활성화
@@ -33,6 +34,7 @@ const startDate = document.getElementById("startDate");
 const endDate = document.getElementById("endDate");
 
 endDate.nextElementSibling.addEventListener("click", function(e){
+	e.target.classList.toggle("filedate");
     startDate.disabled = !startDate.disabled;
     endDate.disabled = !endDate.disabled;
 });
@@ -71,13 +73,12 @@ function getAllList(searchData){
     })
     .then(response => response.json())
     .then(result => {
-        console.log(result);
-        let fileList = result;
+        const fileList = result;
 
         // 태그 생성
         for(let file of fileList){
             let trTag = document.createElement("div");
-            trTag.classList.add("table-tr");
+            trTag.classList.add("file-tr");
             for(let field in file){
                let value = file[field];
                 if(field == 'displayId'){
@@ -87,16 +88,16 @@ function getAllList(searchData){
                 };
                 if(field == 'saveDate') value = changeDate(value);
                 let tdTag = document.createElement("div");
-                tdTag.classList.add("table-td", "inlineTags");
+                tdTag.classList.add("file-td", "inlineTags");
                 tdTag.innerText = value;
                 if(field == 'pageId'){
-                   tdTag.classList.add("pidToFile");
+                    tdTag.classList.add("pidToFile");
                     tdTag.innerText = file[field];
                 };
-                trTag.append(tdTag);
-                if(field == 'workName' || field == 'workId' || field == 'pageId'){
+                if(field == 'workId' || field == 'pageId'){
                    tdTag.style.display = 'none';
                 }
+                trTag.append(tdTag);
             }
             fileSearchList.append(trTag);
         }
@@ -124,9 +125,18 @@ function getSearchList(e){
        let field = tag.getAttribute("value");
        searchData[field] = tag.checked;
     }
-    
-    console.log(searchData);
-    getAllList(searchData);
+
+    // 검색어 체크
+    let shCheck = false;
+    for(let data in searchData){
+        if( data != 'keyword' && searchData[data] != '') shCheck = true;
+    }
+    if(!shCheck){
+        alert("검색 조건을 선택하세요");
+    }else{
+        getAllList(searchData);
+    }
+
     
 }
 
@@ -137,5 +147,5 @@ function moveToFileblock(e){
     const pageId = e.currentTarget.querySelector(".pidToFile").innerText;
     console.log(pageId, displayId);
     if(pageId != '' || pageId != null ) selectPage(pageId);
-    if(displayId != '' || displayId != null) cusorMove(displayId);
+    if(displayId != '' || displayId != null) setTimeout(() => cusorMove(displayId), 500);
 }

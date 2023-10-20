@@ -51,13 +51,37 @@
 	border-radius: 5px;
 }
 
+.btn-db-attr:hover {
+	background-color: #eee;
+}
+
 .db-block-body {
 	overflow : auto;
 }
 
 /* 하위 페이지 */
+.dbpage_btns {
+	float: right;
+}
+
+.dbpage_btns button {
+    background-color: transparent;
+    border: 0;
+    font-size: larger;
+}
+
+.dbpage_btns button:hover {
+	background-color: #ddd;
+	cursor: pointer;
+}
+
 .db_block{
 	padding: 10px;
+}
+
+.data_page {
+	/* float: left; */
+	display: flex;
 }
 
 .del-db-page {
@@ -89,21 +113,41 @@ div[data-attr-option] * {
 	dispaly: block;
 }
 
+div[data-attr-option] div:nth-child(1) {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+div[data-attr-option] button {
+	margin-top: 10px;
+    background-color: #feeafa;
+    border: 0;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+
 div[data-attr-option] div {
 	padding-top: 5px;
 }
 
 
+.pageAttr_option,
 div[data-attr-modal] {
+	position: absolute;
+	background-color: white;
+	width:200px;
+	
 	border: 1px solid #eee;
 	border-radius: 5px;
 	box-shadow: 1px 2px 2px 1px #ccc;
 	padding: 20px;
 	min-width: fit-content;
+	z-index: 90;
 }
 
 div[data-attr-modal] hr {
 	width: inherit;
+	display: block;
 }
 /* 갤러리 레이아웃 */
 div[data-layout="DB_GAL"] .db-block-body{
@@ -253,6 +297,14 @@ div[data-layout="DB_GAL"] .db-block-body{
 	margin-right: 7px;
 }
 
+.add-dbpage:hover,
+.add-page-attr:hover,
+.page-attr-option:hover,
+.attr-name:hover,
+.data_pageNM:hover {
+	cursor: pointer;
+}
+
 .attr-list{
 	float: right;
 }
@@ -265,13 +317,6 @@ div[data-layout="DB_TBL"] .attrAtag {
 
 .dbtype-gal .del-db-page {
 	float: right;
-}
-
-div[data-attr-modal]{
-	position: absolute;
-	background-color: white;
-	top: 100%;
-	width:200px
 }
 
 div[data-attrid="CAL"] div[data-attr-modal] {
@@ -296,6 +341,12 @@ div[data-attrid="CAL"] div[data-attr-modal] {
 	border-radius: 4px;
 	text-align: center;
 	background-color: #e8cff5;
+}
+
+div[data-attrid="USER"] .get-value,
+div[data-attrid="USER"] .this-value
+ {
+	display: block;
 }
 
 .get-value {
@@ -383,10 +434,6 @@ div[data-attrid="CAL"] div[data-attr-modal] {
 	visibility: visible;
 }
 
-.modal-top {
-	position: relative;
-}
-
 .close-attr-modal {
 	display: block;
 	text-align: right;
@@ -429,9 +476,17 @@ div[data-attrid="CAL"] div[data-attr-modal] {
 }
 
 .attr-line .attr-name {
-	width: 200px;
-	font-weight: 500;
-	padding: 10px;
+    width: 120px;
+    font-weight: 500;
+    padding: 10px;
+    display: inline-block;
+    font-weight: 550;
+    color: dimgrey;
+}
+
+.attr-line .attr {
+    max-width: fit-content;
+    white-space: normal;
 }
 
 .dataPage_blocks{

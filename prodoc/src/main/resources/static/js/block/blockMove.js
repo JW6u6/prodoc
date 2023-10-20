@@ -296,19 +296,19 @@ async function drop_handler(event) {
     //컬럼블럭 자체를 데이터 베이스에 insert
     //만약 컬럼블럭이 부모가 있는 블럭쪽에 위치해있다면 parentId를 넣어주기. 아니면 parentId = null
     if (columnBlock.parentElement.classList.contains("child_item")) {
-      createDBBlock({
+      createBlock2DB({
         blockId: "COLUMN",
         creUser: blockSessionUserId,
-        pageId: workBlockId,
+        pageId: pageBlockId,
         rowX: order,
         displayId: temp.displayId,
         parentId: isParent.dataset.blockId,
       });
     } else {
-      createDBBlock({
+      createBlock2DB({
         blockId: "COLUMN",
         creUser: blockSessionUserId,
-        pageId: workBlockId,
+        pageId: pageBlockId,
         rowX: order,
         displayId: temp.displayId,
       });

@@ -6,7 +6,7 @@
 	<!-- 파일검색 -->
 	<select id="getFileList" resultType="SelectFileVO" parameterType="KeywordVO">
 		SELECT *
-		FROM view_file_list
+		FROM VIEW_FILE_LIST
 		WHERE work_id IN (
             SELECT work_id
             FROM tbl_member

@@ -7,6 +7,7 @@
   right: 0;
   overflow-y: auto;
   padding-top: 70px;
+  z-index:3;
 }
 .block_reply img {
   width: 20px;
@@ -22,8 +23,6 @@
   bottom: 50px;
   right: 50px;
   border-radius: 2040123px;
-  border: 1px solid #ccc;
-  background-color: rgb(180, 241, 221);
 }
 
 .block_reply {

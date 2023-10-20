@@ -100,6 +100,7 @@ let auth = document.getElementById("authInput");		//찾기 - 인증번호 입력
 let authNum = "";//서버에서 넘어온 인증번호
 let passOK = false;
 let authOK = false;
+let findType = "email";
 
 //찾기 창 내 인풋 값 초기화
 function findInit(){
@@ -134,6 +135,7 @@ document.querySelectorAll(".findBtn").forEach((tag,idx,list) => {
 			newDiv.style.visibility = "hidden";
 			list[0].classList.add('wd-clicked');
 			list[1].classList.remove('wd-clicked');
+			findType="email";
 			findInit();
 		}else{
 			pwType.style.visibility = "visible";			//비밀번호 찾기
@@ -141,6 +143,7 @@ document.querySelectorAll(".findBtn").forEach((tag,idx,list) => {
 			findInit();
 			list[0].classList.remove('wd-clicked');
 			list[1].classList.add('wd-clicked');
+			findType="pass";
 		}
 	});
 });
@@ -148,13 +151,17 @@ document.querySelectorAll(".findBtn").forEach((tag,idx,list) => {
 
 //번호 입력 칸에 문자 입력(찾기 창 속)
 phone.addEventListener('input', (e)=> phone.value = phone.value.replace(/[^0-9]/gi, ""));
-
+phone.addEventListener('change', (e)=>{authOK = false;});
 
 //인증번호 받기
 document.querySelector("#AuthBtn").addEventListener('click', function(e){
 	if(phone.value.length != 11){
 		alert("휴대폰 11자리를 정확하게 입력해주세요.");	return;
-	}else if(authOK){ return; }	//인증이 된 번호
+	}else if(authOK){ 
+		alert("이미 인증된 번호입니다.");   return; //인증이 된 번호
+	}else if(findType == "pass" && email.value == ""){
+		alert("이메일을 입력해주세요."); return;
+	}	
 	
 	fetch("/sendSMS",{
 		method: "post",
@@ -188,20 +195,26 @@ document.querySelector("#authCheck").addEventListener('click', function(e){
 		body: JSON.stringify({"email": email.value ,
 				"phone" : phone.value})
 	}).then(response=> response.json())
-	.then(result=>{
+	.then(result=> {
 		if(result == null){
-			alert("해당 정보와 일치하는 회원이 없습니다."); return;
+			alert("해당 정보와 일치하는 회원이 없습니다.");
+			return;
 		}
-		console.log("findUser:" + result.email);
-		console.log("findUser:" + result.phone);
-		if(pwType.style.visibility == "hidden"){	//이메일 찾기 상태
-			pTag.innerText = "가입 이메일: " + result.email;
+		let resultList = result.result;
+		if(findType == "email"){	//이메일 찾기 상태
+			let txt = `<가입 이메일 목록>`;
+			for(let list of resultList){
+				console.log(list);
+				txt += `<br>${list}`;
+			}
+			console.log(txt);
+			pTag.innerHTML = txt;
 			pTag.style.visibility = "visible";
-		}else{							//비밀번호 찾기 상태
+		}else{										//비밀번호 찾기 상태
 			newDiv.style.visibility = "visible";	//새 비밀번호 보이기
 		}
 	})
-	.catch(err=>alert("해당 정보와 일치하는 회원이 없습니다."));
+	.catch(err=>console.log(err));
 	
 });
 
@@ -219,7 +232,7 @@ newCheck.addEventListener('change', function(e){
 
 //확인 창 비번찾기일 때 passOK = true 닫기 가능
 document.querySelector("#closeFind").addEventListener('click', function(e){
-	if(pwType.className == "hide"){	//1) 이메일 확인 후 닫기
+	if(findType == "email"){	//1) 이메일 확인 후 닫기
 		findMd.className = 'hide';
 		findInit();
 	}else{							//2) 비밀번호 변경 ajax 처리 후 닫기

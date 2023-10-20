@@ -158,11 +158,12 @@ function addDbpage(){
 function dblistBlock(block){
     let useAttr = getAttrList(block['attrList']);
     const listType = `
-        <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="
-                `+block['page']['pageId']+`" class="dbtype-list db_block" data-page-order="
-                `+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
-            <div class="inlineTags data_page">📄</div>
-            <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
+        <div draggable="true" data-block-id="`+block['block']['displayId']+`" 
+            data-page-id="`+block['page']['pageId']+`" class="dbtype-list db_block" 
+            data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
+            <div class="inlineTags data_page data_pageNM">
+                <span class="material-symbols-outlined">draft</span>`+block['page']['pageName']+`
+            </div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div class="attr-list inlineTags">`+useAttr+`</div>
         </div>
@@ -175,8 +176,9 @@ function dbBrdBlock(block){
     const brdType = `
         <div draggable="true" data-block-id="`+block['block']['displayId']+`" data-page-id="`+block['page']['pageId']+`" 
                 class="dbtype-brd db_block" data-page-order="`+block['page']['numbering']+`" data-block-order="`+block['block']['rowX']+`">
-            <div class="inlineTags data_page">📄</div>
-            <div class="inlineTags data_page data_pageNM">`+block['page']['pageName']+`</div>
+            <div class="inlineTags data_page data_pageNM">
+                <span class="material-symbols-outlined">draft</span>`+block['page']['pageName']+`
+            </div>
             <div class="inlineTags del-db-page">&#10005;</div>
             <div>`+useAttr+`</div>
         </div>
@@ -201,7 +203,7 @@ function dbGalBlock(block){
             <img src="${backImg!=''?'/dbFiles/'+backImg:'images/dbimg/noimg.jpg'}">
         </div>
         <div>
-            <div class="data_page data_pageNM">`+block['page']['pageName']+`</div>
+            <div class="data_page data_pageNM"><span class="material-symbols-outlined">draft</span>`+block['page']['pageName']+`</div>
             <div>`+useAttr+`</div>
         </div>
     </div>
