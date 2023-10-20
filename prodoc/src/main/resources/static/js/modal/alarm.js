@@ -163,7 +163,7 @@ function clickAlarmEvent(){
 		result.addEventListener('click',function(){
 			let clickType;
 			clickType = "OK";
-			if(result.className == 'joinNoBtn'){
+			if(result.className == 'joinNoBtn btn'){
 				clickType = "NO";
 			}
 			let email = document.querySelector("#side input.logUser").value;
@@ -183,6 +183,8 @@ function clickAlarmEvent(){
 			.then(res =>res.text())
 			.then(result => {
 				console.log(result);
+				allList();
+				showAlarmList('all');
 			})
 			.catch(reject => {
 				console.log(reject);
