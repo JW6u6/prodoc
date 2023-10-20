@@ -39,7 +39,6 @@ function containerEvent(box) {
 
   //컨테이너 클릭 이벤트
   box.addEventListener("mouseup", (e) => {
-    let newElement = null;
     if (e.target !== e.currentTarget) return;
     e.stopPropagation();
     const paddingBottom = 150;
@@ -47,12 +46,20 @@ function containerEvent(box) {
     const clickHeight = e.offsetY;
     const prevBlock = e.target.lastElementChild;
 
-    console.log(prevBlock);
-
     if (targetHeight - paddingBottom < clickHeight && prevBlock !== null) {
       const isSeparator = prevBlock.querySelector(".separator");
       if (isSeparator) return;
-      if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
+      if(prevBlock.querySelector(".content")){
+        if (prevBlock.querySelector(".content").innerHTML.length !== 0) {
+          const template = makeBlockTemplate();
+          const displayObj = {
+            template,
+            type: null,
+            element: box,
+          };
+          displayBlock(displayObj); // 문서쪽으로 만듦
+        } 
+      }  else {
         const template = makeBlockTemplate();
         const displayObj = {
           template,
