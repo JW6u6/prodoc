@@ -103,7 +103,7 @@ const displayChildBlock = (template, parent) => {
 };
 
 // 기본적인 블럭을 만드는 함수.
-function makeBlockTemplate(order) {
+function makeBlockTemplate(order, parentId = null) {
   // 블럭을 새로 생성하면
   const displayId = uuidv4();
   const rowX = order ? order : blockCount * 1024;
@@ -116,6 +116,7 @@ function makeBlockTemplate(order) {
     blockId: "TEXT",
     creUser: blockSessionUserId,
     content: "",
+    parentId: parentId ? parentId : null,
   };
   createBlock2DB(blockObj);
 
