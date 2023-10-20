@@ -1065,8 +1065,14 @@ function closeSideModal() {
 
 //페이지- DB 선택시 페이지생성에 DB 종류 삽입
 function selectDb(event) {
+    document.querySelectorAll(".db").forEach(dbs =>{
+        dbs.style.opacity = "1";
+        dbs.style.border = "none";
+    })
     let db = event.currentTarget.dataset.casetype;
     let caseId = document.querySelector("#caseId");
+    event.currentTarget.style.opacity = "0.5";
+    event.currentTarget.style.border = "3px solid orange"
     caseId.value = db;
 }
 wt.addEventListener("click", (e) => {
