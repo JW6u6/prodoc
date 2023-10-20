@@ -1,6 +1,8 @@
 package com.prodoc.user.controller;
 
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,8 +19,6 @@ import com.prodoc.user.service.ProfileService;
 import com.prodoc.user.service.SMSUtil;
 import com.prodoc.user.service.UserService;
 import com.prodoc.user.service.UserVO;
-
-import retrofit2.http.POST;
 
 @Controller
 public class UserController {
@@ -68,10 +67,10 @@ public class UserController {
 	
 	@ResponseBody
 	@PostMapping("/findME")
-	public UserVO findProcess(@RequestBody UserVO user) {
-		UserVO vo = service.getFind(user);
+	public Map<String, List<String>> findProcess(@RequestBody UserVO user) {
+		Map<String, List<String>> map = new HashMap<>();
+		map.put("result", service.getFind(user));
 		System.out.println("findME: " + user.toString());
-		System.out.println("findME: " + vo);
-		return vo;
+		return map;
 	}
 }
