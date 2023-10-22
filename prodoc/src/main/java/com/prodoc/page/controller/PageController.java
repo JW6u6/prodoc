@@ -121,8 +121,6 @@ public class PageController {
 	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/pageDelCheck")
 	public boolean pageDeleteCheck(@RequestBody PageVO pageVO, HttpSession session) {
-//		UserVO user = (UserVO) session.getAttribute("logUser");
-//		pageVO.setCreUser(user.getEmail());
 		return pageService.deleteCheckPage(pageVO);
 	}
 
@@ -181,6 +179,12 @@ public class PageController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	//db페이지 삭제하면 블럭으로 등록된 페이지인 경우에 삭제하는거...
+	@PostMapping("/ifDBPageDelete")
+	public void deleteDBPage(@RequestBody PageVO pageVO) {
+		pageService.deleteDBPageBlock(pageVO);
 	}
 
 }
