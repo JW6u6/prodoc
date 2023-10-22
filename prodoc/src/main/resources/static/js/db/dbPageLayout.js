@@ -1,4 +1,4 @@
-async function listLayoutEditor(dataList, displayId, layout){
+async function listLayoutEditor(dataList, displayId, layout){ 
     console.log(dataList);
     const dbbody = document.querySelector(`[data-block-id="${displayId}"] .db-block-body`);
     const nowLayouts = document.querySelector(`[data-block-id="${displayId}"]`).querySelectorAll(`[data-dblayout]`);
