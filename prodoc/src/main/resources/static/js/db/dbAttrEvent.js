@@ -152,7 +152,6 @@ async function registAttr(e){
             let nodePageId = pageNode.getAttribute("data-page-id");
             attrs.forEach(attr=>{
                 if(nodePageId == attr.pageId){
-                    console.log(layout);
                     if(layout == "DB_BRD" || layout == "GAL"){
                         //pageNode의 마지막 자식 안에 append
                         let tagStr = getAttrList([attr]);
@@ -185,7 +184,9 @@ async function registAttr(e){
             modal.innerHTML = '';
             modal.classList.remove("view");
             modal.classList.add("hide");
-        })
+        });
+        // 검색 옵션에 추가
+        // casepageid로 해당 db 찾아서 queryselector.DBS_option에 append
     })
 
 }
