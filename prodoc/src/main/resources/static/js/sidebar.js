@@ -837,7 +837,6 @@ async function newWork() {
             checkWDivs.forEach((div) => div.remove());
         }
         for (let check of workNullCheck) {
-            console.log(check);
             if (check.id == 'wsName' && check.value == '') {
                 let div = document.createElement('div');
                 div.classList.add('checkWDiv');
@@ -1047,6 +1046,8 @@ function closeSideModal() {
         checkWDivs.forEach((div) => div.remove());
     }
     document.querySelector('#autoContain').style.width = '319px';
+
+    document.querySelectorAll('invList > div').forEach(item => item.remove());
 }
 
 //페이지- DB 선택시 페이지생성에 DB 종류 삽입
