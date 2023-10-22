@@ -223,7 +223,7 @@ function revokeFcn(workId, pageId){ //TODO: 복구 프로세스 ajax
 	.then(result=>{
 		console.log(result.msg);
 		alert(result.msg);
-		workList(result.logUser);
+		allList();
 		//historyModal.className = "hide";
 	}).catch(err=>console.log(err));
 }
