@@ -19,6 +19,7 @@ public interface DBMapper {
 	public int deleteDBPage(BlockVO vo);
 	public DBBlockVO getDBblock(DBBlockVO vo);
 	public List<UserVO> getWorkMembers(String pageId);
+	public List<BlockVO> databaseSearch(PageAttrVO attrVO);	// 데이터베이스 검색
 	
 	public void databaseUpdate(PageAttrVO vo);	// 데이터베이스 : 히스토리, 페이지테이블 업데이트
 	public void dbpageNumbering(PageAttrVO vo);	// 데이터베이스 하위 페이지의 넘버링, 데이터베이스 업데이트
