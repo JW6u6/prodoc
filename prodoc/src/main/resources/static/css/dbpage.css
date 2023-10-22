@@ -39,6 +39,10 @@
 	border-bottom: 2px solid #8a817c;
 }
 
+.dataSearch {
+	display: inline-block;
+}
+
 .db-attr-option {
 	display: inline-block;
 	float: right;

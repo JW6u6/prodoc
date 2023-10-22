@@ -120,4 +120,29 @@
 		FROM tbl_dbblock 
 		WHERE page_id = ( SELECT parent_id FROM tbl_page WHERE page_id = #{pageId} )
 	</select>
+	
+	<!-- 데이터베이스 검색 -->
+	<select id="databaseSearch" parameterType="PageAttrVO" resultType="BlockVO">
+		SELECT *
+		FROM tbl_display
+		WHERE parent_id = #{casePageId}
+		      AND display_id IN (
+		        SELECT d.display_id
+		        FROM tbl_display d JOIN tbl_dbblock db ON d.display_id = db.display_id
+		            JOIN view_pageattr attr ON attr.page_id = db.page_id
+	            <if test="dbUseId == ''">
+		            JOIN tbl_page page ON page.page_id = attr.page_id
+	            </if>
+		        WHERE
+		        <if test="dbUseId != ''">
+		        	attr.db_use_id = #{dbUseId}
+		           	AND (UPPER(attr.attr_content) LIKE UPPER('%'||#{attrContent}||'%')
+		            OR UPPER(attr.nickname) LIKE UPPER('%'||#{attrContent}||'%'))
+		        </if>
+		        <if test="dbUseId == ''">
+		        	UPPER(page.page_name) LIKE UPPER('%'||#{attrContent}||'%')
+		        </if>
+		        )
+		ORDER BY row_x
+	</select>
 </mapper>
