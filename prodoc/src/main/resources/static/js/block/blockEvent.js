@@ -882,7 +882,7 @@ function input_handler(event) {
     displayId,
     content: event.target.innerText,
   };
-  saveTran(updateObj);
+  saveTransection(updateObj);
 }
 
 // 블럭 포인터 이벤트

@@ -155,7 +155,9 @@ const blockHandler = {
     blockRemoveBtn.forEach((removeBtn) => {
       removeBtn.addEventListener("click", async (e) => {
         const reply = e.currentTarget.closest(".block_reply");
-        const replyId = e.currentTarget.dataset.replyId;
+        const replyId = e.currentTarget.closest(".reply_block--header").dataset
+          .replyId;
+        console.log(replyId);
         const result = await deleteReply(replyId, blockSessionUserId);
 
         if (result.result === "success") {
