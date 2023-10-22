@@ -17,7 +17,7 @@ function displayBlock({ template, type, element }) {
     }
   } else {
     if (element) {
-      if (element.classList.contains("container")) {
+      if (element.classList.contains("container") || element.classList.contains("dataPage_blocks")) {
         container.insertAdjacentHTML("beforeend", template.template);
       } else {
         element.insertAdjacentHTML("afterend", template.template);
@@ -204,27 +204,27 @@ function templateMaker(
   // 기본적인 텍스트 블록(생성시 기본값)
   const textblock = ` 
   <div class="block_wrapper">
-    <div class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</div>
+    <div class="content" style="color:#${color};background-color:#${backColor}" spellcheck="false" contenteditable="true">${text}</div>
   </div>`;
 
   // h1
   const h1 = `
   <div class="block_wrapper">
-    <h2 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h2>
+    <h2 class="content" style="color:#${color};background-color:#${backColor}" spellcheck="false" contenteditable="true">${text}</h2>
   <div>
   `;
 
   // h2
   const h2 = `
   <div class="block_wrapper">
-    <h3 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h3>
+    <h3 class="content" style="color:#${color};background-color:#${backColor}" spellcheck="false" contenteditable="true">${text}</h3>
   </div>
   `;
 
   // h3
   const h3 = `
   <div class="block_wrapper">
-    <h4 class="content" style="color:#${color};background-color:#${backColor}"  contenteditable="true">${text}</h4>
+    <h4 class="content" style="color:#${color};background-color:#${backColor}" spellcheck="false" contenteditable="true">${text}</h4>
   </div>`;
 
   // hr
@@ -234,17 +234,12 @@ function templateMaker(
     </div>
   `;
 
-  // 페이지 블록
-  const block_page = `
-  <div class="block_wrapper"><a class="content" href="#">${text}</a></div>
-  `;
-
   //TODO 블록
   const block_todo = `
   <div style="width:100%" class="block_wrapper">
     <div style="display:flex;" class="block_todo">
       <input type="checkbox" >
-      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" contenteditable="true">${text}</div>
+      <div style="width:100%" class="content" style="color:#${color};background-color:#${backColor}" spellcheck="false" contenteditable="true">${text}</div>
     </div>
   </div>`;
 
