@@ -214,6 +214,7 @@ function sendData(isExistData) {
 
 //소켓에 이벤트를 보내는 함수
 function sendSocketEvent(socketEventObj) {
+if(stompClient){
   if (stompClient.connected) {
     stompClient.publish({
       destination: `/topic/collaboration/${pageBlockId}`,
@@ -223,6 +224,7 @@ function sendSocketEvent(socketEventObj) {
   } else {
     console.log("stomp is not connected");
   }
+}
 }
 
 /**
