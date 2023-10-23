@@ -1047,7 +1047,7 @@ function closeSideModal() {
             item.options[0].selected = true;
         });
     }
-    let invTable = document.querySelectorAll("#invList > tr");
+    let invTable = document.querySelectorAll("#invList > div");
     invTable.forEach((item) => {
         item.remove();
     });
@@ -1490,9 +1490,9 @@ function newWorkSpace() {
                 if (invDivList.length > 0) {
                     inviteWork(result); //워크스페이스 초대하는 메소드
                 }
-                closeSideModal();
-                allList();
             }
+            closeSideModal();
+            allList();
         })
         .catch((err) => console.log(err));
 }
