@@ -17,7 +17,10 @@ function displayBlock({ template, type, element }) {
     }
   } else {
     if (element) {
-      if (element.classList.contains("container") || element.classList.contains("dataPage_blocks")) {
+      if (
+        element.classList.contains("container") ||
+        element.classList.contains("dataPage_blocks")
+      ) {
         container.insertAdjacentHTML("beforeend", template.template);
       } else {
         element.insertAdjacentHTML("afterend", template.template);
@@ -136,7 +139,7 @@ function makeBlockTemplate(order, parentId = null) {
 
 /**
  * 블럭을 만드는 함수입니다. HTML형식 String을 반환합니다.
- * @param {{displayId:string,type:string,text:string,order:number}} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order이 필요합니다.
+ * @param {{displayId?:string,type?:string,text?:string,order?:number,color?:string,backColor?:string}} blockObj - 블럭의 형태를 바꿉니다. displyId, type, text, order,color,backColor이 필요합니다.
  * @returns {Promise<{template:string,displayId:string}>}
  */
 async function updateTemplate({
