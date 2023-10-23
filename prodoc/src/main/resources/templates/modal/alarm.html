@@ -1,19 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="alarmFrag">
 	<div id="alarmModal" class="hide" style="background-color : white">
+	<button id="close-modal" class="close workCloseBtn" onclick="closeAlarmModal()">✕</button>
 		<div id = "alarmMenu" >
 			<ul>
 				<li id="allAlarm">전체</li>
 				<li id="replyAlarm">댓글</li>
 				<li id="inviteAlarm">초대</li>
 			</ul>
-		</div>
+		</div >
 		<div id = "alarmFunc">
 			<p>전체 읽음</p>
-			<div>
-			<span>전체 선택</span><input type="checkbox" id="allCheckBox">			
-			</div>
 			<p>선택 삭제</p>
+		<div>전체 선택<input type="checkbox" id="allCheckBox">	</div>	
 		</div>
 		<div id = "alarmList"></div>
 	</div>
