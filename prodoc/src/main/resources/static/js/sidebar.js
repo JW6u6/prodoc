@@ -22,8 +22,8 @@ function allList() {
     let url = "/allList?email=" + email
     let temp_dbpageList = [];
     fetch(url, {
-            method: "GET"
-        })
+        method: "GET"
+    })
         .then((response) => response.json())
         .then((data) => {
             data.forEach((item, idx, dataList) => {
@@ -56,20 +56,16 @@ function allList() {
                         let workSite = document.querySelector(
                             '.Work[data-id="' + item.workId + '"]'
                         );
-                        let text = `<div class= "Page" data-id="${
-              item.pageId
-            }"  data-name="${item.workName}" data-level="2" data-number="${
-              item.numbering
-            }">
+                        let text = `<div class= "Page" data-id="${item.pageId
+                            }"  data-name="${item.workName}" data-level="2" data-number="${item.numbering
+                            }">
                                     <span class="pageListShow">▼</span>
-                                    <span class="pageName" draggable="true">${
-                                      item.workName
-                                    }</span>
-                                    ${
-                                      item.caseId.substr(0, 2) != "DB"
-                                        ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
-                                        : ""
-                                    }
+                                    <span class="pageName" draggable="true">${item.workName
+                            }</span>
+                                    ${item.caseId.substr(0, 2) != "DB"
+                                ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
+                                : ""
+                            }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                                     <div class = "pageMain hide"></div>
                                 </div>`;
@@ -98,20 +94,16 @@ function allList() {
                     );
                     if (pageSite != null) {
                         //부모가 페이지
-                        let text = `<div class= "Page" data-id="${
-              item.pageId
-            }"  data-name="${item.workName}" data-level="3" data-number="${
-              item.numbering
-            }" >
+                        let text = `<div class= "Page" data-id="${item.pageId
+                            }"  data-name="${item.workName}" data-level="3" data-number="${item.numbering
+                            }" >
                                     <span class="pageListShow">▼</span>
-                                    <span class="pageName" draggable="true">${
-                                      item.workName
-                                    }</span>
-                                    ${
-                                      item.caseId.substr(0, 2) != "DB"
-                                        ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
-                                        : ""
-                                    }
+                                    <span class="pageName" draggable="true">${item.workName
+                            }</span>
+                                    ${item.caseId.substr(0, 2) != "DB"
+                                ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
+                                : ""
+                            }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                              <div class="pageMain hide"></div>
                              </div>`;
@@ -131,20 +123,16 @@ function allList() {
                         let workSite = document.querySelector(
                             '.Work[data-id="' + item.workId + '"]'
                         );
-                        let text = `<div class= "Page" data-id="${
-              item.pageId
-            }"  data-name="${item.workName}" data-level="3" data-number="${
-              item.numbering
-            }" >
+                        let text = `<div class= "Page" data-id="${item.pageId
+                            }"  data-name="${item.workName}" data-level="3" data-number="${item.numbering
+                            }" >
                                     <span class="pageListShow">▼</span>
-                                    <span class="pageName" draggable="true">${
-                                      item.workName
-                                    }</span>
-                                    ${
-                                      item.caseId.substr(0, 2) != "DB"
-                                        ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
-                                        : ""
-                                    }
+                                    <span class="pageName" draggable="true">${item.workName
+                            }</span>
+                                    ${item.caseId.substr(0, 2) != "DB"
+                                ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
+                                : ""
+                            }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px">
                              <div class = "pageMain hide"></div>
                              </div>`;
@@ -161,18 +149,15 @@ function allList() {
                     if (pageSite != null) {
                         let text = "";
                         if (pageSite.parentElement.parentElement.className == "Work") {
-                            text = `<div class= "Page" data-id="${item.pageId}"  data-name="${
-                item.workName
-              }" data-level="4" data-number="${item.numbering}" >
+                            text = `<div class= "Page" data-id="${item.pageId}"  data-name="${item.workName
+                                }" data-level="4" data-number="${item.numbering}" >
                                     <span class="pageListShow">▼</span>
-                                    <span class="pageName" draggable="true">${
-                                      item.workName
-                                    }</span>
-                                    ${
-                                      item.caseId.substr(0, 2) != "DB"
-                                        ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
-                                        : ""
-                                    }
+                                    <span class="pageName" draggable="true">${item.workName
+                                }</span>
+                                    ${item.caseId.substr(0, 2) != "DB"
+                                    ? '<span onclick="newPageModal(event)" class="add"><img class="plus" src="/images/plus.svg" width="15px" height="15px"></span>'
+                                    : ""
+                                }
                                     <img class="editPN" src="/images/edite.svg" width="15px" height="15px"><div class = "pageMain hide"></div>
                                 </div>`;
                         } else {
@@ -218,7 +203,7 @@ function allList() {
                             pageSite.children[4].insertAdjacentHTML("beforeend", text);
                     }
                 }
-                
+
                 //forEach의 마지막에 닿음
                 if (dataList.length - 1 == idx) {
                     //워크스페이스 하위 표시 토글 이벤트 :: OK
@@ -521,11 +506,11 @@ document
         let URL = `/pageNewName?pageId=${id}&pageName=${value}`;
 
         fetch(URL, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
             .then((response) => response.json())
             .then((res) => {
                 if (res.result) {
@@ -635,12 +620,12 @@ function dropItem(event) {
         };
         let url = "/pageUpdate";
         fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(val)
-            })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
             .then(res => res.json())
             .then(result => {
                 allList();
@@ -692,81 +677,81 @@ function dropPage(event) {
         };
         let url = "/inPageUpdate";
         fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(val)
-            })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
             .then(res => res.json())
             .then(result => {
                 allList();
             })
             .catch(err => console.log(err))
     } else
-    if (offsetY > center + targetArea) {
-        insertAfter(dragItem, targetItem.parentElement);
-        console.log("뒤");
-        let pageId = dragItem.dataset.id;
-        let numbering = targetItem.parentElement.dataset.number;
-        let workId = targetItem.closest(".Work").dataset.id;
-        let parentId =
-            targetItem.parentElement.parentElement.parentElement.dataset.id;
-        if (parentId == workId) {
-            parentId = "";
-        }
-        console.log(workId, numbering, pageId, parentId);
-        let url = "/pagePlus";
-        let val = {
-            workId: workId,
-            numbering: numbering,
-            pageId: pageId,
-            parentId: parentId,
-        };
-        fetch(url, {
+        if (offsetY > center + targetArea) {
+            insertAfter(dragItem, targetItem.parentElement);
+            console.log("뒤");
+            let pageId = dragItem.dataset.id;
+            let numbering = targetItem.parentElement.dataset.number;
+            let workId = targetItem.closest(".Work").dataset.id;
+            let parentId =
+                targetItem.parentElement.parentElement.parentElement.dataset.id;
+            if (parentId == workId) {
+                parentId = "";
+            }
+            console.log(workId, numbering, pageId, parentId);
+            let url = "/pagePlus";
+            let val = {
+                workId: workId,
+                numbering: numbering,
+                pageId: pageId,
+                parentId: parentId,
+            };
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(val),
             })
-            .then((res) => res.json())
-            .then((result) => {
-                allList();
-            })
-            .catch((err) => console.log(err));
-    } else {
-        pageMain.insertBefore(dragItem, targetItem.parentElement);
-        console.log("앞");
-        let pageId = dragItem.dataset.id;
-        let numbering = targetItem.parentElement.dataset.number;
-        let workId = targetItem.closest(".Work").dataset.id;
-        let parentId =
-            targetItem.parentElement.parentElement.parentElement.dataset.id;
-        if (parentId == workId) {
-            parentId = "";
-        }
-        console.log(workId, numbering, pageId, parentId);
-        let url = "/pagePlus";
-        let val = {
-            workId: workId,
-            numbering: numbering,
-            pageId: pageId,
-            parentId: parentId,
-        };
-        fetch(url, {
+                .then((res) => res.json())
+                .then((result) => {
+                    allList();
+                })
+                .catch((err) => console.log(err));
+        } else {
+            pageMain.insertBefore(dragItem, targetItem.parentElement);
+            console.log("앞");
+            let pageId = dragItem.dataset.id;
+            let numbering = targetItem.parentElement.dataset.number;
+            let workId = targetItem.closest(".Work").dataset.id;
+            let parentId =
+                targetItem.parentElement.parentElement.parentElement.dataset.id;
+            if (parentId == workId) {
+                parentId = "";
+            }
+            console.log(workId, numbering, pageId, parentId);
+            let url = "/pagePlus";
+            let val = {
+                workId: workId,
+                numbering: numbering,
+                pageId: pageId,
+                parentId: parentId,
+            };
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(val),
             })
-            .then((res) => res.json())
-            .then((result) => {
-                allList();
-            })
-            .catch((err) => console.log(err));
-    }
+                .then((res) => res.json())
+                .then((result) => {
+                    allList();
+                })
+                .catch((err) => console.log(err));
+        }
 }
 
 function dragEnd(event) {
@@ -852,7 +837,6 @@ async function newWork() {
             checkWDivs.forEach((div) => div.remove());
         }
         for (let check of workNullCheck) {
-            console.log(check);
             if (check.id == 'wsName' && check.value == '') {
                 let div = document.createElement('div');
                 div.classList.add('checkWDiv');
@@ -986,12 +970,12 @@ function newPage() {
     console.log(val);
     let url = "/pageInsert";
     fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(val),
-        })
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(val),
+    })
         .then((response) => response.text())
         .then((pageId) => {
             console.log(pageId);
@@ -1003,13 +987,13 @@ function newPage() {
         .catch((err) => console.log(err));
 }
 
-function changeSideView() {}
+function changeSideView() { }
 
 //새로운 페이지 생성 모달창(+ 클릭시)
 function newPageModal(event) {
-  pageModal.style.display = "block";
-  dbPage.style.display = "flex";
-  document.body.style.overflow = "hidden";
+    pageModal.style.display = "block";
+    dbPage.style.display = "flex";
+    document.body.style.overflow = "hidden";
 
 
     let wId = event.target.closest(".Work").dataset.id;
@@ -1061,11 +1045,14 @@ function closeSideModal() {
     if (checkWDivs) {
         checkWDivs.forEach((div) => div.remove());
     }
+    document.querySelector('#autoContain').style.width = '319px';
+
+    document.querySelectorAll('invList > div').forEach(item => item.remove());
 }
 
 //페이지- DB 선택시 페이지생성에 DB 종류 삽입
 function selectDb(event) {
-    document.querySelectorAll(".db").forEach(dbs =>{
+    document.querySelectorAll(".db").forEach(dbs => {
         dbs.style.opacity = "1";
         dbs.style.border = "none";
     })
@@ -1151,16 +1138,16 @@ async function setWork(e) {
     let infoResult = await selectOneWork(workId);
     let membAuth = await memberCheck(workId);
 
-    if (infoResult.parentId == null) {
+    if (infoResult.parentId == '') {
         subCheck = false;
-    } else if (infoResult.parentId != null) {
+    } else if (infoResult.parentId != '') {
         subCheck = true;
     }
 
-    await listWorkJoin(workId);
 
     if (subCheck == true) {
         autoCheckList();
+        document.querySelector('#autoContain').style.width = '498px';
     }
 
     let tTog = document.querySelector("#teamToggleArea");
@@ -1191,15 +1178,7 @@ async function setWork(e) {
     editBtn.textContent = "저장";
     editBtn.classList.add("btn-md");
     btnAr.firstElementChild.replaceWith(editBtn);
-    let btns = document.querySelectorAll('#teamToggleArea > button');
-    btns.forEach(targetBtn => {
-        targetBtn.addEventListener('click', function (e) {
-            if (targetBtn.classList.contains('btnClicked')) {
-                targetBtn.classList.remove('btnClicked');
-            }
-            e.currentTarget.classList.add('btnClicked');
-        })
-    })
+
     let targetType = document.querySelector("#wsType");
     document.querySelector('#invList').classList.add('hide');
     if (targetType.value == "TEAM") {
@@ -1216,7 +1195,11 @@ async function setWork(e) {
             .querySelector("#workEdit")
             .addEventListener("click", setTypeChange);
 
-        document.querySelector("#teamEdit").addEventListener("click", function (e) {
+        document.querySelector("#teamEdit").addEventListener("click", async function (e) {
+            document.querySelector("#teamEdit").classList.add('btnClicked');
+            document.querySelector("#workEdit").classList.remove('btnClicked');
+
+            await listWorkJoin(workId);
             memCkArea.classList.remove('hide');
             //멤버일때 보여야 하는거
             if (membAuth == "OWNER") {
@@ -1302,7 +1285,7 @@ async function setWork(e) {
                 if (item.value != "checkAll") {
                     let workId =
                         item.parentElement.closest("tr").children[0].firstElementChild
-                        .value;
+                            .value;
                     let email = item.parentElement.closest("tr").children[1].textContent;
 
                     //멤버 내보내기에 새로운 리스트를 만듦
@@ -1388,6 +1371,9 @@ async function areUDelete(e) {
 }
 
 async function setTypeChange(e) {
+    document.querySelector("#teamEdit").classList.remove('btnClicked');
+    document.querySelector("#workEdit").classList.add('btnClicked');
+
     let workId = document.querySelector("#wid").value;
     let membAuth = await memberCheck(workId);
     let targetType = document.querySelector("#wsType");
@@ -1480,12 +1466,12 @@ function newWorkSpace() {
     let url = "/workInsert";
 
     fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(val),
-        })
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(val),
+    })
         .then((response) => response.text())
         .then((result) => {
             if (workType.value == "TEAM") {
@@ -1535,7 +1521,13 @@ async function autoCheckList() {
     let workId = document.querySelector("#wid");
 
     let memL = [];
-    let member = await memberList(workId.value);
+    let info = await selectOneWork(workId.value);
+    let member;
+    if(info.parentId != ''){
+        member = await memberList(info.parentId);
+    }else if(info.parentId == ''){
+        member = await memberList(workId.value);
+    }
     let mail = document.querySelector("#invEmail");
 
     member.forEach((mem) => {
@@ -1581,11 +1573,7 @@ async function addList() {
     );
     let mine = document.querySelector("#side input.logUser");
 
-    if (
-        mail.value != "" &&
-        areUMail.test(mail.value) &&
-        mine.value != mail.value
-    ) {
+    if ( mail.value != "" && areUMail.test(mail.value) && mine.value != mail.value ) {
         //wid부분이 비어있는 경우(새 워크스페이스를 생성하는 경우)
         if (!workId || workId.value == "") {
             let divTag = document.createElement("div");
@@ -1598,7 +1586,14 @@ async function addList() {
 
             //wid부분이 비어있지 않은 경우(하위 워크스페이스 생성이거나, 설정에서 멤버를 수정하는 경우.)
         } else if (workId.value != "") {
-            let member = await memberList(workId.value);
+            let info = await selectOneWork(workId.value);
+            let member;
+            if(info.parentId != ''){
+                member = await memberList(info.parentId);
+                document.querySelectorAll('#memList > tr').forEach(item => item.remove());
+            }else if(info.parentId == ''){
+                member = await memberList(workId.value);
+            }
             let invite = await listWorkJoin(workId.value);
             let thisM = false;
             let thisI = false;
@@ -1622,22 +1617,22 @@ async function addList() {
             }
             //하위워크스페이스 여부가 true이면
             if (subCheck == true) {
-                Jlist = document.querySelectorAll("#beforeJoin tr");
-                Jlist.forEach((list) => list.remove());
                 if (thisM == false) {
                     alert(
                         "하위 워크스페이스에는 상위 워크스페이스의 멤버만 초대할 수 있습니다."
                     );
                     mail.value = "";
                     mail.focus();
-                } else if (thisI == true || invite.includes(mail.value) == true) {
+                } else if (thisI == true && invite.includes(mail.value) == true) {
                     alert("이미 초대중인 사용자입니다.");
                     mail.value = "";
                     mail.focus();
-                } else if (
-                    thisM == true ||
-                    (thisI == false && invite.includes(mail.value) == false)
-                ) {
+                }else if(info.parentId != ''){
+                    inviteWork(workId.value);                    
+                    mail.value = "";
+                    mail.focus();
+                    listWorkJoin(workId.value);
+                } else if ( thisM == true && (thisI == false && invite.includes(mail.value) == false) ) {
                     let divTag = document.createElement("div");
                     divTag.textContent = mail.value;
 
@@ -1649,15 +1644,27 @@ async function addList() {
 
                 //하위 워크스페이스가 아니고 설정에서 사용자를 새로 초대하는 경우
             } else if (subCheck == false) {
-                if (
-                    thisM == false &&
-                    thisI == false &&
-                    invite.includes(mail.value) == false
-                ) {
+                if ( thisM == false && thisI == false && invite.includes(mail.value) == false ) {
                     inviteWork(workId.value);
                     mail.value = "";
                     mail.focus();
                     listWorkJoin(workId.value);
+                    
+                    let memCheckArea = document.querySelector("#memberCheckArea");
+                    let beforeJoin = document.querySelector('#beforeJoin');
+                    let trTag = document.createElement("tr");
+                    let tdTag = document.createElement("td");
+
+                    tdTag.textContent = inv.inviteEmail;
+
+                    let also = document.createElement("td");
+                    also.textContent = "초대중...";
+
+                    trTag.appendChild(tdTag);
+                    trTag.appendChild(also);
+                    beforeJoin.appendChild(trTag);
+
+                    memCheckArea.appendChild(beforeJoin);
                 } else {
                     alert("이 사용자는 초대할 수 없습니다.");
                     mail.value = "";
@@ -1701,12 +1708,12 @@ function inviteWork(workId) {
     let url = "/workJoin";
 
     fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(inviteList),
-        })
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inviteList),
+    })
         .then((response) => response.text())
         .then((result) => {
             console.log(result + "건 성공");
@@ -1719,23 +1726,23 @@ const arr = ["workId", "email", "auth"];
 //멤버 조회
 async function memberList(workId) {
     let authAry = [{
-            val: "MANAGER",
-            text: "관리자",
-        },
-        {
-            val: "NOMAL",
-            text: "일반",
-        },
+        val: "MANAGER",
+        text: "관리자",
+    },
+    {
+        val: "NOMAL",
+        text: "일반",
+    },
     ];
     let url = `/memberList?workId=${workId}`;
     let mail = [];
 
     await fetch(url, {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        method: "get",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
         .then((response) => response.json())
         .then((result) => {
             document.querySelector("#memList").replaceChildren();
@@ -1820,11 +1827,11 @@ async function selectOneWork(workId) {
 
     let url = `/workInfo?workId=${workId}`;
     await fetch(url, {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        method: "get",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
         .then((response) => response.json())
         .then((result) => {
             for (let field in result) {
@@ -1858,12 +1865,12 @@ function deleteWorkS(workId) {
     if (nameCheck.value == workNm.value) {
         let url = `/workDelete`;
         fetch(url, {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(val),
-            })
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(val),
+        })
             .then((response) => response.text())
             .then((result) => {
                 alert("워크스페이스가 삭제되었습니다.");
@@ -1891,12 +1898,12 @@ function editWorkSpace(workId) {
     let url = "/workEdit";
 
     fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(val),
-        })
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(val),
+    })
         .then((response) => response.text())
         .then((result) => {
             alert("워크스페이스가 수정되었습니다.");
@@ -1911,12 +1918,12 @@ function editWorkSpace(workId) {
 function memberOut(list) {
     let url = "/memberDelete";
     fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(list),
-        })
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(list),
+    })
         .then((response) => response.json())
         .then((result) => {
             closeSideModal();
@@ -1928,12 +1935,12 @@ function memberOut(list) {
 function renewMemberAuth(list) {
     let url = "/memberRenewAuth";
     fetch(url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(list),
-        })
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(list),
+    })
         .then((response) => response.text())
         .then((result) => {
             if (result == list.length) {
@@ -2003,11 +2010,11 @@ async function listWorkJoin(workId) {
     let url = `/joinList?workId=${workId}`;
     let mailList = [];
     await fetch(url, {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        method: "get",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
         .then((response) => response.json())
         .then((result) => {
             if (document.querySelector("#beforeJoin")) {
