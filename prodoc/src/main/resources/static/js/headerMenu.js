@@ -355,25 +355,19 @@ async function areULock() {
     let infos = await pageInfoFromMenu();
     let LockToggle = document.querySelector('#lockPg');
     let LockNotiToggle = document.querySelector('#notiLockPg');
-    let displayedBlock = document.querySelectorAll(".prodoc_block");
-
+	let out;
     for (let info of infos) {
         if (info.lockCheck == 'FALSE') {
             LockToggle.textContent = '페이지 잠금 설정';
             LockNotiToggle.textContent = '페이지 잠금 요청';
-            for (let block of displayedBlock) {
-                let targetblock = block.lastElementChild.firstElementChild;
-                targetblock.removeAttribute('disabled');
-            }
+			out = 'NOEDIT'
         } else if (info.lockCheck == 'TRUE') {
             LockToggle.textContent = '페이지 잠금 해제';
             LockNotiToggle.textContent = '페이지 잠금 해제 요청';
-            for (let block of displayedBlock) {
-                let targetblock = block.lastElementChild.firstElementChild;
-                targetblock.setAttribute('disabled', 'true');
-            }
+			out = 'EDIT'
         }
     }
+    return out;
 }
 
 //링크복사

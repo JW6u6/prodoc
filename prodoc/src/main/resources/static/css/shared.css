@@ -1,0 +1,16 @@
+/*shareWith페이지 전용 블럭 보여주는 css*/
+.shareContainer {
+	margin-left: 10%;
+	width: 80%;
+	padding-bottom: 150px;
+	margin-top: 100px;
+}
+
+.noTouchScreen {
+	z-index: 999;
+	background-color: rgba(0, 0, 0, 0);
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	pointer-events: none;
+}
