@@ -33,7 +33,7 @@
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 645px;
+  width: 680px;
   z-index: 51;
 }
 #joinOutMod > div {
@@ -137,6 +137,7 @@
 
 #userModForm {
   display: flex;
+  padding: 20px;
 }
 
 .authBtn {

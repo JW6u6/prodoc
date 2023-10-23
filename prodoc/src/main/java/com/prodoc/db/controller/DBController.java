@@ -259,4 +259,26 @@ public class DBController {
         fis.close();
         os.close();
 	}
+	
+	// 데이터베이스 검색
+	@PostMapping("databaseSearch")	// DBCase displayId로 자식요소 조회
+	public List<Map<String, Object>> databaseSearch(@RequestBody PageAttrVO attrvo){
+		List<Map<String, Object>> resultList = new ArrayList<>();	// 하위 정보를 순서대로 담기위한 리스트
+		Map<String, Object> childList = new HashMap<String, Object>();	// 반환할 하위 정보를 담은 맵
+		PageVO parentVO = dbService.getDBPageInfo(attrvo.getCasePageId());				// case page의 VO 담기
+		childList.put("parent", parentVO);
+		resultList.add(childList);
+		List<BlockVO> blockList = dbService.databaseSearch(attrvo);		// DB하위 리스트(블럭)
+		for(int i=0; i<blockList.size(); i++) {							// 하위블럭의 블럭아이디로 attr, 해당pageVO 조회
+			Map<String, Object> infoMap = new HashMap<String, Object>();		// 한 블럭당 가질 정보 맵
+			String key = blockList.get(i).getDisplayId();
+			PageVO pageVO = dbService.getDBPageInfo(key);
+			List<PageAttrVO> attrList = attrService.getPageAttr(key);
+			infoMap.put("block", blockList.get(i));
+			infoMap.put("page", pageVO);
+			infoMap.put("attrList", attrList);
+			resultList.add(infoMap);	// 하위블럭ID, 블럭정보map
+		}
+		return resultList;
+	}
 }

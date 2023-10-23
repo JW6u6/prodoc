@@ -19,18 +19,31 @@ armMenu.forEach((tag, idx, list) => {
 		if(idx == 0){//allAlarm
 			console.log("전체알림")
 			clickedTab = 'all';
+			document.querySelector('#allAlarm').style.backgroundColor = "purple";
+			document.querySelector('#replyAlarm').style.backgroundColor = "lavender";
+			document.querySelector('#inviteAlarm').style.backgroundColor = "lavender";
 			showAlarmList(clickedTab);
 		}else if(idx == 1){//replyAlarm
 			console.log("댓글 알림")
 			clickedTab = 'REPLY_TG';
+			document.querySelector('#allAlarm').style.backgroundColor = "lavender";
+			document.querySelector('#replyAlarm').style.backgroundColor = "purple";
+			document.querySelector('#inviteAlarm').style.backgroundColor = "lavender";
 			showAlarmList(clickedTab)
 		}else{//inviteAlarm
 			console.log("초대 알림")
 			clickedTab = 'invite';
+			document.querySelector('#allAlarm').style.backgroundColor = "lavender";
+			document.querySelector('#replyAlarm').style.backgroundColor = "lavender";
+			document.querySelector('#inviteAlarm').style.backgroundColor = "purple";
 			showAlarmList(clickedTab)
 		}
 	});
 });
+
+function closeAlarmModal(){
+	alarmMod.className = 'hide';
+}
 
 //목록 가져오는 함수
 function showAlarmList(type){
@@ -163,7 +176,7 @@ function clickAlarmEvent(){
 		result.addEventListener('click',function(){
 			let clickType;
 			clickType = "OK";
-			if(result.className == 'joinNoBtn'){
+			if(result.className == 'joinNoBtn btn'){
 				clickType = "NO";
 			}
 			let email = document.querySelector("#side input.logUser").value;
@@ -183,6 +196,8 @@ function clickAlarmEvent(){
 			.then(res =>res.text())
 			.then(result => {
 				console.log(result);
+				allList();
+				showAlarmList('all');
 			})
 			.catch(reject => {
 				console.log(reject);

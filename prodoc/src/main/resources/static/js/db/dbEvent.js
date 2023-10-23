@@ -30,7 +30,7 @@ function databaseAllEvent(){
         // 키다운 이벤트
         block.addEventListener("keydown", e => {
             if (e.target.matches(".attr")) attrContentUpdate(e);
-            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".attr-name")) modAttrNameFix(e);
             else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
         });
 
@@ -51,7 +51,7 @@ function databaseAllEvent(){
                 // 키다운 이벤트
         page.addEventListener("keydown", e => {
             if (e.target.matches(".attr")) attrContentUpdate(e);
-            else if (e.target.matches(".attr-name")) modifyAttrName(e);
+            else if (e.target.matches(".attr-name")) modAttrNameFix(e);
             else if (e.target.matches(".db-page-name")) editDBPageName(e);  // DB 이름 변경
         });
 
@@ -95,9 +95,16 @@ function createDBblock(block){
                     <li class="change-layout" data-dblayout="DB_TBL">표</li>
                 </ul>
             </div>
-                <div class="db-attr-option">
-                    <button class="page-attr-option btn-db-attr">속성</button>
-                </div>
+            <div class="dataSearch">
+                <select class="DBS_option">
+                    <option value="">이름</option>
+                </select>
+                <input class="DBS_content">
+                <button class="DBS_btn">검색</button>
+            </div>
+            <div class="db-attr-option">
+                <button class="page-attr-option btn-db-attr">속성</button>
+            </div>
         </div>
         <div class="db-block-body"></div>
 
@@ -117,19 +124,39 @@ async function getChildList(disId){
 	.then( response => response.json())
 	.then( infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
         let layout = infoList[0].parent.caseId;
-        infoList.forEach((pagevo, idx) => {
+        infoList.forEach( (pagevo, idx) => {
             if(idx == 0){
                 let parentVO = pagevo.parent;
                 // let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');
                 let parentDiv = document.querySelectorAll('.database_case');
                 console.log(parentDiv);
                 // DB블럭에 DB의 페이지 정보를 속성에 추가
-                parentDiv.forEach(DBele => {
+                parentDiv.forEach(async(DBele) => {
                     let tagId = DBele.getAttribute("data-block-id");
                     if(tagId == disId){
                         DBele.setAttribute("data-page-id", parentVO["pageId"]);
                         DBele.setAttribute("data-layout", parentVO["caseId"]);
                         DBele.querySelector(".db-page-name").textContent = parentVO["pageName"];
+                        DBele.querySelector(".DBS_btn").addEventListener("click", databaseSearch);
+                        DBele.querySelector(".DBS_content").addEventListener("keydown", databaseSearch);
+
+                        const selectOp = DBele.querySelector(".DBS_option");
+                        const attrList = await getUseAttrList(disId);
+                        selectOp.innerHTML = '';
+                        for(let i=0; i<attrList.length+1; i++){
+                            if (attrList[i].attrId !== 'CAL'){
+                                let attrDiv = document.createElement("option");
+                                if(i===0) {
+                                    attrDiv.innerText = '이름';
+                                    attrDiv.value = "";
+                                }
+                                else {
+                                    attrDiv.innerText = attrList[i].attrName;
+                                    attrDiv.value = attrList[i].dbUseId;
+                                }
+                                selectOp.append(attrDiv);
+                            }
+                        }
                     }
                 });
             } else {
@@ -204,6 +231,8 @@ function insertDBpage(e){
             })
             targetNode.prepend(block);
         }
+
+        allList(); // 사이드바 리로드
     })
     .catch(err => console.log(err));
 }
@@ -293,4 +322,48 @@ function dbhistoryUpdate(data){
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(err => console.log(err));
+}
+
+// 검색을 만들어 보겠습니다.
+// param : { displayId(DB의 displayId), dbUseId, attrContent }
+async function databaseSearch(e){
+    if(e.type == 'keydown' && e.keyCode != 13) return;
+    const searchData = {
+        'casePageId' : e.target.closest("[data-layout]").getAttribute("data-block-id"),
+        'dbUseId' : e.target.parentElement.querySelector(".DBS_option").value,
+        'attrContent' : e.target.parentElement.querySelector(".DBS_content").value
+    }
+    console.log(searchData);
+    let caseInfo = [];
+	let url = 'databaseSearch?parentId=' + searchData.casePageId;
+	await fetch(url, {
+		method : 'POST',
+        headers : { 'Content-Type' : 'application/json' },
+        body : JSON.stringify(searchData)
+	})
+	.then( response => response.json())
+	.then( infoList => {     // infoList : { 'parent' : {casePageVO}, '하위블럭id' : { {'block' : VO}, {'page' : VO}, {'attrList' : []} } }
+        let layout = infoList[0].parent.caseId;
+        infoList.forEach((pagevo, idx) => {
+            if(idx == 0){
+                let parentVO = pagevo.parent;
+                // let parentDiv = document.querySelectorAll('[data-block-type="DATABASE"]');
+                let parentDiv = document.querySelectorAll('.database_case');
+                console.log(parentDiv);
+                // DB블럭에 DB의 페이지 정보를 속성에 추가
+                parentDiv.forEach(DBele => {
+                    let tagId = DBele.getAttribute("data-block-id");
+                    if(tagId == searchData.casePageId){
+                        DBele.setAttribute("data-page-id", parentVO["pageId"]);
+                        DBele.setAttribute("data-layout", parentVO["caseId"]);
+                        DBele.querySelector(".db-page-name").textContent = parentVO["pageName"];
+                    }
+                });
+            } else {
+                caseInfo.push(pagevo);
+            }
+        })
+        listLayoutEditor(caseInfo, searchData.casePageId, layout);
+	})
+	.catch(err => console.log(err));
 }

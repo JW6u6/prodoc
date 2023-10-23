@@ -39,6 +39,10 @@
 	border-bottom: 2px solid #8a817c;
 }
 
+.dataSearch {
+	display: inline-block;
+}
+
 .db-attr-option {
 	display: inline-block;
 	float: right;
@@ -51,13 +55,37 @@
 	border-radius: 5px;
 }
 
+.btn-db-attr:hover {
+	background-color: #eee;
+}
+
 .db-block-body {
 	overflow : auto;
 }
 
 /* 하위 페이지 */
+.dbpage_btns {
+	float: right;
+}
+
+.dbpage_btns button {
+    background-color: transparent;
+    border: 0;
+    font-size: larger;
+}
+
+.dbpage_btns button:hover {
+	background-color: #ddd;
+	cursor: pointer;
+}
+
 .db_block{
 	padding: 10px;
+}
+
+.data_page {
+	/* float: left; */
+	display: flex;
 }
 
 .del-db-page {
@@ -89,11 +117,25 @@ div[data-attr-option] * {
 	dispaly: block;
 }
 
+div[data-attr-option] div:nth-child(1) {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+div[data-attr-option] button {
+	margin-top: 10px;
+    background-color: #feeafa;
+    border: 0;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+
 div[data-attr-option] div {
 	padding-top: 5px;
 }
 
 
+.pageAttr_option,
 div[data-attr-modal] {
 	position: absolute;
 	background-color: white;
@@ -257,6 +299,14 @@ div[data-layout="DB_GAL"] .db-block-body{
 	text-overflow: ellipsis;
     white-space: nowrap;
 	margin-right: 7px;
+}
+
+.add-dbpage:hover,
+.add-page-attr:hover,
+.page-attr-option:hover,
+.attr-name:hover,
+.data_pageNM:hover {
+	cursor: pointer;
 }
 
 .attr-list{
@@ -430,9 +480,17 @@ div[data-attrid="USER"] .this-value
 }
 
 .attr-line .attr-name {
-	width: 200px;
-	font-weight: 500;
-	padding: 10px;
+    width: 120px;
+    font-weight: 500;
+    padding: 10px;
+    display: inline-block;
+    font-weight: 550;
+    color: dimgrey;
+}
+
+.attr-line .attr {
+    max-width: fit-content;
+    white-space: normal;
 }
 
 .dataPage_blocks{

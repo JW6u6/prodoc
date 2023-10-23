@@ -178,7 +178,7 @@ async function pageDelCheck() {
         console.log('나는데이터베이스페이지입니다.');
         pageId = dbcont;
 
-        
+
 
     } else if(!dbcont){        
         console.log('나는 데이터베이스페이지가 아니다.');
@@ -214,7 +214,7 @@ async function pageDelCheck() {
     //             if (result == 'true') {
     //                 let email = document.querySelector("#side input.logUser").value;
     //                 alert('페이지가 삭제되었습니다.')
-    //                 allList(email);
+    //                 allList();
     //             } else if (result == 'false') {
     //                 alert('페이지가 삭제되지 않았습니다. 다시 시도하십시오.');
     //             }
@@ -355,11 +355,7 @@ async function creLink() {
         let linkText = document.createElement("textarea");
         //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
         document.body.appendChild(linkText);
-        url =
-            'http://prodox.me/shared/'
-            // 'http://localhost:8099/shared/'
-            +
-            pageBlockId;
+        url = 'https://prodox.me/shared/' + pageBlockId;
         linkText.value = url; // textarea 값에 url를 넣어줌
 
         if (navigator.clipboard !== undefined) {

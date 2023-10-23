@@ -121,8 +121,8 @@ public class PageController {
 	// 페이지 삭제 체크(삭제시 삭제 체크 값이 true로 등록)
 	@PostMapping("/pageDelCheck")
 	public boolean pageDeleteCheck(@RequestBody PageVO pageVO, HttpSession session) {
-		UserVO user = (UserVO) session.getAttribute("logUser");
-		pageVO.setCreUser(user.getEmail());
+//		UserVO user = (UserVO) session.getAttribute("logUser");
+//		pageVO.setCreUser(user.getEmail());
 		return pageService.deleteCheckPage(pageVO);
 	}
 

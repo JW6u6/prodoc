@@ -115,7 +115,7 @@ async function openDataPage(pageId){
         let pageModal = `
             <div class="db_dataPage" data-page-id="${pageId}">
                 <div>
-                    <div>
+                    <div class="dbpage_btns">
                         <button class="view_change">❒</button>
                         <button class="dbPage_close">✕</button>
                     </div>
@@ -141,6 +141,9 @@ async function openDataPage(pageId){
         document.querySelector(".dbPage_close").addEventListener("click", e => {
             document.querySelector(".db_dataPage").remove();
         })
+        const modalContainer = document.querySelector(".dataPage_blocks")
+        containerEvent(modalContainer);
+        
     })
     .catch(err => console.log(err));
 }
@@ -294,6 +297,7 @@ async function pageAttrnameUpdate(e){
 
 // 페이지 모달에서 페이지 이름 수정
 function pageNameRegisterToModal(e){
+    if(e.target != e.currentTarget) return;
     const titleEle = e.target;
     const nowTitle = titleEle.innerText;
     titleEle.style.display = "none";
