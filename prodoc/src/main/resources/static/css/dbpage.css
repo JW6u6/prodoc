@@ -511,6 +511,5 @@ div[data-attrid="USER"] .this-value
 }
 
 .dataPage_blocks{
-	padding-top: 30px;
-	padding-bottom: 150px;
+	padding: 30px 40px 150px 40px;
 }
