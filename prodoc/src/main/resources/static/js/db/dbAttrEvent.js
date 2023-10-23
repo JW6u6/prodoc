@@ -1,4 +1,4 @@
-// case block 아이디로 해당 db에 사용된 속성 리스트 리턴하는 AJAX
+// case block 아이디로 해당 db에 사용된 속성 리스트 리턴하는 AJAX 
 async function getUseAttrList(caseBlockId){
     let url = 'getAllPageAttr?parentId=' + caseBlockId;
     let list = [];

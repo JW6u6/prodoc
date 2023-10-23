@@ -1,4 +1,4 @@
-// 그룹이벤트
+// 그룹이벤트 
 document.querySelector(".container").addEventListener("click", e =>{    // 클릭 이벤트
     if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
