@@ -142,6 +142,13 @@
   						, #{insertResult, mode=OUT, jdbcType=VARCHAR, javaType=string} 
 		)}
 	</insert>
+	
+	<update id="RemoveDBPageBlock" parameterType="String">
+		UPDATE tbl_display
+		SET checked = 'true'
+		WHERE display_id = (SELECT display_id FROM tbl_dbblock WHERE page_id = #{pageId})
+	</update>
+	
 </mapper>
   
   

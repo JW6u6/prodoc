@@ -1,4 +1,4 @@
-// 그룹이벤트
+// 그룹이벤트 
 document.querySelector(".container").addEventListener("click", e =>{    // 클릭 이벤트
     if (e.target.matches(".add-dbpage")) insertDBpage(e);
     else if (e.target.matches(".change-layout")) layoutClick(e);
@@ -143,17 +143,15 @@ async function getChildList(disId){
                         const selectOp = DBele.querySelector(".DBS_option");
                         const attrList = await getUseAttrList(disId);
                         selectOp.innerHTML = '';
-                        for(let i=0; i<attrList.length+1; i++){
+                        let attrDiv = document.createElement("option");
+                        attrDiv.innerText = '이름';
+                        attrDiv.value = "";
+                        selectOp.append(attrDiv);
+                        for(let i=0; i<attrList.length; i++){
                             if (attrList[i].attrId !== 'CAL'){
                                 let attrDiv = document.createElement("option");
-                                if(i===0) {
-                                    attrDiv.innerText = '이름';
-                                    attrDiv.value = "";
-                                }
-                                else {
-                                    attrDiv.innerText = attrList[i].attrName;
-                                    attrDiv.value = attrList[i].dbUseId;
-                                }
+                                attrDiv.innerText = attrList[i].attrName;
+                                attrDiv.value = attrList[i].dbUseId;
                                 selectOp.append(attrDiv);
                             }
                         }

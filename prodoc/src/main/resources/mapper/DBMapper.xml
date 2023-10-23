@@ -9,7 +9,7 @@
 			#{pageId}
 			, #{caseId, mode=OUT, jdbcType=VARCHAR, javaType=String}
 		)}
-	</select>
+	</select> 
 
 	<!-- DBCase 페이지 추가 -->
 	<insert id="insertDBCase" parameterType="DBCaseVO" statementType="CALLABLE">

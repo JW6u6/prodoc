@@ -34,4 +34,7 @@ public interface PageService {
 	
 	//페이지 복사
 	public String pastePage(PageVO pageVO);
+	
+	//디비 페이지 삭제하면 블럭으로된것도 삭제 
+	public void deleteDBPageBlock(PageVO pageVO);
 }

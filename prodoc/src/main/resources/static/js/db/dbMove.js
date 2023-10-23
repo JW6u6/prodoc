@@ -1,4 +1,4 @@
-function dbMoveEvent(type){
+function dbMoveEvent(type){ 
     // 칸반보드 빈값일때 이벤트
     const dbStateBoxs = document.querySelectorAll(".db-state-box");
     dbStateBoxs.forEach(box=>{

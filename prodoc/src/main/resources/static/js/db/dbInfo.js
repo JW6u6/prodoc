@@ -1,4 +1,4 @@
-// 페이지 클릭시 페이지 타입을 체크
+// 페이지 클릭시 페이지 타입을 체크 
 /*
         페이지 클릭했을 때
         1. 페이지 타입 구분한다
@@ -297,7 +297,7 @@ async function pageAttrnameUpdate(e){
 
 // 페이지 모달에서 페이지 이름 수정
 function pageNameRegisterToModal(e){
-    if(e.target != e.currentTarget) return;
+    // if(e.target != e.currentTarget) return; 
     const titleEle = e.target;
     const nowTitle = titleEle.innerText;
     titleEle.style.display = "none";

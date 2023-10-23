@@ -46,4 +46,7 @@ public interface PageMapper {
 	
 	//페이지 복사
 	public void copyPage(PageVO pageVO);
+	
+	//블럭으로 등록된 db페이지 삭제하면 페이지에 있는 db블럭에 checked 속성 생기는거
+	public void RemoveDBPageBlock(String pageId);
 }

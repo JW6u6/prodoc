@@ -136,4 +136,9 @@ public class PageServiceImpl implements PageService {
 		return pageVO.getInsertResult();
 	}
 
+	@Override
+	public void deleteDBPageBlock(PageVO pageVO) {
+		pageMapper.RemoveDBPageBlock(pageVO.getPageId());
+	}
+
 }
