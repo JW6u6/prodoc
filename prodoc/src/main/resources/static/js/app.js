@@ -1,6 +1,6 @@
 //메인이 될 IP 주소 설정
 const stompClient = new StompJs.Client({
-  brokerURL: "ws://localhost:8099/websocket",
+  brokerURL: "wss://prodox.me/websocket",
 });
 console.log(stompClient);
 connect();
