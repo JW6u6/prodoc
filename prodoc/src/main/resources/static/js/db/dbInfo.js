@@ -297,7 +297,7 @@ async function pageAttrnameUpdate(e){
 
 // 페이지 모달에서 페이지 이름 수정
 function pageNameRegisterToModal(e){
-    if(e.target != e.currentTarget) return;
+    // if(e.target != e.currentTarget) return; 
     const titleEle = e.target;
     const nowTitle = titleEle.innerText;
     titleEle.style.display = "none";
