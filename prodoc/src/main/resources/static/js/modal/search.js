@@ -113,7 +113,12 @@ function searchThis(dataList){
 		let ResultDiv = document.querySelector('.SearchResult');
 		ResultDiv.innerHTML = ""; //초기화
 		let dataDiv = "";
-
+		if(result.data.length == 0){
+				ResultDiv.innerHTML = `<div class="historyItem" style="overflow:hidden; 
+				border:1px solid lightgray;"><h2>검색 내역이 없습니다.</h2></div>`;
+				return;
+		}//검색 결과가 없음
+			
 		for(let list of result.data){
 			if(wkdbType == "wk"){	//워크일 때
 				dataDiv = `

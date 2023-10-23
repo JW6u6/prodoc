@@ -196,11 +196,12 @@ document.querySelector("#authCheck").addEventListener('click', function(e){
 				"phone" : phone.value})
 	}).then(response=> response.json())
 	.then(result=> {
-		if(result == null){
+		console.log(result.result);
+		let resultList = result.result;
+		if(resultList.length == 0){
 			alert("해당 정보와 일치하는 회원이 없습니다.");
 			return;
 		}
-		let resultList = result.result;
 		if(findType == "email"){	//이메일 찾기 상태
 			let txt = `<가입 이메일 목록>`;
 			for(let list of resultList){
