@@ -3,7 +3,7 @@ const stompClient = new StompJs.Client({
   brokerURL: "ws://prodox.me/websocket",
 });
 console.log(stompClient);
-connect();
+connect();  
 
 //해당 updatePage를 구독중인 사람
 stompClient.onConnect = (frame) => {
