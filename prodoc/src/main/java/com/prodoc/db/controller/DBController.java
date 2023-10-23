@@ -51,7 +51,7 @@ public class DBController {
 	@Autowired dbattrFileService fileService;
 	@Autowired HistoryService historyService;
 	
-	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성
+	@PostMapping("InsertDBCase")		// DBCase 페이지&블럭 생성 
 	public String InsertDBCase(@RequestBody DBCaseVO casePage) {
 		dbService.insertDBCase(casePage);
 		return casePage.getResult(); 

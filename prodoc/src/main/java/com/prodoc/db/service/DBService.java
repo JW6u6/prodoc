@@ -15,7 +15,7 @@ public interface DBService {
 	public int deleteDBPage(BlockVO vo);
 	public DBBlockVO getDBblock(DBBlockVO vo);
 	public List<UserVO> getWorkMembers(String pageId);
-	public List<BlockVO> databaseSearch(PageAttrVO attrVO);
+	public List<BlockVO> databaseSearch(PageAttrVO attrVO); 
 	
 	public void databaseUpdate(PageAttrVO vo);
 	public void dbpageNumbering(PageAttrVO vo);

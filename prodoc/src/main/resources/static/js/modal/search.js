@@ -109,11 +109,15 @@ function searchThis(dataList){
 		headers: {'content-Type' : 'application/json'}
 	}).then(response => response.json())
 	.then(result =>{
-		//console.log(result.data);
+		console.log(result.data);
 		let ResultDiv = document.querySelector('.SearchResult');
 		ResultDiv.innerHTML = ""; //초기화
 		let dataDiv = "";
-
+		if(result.data.length == 0){
+				ResultDiv.innerHTML = `<div class="historyItem" style="overflow:hidden; 
+				border:1px solid lightgray;"><h2>검색 내역이 없습니다.</h2></div>`;
+		}//검색 결과가 없음
+			
 		for(let list of result.data){
 			if(wkdbType == "wk"){	//워크일 때
 				dataDiv = `
@@ -138,7 +142,7 @@ function searchThis(dataList){
 					<span>${list.caseName}</span>
 				</div>
 				<div>
-				<span>${list.parentName}(${list.workName})</span>
+				<span>${list.parentName == null ? list.pageName :list.parentName}(${list.workName})</span>
 				<span>${list.pageName}</span>
 				</div>
 				</div>

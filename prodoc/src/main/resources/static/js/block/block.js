@@ -8,12 +8,10 @@ async function makeBlockPage(pageId, type = "PAGE", element) {
     const subs = subscribeTopics.pop();
     subs.unsubscribe();
   }
-  console.log(type === "DATA_PAGE");
   if (type === "DATA_PAGE") {
     document.querySelector(".container").innerHTML = "";
     const parentContainer = await createDataPage(pageId);
     // const element = document.querySelector("dataPage_blocks");
-    console.log(parentContainer);
     containerEvent(parentContainer);
     showBlocks(pageId, type, parentContainer);
   } else if (type === "PAGE") {
@@ -25,85 +23,108 @@ async function makeBlockPage(pageId, type = "PAGE", element) {
   const blockSubscribe = stompClient.subscribe(
     `/topic/collaboration/${pageBlockId}`,
     (data) => {
-      const socketDataObj = JSON.parse(data.body);
-      console.log(socketDataObj);
-      const { eventType, displayId } = socketDataObj;
-      if (socketDataObj.upUser === blockSessionUserId) return;
-
-      const targetItem = document.querySelector(
-        `[data-block-id="${socketDataObj.targetBlockId}"]`
-      );
-      const dragItem = document.querySelector(
-        `[data-block-id="${socketDataObj.dragBlockId}"]`
-      );
-
-      if (eventType === "input") {
-        const changedBlock = document
-          .querySelector(`[data-block-id="${displayId}"]`)
-          .querySelector(".content");
-        if (changedBlock) {
-          changedBlock.innerText = socketDataObj.content;
-        }
-      } else if (eventType === "DRAG") {
-        console.log(socketDataObj);
-        const { dragState } = socketDataObj;
-        const targetType = targetItem.dataset.blockType;
-        dragEvent({ targetItem, dragItem, dragState, targetType });
-      } else if (eventType === "RESETORDER") {
-        resetOrder(true);
-      } else if (eventType === "CREATEBLOCK") {
-        const { template, type, enteredBlockId } = socketDataObj;
-
-        const enteredBlock = document.querySelector(
-          `[data-block-id="${enteredBlockId}"]`
-        );
-        const displayObj = {
-          template,
-          type,
-          element: enteredBlock,
-        };
-        console.log(displayObj);
-        displayBlock(displayObj);
-      } else if (eventType === "DELETEBLOCK") {
-        document.querySelector(`[data-block-id="${displayId}"]`).remove();
-      } else if (eventType === "CHANGETYPE") {
-        // 캐릭캐릭체인지
-        const blockType = socketDataObj.blockType;
-        changeEvent(displayId, blockType);
-      } else if (eventType === "FOCUSIN") {
-        console.log(socketDataObj);
-        const block = document.querySelector(`[data-block-id="${socketDataObj.displayId}"]`)
-        const img = document.createElement("img");
-        img.src= socketDataObj.imgSrc;
-        img.addEventListener("error",(e)=>{
-          e.target.src = "images/noneUser.jpg";
-        })
-        img.classList.add("profile");
-        img.classList.add("move_profile")
-        img.style.width = "30px";
-
-        img.dataset.who = socketDataObj.upUser;
-        block.append(img);
-      } else if (eventType === "FOCUSOUT") {
-        console.log(socketDataObj);
-        const block = document.querySelector(`[data-block-id="${socketDataObj.displayId}"]`)
-        block.querySelector(".content").contenteditable = true;
-        document.querySelector(`[data-who="${socketDataObj.upUser}"]`).remove();
-      }
+      asyncWorkFunc(data);
     }
   );
 
-  console.log(blockSubscribe);
   subscribeTopics.push(blockSubscribe);
+}
+
+// 동시작업 이벤트 처리 함수
+function asyncWorkFunc(data) {
+  const socketDataObj = JSON.parse(data.body);
+  console.log(socketDataObj);
+  const { eventType, displayId } = socketDataObj;
+  //만약 동일한 유저면 실핼시키지않음.
+  if (socketDataObj.upUser === blockSessionUserId) return;
+
+  // 드랍당하는 블럭
+  const targetItem = document.querySelector(
+    `[data-block-id="${socketDataObj.targetBlockId}"]`
+  );
+  // 해당 블럭
+  const dragItem = document.querySelector(
+    `[data-block-id="${socketDataObj.dragBlockId}"]`
+  );
+  if (eventType === "input") {
+    //블록Input 이벤트를 받을때
+    const changedBlock = document
+      .querySelector(`[data-block-id="${displayId}"]`)
+      .querySelector(".content");
+    if (changedBlock) {
+      changedBlock.innerText = socketDataObj.content;
+    }
+  } else if (eventType === "DRAG") {
+    const { dragState } = socketDataObj;
+    const targetType = targetItem.dataset.blockType;
+    dragEvent({ targetItem, dragItem, dragState, targetType }); // 드래그 이벤트
+  } else if (eventType === "RESETORDER") {
+    resetOrder(true); // 순서 재부여
+  } else if (eventType === "CREATEBLOCK") {
+    const { template, type, enteredBlockId } = socketDataObj;
+
+    const enteredBlock = document.querySelector(
+      `[data-block-id="${enteredBlockId}"]`
+    );
+    const displayObj = {
+      template,
+      type,
+      element: enteredBlock,
+    };
+    displayBlock(displayObj);
+  } else if (eventType === "DELETEBLOCK") {
+    //블록삭제 이벤트를 받을때
+    document.querySelector(`[data-block-id="${displayId}"]`).remove();
+  } else if (eventType === "CHANGETYPE") {
+    //블록변경이벤트를 받을때
+    const blockType = socketDataObj.blockType;
+    changeEvent(displayId, blockType);
+  } else if (eventType === "FOCUSIN") {
+    //Focusin 이벤트를 받을때
+    setTimeout(focusInAsyncEvent, 500); // 다른 작업을 처리하고 난뒤 포커스를 시키기 위한 작업
+    function focusInAsyncEvent() {
+      foucsOutAsyncEvent(socketDataObj);
+      const block = document.querySelector(
+        `[data-block-id="${socketDataObj.displayId}"]`
+      );
+      const img = document.createElement("img");
+      img.src = socketDataObj.imgSrc;
+      img.addEventListener("error", (e) => {
+        e.target.src = "images/noneUser.jpg";
+      });
+      img.classList.add("profile");
+      img.classList.add("move_profile");
+      img.style.width = "30px";
+
+      img.dataset.who = socketDataObj.upUser;
+      block.append(img);
+    }
+  } else if (eventType === "FOCUSOUT") {
+    //FocusOut 이벤트를 받을때
+    foucsOutAsyncEvent(socketDataObj);
+  }
+}
+
+function foucsOutAsyncEvent(socketDataObj) {
+  const block = document.querySelector(
+    `[data-block-id="${socketDataObj.displayId}"]`
+  );
+  if (block) {
+    const userProfile = document.querySelector(
+      `[data-who="${socketDataObj.upUser}"]`
+    );
+    block.querySelector(".content").contenteditable = true;
+    if (userProfile) {
+      userProfile.remove();
+    }
+  }
 }
 
 function cusorMove(blockid) {
   let cursor = `div[data-block-id="${blockid}"]`;
   let focusBlock = document.querySelector(cursor);
   if (focusBlock != null) {
-    console.log(focusBlock);
     let topLocation = focusBlock.offsetTop;
-    console.log(topLocation);
     window.scrollTo({ top: topLocation, behavior: "smooth" });
   }
 }
@@ -128,7 +149,7 @@ let isExistData = [];
  *
  * @param {Object} obj
  */
-function saveTran(obj) {
+function saveTransection(obj) {
   isExistData.push(obj);
   save();
   function save() {
@@ -169,7 +190,6 @@ function sendData(isExistData) {
     }
     groupedData[eventType][displayId].push(rest);
   });
-  console.log(groupedData);
 
   const groupedArray = Object.keys(groupedData).map((eventType) => ({
     eventType,
@@ -208,6 +228,7 @@ function sendSocketEvent(socketEventObj) {
 /**
  *  페이지 요청함수
  * @param {string} pageId - 페이지아이디
+ * @param {string} type - 페이지의 타입
  */
 
 function showBlocks(pageId, type = "PAGE") {
@@ -228,7 +249,7 @@ function showBlocks(pageId, type = "PAGE") {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      // 트리탐색 재귀
+      // 자식을 불러오는 함수
       async function displayChildBlock(blocks, childBlocks) {
         for (const block of blocks) {
           const displayId = block.dataset.blockId;
@@ -236,14 +257,12 @@ function showBlocks(pageId, type = "PAGE") {
             if (displayId === childBlocks[i].parentId) {
               await asyncChildDisplay(childBlocks[i], block);
               childBlocks.splice(i, 1);
-              console.log(childBlocks[i],displayId);
               i--;
             }
           }
         }
       }
-      //탐색재귀함수 끝 
-      
+      // 자식을 불러오는 함수의 끝
       blockCount = data.length + 1;
       let parentBlocks = [];
       let childBlocks = [];
@@ -257,7 +276,7 @@ function showBlocks(pageId, type = "PAGE") {
           parentId,
           color,
           backColor,
-          checked
+          checked,
         } = item;
         const blockObj = {
           displayId,
@@ -268,15 +287,13 @@ function showBlocks(pageId, type = "PAGE") {
           color,
           backColor,
         };
-        if(blockObj.checked === "true" && blockId === "DATABASE") return;
+        if (checked === "true" && blockId === "DATABASE") return;
         if (blockObj.parentId) {
           childBlocks.push(blockObj);
         } else {
           parentBlocks.push(blockObj);
         }
       });
-      console.log(childBlocks);
-      console.log(parentBlocks)
       for (const block of parentBlocks) {
         await asyncDisplay(block, type);
       }
@@ -387,7 +404,6 @@ async function createBlock2DB(blockObj) {
 function updateDBBlock(blockObj) {
   blockObj.workId = workBlockId;
   blockObj.pageId = pageBlockId;
-  console.log(blockObj);
   fetch("/block/update", {
     method: "POST",
     headers: {
@@ -595,7 +611,7 @@ async function getBlockreplyList(blockId) {
  *          pageId:string}} replyObj
  */
 function registReply(replyObj) {
-  const replyId = uuidv4();;
+  const replyId = uuidv4();
   replyObj.replyId = replyId;
   fetch("/reply/regist", {
     method: "POST",
@@ -624,11 +640,11 @@ async function deleteReply(replyId, userId) {
   return resultObj;
 }
 
-const obj ={
-  apple:"사과",
-  banana:"바나나",
-  wiki:"나무",
-}
+const obj = {
+  apple: "사과",
+  banana: "바나나",
+  wiki: "나무",
+};
 
 /**
  *  페이지 리스트를 불러오는 함수
