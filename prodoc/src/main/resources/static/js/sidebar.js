@@ -920,7 +920,7 @@ function selectPage(pageId) {
             data.forEach(async (item) => {
                 //이미 있으면 제거
                 const title = document.querySelector(".pageHead");
-
+                
                 if (title) {
                     title.remove();
                 }
@@ -932,6 +932,17 @@ function selectPage(pageId) {
                            style="visibility:hidden;">
                      </div>`;
                 app.insertAdjacentHTML("beforebegin", pageTitle);
+                let dontTouchDiv = document.createElement('div');
+                dontTouchDiv.classList.add('noTouchScreen');
+                if(item.lockCheck == 'TRUE'){
+                    if(document.querySelector('.noTouchScreen')){
+                        console.log('이미있음');
+                    }else{
+                        app.parentElement.insertBefore(dontTouchDiv, app.parentElement.firstChild);
+                    }
+                }else if(item.lockCheck == 'FALSE'){
+                    dontTouchDiv.remove();
+                }
                 // 페이지 타입 체크
                 let type = await pageTypeCheck(pageId);
                 console.log("페이지 타입 체크", type);
@@ -1138,9 +1149,9 @@ async function setWork(e) {
     let infoResult = await selectOneWork(workId);
     let membAuth = await memberCheck(workId);
 
-    if (infoResult.parentId == '') {
+    if (!infoResult.parentId) {
         subCheck = false;
-    } else if (infoResult.parentId != '') {
+    } else if (infoResult.parentId) {
         subCheck = true;
     }
 
@@ -1588,17 +1599,17 @@ async function addList() {
         } else if (workId.value != "") {
             let info = await selectOneWork(workId.value);
             let member;
-            if(info.parentId != ''){
+            if(info.parentId){
                 member = await memberList(info.parentId);
                 document.querySelectorAll('#memList > tr').forEach(item => item.remove());
-            }else if(info.parentId == ''){
+            }else if(!info.parentId){
                 member = await memberList(workId.value);
             }
-            let invite = await listWorkJoin(workId.value);
             let thisM = false;
             let thisI = false;
+            let thisJ = false;
             let invDivList = document.querySelectorAll("#invList > div");
-
+            let joinList = document.querySelectorAll('#beforeJoin > tr');
             for (let mem of member) {
                 if (mem.email == mail.value) {
                     thisM = true;
@@ -1608,31 +1619,47 @@ async function addList() {
                 }
             }
             for (let dL of invDivList) {
+                console.log(invDivList);
+                console.log(dL);
                 if (dL.textContent == mail.value) {
+                    console.log(dL.textContent);
                     thisI = true;
                     break;
                 } else if (dL.textContent != mail.value) {
+                    console.log(dL.textContent);
                     thisI = false;
                 }
             }
+            for(let tdL of joinList){
+                let already = tdL.firstElementChild;
+                console.log(mail.value == already.textContent);
+                if(mail.value == already.textContent){
+                    thisJ = false;
+                    break;
+                }else if(mail.value != already.textContent){
+                    thisJ = true;
+                }
+            }
+
             //하위워크스페이스 여부가 true이면
             if (subCheck == true) {
+                console.log(subCheck);
                 if (thisM == false) {
                     alert(
                         "하위 워크스페이스에는 상위 워크스페이스의 멤버만 초대할 수 있습니다."
                     );
                     mail.value = "";
                     mail.focus();
-                } else if (thisI == true && invite.includes(mail.value) == true) {
+                } else if (thisI == true || thisJ == false) {
                     alert("이미 초대중인 사용자입니다.");
                     mail.value = "";
                     mail.focus();
-                }else if(info.parentId != ''){
-                    inviteWork(workId.value);                    
+                }else if(info.parentId){
+                    inviteWork(workId.value);     
                     mail.value = "";
                     mail.focus();
                     listWorkJoin(workId.value);
-                } else if ( thisM == true && (thisI == false && invite.includes(mail.value) == false) ) {
+                } else if ( thisM == true && thisI == false && thisJ == true ) {
                     let divTag = document.createElement("div");
                     divTag.textContent = mail.value;
 
@@ -1644,7 +1671,7 @@ async function addList() {
 
                 //하위 워크스페이스가 아니고 설정에서 사용자를 새로 초대하는 경우
             } else if (subCheck == false) {
-                if ( thisM == false && thisI == false && invite.includes(mail.value) == false ) {
+                if ( thisM == false && thisI == false && thisJ == true ) {
                     inviteWork(workId.value);
                     mail.value = "";
                     mail.focus();
