@@ -1,4 +1,4 @@
-// case block 아이디로 해당 db에 사용된 속성 리스트 리턴하는 AJAX
+// case block 아이디로 해당 db에 사용된 속성 리스트 리턴하는 AJAX 
 async function getUseAttrList(caseBlockId){
     let url = 'getAllPageAttr?parentId=' + caseBlockId;
     let list = [];
@@ -1079,10 +1079,11 @@ function modifyAttrName(e){
 }
 
 async function modAttrNameFix(e){
+    console.log(e.target)
     if(e.keyCode === 13){
-        const attrId = e.target.getAttribute("data-attrid");
         const orgName = e.target.getAttribute("data-nowan");
         e.preventDefault();
+        
         e.target.setAttribute("contenteditable", false);
         let attrName = e.target.innerText;
         let check = true;
@@ -1097,15 +1098,15 @@ async function modAttrNameFix(e){
         };
 
         let attrList = await getUseAttrList(data.casePageId);
-
         attrList.forEach(useAttr => {
-            if(useAttr.attrId == attrId && useAttr.attrName == attrName) check = false;
+            if(useAttr.attrName == attrName) check = false;
         });
 
         if(check == false){
             alert("해당 속성이 이미 존재합니다.");
             e.target.innerText = orgName;
         }else {
+            alert("속성 이름이 변경되었습니다.");
             modifyAttrNameAjax(data);
         }
         e.target.removeAttribute("data-nowan");
@@ -1130,7 +1131,7 @@ function modifyAttrNameAjax(data){
     })
     .then(response => response.text())
     .then(result => {
-        console.log(result);
+        // console.log(result);
     })
     .catch(err => console.log(err));
 }

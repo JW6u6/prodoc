@@ -40,6 +40,9 @@
   height: 500px;
   text-align: center;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .side_logo {
@@ -369,11 +372,13 @@ select::-ms-expand {
 }
 
 #autoContain {
-  width: 175px;
+  width: 319px;
   background-color: #edf3fa;
+  opacity: 0.9;
   position: absolute;
   z-index: 700;
-  left: 847px;
+  left: 8px;
+  top: 38px
 }
 
 #autoContain > div {

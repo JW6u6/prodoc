@@ -90,7 +90,7 @@ public class DBServiceImpl implements DBService {
 
 	@Override
 	public List<BlockVO> databaseSearch(PageAttrVO attrVO) {
-		return mapper.databaseSearch(attrVO);
+		return mapper.databaseSearch(attrVO); 
 	}
 
 
